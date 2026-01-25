@@ -33,8 +33,20 @@ You generate the following markdown files. Each should be actionable, not theore
 - **Daily frustrations:**
 - **Goals they're measured on:**
 - **Tools they already use:**
-- **Where they hang out online:**
-- **What they read/follow:**
+
+### Where to Find Them (Critical for Distribution)
+| Channel | Specific Places |
+|---------|-----------------|
+| **LinkedIn** | [Groups, hashtags, influencers they follow] |
+| **Communities** | [Slack groups, Discord, forums, Reddit subs] |
+| **Publications** | [Newsletters, blogs, podcasts they consume] |
+| **Events** | [Conferences, meetups, webinars] |
+
+### Trigger Events (What Makes Them Search)
+*When do they actively look for a solution?*
+1. [Trigger 1 - e.g., "Just hired 5th employee, processes breaking"]
+2. [Trigger 2 - e.g., "Lost a deal due to slow response time"]
+3. [Trigger 3 - e.g., "New quarter, new budget allocated"]
 
 ### Qualifying Questions
 1. [Question to confirm they have the problem]

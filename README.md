@@ -155,6 +155,75 @@ Edit `ideas/your-idea-name/business-context.md` with your business idea. This is
 
 ---
 
+## 21-Day Launch Playbook
+
+A concrete timeline from idea to first outreach.
+
+### Week 1: Discovery (Days 1-7)
+
+| Day | Task | Agent | Output |
+|-----|------|-------|--------|
+| 1-2 | Fill business context | You | `business-context.md` |
+| 2-3 | Competitor research | Product | `01-market-research.md` |
+| 3-4 | Define ICP | Marketing | `01-icp-market-analysis.md` |
+| 5-6 | Create PRD | Product | `02-prd.md` |
+| 7 | Positioning & messaging | Marketing | `02-positioning-messaging.md` |
+
+### Week 2: Strategy (Days 8-14)
+
+| Day | Task | Agent | Output |
+|-----|------|-------|--------|
+| 8-9 | GTM strategy | Marketing | `03-gtm-strategy.md` |
+| 9-10 | Sales process design | Sales | `01-sales-process.md` |
+| 10-11 | Discovery framework | Sales | `02-discovery-framework.md` |
+| 12 | LinkedIn outreach system | Marketing | `04-linkedin-outreach.md` |
+| 13-14 | Landing page strategy | Marketing | `05-landing-page.md` |
+
+### Week 3: Execution Setup (Days 15-21)
+
+| Day | Task | Agent | Output |
+|-----|------|-------|--------|
+| 15-16 | Generate dev tasks | Product | `03-tasks.md` |
+| 16-17 | Architecture decisions | Engineering | `01-architecture.md` |
+| 17-18 | Qualification & objections | Sales | `03-qualification.md`, `04-objections.md` |
+| 19-20 | Set up metrics dashboards | All | `*-metrics.md` |
+| 21 | **Start outreach** | You | Real conversations! |
+
+---
+
+## When to Re-run Agents
+
+Don't update artifacts randomly. Use these triggers:
+
+| Trigger Event | Which Artifacts to Update | Agent |
+|---------------|---------------------------|-------|
+| New competitor discovered | Market research, Positioning | Product + Marketing |
+| ICP assumptions wrong | ICP, Qualification, Discovery | Marketing + Sales |
+| Positioning not resonating | Messaging, Landing page, GTM | Marketing |
+| Conversion rate drops | Landing page, Channel plan | Marketing |
+| Consistent deal losses | Objection handling, Qualification | Sales |
+| Feature scope changes | PRD, Tasks, Architecture | Product + Engineering |
+| New channel opportunity | GTM, Channel plan | Marketing |
+| Price feedback from prospects | Market research, Sales process | Product + Sales |
+
+### Weekly Review (15 min)
+
+Every Monday, ask:
+1. What metric improved most?
+2. What metric is stuck?
+3. Which artifact is the bottleneck?
+4. What did I learn from customer conversations?
+
+### Monthly Deep Dive (1 hour)
+
+End of each month:
+1. Re-validate ICP with actual data
+2. Update positioning if needed
+3. Review win/loss patterns
+4. Adjust roadmap based on learnings
+
+---
+
 ## Managing Multiple Ideas
 
 ### Idea Lifecycle
