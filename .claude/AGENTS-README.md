@@ -268,38 +268,14 @@ When iterating on strategy:
 
 ---
 
-## Migration from Legacy Agents
+## Agent Benefits
 
-If you were using the markdown agents in `agents/` folder:
-
-**Old way (manual):**
-```
-1. Read agents/marketing-manager.md
-2. Copy prompt to Claude
-3. Provide context files
-4. Copy output
-5. Manually save to ideas/[idea]/marketing/01-icp.md
-6. Repeat for each artifact...
-```
-
-**New way (automated):**
-```
-@marketing-manager generate all artifacts for [idea]
-```
-
-**Benefits:**
-- ✅ Automatic file management
-- ✅ Dependency checking
-- ✅ Agent chaining
-- ✅ Progress tracking
-- ✅ Error handling
-- ✅ No manual copy/paste
-
-The original markdown agents in `agents/` are kept for:
-- Reference documentation
-- Portability to other LLMs (GPT-4, Gemini, local models)
-- Understanding agent logic
-- Custom modifications
+- ✅ **Automatic file management** - Writes artifacts to correct locations
+- ✅ **Dependency checking** - Ensures required files exist before proceeding
+- ✅ **Agent chaining** - Agents can invoke other agents when needed
+- ✅ **Progress tracking** - Status updates as agents work
+- ✅ **Error handling** - Built-in retry logic and graceful failures
+- ✅ **No manual work** - No copy/paste, no file navigation
 
 ---
 

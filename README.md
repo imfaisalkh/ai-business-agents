@@ -16,11 +16,15 @@ A lean, artifact-driven AI agent system for building bootstrapped $1M businesses
 ```
 ai-business-agents/
 ├── README.md                    # This file
-├── agents/                      # Agent system prompts (shared)
-│   ├── marketing-manager.md
-│   ├── sales-manager.md
-│   ├── product-manager.md
-│   └── engineering-manager.md
+├── .claude/
+│   └── agents/                  # Claude native agents (automated)
+│       ├── marketing-manager.md
+│       ├── product-manager.md
+│       ├── sales-manager.md
+│       ├── engineering-manager.md
+│       └── launch-orchestrator.md
+├── scripts/                     # Utility scripts
+│   └── new-idea.sh
 └── ideas/                       # Your business ideas
     ├── _template/               # Copy this for new ideas
     │   ├── README.md
@@ -38,33 +42,46 @@ ai-business-agents/
 
 ## Quick Start
 
-### 1. Create a New Idea
+### Option A: Complete Launch Strategy (Recommended)
 
 ```bash
-# Copy the template folder
-cp -r ideas/_template ideas/your-idea-name
+# 1. Create new idea
+./scripts/new-idea.sh your-idea-name
+
+# 2. Fill out business context
+# Edit ideas/your-idea-name/business-context.md
+
+# 3. Generate everything
+@launch-orchestrator generate complete launch strategy for your-idea-name
 ```
 
-### 2. Fill Out Business Context
+**Output:** 24 artifacts + comprehensive launch summary in ~15 minutes
 
-Edit `ideas/your-idea-name/business-context.md` with your business idea. This is the foundation all agents use.
+---
 
-### 3. Run Agents in Order
+### Option B: Individual Agents
 
-| Order | Agent | Input | Output Location |
-|-------|-------|-------|-----------------|
-| 1 | Marketing Manager | `business-context.md` | `marketing/` |
-| 2 | Product Manager | `business-context.md` + `marketing/01-icp-market-analysis.md` | `product/` |
-| 3 | Sales Manager | `marketing/01-icp-market-analysis.md` + `marketing/02-positioning-messaging.md` | `sales/` |
-| 4 | Engineering Manager | `product/02-prd.md` + `product/03-tasks.md` | `engineering/` |
+```bash
+# 1. Create new idea
+./scripts/new-idea.sh your-idea-name
 
-### 4. Using an Agent
+# 2. Fill out business context
+# Edit ideas/your-idea-name/business-context.md
 
-1. Open Claude (or your preferred AI)
-2. Paste the agent's system prompt from `agents/[agent-name].md`
-3. Provide the required input files as context
-4. Request specific artifacts
-5. Save outputs to the appropriate `ideas/[your-idea]/[function]/` folder
+# 3. Run agents one by one
+@marketing-manager generate all artifacts for your-idea-name
+@product-manager generate all artifacts for your-idea-name
+@sales-manager generate all artifacts for your-idea-name
+@engineering-manager generate all artifacts for your-idea-name
+```
+
+**Agent execution order:**
+1. Marketing Manager → 7 marketing artifacts
+2. Product Manager → 5 product artifacts (needs marketing/01-icp)
+3. Sales Manager → 7 sales artifacts (needs marketing/01, 02)
+4. Engineering Manager → 5 engineering artifacts (needs product/02-prd, 03-tasks)
+
+**Note:** Agents automatically check for and generate missing dependencies
 
 ---
 
@@ -102,7 +119,7 @@ Edit `ideas/your-idea-name/business-context.md` with your business idea. This is
 
 ## Artifacts Generated
 
-### Marketing Manager (`agents/marketing-manager.md`)
+### Marketing Manager (`.claude/agents/marketing-manager.md`)
 | # | Artifact | Purpose |
 |---|----------|---------|
 | 01 | ICP & Market Analysis | Define who you're selling to |
@@ -113,7 +130,16 @@ Edit `ideas/your-idea-name/business-context.md` with your business idea. This is
 | 06 | Lead Validation | Test before scaling |
 | 07 | Marketing Metrics | Track what matters |
 
-### Sales Manager (`agents/sales-manager.md`)
+### Product Manager (`.claude/agents/product-manager.md`)
+| # | Artifact | Purpose |
+|---|----------|---------|
+| 01 | Market Research | Competitor analysis, pricing |
+| 02 | PRD | Requirements, MVP Funnel, Wireframes |
+| 03 | Tasks | Epics, stories, implementation tasks |
+| 04 | Product Metrics | Usage and adoption tracking |
+| 05 | Interview Template | Customer research structure |
+
+### Sales Manager (`.claude/agents/sales-manager.md`)
 | # | Artifact | Purpose |
 |---|----------|---------|
 | 01 | Sales Process | Stage definitions and criteria |
@@ -124,23 +150,19 @@ Edit `ideas/your-idea-name/business-context.md` with your business idea. This is
 | 06 | Sales Metrics | Pipeline and conversion tracking |
 | 07 | Scripts Library | Cold outreach, demos, closing |
 
-### Product Manager (`agents/product-manager.md`)
+### Engineering Manager (`.claude/agents/engineering-manager.md`)
 | # | Artifact | Purpose |
 |---|----------|---------|
-| 01 | Market Research | Competitor analysis, pricing |
-| 02 | PRD | Requirements and scope |
-| 03 | Tasks | Epics, stories, implementation tasks |
-| 04 | Product Metrics | Usage and adoption tracking |
-| 05 | Interview Template | Customer research structure |
-
-### Engineering Manager (`agents/engineering-manager.md`)
-| # | Artifact | Purpose |
-|---|----------|---------|
-| 01 | Architecture | Tech decisions, folder structure |
+| 01 | Architecture | Tech decisions (Nuxt 3 + SQLite) |
 | 02 | Setup Guide | Bootstrap instructions |
-| 03 | Implementation Tasks | Detailed coding tasks |
-| 04 | Code Templates | Reusable patterns |
+| 03 | Implementation Tasks | Phase-based coding tasks |
+| 04 | Code Templates | Reusable patterns (auth, CRUD, UI) |
 | 05 | Engineering Metrics | Ship velocity, quality |
+
+### Launch Orchestrator (`.claude/agents/launch-orchestrator.md`)
+| # | Artifact | Purpose |
+|---|----------|---------|
+| 00 | Launch Summary | Complete 21-day launch plan + all artifacts |
 
 ---
 
@@ -157,37 +179,64 @@ Edit `ideas/your-idea-name/business-context.md` with your business idea. This is
 
 ## 21-Day Launch Playbook
 
-A concrete timeline from idea to first outreach.
+A concrete timeline from idea to first 10 customers.
 
-### Week 1: Discovery (Days 1-7)
+### Day 1: Strategy Generation (1 day)
 
-| Day | Task | Agent | Output |
-|-----|------|-------|--------|
-| 1-2 | Fill business context | You | `business-context.md` |
-| 2-3 | Competitor research | Product | `01-market-research.md` |
-| 3-4 | Define ICP | Marketing | `01-icp-market-analysis.md` |
-| 5-6 | Create PRD | Product | `02-prd.md` |
-| 7 | Positioning & messaging | Marketing | `02-positioning-messaging.md` |
+| Time | Task | Tool | Output |
+|------|------|------|--------|
+| 30 min | Fill business context | You | `business-context.md` |
+| 15 min | Generate all artifacts | `@launch-orchestrator` | 24 artifacts + launch summary |
+| 30 min | Review PRD at a Glance | You | Understand MVP scope |
+| 15 min | Practice discovery call script | You | Sales readiness |
 
-### Week 2: Strategy (Days 8-14)
+**Total:** 90 minutes. You now have complete strategy.
 
-| Day | Task | Agent | Output |
-|-----|------|-------|--------|
-| 8-9 | GTM strategy | Marketing | `03-gtm-strategy.md` |
-| 9-10 | Sales process design | Sales | `01-sales-process.md` |
-| 10-11 | Discovery framework | Sales | `02-discovery-framework.md` |
-| 12 | LinkedIn outreach system | Marketing | `04-linkedin-outreach.md` |
-| 13-14 | Landing page strategy | Marketing | `05-landing-page.md` |
+### Week 1: Discovery & Validation (Days 2-7)
 
-### Week 3: Execution Setup (Days 15-21)
+| Day | Task | Action |
+|-----|------|--------|
+| 2-3 | Research 50 ICPs | Use marketing/01-icp to find prospects on LinkedIn |
+| 3-4 | Send 20 connection requests/day | Use marketing/04-outreach templates |
+| 4-5 | Book 5 discovery calls | Use sales/02-discovery-call framework |
+| 6-7 | Run calls, validate problem | Take notes, validate pain points |
 
-| Day | Task | Agent | Output |
-|-----|------|-------|--------|
-| 15-16 | Generate dev tasks | Product | `03-tasks.md` |
-| 16-17 | Architecture decisions | Engineering | `01-architecture.md` |
-| 17-18 | Qualification & objections | Sales | `03-qualification.md`, `04-objections.md` |
-| 19-20 | Set up metrics dashboards | All | `*-metrics.md` |
-| 21 | **Start outreach** | You | Real conversations! |
+**Goal:** Validate ICP and problem before building anything.
+
+### Week 2: Build Foundation + Outreach (Days 8-14)
+
+| Day | Task | Action |
+|-----|------|--------|
+| 8-9 | Bootstrap project | Follow engineering/02-setup-guide |
+| 9-10 | Build auth + database | Complete Phase 1 from engineering/03-tasks |
+| 11-13 | Build Feature 1 | Use engineering/04-code-templates |
+| 14 | Deploy to staging | Test core flow end-to-end |
+| **Daily** | Send 25 connections + follow-ups | Continuous outreach |
+
+**Goal:** Core flow working + 10+ discovery calls booked.
+
+### Week 3: Feature Complete + First Sales (Days 15-21)
+
+| Day | Task | Action |
+|-----|------|--------|
+| 15-17 | Build Features 2 & 3 | Complete MVP from PRD |
+| 17-18 | Beta test with 10 users | Screen share onboarding |
+| 19-20 | Fix critical bugs, polish | Empty states, error handling |
+| 21 | Public launch + close first 3 customers | Use sales/05-followup system |
+
+**Goal:** MVP live + first 3 paying customers.
+
+### Week 4: Scale to 10 Customers (Days 22-28)
+
+| Day | Task | Action |
+|-----|------|--------|
+| 22 | Launch announcement | LinkedIn, Twitter, communities |
+| 23-28 | 50 connections/day + discovery calls | Scale what's working |
+| 28 | Review metrics | Check marketing/sales/product metrics |
+
+**Goal:** 10 paying customers by end of Week 4.
+
+**Note:** This playbook assumes you run `@launch-orchestrator` on Day 1. See `ideas/[your-idea]/00-LAUNCH-SUMMARY.md` for detailed daily tasks.
 
 ---
 

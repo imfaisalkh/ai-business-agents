@@ -24,8 +24,7 @@ business-context.md (foundation)
 ```
 
 ### Directory Structure
-- `agents/` - Original markdown agent prompts (reference/documentation)
-- `.claude/agents/` - **Claude native agents (USE THESE)** - Automated, chainable agents
+- `.claude/agents/` - **Claude native agents** - Automated, chainable agents
 - `ideas/` - Business idea workspaces, each with isolated artifact folders
 - `ideas/_template/` - Template structure for new ideas
 - `scripts/` - Utility scripts (currently just new-idea.sh)
@@ -55,7 +54,7 @@ Alternative manual approach:
 cp -r ideas/_template ideas/my-idea-name
 ```
 
-### Working with Native Agents (Recommended)
+### Working with Native Agents
 
 **Claude native agents (in `.claude/agents/`) are automated and self-contained.** They handle dependencies automatically, chain together, and generate all artifacts with proper file management.
 
@@ -122,17 +121,6 @@ Native agents automatically check for and generate missing dependencies:
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
 4. Engineering Manager (requires: product/02-prd.md + product/03-tasks.md)
 
-### Working with Legacy Markdown Agents (Reference Only)
-
-Original markdown agents in `agents/` folder are kept for reference and portability to other LLMs:
-
-1. Read the agent prompt from `agents/[agent-name].md`
-2. Provide required input files as context (specified in each agent's documentation)
-3. Request specific artifacts by number (e.g., "generate artifact 01")
-4. Manually save outputs to `ideas/[idea-name]/[function]/[artifact-name].md`
-
-**Use native agents instead for automation and dependency management.**
-
 ## Key Concepts
 
 ### Artifact Numbering
@@ -147,21 +135,26 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
 - Constraints and success criteria
 
 ### Agent Types
-1. **Marketing Manager** (`agents/marketing-manager.md`)
+1. **Marketing Manager** (`.claude/agents/marketing-manager.md`)
    - Generates 7 artifacts: ICP analysis, positioning, GTM strategy, LinkedIn outreach, landing page, validation tactics, metrics
    - Focus: Distribution channels and customer messaging
 
-2. **Product Manager** (`agents/product-manager.md`)
-   - Generates 5 artifacts: Market research, PRD, tasks, metrics, interview templates
+2. **Product Manager** (`.claude/agents/product-manager.md`)
+   - Generates 5 artifacts: Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview templates
    - Focus: What to build and why (validate before building)
 
-3. **Sales Manager** (`agents/sales-manager.md`)
+3. **Sales Manager** (`.claude/agents/sales-manager.md`)
    - Generates 7 artifacts: Sales process, discovery framework, qualification, objection handling, follow-up, metrics, scripts
    - Focus: Converting prospects to customers
 
-4. **Engineering Manager** (`agents/engineering-manager.md`)
+4. **Engineering Manager** (`.claude/agents/engineering-manager.md`)
    - Generates 5 artifacts: Architecture, setup guide, implementation tasks, code templates, metrics
-   - Focus: Ship velocity and quality
+   - Focus: Ship velocity and quality (Nuxt 3 + Vue 3 + SQLite stack)
+
+5. **Launch Orchestrator** (`.claude/agents/launch-orchestrator.md`)
+   - Chains all 4 agents to generate complete 21-day launch strategy
+   - Creates comprehensive launch summary
+   - Focus: Complete strategy generation from idea to launch
 
 ### When to Re-run Agents
 Don't update artifacts randomly. Triggers include:
@@ -237,11 +230,12 @@ Agents are opinionated and direct:
 
 ## File Modification Guidelines
 
-When editing agent prompts (`agents/*.md`):
+When editing agent prompts (`.claude/agents/*.md`):
 - Keep the artifact templates intact (they're markdown code blocks)
 - Don't add enterprise-y fluff
 - Maintain focus on bootstrapped, solo founder context
 - Agent outputs should be immediately actionable
+- Test changes by running the agent on a test idea
 
 When creating new ideas:
 - Always start from `ideas/_template/`
@@ -250,8 +244,9 @@ When creating new ideas:
 
 ## Development Notes
 
-This is a documentation-based system, not a code project:
-- No build process, no dependencies
-- No tests (it's all markdown and bash)
-- The "code" is the agent prompts and templates
+This is an AI-native agent system:
+- Agents are Claude native agents (markdown format with YAML frontmatter)
+- No build process, no dependencies (beyond Claude Code CLI)
+- Agents handle all file operations automatically
 - Git is used for version control of artifacts and agent evolution
+- All agent logic is in `.claude/agents/` directory
