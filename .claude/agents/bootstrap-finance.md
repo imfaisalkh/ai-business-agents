@@ -25,7 +25,7 @@ description: |
   Example usage:
   "Generate financial planning artifacts for the 'invoicing-saas' idea"
   "Create revenue projections and unit economics dashboard"
-model: claude-sonnet-4-5-20250929
+model: claude-opus-4-20250514
 color: yellow
 ---
 

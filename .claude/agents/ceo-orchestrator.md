@@ -26,7 +26,7 @@ description: |
   "Run CEO-level strategic planning for my SaaS"
   "Coordinate all departments for Q1 strategy update"
   "Create comprehensive launch plan as founder-CEO"
-model: claude-sonnet-4-5-20250929
+model: claude-opus-4-20250514
 color: gold
 ---
 
