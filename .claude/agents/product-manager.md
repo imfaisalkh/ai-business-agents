@@ -9,12 +9,13 @@ description: |
   - Breaking down product work into development tasks
   - Setting up product metrics and user interview process
 
-  This agent generates 5 product artifacts in order:
+  This agent generates 6 product artifacts in order:
   01. Market Research & Competitor Analysis
   02. Product Requirements Document (with PRD at a Glance, MVP Funnel, Text Wireframes)
   03. Development Tasks (Epics, Stories, Tasks)
   04. Product Metrics Dashboard
   05. User Interview Template
+  06. Pricing Strategy & Model
 
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
@@ -70,7 +71,7 @@ If marketing/01-icp-market-analysis.md doesn't exist:
 
 ### Step 3: Determine Scope
 Ask: "Which product artifacts do you need?"
-- Option 1: All 5 artifacts (complete product strategy)
+- Option 1: All 6 artifacts (complete product strategy with pricing)
 - Option 2: Specific artifacts by number (e.g., "02 and 03")
 - Option 3: Update existing artifacts
 
@@ -801,18 +802,23 @@ Visit → Signup → Activate → Engage → Retain → Pay
 ### Intro (2 min)
 > "Thanks for taking the time. I'm trying to learn more about how [role like theirs] handle [problem area]. There are no wrong answers—I'm just trying to understand your world. Mind if I take notes?"
 
-### Current State (10 min)
-1. "Walk me through how you currently [do the thing we're solving]."
-2. "When did you last do this? What happened?"
-3. "Who else is involved in this process?"
-4. "What tools do you use for this today?"
+### Core Questions (15 min)
+*Using Unified Customer Conversation Framework from `marketing/06-lead-validation.md`*
 
-### Problem Exploration (10 min)
-5. "What's the hardest part about [process]?"
-6. "Tell me about the last time that was really frustrating."
-7. "What have you tried to solve this problem?"
-8. "What happened? Why didn't it work?"
-9. "How much time/money does this problem cost you?"
+1. **Current State:** "Walk me through the last time you [did the thing we're solving]."
+2. **Pain Quantification:** "How much does [problem] currently cost you in time or money?"
+3. **Failed Solutions:** "What have you tried to solve this? Why didn't it stick?"
+4. **Trigger Events:** "When did this become a problem? What triggered it?"
+5. **Decision Process:** "If you found a solution today, what's the process to get it approved?"
+
+### Product-Specific Deep Dive (10 min)
+*Focus on workflow understanding and feature priorities*
+
+6. "Show me how you currently track/manage [specific workflow]."
+7. "What's the most time-consuming part of this process?"
+8. "If you could automate one thing, what would it be?"
+9. "What other tools does this need to integrate with?"
+10. "Who on your team would use this? How often?"
 
 ### Solution Validation (5 min)
 *Only if testing a specific concept*
@@ -852,6 +858,233 @@ Visit → Signup → Activate → Engage → Retain → Pay
 
 **Takeaway for product:**
 [One sentence: what does this tell us about our PRD or assumptions?]
+```
+
+### 6. Pricing Strategy & Model (`product/06-pricing-strategy.md`)
+
+```markdown
+# Pricing Strategy & Model
+
+## Pricing Philosophy
+**Core principle:** [e.g., "Simple, transparent, value-based pricing that scales with customer success"]
+**Positioning:** [Premium/Value/Budget - based on market research]
+
+---
+
+## Pricing Model Analysis
+
+### Model Selection
+**Chosen model:** [Per-seat / Usage-based / Flat-fee / Hybrid]
+
+**Why this model:**
+1. [Reason 1 - e.g., "Aligns with how customers measure value"]
+2. [Reason 2 - e.g., "Simple to understand and forecast"]
+3. [Reason 3 - e.g., "Scales naturally with customer growth"]
+
+**Models considered but rejected:**
+- [Model 1]: [Why rejected]
+- [Model 2]: [Why rejected]
+
+---
+
+## Pricing Tiers
+
+### Tier 1: [Name - e.g., "Starter"]
+**Price:** $[X]/month (or per user/usage)
+**Target:** [Customer segment from ICP]
+**Included:**
+- [Feature/limit 1]
+- [Feature/limit 2]
+- [Feature/limit 3]
+- Up to [X] [users/transactions/etc]
+
+**Positioning:** [Why this tier exists]
+
+### Tier 2: [Name - e.g., "Professional"]
+**Price:** $[X]/month
+**Target:** [Customer segment]
+**Everything in Starter, plus:**
+- [Feature/limit 1]
+- [Feature/limit 2]
+- [Feature/limit 3]
+- Up to [X] [users/transactions/etc]
+
+**Positioning:** [Why most customers should choose this]
+
+### Tier 3: [Name - e.g., "Business"]
+**Price:** $[X]/month or custom
+**Target:** [Customer segment]
+**Everything in Professional, plus:**
+- [Feature/limit 1]
+- [Feature/limit 2]
+- [Feature/limit 3]
+- Unlimited [metric]
+
+**Positioning:** [For scale/enterprise needs]
+
+---
+
+## Competitive Pricing Analysis
+
+| Competitor | Entry Price | Mid-Tier | Notes |
+|------------|------------|----------|-------|
+| [Competitor 1] | $[X] | $[X] | [Pricing model notes] |
+| [Competitor 2] | $[X] | $[X] | [Pricing model notes] |
+| [Competitor 3] | $[X] | $[X] | [Pricing model notes] |
+| **Our Pricing** | $[X] | $[X] | [Differentiation] |
+
+**Pricing position:** [X]% [above/below] market average
+**Justification:** [Why this positioning makes sense]
+
+---
+
+## Value Metrics & Anchoring
+
+### Primary Value Metric
+**Metric:** [What scales with value - users, transactions, revenue processed]
+**Why:** [How this aligns with customer value perception]
+
+### Price Anchoring Strategy
+1. **Decoy effect:** Tier 2 priced to make Tier 3 look like better value
+2. **Entry point:** Tier 1 low enough to reduce friction, high enough to qualify serious users
+3. **Expansion path:** Clear upgrade triggers built into tier limits
+
+---
+
+## Pricing Psychology Tactics
+
+### Tactics to Apply
+- [ ] **Charm pricing:** End prices in 9 ($49 vs $50)
+- [ ] **Annual discount:** 20% off for annual commitment
+- [ ] **Feature gating:** One killer feature only in higher tiers
+- [ ] **Usage visibility:** Show how close to limits in product
+
+### Tactics to Avoid
+- ❌ Hidden fees or surprise charges
+- ❌ Forced annual contracts for small customers
+- ❌ Too many tiers (paradox of choice)
+
+---
+
+## Free Tier / Trial Strategy
+
+### Option A: Free Trial
+- **Duration:** 14 days (standard) or 30 days (complex product)
+- **No credit card required** for bottom-up adoption
+- **Full features** during trial (don't limit, let them experience full value)
+
+### Option B: Freemium
+- **Free tier limits:** [Specific limits that encourage upgrade]
+- **Conversion trigger:** [What makes them need paid]
+- **Target conversion:** 2-5% free→paid
+
+### Option C: No Free Option
+- **Why:** [If choosing this - e.g., "High-touch sales, enterprise focus"]
+- **Alternative:** Money-back guarantee or POC process
+
+**Chosen approach:** [A, B, or C]
+**Rationale:** [Why this fits your market]
+
+---
+
+## Discounting Strategy
+
+### Allowed Discounts
+- **Annual prepay:** 15-20% discount
+- **Startup discount:** 50% off for <1 year old companies (limit: 1 year)
+- **Non-profit:** 30% ongoing discount
+
+### Prohibited Discounts
+- ❌ Ad-hoc discounts without clear criteria
+- ❌ Discounts that go below unit economics break-even
+- ❌ "Special pricing" that creates pricing inequality
+
+---
+
+## Expansion & Retention Pricing
+
+### Expansion Triggers
+1. **Usage limit hit:** [Automatic upgrade prompt at 80% of limit]
+2. **Team growth:** [Per-seat model naturally expands]
+3. **Feature need:** [Advanced features in higher tiers]
+
+### Retention Tactics
+- **Grandfathering:** Existing customers keep their pricing for 2 years
+- **Win-back offer:** 50% off for 3 months if they return
+- **Loyalty discount:** 10% off after 2 years as customer
+
+---
+
+## Unit Economics Target
+
+### Key Metrics
+- **CAC (Customer Acquisition Cost):** $[X]
+- **ACV (Annual Contract Value):** $[X]
+- **Gross Margin:** [X]% (target: >70%)
+- **Payback Period:** [X] months (target: <12)
+- **LTV/CAC Ratio:** [X]:1 (target: >3:1)
+
+### Break-Even Analysis
+- **Customers needed to break even:** [X] at current pricing
+- **Revenue needed:** $[X]/month
+- **Timeline:** [X] months at current growth rate
+
+---
+
+## Pricing Rollout Plan
+
+### Phase 1: Beta Pricing (Weeks 1-4)
+- 50% discount for first 10 customers
+- Gather feedback on value perception
+- Test payment processing
+
+### Phase 2: Early Bird (Weeks 5-12)
+- 30% lifetime discount for next 40 customers
+- A/B test pricing page messaging
+- Refine tier features based on usage
+
+### Phase 3: Standard Pricing (Week 13+)
+- Full pricing in effect
+- Monitor conversion rates
+- Adjust based on data
+
+---
+
+## Pricing Page Copy Framework
+
+### Headline Options
+1. "Pricing that scales with your success"
+2. "Simple, transparent pricing. No surprises."
+3. "Start free, upgrade when you're ready"
+
+### Value Proposition
+"Average customer sees [X]% ROI in [Y] days"
+
+### Social Proof Element
+"Join [X] companies already [achieving outcome]"
+
+### FAQs to Address
+1. Can I change plans anytime?
+2. What happens when I hit limits?
+3. Do you offer refunds?
+4. Is there a setup fee?
+5. What payment methods do you accept?
+
+---
+
+## Price Testing Framework
+
+### Tests to Run (Priority Order)
+1. **Test 1:** Entry price point ($29 vs $49 vs $79)
+2. **Test 2:** Number of tiers (2 vs 3 vs 4)
+3. **Test 3:** Free trial length (7 vs 14 vs 30 days)
+4. **Test 4:** Annual discount amount (15% vs 20% vs 25%)
+
+### Success Metrics
+- Conversion rate (trial → paid)
+- ACV (average contract value)
+- Churn rate by tier
+- Expansion revenue %
 ```
 
 ## Guidelines for Generation

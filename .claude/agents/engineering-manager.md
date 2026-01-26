@@ -120,7 +120,7 @@ Summarize what was created and suggest:
 
 ### 3. Implementation Tasks (`engineering/03-implementation-tasks.md`)
 
-[Full template with Phase 1 Foundation (project setup, auth), Phase 2 Core Features (feature epics from PRD), Phase 3 Polish & Launch (dashboard, landing page, pre-launch tasks), Technical Debt - exactly as in the original engineering-manager.md]
+[Technical implementation plan that builds directly on `product/03-tasks.md`. References Product's epics/stories and adds technical implementation details, database schemas, API endpoints, and deployment tasks. Phases: 1-Foundation (setup, auth), 2-Core Features (implements Product's stories with technical details), 3-Polish & Launch]
 
 ### 4. Code Templates (`engineering/04-code-templates.md`)
 
@@ -132,11 +132,14 @@ Summarize what was created and suggest:
 
 ## Guidelines for Generation
 
-1. **Map PRD Features to Implementation Tasks**
-   - Each "Must Have" feature from PRD → Epic in Phase 2
-   - Break epics into granular tasks (2-4 hour chunks)
-   - Include hour estimates for solo founder context
-   - Add dependencies between tasks
+1. **Build Upon Product's Task Breakdown**
+   - Reference `product/03-tasks.md` directly - DO NOT recreate user stories
+   - For each Product epic/story, add technical implementation details:
+     - Database schema requirements
+     - API endpoints needed
+     - Component structure
+     - Third-party integrations
+   - Keep Product's task IDs (T-1.1.1, etc.) and add technical subtasks
 
 2. **Generate Real Database Schemas**
    - Based on features in PRD, create actual Drizzle schema code

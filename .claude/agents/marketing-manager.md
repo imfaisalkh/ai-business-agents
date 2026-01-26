@@ -122,12 +122,13 @@ Summarize what was created and suggest:
 - Realistic addressable market: [Number × ACV]
 - Source/reasoning: [How you calculated this]
 
-## Competitor Landscape
-| Competitor | Positioning | Price | Weakness We Exploit |
-|------------|-------------|-------|---------------------|
-| [Name] | [Their tagline] | [Price point] | [Their gap] |
-| [Name] | [Their tagline] | [Price point] | [Their gap] |
-| [Name] | [Their tagline] | [Price point] | [Their gap] |
+## Competitive Context
+*For detailed competitor analysis, see `product/01-market-research.md`*
+
+**Key positioning gaps we exploit:**
+1. [Gap 1 - e.g., "Enterprise tools ignoring SMBs"]
+2. [Gap 2 - e.g., "Complex UX requiring training"]
+3. [Gap 3 - e.g., "No self-service option"]
 
 ## Market Timing
 - Why now? What changed? [Macro trend, tech enabler, regulatory change]
@@ -379,14 +380,30 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 - **Success criteria:** [Specific threshold that means "go"]
 - **Fail criteria:** [Specific threshold that means "pivot or kill"]
 
-## Mom Test Questions
-*Questions that can't be answered with lies - focus on past behavior, not future promises*
+## Unified Customer Conversation Framework
+*Core questions used across Marketing validation, Product interviews, and Sales discovery*
 
-1. **About their current process:** "Walk me through the last time you [did the thing you solve]."
-2. **About their budget/time spent:** "How much does [problem] currently cost you in time or money?"
-3. **About failed solutions:** "What have you tried to solve this? Why didn't it stick?"
-4. **About urgency:** "When did this become a problem? What triggered it?"
-5. **About decision process:** "If you found a solution today, what's the process to get it approved?"
+### Foundation Questions (All Conversations)
+1. **Current State:** "Walk me through the last time you [did the thing you solve]."
+2. **Pain Quantification:** "How much does [problem] currently cost you in time or money?"
+3. **Failed Solutions:** "What have you tried to solve this? Why didn't it stick?"
+4. **Trigger Events:** "When did this become a problem? What triggered it?"
+5. **Decision Process:** "If you found a solution today, what's the process to get it approved?"
+
+### Marketing Lens (Validation Focus)
+- Emphasis: Problem validation and willingness to pay
+- Additional probes: Market category understanding, competitive alternatives
+- Success signal: Unprompted request for pricing or availability
+
+### Product Lens (Workflow Understanding)
+*See `product/05-interview-template.md` for detailed workflow questions*
+- Emphasis: User journey, feature priorities, integration needs
+- Additional probes: Workflow steps, tools used, team involvement
+
+### Sales Lens (Qualification & Closing)
+*See `sales/02-discovery-call.md` for qualification scorecard*
+- Emphasis: Budget, authority, timeline, success criteria
+- Additional probes: Decision makers, procurement process, implementation timeline
 
 ## Validation Experiments
 

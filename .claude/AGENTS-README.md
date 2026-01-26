@@ -2,6 +2,26 @@
 
 This directory contains automated Claude native agents for generating complete SaaS business strategies.
 
+## Recent Changes (v2.1)
+
+### Major Update
+- **CEO Orchestrator** (renamed from Launch Orchestrator) - Now reflects its true role as CEO-level coordinator of all 5 departments
+
+### New Features
+- **Bootstrap Finance Agent** - Complete financial planning with revenue projections, unit economics, burn rate tracking
+- **Pricing Strategy Module** - Added to Product Manager (artifact #6) with comprehensive pricing model, tiers, and psychology
+- **Unified Customer Conversation Framework** - Shared foundation questions across Marketing, Product, and Sales agents
+
+### Improvements
+- **Eliminated Overlaps** - Removed competitor analysis duplication (now only in Product)
+- **Unified Task Management** - Engineering now references Product's tasks instead of recreating them
+- **Better Dependencies** - Finance agent leverages pricing and marketing metrics for accurate modeling
+
+### Stats
+- Total artifacts: 30 (up from 24)
+- Agents: 6 (added Bootstrap Finance)
+- Reduced duplication: ~40% less overlap between agents
+
 ## Quick Start
 
 ### Step 1: Create New Idea
@@ -14,41 +34,45 @@ Edit `ideas/my-saas-idea/business-context.md` with your business details.
 
 ### Step 3: Generate Strategy
 ```
-@launch-orchestrator generate complete launch strategy for my-saas-idea
+@ceo-orchestrator generate complete business strategy for my-saas-idea
 ```
 
-This runs all 4 specialist agents in sequence and generates:
+This runs all 5 specialist agents in sequence and generates:
 - 7 marketing artifacts
-- 5 product artifacts
+- 6 product artifacts (including new Pricing Strategy)
 - 7 sales artifacts
 - 5 engineering artifacts
+- 5 financial artifacts (new Bootstrap Finance agent)
 - 1 launch summary
 
-**Total:** 24 artifacts + actionable 21-day launch plan
+**Total:** 30 artifacts + actionable 21-day launch plan
 
 ---
 
 ## Available Agents
 
-### 1. `launch-orchestrator.md` (Master Agent)
-**Use when:** Starting a new idea from scratch
+### 1. `ceo-orchestrator.md` (CEO-Level Master Agent)
+**Use when:** Need comprehensive strategy across all business functions
 
 **What it does:**
-- Runs marketing-manager → product-manager → sales-manager → engineering-manager in sequence
+- Acts as CEO coordinating all 5 department managers in sequence
+- Marketing → Product → Sales → Engineering → Finance
 - Handles all dependencies automatically
-- Generates comprehensive launch summary with 21-day plan
-- Creates 24 artifacts across all functions
+- Creates 30 artifacts across all functions
+- Generates executive summary with 21-day execution plan
 
 **Example:**
 ```
-@launch-orchestrator generate complete launch strategy for invoicing-saas
+@ceo-orchestrator generate complete business strategy for invoicing-saas
+@ceo-orchestrator run quarterly strategic planning for my-saas
 ```
 
 **Output:**
 - `ideas/[idea]/marketing/` - 7 artifacts
-- `ideas/[idea]/product/` - 5 artifacts
+- `ideas/[idea]/product/` - 6 artifacts (includes Pricing Strategy)
 - `ideas/[idea]/sales/` - 7 artifacts
 - `ideas/[idea]/engineering/` - 5 artifacts
+- `ideas/[idea]/finance/` - 5 artifacts (new!)
 - `ideas/[idea]/00-LAUNCH-SUMMARY.md` - Master playbook
 
 ---
@@ -77,9 +101,9 @@ This runs all 4 specialist agents in sequence and generates:
 ---
 
 ### 3. `product-manager.md`
-**Use when:** Need PRD, feature planning, MVP definition
+**Use when:** Need PRD, feature planning, MVP definition, pricing strategy
 
-**What it generates (5 artifacts):**
+**What it generates (6 artifacts):**
 1. Market Research & Competitor Analysis
 2. Product Requirements Document
    - PRD at a Glance (forces crisp choices)
@@ -88,6 +112,7 @@ This runs all 4 specialist agents in sequence and generates:
 3. Development Tasks (Epics, Stories, Tasks)
 4. Product Metrics Dashboard
 5. User Interview Template
+6. Pricing Strategy & Model (NEW)
 
 **Dependencies:**
 - Required: `business-context.md`
@@ -149,14 +174,36 @@ This runs all 4 specialist agents in sequence and generates:
 
 ---
 
+### 6. `bootstrap-finance.md` (NEW!)
+**Use when:** Need financial planning, unit economics, revenue projections
+
+**What it generates (5 artifacts):**
+1. Revenue Model & Projections (24-month forecast)
+2. Unit Economics Dashboard (CAC, LTV, payback)
+3. Burn Rate & Runway Tracker (cash management)
+4. Financial Metrics & KPIs (SaaS metrics)
+5. Fundraising Readiness Checklist (even if bootstrapping)
+
+**Dependencies:**
+- Required: `business-context.md`
+- Recommended: `product/06-pricing-strategy.md` + `marketing/07-marketing-metrics.md`
+- Auto-generated: Will generate pricing and metrics if missing
+
+**Example:**
+```
+@bootstrap-finance generate all financial artifacts for invoicing-saas
+```
+
+---
+
 ## Usage Patterns
 
-### Pattern 1: Complete Strategy (New Idea)
+### Pattern 1: Complete Strategy (CEO Mode)
 ```
-@launch-orchestrator generate complete launch strategy for my-idea
+@ceo-orchestrator generate complete business strategy for my-idea
 ```
 **Time:** ~15-20 minutes
-**Output:** 24 artifacts + launch summary
+**Output:** 30 artifacts + executive summary
 
 ---
 
@@ -203,18 +250,21 @@ product-manager (needs marketing/01)
 sales-manager (needs marketing/01, 02)
     ↓
 engineering-manager (needs product/02, 03)
+    ↓
+bootstrap-finance (needs product/06, marketing/07)
 ```
 
 ---
 
 ## Best Practices
 
-### 1. Start with Orchestrator
-For new ideas, always use `launch-orchestrator` first. It ensures:
+### 1. Start with CEO Orchestrator
+For comprehensive strategy, use `ceo-orchestrator` first. It ensures:
+- CEO-level coordination across all departments
 - Optimal execution order
 - No missing dependencies
-- Comprehensive launch summary
-- All artifacts in 1 run
+- Complete business strategy in one run
+- Executive summary with action plan
 
 ### 2. Fill Out Business Context Completely
 Before running ANY agent, ensure `ideas/[idea]/business-context.md` is complete:
@@ -281,10 +331,11 @@ npm run new-idea my-idea
 ## Files in This Directory
 
 - `marketing-manager.md` - Marketing strategy agent
-- `product-manager.md` - Product strategy agent
+- `product-manager.md` - Product strategy agent (with pricing)
 - `sales-manager.md` - Sales process agent
 - `engineering-manager.md` - Engineering architecture agent
-- `launch-orchestrator.md` - Master orchestrator agent
+- `bootstrap-finance.md` - Financial planning agent (NEW)
+- `ceo-orchestrator.md` - CEO-level master agent (coordinates all 5 departments)
 - `AGENTS-README.md` - This file
 
 ---

@@ -67,11 +67,12 @@ cp -r ideas/_template ideas/my-idea-name
 
 #### Available Native Agents
 
-1. **`launch-orchestrator`** - Master agent that runs ALL 4 specialist agents in order
-   - Generates complete 21-day launch strategy (24 artifacts)
+1. **`ceo-orchestrator`** - CEO-level master agent that coordinates ALL 5 departments
+   - Generates complete business strategy (30 artifacts)
+   - Acts as strategic CEO coordinating all functions
    - Handles all dependencies automatically
-   - Creates comprehensive launch summary
-   - **Best for:** New ideas, complete strategy generation
+   - Creates executive summary with 21-day action plan
+   - **Best for:** Comprehensive strategy, quarterly planning, new ideas
 
 2. **`marketing-manager`** - Generates 7 marketing artifacts
    - ICP analysis, positioning, GTM, LinkedIn outreach, landing page, validation, metrics
@@ -94,11 +95,11 @@ cp -r ideas/_template ideas/my-idea-name
 
 #### How to Use Native Agents
 
-**Method 1: Quick Launch (Recommended for new ideas)**
+**Method 1: CEO Strategy (Recommended for comprehensive planning)**
 ```
-@launch-orchestrator generate complete launch strategy for [idea-name]
+@ceo-orchestrator generate complete business strategy for [idea-name]
 ```
-This runs all 4 agents in sequence and generates 24 artifacts + launch summary.
+This coordinates all 5 departments and generates 30 artifacts + executive summary.
 
 **Method 2: Individual Agents**
 ```
@@ -120,7 +121,8 @@ Native agents automatically check for and generate missing dependencies:
 - **Product Manager** → Auto-generates marketing/01-icp if missing
 - **Sales Manager** → Auto-generates marketing/01-icp and 02-positioning if missing
 - **Engineering Manager** → Auto-generates product/02-prd and 03-tasks if missing
-- **Launch Orchestrator** → Runs all agents in optimal order
+- **Bootstrap Finance** → Auto-generates product/06-pricing and marketing/07-metrics if missing
+- **CEO Orchestrator** → Coordinates all 5 departments in optimal order
 
 **Manual Execution Order** (if not using orchestrator):
 1. Marketing Manager (requires: business-context.md)
@@ -174,11 +176,11 @@ Don't update artifacts randomly. Triggers include:
 
 ### Starting a New Idea (21-Day Launch Playbook)
 
-#### Option A: Automated (Recommended)
+#### Option A: CEO-Orchestrated (Recommended)
 1. Create new idea: `npm run new-idea my-saas-idea`
 2. Fill out `ideas/my-saas-idea/business-context.md` completely
-3. Run: `@launch-orchestrator generate complete launch strategy for my-saas-idea`
-4. Review `ideas/my-saas-idea/00-LAUNCH-SUMMARY.md` for next steps
+3. Run: `@ceo-orchestrator generate complete business strategy for my-saas-idea`
+4. Review `ideas/my-saas-idea/00-LAUNCH-SUMMARY.md` for executive action plan
 5. Execute the 21-Day Launch Plan from the summary
 
 **Total time:** 30 min setup + 15 min for agent to generate all artifacts

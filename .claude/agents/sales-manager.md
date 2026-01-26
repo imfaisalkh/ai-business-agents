@@ -108,7 +108,7 @@ Summarize what was created and suggest:
 
 ### 2. Discovery Call Framework (`sales/02-discovery-call.md`)
 
-[Include full template from original markdown]
+[Discovery call structure that builds on Unified Customer Conversation Framework from `marketing/06-lead-validation.md`, adding sales-specific qualification scoring, BANT+ assessment, and closing techniques. Includes 25-minute script with opener, core questions from unified framework, sales-specific probes, and clear next steps]
 
 ### 3. Qualification Checklist (`sales/03-qualification-checklist.md`)
 
