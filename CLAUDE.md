@@ -24,7 +24,8 @@ business-context.md (foundation)
 ```
 
 ### Directory Structure
-- `agents/` - Shared agent system prompts (4 agents: marketing, product, sales, engineering)
+- `agents/` - Original markdown agent prompts (reference/documentation)
+- `.claude/agents/` - **Claude native agents (USE THESE)** - Automated, chainable agents
 - `ideas/` - Business idea workspaces, each with isolated artifact folders
 - `ideas/_template/` - Template structure for new ideas
 - `scripts/` - Utility scripts (currently just new-idea.sh)
@@ -54,19 +55,83 @@ Alternative manual approach:
 cp -r ideas/_template ideas/my-idea-name
 ```
 
-### Working with Agents
-Agents are not executed directly - they are system prompts to be used with Claude or other LLMs:
+### Working with Native Agents (Recommended)
 
-1. Read the agent prompt from `agents/[agent-name].md`
-2. Provide required input files as context (specified in each agent's documentation)
-3. Request specific artifacts by number (e.g., "generate artifact 01")
-4. Save outputs to `ideas/[idea-name]/[function]/[artifact-name].md`
+**Claude native agents (in `.claude/agents/`) are automated and self-contained.** They handle dependencies automatically, chain together, and generate all artifacts with proper file management.
 
-**Agent Execution Order:**
+#### Available Native Agents
+
+1. **`launch-orchestrator`** - Master agent that runs ALL 4 specialist agents in order
+   - Generates complete 21-day launch strategy (24 artifacts)
+   - Handles all dependencies automatically
+   - Creates comprehensive launch summary
+   - **Best for:** New ideas, complete strategy generation
+
+2. **`marketing-manager`** - Generates 7 marketing artifacts
+   - ICP analysis, positioning, GTM, LinkedIn outreach, landing page, validation, metrics
+   - **Best for:** Marketing strategy, customer research, go-to-market planning
+
+3. **`product-manager`** - Generates 5 product artifacts
+   - Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview template
+   - Auto-generates marketing dependencies if missing
+   - **Best for:** Product strategy, feature planning, PRD creation
+
+4. **`sales-manager`** - Generates 7 sales artifacts
+   - Sales process, discovery calls, qualification, objections, follow-up, metrics, scripts
+   - Auto-generates marketing dependencies if missing
+   - **Best for:** Sales process design, founder-led sales systems
+
+5. **`engineering-manager`** - Generates 5 engineering artifacts
+   - Architecture, setup guide, implementation tasks, code templates, metrics
+   - Auto-generates product dependencies if missing
+   - **Best for:** Technical architecture, development planning, code scaffolding
+
+#### How to Use Native Agents
+
+**Method 1: Quick Launch (Recommended for new ideas)**
+```
+@launch-orchestrator generate complete launch strategy for [idea-name]
+```
+This runs all 4 agents in sequence and generates 24 artifacts + launch summary.
+
+**Method 2: Individual Agents**
+```
+@marketing-manager generate all artifacts for [idea-name]
+@product-manager generate all artifacts for [idea-name]
+@sales-manager generate all artifacts for [idea-name]
+@engineering-manager generate all artifacts for [idea-name]
+```
+
+**Method 3: Specific Artifacts**
+```
+@product-manager generate PRD and tasks for [idea-name]
+@sales-manager generate discovery call framework and objection handling
+```
+
+#### Agent Dependencies (Auto-Handled)
+
+Native agents automatically check for and generate missing dependencies:
+- **Product Manager** → Auto-generates marketing/01-icp if missing
+- **Sales Manager** → Auto-generates marketing/01-icp and 02-positioning if missing
+- **Engineering Manager** → Auto-generates product/02-prd and 03-tasks if missing
+- **Launch Orchestrator** → Runs all agents in optimal order
+
+**Manual Execution Order** (if not using orchestrator):
 1. Marketing Manager (requires: business-context.md)
 2. Product Manager (requires: business-context.md + marketing/01-icp-market-analysis.md)
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
 4. Engineering Manager (requires: product/02-prd.md + product/03-tasks.md)
+
+### Working with Legacy Markdown Agents (Reference Only)
+
+Original markdown agents in `agents/` folder are kept for reference and portability to other LLMs:
+
+1. Read the agent prompt from `agents/[agent-name].md`
+2. Provide required input files as context (specified in each agent's documentation)
+3. Request specific artifacts by number (e.g., "generate artifact 01")
+4. Manually save outputs to `ideas/[idea-name]/[function]/[artifact-name].md`
+
+**Use native agents instead for automation and dependency management.**
 
 ## Key Concepts
 
@@ -108,23 +173,40 @@ Don't update artifacts randomly. Triggers include:
 ## Workflow Patterns
 
 ### Starting a New Idea (21-Day Launch Playbook)
+
+#### Option A: Automated (Recommended)
+1. Create new idea: `./scripts/new-idea.sh my-saas-idea`
+2. Fill out `ideas/my-saas-idea/business-context.md` completely
+3. Run: `@launch-orchestrator generate complete launch strategy for my-saas-idea`
+4. Review `ideas/my-saas-idea/00-LAUNCH-SUMMARY.md` for next steps
+5. Execute the 21-Day Launch Plan from the summary
+
+**Total time:** 30 min setup + 15 min for agent to generate all artifacts
+
+#### Option B: Manual (Step-by-Step)
 **Week 1: Discovery**
-1. Fill out business-context.md
-2. Run Product Manager for competitor research
-3. Run Marketing Manager for ICP analysis
-4. Generate PRD and positioning
+1. Create idea + fill out business-context.md
+2. Run `@marketing-manager generate all artifacts for [idea]`
+3. Run `@product-manager generate all artifacts for [idea]`
+4. Review ICP, positioning, and PRD
 
 **Week 2: Strategy**
-1. Complete GTM strategy
-2. Design sales process
-3. Set up LinkedIn outreach
-4. Create landing page strategy
+1. Run `@sales-manager generate all artifacts for [idea]`
+2. Practice discovery call framework
+3. Prepare LinkedIn outreach templates
+4. Start customer conversations
 
 **Week 3: Execution**
-1. Generate development tasks
-2. Define architecture
-3. Set up metrics dashboards
-4. **Start outreach**
+1. Run `@engineering-manager generate all artifacts for [idea]`
+2. Bootstrap project using setup guide
+3. Start Phase 1 implementation (auth + foundation)
+4. Deploy MVP features and continue outreach
+
+**Week 4: Launch**
+1. Complete MVP build
+2. Beta test with first users
+3. Public launch
+4. Track metrics and iterate
 
 ### Managing Multiple Ideas
 - Each idea is completely isolated in its own folder
