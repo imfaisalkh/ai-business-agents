@@ -45,9 +45,16 @@ Each idea in `ideas/[idea-name]/` follows this structure:
 
 ### Creating a New Idea
 ```bash
-./scripts/new-idea.sh my-idea-name
+npm run new-idea my-idea-name
 ```
 This copies `ideas/_template/` to `ideas/my-idea-name/` and updates the README.
+
+### Other Useful Commands
+```bash
+npm run list-ideas          # List all existing ideas
+npm run list-agents         # List all available agents
+npm run help                # Show all available commands
+```
 
 Alternative manual approach:
 ```bash
@@ -168,7 +175,7 @@ Don't update artifacts randomly. Triggers include:
 ### Starting a New Idea (21-Day Launch Playbook)
 
 #### Option A: Automated (Recommended)
-1. Create new idea: `./scripts/new-idea.sh my-saas-idea`
+1. Create new idea: `npm run new-idea my-saas-idea`
 2. Fill out `ideas/my-saas-idea/business-context.md` completely
 3. Run: `@launch-orchestrator generate complete launch strategy for my-saas-idea`
 4. Review `ideas/my-saas-idea/00-LAUNCH-SUMMARY.md` for next steps

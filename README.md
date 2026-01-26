@@ -46,7 +46,7 @@ ai-business-agents/
 
 ```bash
 # 1. Create new idea
-./scripts/new-idea.sh your-idea-name
+npm run new-idea your-idea-name
 
 # 2. Fill out business context
 # Edit ideas/your-idea-name/business-context.md
@@ -63,7 +63,7 @@ ai-business-agents/
 
 ```bash
 # 1. Create new idea
-./scripts/new-idea.sh your-idea-name
+npm run new-idea your-idea-name
 
 # 2. Fill out business context
 # Edit ideas/your-idea-name/business-context.md
@@ -82,6 +82,17 @@ ai-business-agents/
 4. Engineering Manager → 5 engineering artifacts (needs product/02-prd, 03-tasks)
 
 **Note:** Agents automatically check for and generate missing dependencies
+
+---
+
+## Available Commands
+
+```bash
+npm run new-idea <name>     # Create new idea from template
+npm run list-ideas          # List all existing ideas
+npm run list-agents         # List all available agents
+npm run help                # Show help with all commands
+```
 
 ---
 

@@ -4,9 +4,17 @@ This directory contains automated Claude native agents for generating complete S
 
 ## Quick Start
 
-### For New Ideas (Recommended)
+### Step 1: Create New Idea
+```bash
+npm run new-idea my-saas-idea
 ```
-@launch-orchestrator generate complete launch strategy for [idea-name]
+
+### Step 2: Fill Business Context
+Edit `ideas/my-saas-idea/business-context.md` with your business details.
+
+### Step 3: Generate Strategy
+```
+@launch-orchestrator generate complete launch strategy for my-saas-idea
 ```
 
 This runs all 4 specialist agents in sequence and generates:
@@ -232,12 +240,25 @@ When iterating on strategy:
 
 ---
 
+## Available Commands
+
+Before running agents, use these npm commands:
+
+```bash
+npm run new-idea <name>     # Create new idea from template
+npm run list-ideas          # List all existing ideas
+npm run list-agents         # List all available agents
+npm run help                # Show help with all commands
+```
+
+---
+
 ## Troubleshooting
 
 ### "business-context.md not found"
 **Solution:** Create idea folder and fill out business context:
 ```bash
-./scripts/new-idea.sh my-idea
+npm run new-idea my-idea
 # Fill out ideas/my-idea/business-context.md
 ```
 
