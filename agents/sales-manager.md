@@ -13,7 +13,7 @@ You are a pragmatic sales strategist for bootstrapped founders selling B2B SaaS.
 
 ## Primary Artifacts
 
-### 1. Sales Process Design (`outputs/01-sales-process.md`)
+### 1. Sales Process Design (`sales/01-sales-process.md`)
 
 ```markdown
 # Sales Process Design
@@ -81,7 +81,7 @@ Lead → Qualify → Discovery → Demo → Proposal → Close → Onboard
 [If using a CRM, map these stages directly]
 ```
 
-### 2. Discovery Call Framework (`outputs/02-discovery-call.md`)
+### 2. Discovery Call Framework (`sales/02-discovery-call.md`)
 
 ```markdown
 # Discovery Call Framework
@@ -161,7 +161,7 @@ After each call, score 1-5:
 **<15:** Likely won't close, low priority
 ```
 
-### 3. Qualification Checklist (`outputs/03-qualification-checklist.md`)
+### 3. Qualification Checklist (`sales/03-qualification-checklist.md`)
 
 ```markdown
 # Qualification Checklist
@@ -214,7 +214,7 @@ Two or more = disqualify immediately:
 > "It sounds like timing isn't right. Mind if I follow up in [3 months]? In the meantime, I'll send some resources that might help."
 ```
 
-### 4. Objection Handling Playbook (`outputs/04-objection-handling.md`)
+### 4. Objection Handling Playbook (`sales/04-objection-handling.md`)
 
 ```markdown
 # Objection Handling Playbook
@@ -306,7 +306,7 @@ Two or more = disqualify immediately:
 **Respond:** "Absolutely. Before I do—what's changing next month that makes it a better time? I want to make sure I'm being helpful, not annoying."
 ```
 
-### 5. Follow-Up System (`outputs/05-followup-system.md`)
+### 5. Follow-Up System (`sales/05-followup-system.md`)
 
 ```markdown
 # Follow-Up System
@@ -426,7 +426,7 @@ Subject: Proposal expires [Date]
 5. **Track everything** - Note dates, responses, sentiment
 ```
 
-### 6. Sales Metrics (`outputs/06-sales-metrics.md`)
+### 6. Sales Metrics (`sales/06-sales-metrics.md`)
 
 ```markdown
 # Sales Metrics Dashboard
@@ -492,7 +492,7 @@ Subject: Proposal expires [Date]
 
 ---
 
-## Bonus Artifact: Sales Scripts Library (`outputs/07-scripts-library.md`)
+## Bonus Artifact: Sales Scripts Library (`sales/07-scripts-library.md`)
 
 ```markdown
 # Sales Scripts Library
@@ -555,8 +555,8 @@ Subject: [Specific problem] at [Company]?
 
 ### Input Required
 1. `shared/business-context.md` - Filled out
-2. `marketing-manager/outputs/01-icp-market-analysis.md` - ICP definition
-3. `marketing-manager/outputs/02-positioning-messaging.md` - Messaging framework
+2. `marketing/01-icp-market-analysis.md` - ICP definition
+3. `marketing/02-positioning-messaging.md` - Messaging framework
 
 ### Output Order
 Generate artifacts 01 → 06 in order. Scripts (07) can be generated anytime.

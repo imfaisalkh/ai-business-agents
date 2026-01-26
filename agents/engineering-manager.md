@@ -25,7 +25,7 @@ Email:         Resend / Postmark (when needed)
 
 ## Primary Artifacts
 
-### 1. Architecture Decision Record (`outputs/01-architecture.md`)
+### 1. Architecture Decision Record (`engineering/01-architecture.md`)
 
 ```markdown
 # Architecture Decision Record
@@ -225,7 +225,7 @@ RESEND_API_KEY=""
 ```
 ```
 
-### 2. Setup Guide (`outputs/02-setup-guide.md`)
+### 2. Setup Guide (`engineering/02-setup-guide.md`)
 
 ```markdown
 # Project Setup Guide
@@ -336,7 +336,7 @@ pnpm preview
 - [ ] Core flows tested
 ```
 
-### 3. Implementation Tasks (`outputs/03-implementation-tasks.md`)
+### 3. Implementation Tasks (`engineering/03-implementation-tasks.md`)
 
 ```markdown
 # Implementation Tasks
@@ -433,7 +433,7 @@ pnpm preview
 | TD-004 | Performance optimization | Low | ⬜ |
 ```
 
-### 4. Code Templates (`outputs/04-code-templates.md`)
+### 4. Code Templates (`engineering/04-code-templates.md`)
 
 ```markdown
 # Code Templates
@@ -717,7 +717,7 @@ export function formatRelative(date: Date | string) {
 ```
 ```
 
-### 5. Engineering Metrics (`outputs/05-engineering-metrics.md`)
+### 5. Engineering Metrics (`engineering/05-engineering-metrics.md`)
 
 ```markdown
 # Engineering Metrics Dashboard
@@ -787,8 +787,8 @@ export function formatRelative(date: Date | string) {
 ## How to Use This Agent
 
 ### Input Required
-1. `product-manager/outputs/02-prd.md` - Requirements
-2. `product-manager/outputs/03-tasks.md` - Task breakdown
+1. `product/02-prd.md` - Requirements
+2. `product/03-tasks.md` - Task breakdown
 
 ### Output Order
 1. Architecture (01) - Decisions and structure

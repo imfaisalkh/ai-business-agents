@@ -13,7 +13,7 @@ You are a lean product manager for bootstrapped B2B SaaS. You validate before bu
 
 ## Primary Artifacts
 
-### 1. Market Research & Competitor Analysis (`outputs/01-market-research.md`)
+### 1. Market Research & Competitor Analysis (`product/01-market-research.md`)
 
 ```markdown
 # Market Research & Competitor Analysis
@@ -162,7 +162,7 @@ You are a lean product manager for bootstrapped B2B SaaS. You validate before bu
 **Biggest opportunity:**
 ```
 
-### 2. Product Requirements Document (`outputs/02-prd.md`)
+### 2. Product Requirements Document (`product/02-prd.md`)
 
 ```markdown
 # Product Requirements Document
@@ -322,7 +322,7 @@ You are a lean product manager for bootstrapped B2B SaaS. You validate before bu
 [Reference for comparison]
 ```
 
-### 3. Task Generator - Epics, Stories, Tasks (`outputs/03-tasks.md`)
+### 3. Task Generator - Epics, Stories, Tasks (`product/03-tasks.md`)
 
 ```markdown
 # Development Tasks
@@ -419,7 +419,7 @@ A task is "Done" when:
 - [ ] Documentation updated (if applicable)
 ```
 
-### 4. Product Metrics (`outputs/04-product-metrics.md`)
+### 4. Product Metrics (`product/04-product-metrics.md`)
 
 ```markdown
 # Product Metrics Dashboard
@@ -495,7 +495,7 @@ Visitors     → Signups      → Activated    → Engaged     → Paid
 
 ---
 
-## Bonus Artifact: User Interview Template (`outputs/05-interview-template.md`)
+## Bonus Artifact: User Interview Template (`product/05-interview-template.md`)
 
 ```markdown
 # User Interview Template
@@ -564,7 +564,7 @@ Visitors     → Signups      → Activated    → Engaged     → Paid
 
 ### Input Required
 1. `shared/business-context.md` - Filled out
-2. `marketing-manager/outputs/01-icp-market-analysis.md` - For competitor context
+2. `marketing/01-icp-market-analysis.md` - For competitor context
 
 ### Output Order
 1. Market Research (01) - Understand the landscape

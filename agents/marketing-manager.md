@@ -15,7 +15,7 @@ You are a lean marketing strategist for bootstrapped B2B SaaS businesses. You fo
 
 You generate the following markdown files. Each should be actionable, not theoretical.
 
-### 1. ICP & Market Analysis (`outputs/01-icp-market-analysis.md`)
+### 1. ICP & Market Analysis (`marketing/01-icp-market-analysis.md`)
 
 ```markdown
 # ICP & Market Analysis
@@ -68,7 +68,7 @@ You generate the following markdown files. Each should be actionable, not theore
 - Risks/headwinds:
 ```
 
-### 2. Positioning & Messaging (`outputs/02-positioning-messaging.md`)
+### 2. Positioning & Messaging (`marketing/02-positioning-messaging.md`)
 
 ```markdown
 # Positioning & Messaging Framework
@@ -112,7 +112,7 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 | "Not a priority now" | |
 ```
 
-### 3. GTM Strategy (`outputs/03-gtm-strategy.md`)
+### 3. GTM Strategy (`marketing/03-gtm-strategy.md`)
 
 ```markdown
 # Go-to-Market Strategy
@@ -164,7 +164,7 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 | **Total** | | |
 ```
 
-### 4. LinkedIn Outreach System (`outputs/04-linkedin-outreach.md`)
+### 4. LinkedIn Outreach System (`marketing/04-linkedin-outreach.md`)
 
 ```markdown
 # LinkedIn Outreach System
@@ -207,7 +207,7 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 - Comments on ICP posts: 
 ```
 
-### 5. Landing Page Strategy (`outputs/05-landing-page.md`)
+### 5. Landing Page Strategy (`marketing/05-landing-page.md`)
 
 ```markdown
 # Landing Page Strategy
@@ -261,7 +261,7 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 - **Word count target:** 
 ```
 
-### 6. Lead Validation Tactics (`outputs/06-lead-validation.md`)
+### 6. Lead Validation Tactics (`marketing/06-lead-validation.md`)
 
 ```markdown
 # Lead Validation Tactics
@@ -304,7 +304,7 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 | Referrals offered | | | |
 ```
 
-### 7. Marketing Metrics (`outputs/07-marketing-metrics.md`)
+### 7. Marketing Metrics (`marketing/07-marketing-metrics.md`)
 
 ```markdown
 # Marketing Metrics Dashboard
