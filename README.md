@@ -22,7 +22,8 @@ ai-business-agents/
 │       ├── product-manager.md
 │       ├── sales-manager.md
 │       ├── engineering-manager.md
-│       └── launch-orchestrator.md
+│       ├── bootstrap-finance.md
+│       └── ceo-orchestrator.md
 ├── scripts/                     # Utility scripts
 │   └── new-idea.sh
 └── ideas/                       # Your business ideas
@@ -32,7 +33,8 @@ ai-business-agents/
     │   ├── marketing/
     │   ├── sales/
     │   ├── product/
-    │   └── engineering/
+    │   ├── engineering/
+    │   └── finance/
     ├── [idea-1]/                # Your first idea
     ├── [idea-2]/                # Your second idea
     └── ...
@@ -52,10 +54,10 @@ npm run new-idea your-idea-name
 # Edit ideas/your-idea-name/business-context.md
 
 # 3. Generate everything
-@launch-orchestrator generate complete launch strategy for your-idea-name
+@ceo-orchestrator generate complete business strategy for your-idea-name
 ```
 
-**Output:** 24 artifacts + comprehensive launch summary in ~15 minutes
+**Output:** 29 artifacts across all departments + executive launch summary in ~15-25 minutes
 
 ---
 
@@ -73,6 +75,7 @@ npm run new-idea your-idea-name
 @product-manager generate all artifacts for your-idea-name
 @sales-manager generate all artifacts for your-idea-name
 @engineering-manager generate all artifacts for your-idea-name
+@bootstrap-finance generate all artifacts for your-idea-name
 ```
 
 **Agent execution order:**
@@ -80,6 +83,7 @@ npm run new-idea your-idea-name
 2. Product Manager → 5 product artifacts (needs marketing/01-icp)
 3. Sales Manager → 7 sales artifacts (needs marketing/01, 02)
 4. Engineering Manager → 5 engineering artifacts (needs product/02-prd, 03-tasks)
+5. Bootstrap Finance → 5 financial artifacts (needs product/06-pricing, marketing/07-metrics)
 
 **Note:** Agents automatically check for and generate missing dependencies
 
@@ -113,17 +117,17 @@ npm run help                # Show help with all commands
 │ • ICP & Market  │   │ • Research      │   │ • Process       │
 │ • Positioning   │   │ • PRD           │   │ • Scripts       │
 │ • GTM Strategy  │   │ • Tasks         │   │ • Qualification │
-└─────────────────┘   └─────────────────┘   └─────────────────┘
-                              │
-                              ▼
-                    ┌─────────────────┐
-                    │   ENGINEERING   │
-                    │     MANAGER     │
-                    │                 │
-                    │ • Architecture  │
-                    │ • Code          │
-                    │ • Ship          │
-                    └─────────────────┘
+└─────────────────┘   └────────┬────────┘   └─────────────────┘
+                              │                      │
+                              ▼                      ▼
+                    ┌─────────────────┐   ┌─────────────────┐
+                    │   ENGINEERING   │   │    BOOTSTRAP    │
+                    │     MANAGER     │   │     FINANCE     │
+                    │                 │   │                 │
+                    │ • Architecture  │   │ • Revenue Model │
+                    │ • Code          │   │ • Unit Economics│
+                    │ • Ship          │   │ • Burn & Runway │
+                    └─────────────────┘   └─────────────────┘
 ```
 
 ---
@@ -170,10 +174,19 @@ npm run help                # Show help with all commands
 | 04 | Code Templates | Reusable patterns (auth, CRUD, UI) |
 | 05 | Engineering Metrics | Ship velocity, quality |
 
-### Launch Orchestrator (`.claude/agents/launch-orchestrator.md`)
+### Bootstrap Finance (`.claude/agents/bootstrap-finance.md`)
 | # | Artifact | Purpose |
 |---|----------|---------|
-| 00 | Launch Summary | Complete 21-day launch plan + all artifacts |
+| 01 | Revenue Model & Projections | 24-month revenue forecast, scenarios |
+| 02 | Unit Economics Dashboard | CAC, LTV, payback analysis |
+| 03 | Burn Rate & Runway Tracker | Cash position, runway scenarios |
+| 04 | Financial Metrics & KPIs | MRR, growth, efficiency metrics |
+| 05 | Fundraising Readiness | Investor prep, data room checklist |
+
+### CEO Orchestrator (`.claude/agents/ceo-orchestrator.md`)
+| # | Artifact | Purpose |
+|---|----------|---------|
+| 00 | Launch Summary | Complete 21-day launch plan + all 29 artifacts |
 
 ---
 
@@ -185,6 +198,7 @@ npm run help                # Show help with all commands
 | Sales | Close Rate % | Average Deal Size |
 | Product | Weekly Active Users | Feature Adoption |
 | Engineering | Ship Velocity | Bug Escape Rate |
+| Finance | Monthly Recurring Revenue | Burn Rate & Runway |
 
 ---
 
@@ -197,11 +211,11 @@ A concrete timeline from idea to first 10 customers.
 | Time | Task | Tool | Output |
 |------|------|------|--------|
 | 30 min | Fill business context | You | `business-context.md` |
-| 15 min | Generate all artifacts | `@launch-orchestrator` | 24 artifacts + launch summary |
+| 20 min | Generate all artifacts | `@ceo-orchestrator` | 29 artifacts + launch summary |
 | 30 min | Review PRD at a Glance | You | Understand MVP scope |
 | 15 min | Practice discovery call script | You | Sales readiness |
 
-**Total:** 90 minutes. You now have complete strategy.
+**Total:** 95 minutes. You now have complete strategy across all 5 departments.
 
 ### Week 1: Discovery & Validation (Days 2-7)
 
@@ -247,7 +261,7 @@ A concrete timeline from idea to first 10 customers.
 
 **Goal:** 10 paying customers by end of Week 4.
 
-**Note:** This playbook assumes you run `@launch-orchestrator` on Day 1. See `ideas/[your-idea]/00-LAUNCH-SUMMARY.md` for detailed daily tasks.
+**Note:** This playbook assumes you run `@ceo-orchestrator` on Day 1. See `ideas/[your-idea]/00-LAUNCH-SUMMARY.md` for detailed daily tasks.
 
 ---
 
