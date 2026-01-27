@@ -26,7 +26,7 @@ description: |
   Example usage:
   "Generate sales artifacts for the 'invoicing-saas' idea"
   "Create discovery call framework and objection handling playbook"
-model: claude-opus-4-20250514
+model: claude-opus-4-5-20251101
 color: green
 ---
 

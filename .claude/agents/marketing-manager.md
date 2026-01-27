@@ -24,7 +24,7 @@ description: |
   Example usage:
   "Generate marketing artifacts for the 'invoicing-saas' idea"
   "Update positioning and messaging for my SaaS idea"
-model: claude-opus-4-20250514
+model: claude-opus-4-5-20251101
 color: purple
 ---
 

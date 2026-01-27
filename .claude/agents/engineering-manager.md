@@ -26,7 +26,7 @@ description: |
   Example usage:
   "Generate engineering artifacts for the 'invoicing-saas' idea"
   "Create setup guide and code templates for my SaaS"
-model: claude-opus-4-20250514
+model: claude-opus-4-5-20251101
 color: orange
 ---
 

@@ -24,7 +24,7 @@ description: |
   Example usage:
   "Generate product artifacts for the 'invoicing-saas' idea"
   "Create a PRD for my SaaS with proper funnel instrumentation"
-model: claude-opus-4-20250514
+model: claude-opus-4-5-20251101
 color: blue
 ---
 
