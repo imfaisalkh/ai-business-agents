@@ -1,457 +1,540 @@
 # Product Requirements Document (PRD)
 
+*Generated for: Performance Evaluation Tool*
+
 ---
 
 ## PRD at a Glance
 
-**Product Name:** TeamPulse
+### One-Sentence Promise
 
-**One-sentence promise:**
-"Run structured 360-degree performance reviews with employee self-review, manager gap analysis, and peer feedback in 15 minutes—not 15 hours."
+> Help small team managers run comprehensive 360-degree performance reviews with self-review, peer feedback, and gap analysis in 15 minutes instead of 5 hours.
 
-**Target user:**
-Engineering, product, and operations managers at 15-50 person tech companies who currently use Google Docs or can't justify Lattice's pricing.
+### MVP Features (3-5 Max)
 
-**Core problem solved:**
-Performance reviews are time-consuming chaos (copy-pasting docs, manual peer feedback aggregation, no visibility for employees) OR prohibitively expensive (Lattice $11-16 PEPM for features teams don't need).
+1. **Self-Review + Gap Analysis** - Employees rate themselves, managers see side-by-side comparison
+2. **Peer Feedback System** - Request, collect, and anonymize peer feedback automatically
+3. **Review Templates** - Pre-built role-specific templates (Engineering, Product, Sales, Manager)
+4. **Review Cycle Management** - Create cycles, set deadlines, automatic reminders
 
-**Key differentiator:**
-**Self-review gap analysis** (side-by-side comparison of employee vs manager ratings) at SMB pricing ($6-8 PEPM)—only tool in this price tier with this feature.
+### MVP Scope Boundaries
 
-**MVP feature set (3-5 features):**
-1. **Employee Self-Review with Manager Gap Analysis** - Employees rate themselves, managers see side-by-side comparison before the 1:1
-2. **Anonymous Peer Feedback Aggregation** - Collect 360-degree feedback with automatic anonymization and theme extraction
-3. **Role-Based Review Templates** - Pre-built templates for Software Engineer, Manager, Sales Rep (Junior/Mid/Senior levels)
-4. **Goal Setting & Tracking** - Set quarterly goals, track progress, review in next cycle for continuity
-5. **Team Analytics Dashboard** - Completion rates, performance distribution, historical trends
+| In Scope | Out of Scope |
+|----------|--------------|
+| Self-review submission | Mobile native app |
+| Manager review with gap analysis | HRIS integration |
+| Peer feedback request/collection | Compensation management |
+| Role/level templates | Engagement surveys |
+| Email reminders | Advanced analytics |
+| PDF export | 1:1 meeting tracking |
+| Basic team dashboard | OKR management |
 
-**What we're NOT building (yet):**
-- Engagement surveys or pulse surveys (enterprise feature bloat)
-- OKR management (separate category, adds complexity)
-- Compensation management (HR/finance feature, not review-focused)
-- 1-on-1 meeting notes (already solved by Fellow, Soapbox)
+### Riskiest Assumptions
 
-**Success metrics:**
-- **80%+ employee self-review completion rate** (employees actually use it)
-- **70%+ peer feedback participation rate** (peers respond to requests)
-- **25%+ trial-to-paid conversion** (validates willingness to pay)
-- **30 min time savings per review** (managers confirm ROI)
-- **Net Revenue Retention >100%** (team growth offsets churn)
+1. **Managers will pay $6-8 PEPM** for reviews (vs free spreadsheets)
+2. **Employees will complete self-reviews** (80%+ completion target)
+3. **Peers will provide feedback** when requested (70%+ response rate)
+4. **Gap analysis is valuable** enough to differentiate from basic tools
 
-**Launch timeline:**
-- **Phase 1 (Weeks 1-6):** Foundation (auth, team setup, core database schema)
-- **Phase 2 (Weeks 7-14):** Self-review + gap analysis MVP
-- **Phase 3 (Weeks 15-20):** Peer feedback + analytics dashboard
-- **Beta launch:** Week 20 (5 beta customers)
-- **Public launch:** Week 24 (waitlist + Product Hunt)
+### Success Metrics (MVP)
 
----
-
-## MVP Funnel (Instrumentation Required)
-
-*Track these events to validate product-market fit:*
-
-### Onboarding Funnel
-1. **`signup_started`** - User clicks "Sign up" / "Start free trial"
-2. **`account_created`** - Email verified, account active
-3. **`team_imported`** - Slack connected OR CSV uploaded (employees added)
-4. **`template_selected`** - User picks a role template (Engineer, Manager, Sales)
-5. **`first_review_launched`** - User sends first self-review request to team
-6. **`onboarding_completed`** - First review cycle started
-
-**Success criteria:** >70% of signups complete onboarding (reach step 6)
+| Metric | Target | Why It Matters |
+|--------|--------|----------------|
+| Trial-to-paid conversion | 25%+ | Revenue validation |
+| Self-review completion rate | 80%+ | Core feature works |
+| Peer feedback response rate | 70%+ | 360 value delivered |
+| Manager time saved per review | 30 min | Value proposition proven |
+| NPS after first review cycle | 40+ | Product-market fit signal |
 
 ---
 
-### Review Cycle Funnel (Core Product Loop)
-1. **`self_review_sent`** - Manager sends self-review request to employee
-2. **`self_review_opened`** - Employee opens self-review form
-3. **`self_review_submitted`** - Employee submits self-review
-4. **`manager_review_opened`** - Manager opens gap analysis view
-5. **`manager_review_submitted`** - Manager finalizes their ratings
-6. **`review_shared`** - Manager shares review with employee (1:1 happens)
-7. **`goals_set`** - Manager + employee set goals for next quarter
+## MVP Funnel
 
-**Success criteria:**
-- 80%+ employees submit self-reviews (step 3)
-- 90%+ managers complete reviews (step 5)
-- 70%+ reviews result in goals set (step 7)
-
----
-
-### Peer Feedback Funnel (Differentiation Feature)
-1. **`peer_feedback_requested`** - Employee or manager requests peer feedback
-2. **`peer_request_sent`** - 2-3 peers receive notification
-3. **`peer_feedback_opened`** - Peer opens feedback form
-4. **`peer_feedback_submitted`** - Peer submits feedback (anonymized)
-5. **`peer_feedback_aggregated`** - System aggregates responses, surfaces themes
-6. **`peer_feedback_viewed`** - Manager views aggregated peer feedback
-
-**Success criteria:** 70%+ of peer requests get 2+ responses (step 4)
-
----
-
-### Retention & Expansion
-1. **`review_cycle_completed`** - User completes one full review cycle (all team members reviewed)
-2. **`second_cycle_started`** - User starts second review cycle (retention signal)
-3. **`team_member_added`** - User adds new employee (expansion)
-4. **`template_customized`** - User creates custom review template (power user signal)
-5. **`historical_review_viewed`** - Manager accesses past review for promotion/termination decision
-
-**Success criteria:**
-- 80%+ of beta users start second cycle (retention)
-- 50%+ add team members within 6 months (expansion)
-
----
-
-## Text Wireframes (Critical Screens)
-
-### Screen 1: Dashboard (Manager Home Screen)
+### Funnel Events (Track These)
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│ TeamPulse                    [Team: Acme Inc ▼]  [⚙️]│
-├────────────────────────────────────────────────────────────┤
-│                                                              │
-│  📊 Q1 2026 Review Cycle                                    │
-│  ───────────────────────────────────                       │
-│  Progress: ████████░░ 8/10 reviews completed               │
-│                                                              │
-│  🎯 Your Action Items (2)                                   │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ 🔴 Review self-review for Sarah Chen (Engineer)    │   │
-│  │    Submitted 2 days ago • Gap analysis ready       │   │
-│  │    [View Gap Analysis →]                            │   │
-│  ├────────────────────────────────────────────────────┤   │
-│  │ 🟡 Finalize review for Alex Kim (Manager)          │   │
-│  │    Self-review submitted • Peer feedback ready (3)  │   │
-│  │    [Complete Review →]                              │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-│  ✅ Completed Reviews (8)                                   │
-│  Jordan Lee, Priya Sharma, ... [View All]                  │
-│                                                              │
-│  [+ Start New Review Cycle]                                │
-│                                                              │
-└────────────────────────────────────────────────────────────┘
+1. SIGNUP_STARTED
+   └─> User clicks "Start Free Trial"
+
+2. SIGNUP_COMPLETED
+   └─> User creates account (email + password)
+
+3. TEAM_SETUP_STARTED
+   └─> User navigates to team setup
+
+4. FIRST_EMPLOYEE_ADDED
+   └─> User adds first team member
+
+5. TEAM_SETUP_COMPLETED
+   └─> User adds 3+ employees
+
+6. TEMPLATE_SELECTED
+   └─> User chooses a review template
+
+7. REVIEW_CYCLE_CREATED
+   └─> User creates first review cycle
+
+8. FIRST_SELF_REVIEW_COMPLETED
+   └─> An employee submits self-review
+
+9. FIRST_PEER_FEEDBACK_COMPLETED
+   └─> A peer submits feedback
+
+10. FIRST_MANAGER_REVIEW_COMPLETED
+    └─> Manager completes their evaluation
+
+11. GAP_ANALYSIS_VIEWED
+    └─> Manager views self vs manager comparison
+
+12. REVIEW_CYCLE_COMPLETED
+    └─> All reviews in cycle are done
+
+13. SUBSCRIPTION_STARTED
+    └─> User converts to paid
 ```
 
-**Key interactions:**
-- Click "View Gap Analysis" → Opens Screen 2 (Gap Analysis View)
-- Click "Complete Review" → Opens manager rating form
-- Click "+ Start New Review Cycle" → Launches setup wizard
+### Funnel Targets
+
+| Stage | Event | Target % | Drop-off Action |
+|-------|-------|----------|-----------------|
+| Signup | SIGNUP_COMPLETED | 70% of starts | Simplify signup form |
+| Onboarding | TEAM_SETUP_COMPLETED | 60% of signups | Add import options |
+| Activation | REVIEW_CYCLE_CREATED | 50% of setups | Template guidance |
+| Engagement | FIRST_SELF_REVIEW_COMPLETED | 80% of cycles | Better employee emails |
+| Value | GAP_ANALYSIS_VIEWED | 90% of reviews | Highlight in UI |
+| Conversion | SUBSCRIPTION_STARTED | 25% of trials | Improve value demo |
 
 ---
 
-### Screen 2: Gap Analysis View (Differentiator Feature)
+## Text Wireframes
+
+### Screen 1: Dashboard (Manager View)
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│ ← Back to Dashboard          Sarah Chen • Mid-Level SWE    │
-├────────────────────────────────────────────────────────────┤
-│                                                              │
-│  📊 Self-Review Gap Analysis                                │
-│  ───────────────────────────                               │
-│  Side-by-side comparison of Sarah's self-ratings vs your   │
-│  preliminary ratings. Focus your 1:1 on the gaps.          │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ Competency       Sarah's Rating  Your Rating   Gap │   │
-│  ├────────────────────────────────────────────────────┤   │
-│  │ Code Quality           4/5           5/5      ✅ +1 │   │
-│  │ Impact                 2/5           5/5      ⚠️ +3 │   │
-│  │ Communication          5/5           4/5      ↔️ -1 │   │
-│  │ Collaboration          4/5           4/5      ✅ 0  │   │
-│  │ Initiative             3/5           4/5      ✅ +1 │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-│  💡 Coaching Insight:                                       │
-│  Sarah underrates herself on "Impact" by 3 points. This    │
-│  suggests a confidence issue, not a skill gap. In your 1:1, │
-│  ask: "Why did you rate yourself 2/5 on Impact?" and share │
-│  specific examples of her high-impact work.                 │
-│                                                              │
-│  📝 Sarah's Self-Reflection:                                │
-│  "I shipped the analytics dashboard, but I'm not sure it's │
-│  being used. I feel like I could be doing more."           │
-│                                                              │
-│  🗣️ Peer Feedback (3 responses):                           │
-│  "Sarah's code reviews are thorough and kind."             │
-│  "She unblocked me twice this quarter—huge impact."        │
-│  [View All Peer Feedback →]                                │
-│                                                              │
-│  [Finalize Your Review →]                                  │
-│                                                              │
-└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo] Performance                    [Team ▼] [Profile ▼]         │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Welcome back, Sarah                                               │
+│                                                                    │
+│  ┌─────────────────────────────────┐  ┌──────────────────────────┐│
+│  │ CURRENT CYCLE                   │  │ QUICK STATS              ││
+│  │ Q1 2026 Reviews                 │  │                          ││
+│  │                                 │  │ Team Size: 8             ││
+│  │ Progress: 6/8 complete          │  │ Pending Reviews: 2       ││
+│  │ ████████████░░░░ 75%            │  │ Avg Rating: 3.8          ││
+│  │                                 │  │ Cycle Ends: Feb 15       ││
+│  │ [View Details]                  │  └──────────────────────────┘│
+│  └─────────────────────────────────┘                              │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  PENDING ACTIONS                                                   │
+│                                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ ⏳ John Smith          Self-review pending                   │  │
+│  │    Software Engineer   Reminder sent 2 days ago              │  │
+│  │                        [Send Reminder] [Mark Complete]       │  │
+│  ├─────────────────────────────────────────────────────────────┤  │
+│  │ ⏳ Alice Chen          Manager review pending                │  │
+│  │    Product Manager     Self-review: Complete                 │  │
+│  │                        [Start Review]                        │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  [+ Start New Review Cycle]                                        │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**Key interactions:**
-- Hover over gap numbers → See explanation ("Large positive gap = underconfidence")
-- Click "View All Peer Feedback" → Opens anonymized peer responses
-- Click "Finalize Your Review" → Manager rates, adds comments, sets goals
-
----
-
-### Screen 3: Employee Self-Review Form
+### Screen 2: Self-Review Form (Employee View)
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│ TeamPulse                               [Sarah Chen]   │
-├────────────────────────────────────────────────────────────┤
-│                                                              │
-│  📝 Q1 2026 Self-Review                                     │
-│  ───────────────────────────                               │
-│  Your manager will see your ratings and reflections.       │
-│  Be honest—this helps them coach you better.               │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ 1. Code Quality                                     │   │
-│  │    Rate yourself: ⭐⭐⭐⭐☆ (4/5)                    │   │
-│  │    What went well:                                  │   │
-│  │    [Shipped analytics dashboard with 95% test...]  │   │
-│  │    What to improve:                                 │   │
-│  │    [Need to reduce PR review time from 2 days...] │   │
-│  ├────────────────────────────────────────────────────┤   │
-│  │ 2. Impact                                           │   │
-│  │    Rate yourself: ⭐⭐☆☆☆ (2/5)                    │   │
-│  │    Reflection:                                      │   │
-│  │    [I shipped the analytics dashboard, but I'm...] │   │
-│  ├────────────────────────────────────────────────────┤   │
-│  │ 3. Communication                                    │   │
-│  │    Rate yourself: ⭐⭐⭐⭐⭐ (5/5)                    │   │
-│  │    ...                                              │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-│  📌 Request Peer Feedback (Optional)                        │
-│  Select 2-3 teammates to give you feedback:                │
-│  ☑️ Jordan Lee (Engineer)                                   │
-│  ☑️ Alex Kim (Manager)                                      │
-│  ☑️ Priya Sharma (Designer)                                 │
-│                                                              │
-│  [Save Draft]  [Submit Self-Review →]                      │
-│                                                              │
-└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo] Performance                              [Your Profile ▼]   │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Your Q1 2026 Self-Review                                          │
+│  Due: February 10, 2026                                            │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  TECHNICAL SKILLS                                     Section 1/4  │
+│                                                                    │
+│  1. Code Quality                                                   │
+│     How would you rate your code quality this quarter?             │
+│                                                                    │
+│     [1] [2] [3] [4] [5]                                            │
+│      😕      😐      😊                                            │
+│     Needs    Meets   Exceeds                                       │
+│     Work     Expect  Expect                                        │
+│                                                                    │
+│     Comments (optional):                                           │
+│     ┌──────────────────────────────────────────────────────────┐  │
+│     │ I refactored the auth module and reduced bugs by 40%...  │  │
+│     └──────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  2. Problem Solving                                                │
+│     How would you rate your problem-solving skills?                │
+│                                                                    │
+│     [1] [2] [3] [4] (5)  ← Selected                                │
+│                                                                    │
+│     Comments (optional):                                           │
+│     ┌──────────────────────────────────────────────────────────┐  │
+│     │                                                          │  │
+│     └──────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  Progress: 2/12 questions                                          │
+│  ████░░░░░░░░░░░░░░░░ 17%                                          │
+│                                                                    │
+│                               [Save Draft] [Next Section →]        │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**Key interactions:**
-- Star rating → Updates score, enables text input
-- "Request Peer Feedback" → Sends notifications to selected peers
-- "Submit" → Triggers `self_review_submitted` event, notifies manager
-
----
-
-### Screen 4: Peer Feedback Form (Anonymized)
+### Screen 3: Manager Review with Gap Analysis
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│ TeamPulse                               [Anonymous]    │
-├────────────────────────────────────────────────────────────┤
-│                                                              │
-│  🗣️ Peer Feedback Request                                  │
-│  ───────────────────────────                               │
-│  Sarah Chen has requested your feedback for their Q1       │
-│  review. Your responses are anonymous and will be           │
-│  aggregated with other peers.                               │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ 1. What does Sarah do well?                         │   │
-│  │    [Sarah's code reviews are thorough and kind...]  │   │
-│  ├────────────────────────────────────────────────────┤   │
-│  │ 2. Where could Sarah improve?                       │   │
-│  │    [Sometimes takes 2 days to review PRs, could...] │   │
-│  ├────────────────────────────────────────────────────┤   │
-│  │ 3. One thing Sarah should start/stop/continue?      │   │
-│  │    [Continue being generous with pair programming...]│  │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-│  ⚠️ Your responses are anonymous. Sarah's manager will see │
-│     aggregated themes, not individual responses.            │
-│                                                              │
-│  [Skip]  [Submit Feedback →]                               │
-│                                                              │
-└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo] Performance                    [Team ▼] [Profile ▼]         │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Review: Alice Chen - Product Manager                              │
+│  Q1 2026 Performance Review                                        │
+│                                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ VIEW: [Your Review] [Gap Analysis] [Peer Feedback]          │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ═══════════════════════════════════════════════════════════════  │
+│  GAP ANALYSIS                                                      │
+│  ═══════════════════════════════════════════════════════════════  │
+│                                                                    │
+│  STRATEGIC THINKING                                                │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ Alice's Self-Rating:    ████████████████████  5/5           │  │
+│  │ Your Rating:            ████████████░░░░░░░░  3/5           │  │
+│  │                                                             │  │
+│  │ ⚠️  GAP: -2 points                                          │  │
+│  │                                                             │  │
+│  │ Alice's Comment: "I led the Q4 roadmap planning..."         │  │
+│  │ Your Comment: [Add your perspective]                        │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  💡 COACHING OPPORTUNITY: Significant perception gap.              │
+│     Consider discussing specific examples in your 1:1.             │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  COMMUNICATION                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ Alice's Self-Rating:    ████████████████░░░░  4/5           │  │
+│  │ Your Rating:            ████████████████░░░░  4/5           │  │
+│  │                                                             │  │
+│  │ ✅  ALIGNED                                                  │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  OVERALL SUMMARY                                                   │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ Average Self-Rating:    4.2/5                               │  │
+│  │ Average Manager Rating: 3.5/5                               │  │
+│  │ Gap: -0.7 (Self rates higher)                               │  │
+│  │                                                             │  │
+│  │ Areas of Alignment (3): Communication, Execution, Teamwork  │  │
+│  │ Areas to Discuss (2): Strategic Thinking, Leadership        │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│                          [Save] [Complete & Share with Employee]   │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**Key interactions:**
-- Text fields → Free-form feedback
-- "Submit" → Triggers `peer_feedback_submitted`, system aggregates themes
-
----
-
-### Screen 5: Team Analytics Dashboard (Manager View)
+### Screen 4: Peer Feedback Request
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│ TeamPulse                          Team Analytics      │
-├────────────────────────────────────────────────────────────┤
-│                                                              │
-│  📊 Q1 2026 Team Overview                                   │
-│  ───────────────────────────                               │
-│                                                              │
-│  Completion Rate: 80% (8/10 reviews completed)             │
-│  ████████░░                                                 │
-│                                                              │
-│  Peer Feedback Participation: 75% (15/20 requests answered)│
-│  ███████░░░                                                 │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ Performance Distribution                            │   │
-│  │                                                      │   │
-│  │  Below Expectations (1-2):  █ 1 person              │   │
-│  │  Meets Expectations (3-4):  ████ 6 people           │   │
-│  │  Exceeds Expectations (5):  █ 2 people              │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ Top Competencies (Team Strengths)                   │   │
-│  │  1. Communication (Avg: 4.2/5)                      │   │
-│  │  2. Collaboration (Avg: 4.0/5)                      │   │
-│  │  3. Code Quality (Avg: 3.8/5)                       │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │ Growth Areas (Team Opportunities)                   │   │
-│  │  1. Initiative (Avg: 3.2/5)                         │   │
-│  │  2. Impact (Avg: 3.4/5)                             │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                              │
-└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo] Performance                              [Your Profile ▼]   │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Peer Feedback Request                                             │
+│  For: John Smith, Software Engineer                                │
+│                                                                    │
+│  Sarah (Manager) has requested your feedback on John's             │
+│  performance this quarter. Your responses are anonymous.           │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  1. How effectively does John collaborate with the team?           │
+│                                                                    │
+│     [1] [2] [3] (4) [5]                                            │
+│                                                                    │
+│  2. What is John's greatest strength?                              │
+│     ┌──────────────────────────────────────────────────────────┐  │
+│     │ John is incredibly reliable. When he commits to a        │  │
+│     │ deadline, he always delivers...                          │  │
+│     └──────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  3. What is one area where John could improve?                     │
+│     ┌──────────────────────────────────────────────────────────┐  │
+│     │ Sometimes John could communicate blockers earlier...     │  │
+│     └──────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  4. Any additional comments for John's manager?                    │
+│     ┌──────────────────────────────────────────────────────────┐  │
+│     │ (Optional)                                               │  │
+│     └──────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  🔒 Your feedback is anonymous. John will see aggregated           │
+│     insights but not who said what.                                │
+│                                                                    │
+│                                              [Submit Feedback]     │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**Key interactions:**
-- Click bars → Drill into individual employee scores
-- Export data → Download CSV for presentations or HR reports
+### Screen 5: Aggregated Peer Feedback View (Manager)
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo] Performance                    [Team ▼] [Profile ▼]         │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Peer Feedback Summary: John Smith                                 │
+│  Q1 2026 | 4 of 5 peers responded                                  │
+│                                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ VIEW: [Your Review] [Gap Analysis] [Peer Feedback]          │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ═══════════════════════════════════════════════════════════════  │
+│  QUANTITATIVE RATINGS (Averaged)                                   │
+│  ═══════════════════════════════════════════════════════════════  │
+│                                                                    │
+│  Collaboration:     ████████████████░░░░  4.0/5 (4 responses)      │
+│  Communication:     ████████████████████  4.5/5 (4 responses)      │
+│  Reliability:       ████████████████████  5.0/5 (4 responses)      │
+│  Technical Skills:  ████████████████░░░░  4.0/5 (3 responses)      │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  STRENGTHS (What peers said)                                       │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ • "Incredibly reliable - always delivers on commitments"    │  │
+│  │ • "Great at explaining technical concepts"                  │  │
+│  │ • "Always willing to help when others are stuck"            │  │
+│  │ • "Strong code reviewer - catches bugs others miss"         │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  AREAS FOR GROWTH (What peers said)                                │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ • "Could communicate blockers earlier"                      │  │
+│  │ • "Sometimes takes on too much and gets stretched thin"     │  │
+│  │ • "Would benefit from more visibility in team meetings"     │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  💡 INSIGHT: Peers rate John highest on reliability and            │
+│     communication. Consider discussing workload management.        │
+│                                                                    │
+│                                             [Include in Review]    │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### Screen 6: Create Review Cycle
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo] Performance                    [Team ▼] [Profile ▼]         │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Create New Review Cycle                                           │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  STEP 1 OF 4: Basic Info                                           │
+│                                                                    │
+│  Cycle Name:                                                       │
+│  ┌──────────────────────────────────────────────────────────────┐ │
+│  │ Q1 2026 Performance Reviews                                  │ │
+│  └──────────────────────────────────────────────────────────────┘ │
+│                                                                    │
+│  Review Period:                                                    │
+│  [Jan 1, 2026] to [Mar 31, 2026]                                   │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  STEP 2 OF 4: Who's Included                                       │
+│                                                                    │
+│  ☑ Engineering Team (8 people)                                     │
+│  ☐ Product Team (4 people)                                         │
+│  ☐ Sales Team (6 people)                                           │
+│                                                                    │
+│  Or: [Select Individual Employees]                                 │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  STEP 3 OF 4: Review Components                                    │
+│                                                                    │
+│  ☑ Self-Review          (Employees rate themselves)                │
+│  ☑ Manager Review       (You rate your reports)                    │
+│  ☑ Peer Feedback        (Collect from teammates)                   │
+│  ☐ Upward Feedback      (Reports rate managers)                    │
+│                                                                    │
+│  Peer Feedback Settings:                                           │
+│  Number of peers to request: [3]                                   │
+│  ☑ Allow employees to suggest peers                                │
+│  ☑ Anonymize feedback                                              │
+│                                                                    │
+│  ─────────────────────────────────────────────────────────────    │
+│                                                                    │
+│  STEP 4 OF 4: Timeline                                             │
+│                                                                    │
+│  Self-reviews due:     [Feb 7, 2026]                               │
+│  Peer feedback due:    [Feb 10, 2026]                              │
+│  Manager reviews due:  [Feb 14, 2026]                              │
+│  Share with employees: [Feb 15, 2026]                              │
+│                                                                    │
+│  ☑ Send automatic reminders (3 days and 1 day before due)          │
+│                                                                    │
+│                                                                    │
+│               [Save as Draft]          [Launch Cycle →]            │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## User Stories (Prioritized for MVP)
+## User Stories
 
-### Must-Have (P0 - Ship-Blocking)
+### Epic 1: Account & Team Setup
 
-**Story 1: Manager launches first review cycle**
-- **As a** manager
-- **I want to** import my team and launch a review cycle in 15 minutes
-- **So that** I don't waste 2 hours setting up like I did with Google Docs
-- **Acceptance criteria:**
-  - Can connect Slack OR upload CSV (2 options)
-  - Can select pre-built template (Engineer, Manager, Sales) with Junior/Mid/Senior variants
-  - Can send self-review requests to all team members in <3 clicks
-  - System sends email + Slack notification to employees
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U1.1 | As a manager, I can sign up with email/password so I can create an account | P0 | 4h |
+| U1.2 | As a manager, I can create a team and invite employees via email | P0 | 6h |
+| U1.3 | As a manager, I can import employees from CSV | P1 | 4h |
+| U1.4 | As a manager, I can assign reporting relationships (who reports to whom) | P0 | 4h |
+| U1.5 | As an employee, I can accept an invitation and create my account | P0 | 3h |
 
-**Story 2: Employee completes self-review**
-- **As an** employee
-- **I want to** rate myself and reflect on my work
-- **So that** my manager understands my perspective before the 1:1
-- **Acceptance criteria:**
-  - Can rate myself on 5-8 competencies (star ratings)
-  - Can add text reflections for each competency
-  - Can save draft and return later
-  - Can request peer feedback from 2-3 teammates
-  - System notifies manager when submitted
+### Epic 2: Review Templates
 
-**Story 3: Manager sees gap analysis**
-- **As a** manager
-- **I want to** see side-by-side comparison of my ratings vs employee's self-ratings
-- **So that** I can focus the 1:1 on gaps (confidence vs skill issues)
-- **Acceptance criteria:**
-  - Gap view shows employee rating, my rating, and difference
-  - System highlights large gaps (>2 points) with coaching tips
-  - Can see employee's text reflections
-  - Can see aggregated peer feedback (if requested)
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U2.1 | As a manager, I can choose from pre-built templates (Engineering, Product, etc.) | P0 | 8h |
+| U2.2 | As a manager, I can customize template questions | P1 | 6h |
+| U2.3 | As a manager, I can create a template from scratch | P2 | 8h |
+| U2.4 | As a manager, I can see template previews before selecting | P1 | 3h |
 
-**Story 4: Manager finalizes review and sets goals**
-- **As a** manager
-- **I want to** finalize my ratings, add comments, and set goals for next quarter
-- **So that** the review is documented and we have continuity
-- **Acceptance criteria:**
-  - Can rate employee on each competency (overriding or confirming preliminary ratings)
-  - Can add overall comments
-  - Can set 3-5 goals for next quarter
-  - Can share review with employee (triggers notification)
+### Epic 3: Review Cycles
 
-**Story 5: Peer submits anonymous feedback**
-- **As a** peer
-- **I want to** give feedback anonymously in 5-10 minutes
-- **So that** I can be honest without worrying about retaliation
-- **Acceptance criteria:**
-  - Can answer 3 open-ended questions (strengths, growth areas, start/stop/continue)
-  - System confirms anonymity (no attribution visible to manager or employee)
-  - Can skip or decline (no pressure)
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U3.1 | As a manager, I can create a review cycle with name, dates, and participants | P0 | 6h |
+| U3.2 | As a manager, I can select which components to include (self, peer, manager) | P0 | 4h |
+| U3.3 | As a manager, I can set deadlines for each review type | P0 | 3h |
+| U3.4 | As a manager, I can launch a cycle which notifies all participants | P0 | 4h |
+| U3.5 | As a manager, I can see cycle progress (who completed, who pending) | P0 | 6h |
 
----
+### Epic 4: Self-Reviews
 
-### Should-Have (P1 - Launch with This)
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U4.1 | As an employee, I receive an email when a self-review is requested | P0 | 2h |
+| U4.2 | As an employee, I can complete my self-review with ratings and comments | P0 | 8h |
+| U4.3 | As an employee, I can save my review as draft and return later | P1 | 3h |
+| U4.4 | As an employee, I can see my self-review after submitting | P0 | 2h |
 
-**Story 6: Manager views team analytics**
-- **As a** manager
-- **I want to** see team-wide trends (completion rates, performance distribution)
-- **So that** I can spot patterns and improve my team's development
-- **Acceptance criteria:**
-  - Can see completion rate, peer participation rate
-  - Can see performance distribution (1-5 scale)
-  - Can see top competencies and growth areas
+### Epic 5: Peer Feedback
 
-**Story 7: Manager accesses historical reviews**
-- **As a** manager
-- **I want to** view past reviews for an employee
-- **So that** I can make promotion or termination decisions with documentation
-- **Acceptance criteria:**
-  - Can view all past reviews for an employee in chronological order
-  - Can export reviews as PDF
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U5.1 | As a manager, I can request peer feedback for my reports | P0 | 4h |
+| U5.2 | As an employee, I can suggest peers who should review me | P1 | 3h |
+| U5.3 | As a peer, I receive an email when feedback is requested | P0 | 2h |
+| U5.4 | As a peer, I can submit anonymous feedback | P0 | 6h |
+| U5.5 | As a manager, I can see aggregated peer feedback (anonymized) | P0 | 6h |
+
+### Epic 6: Manager Reviews & Gap Analysis
+
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U6.1 | As a manager, I can complete my review of a direct report | P0 | 8h |
+| U6.2 | As a manager, I can see gap analysis (self vs manager ratings) | P0 | 8h |
+| U6.3 | As a manager, I can see peer feedback alongside my review | P0 | 4h |
+| U6.4 | As a manager, I can share the completed review with the employee | P0 | 4h |
+| U6.5 | As an employee, I can view my completed review and feedback | P0 | 4h |
+
+### Epic 7: Notifications & Reminders
+
+| ID | User Story | Priority | Estimate |
+|----|------------|----------|----------|
+| U7.1 | As a participant, I receive reminder emails before deadlines | P0 | 4h |
+| U7.2 | As a manager, I can manually send reminders to pending participants | P1 | 3h |
+| U7.3 | As a manager, I get notified when all reviews in a cycle are complete | P1 | 2h |
 
 ---
 
-### Nice-to-Have (P2 - Post-MVP)
+## Technical Requirements
 
-**Story 8: Manager customizes review templates**
-- **As a** manager
-- **I want to** create custom competencies or questions
-- **So that** reviews match my team's unique needs
-- **Acceptance criteria:**
-  - Can edit pre-built templates (add/remove/reword competencies)
-  - Can save custom templates for future cycles
+### Performance
 
-**Story 9: Employee views their review history**
-- **As an** employee
-- **I want to** see all my past reviews and goals
-- **So that** I can track my growth over time
-- **Acceptance criteria:**
-  - Can access personal review history
-  - Can see goals from previous quarters and completion status
+- Page load time: <2 seconds
+- Review form save: <500ms
+- Dashboard load: <1 second with 50 employees
 
----
+### Security
 
-## Out of Scope (Not in MVP)
+- All data encrypted at rest and in transit
+- Role-based access (manager sees reports, employee sees own)
+- Peer feedback anonymization enforced in database
+- Session management with secure tokens
 
-- **Engagement surveys:** Different category, adds complexity
-- **OKR management:** Separate tool (use Lattice or 15Five for this)
-- **Compensation/salary recommendations:** HR/finance feature, legal risk
-- **1-on-1 meeting notes:** Already solved by Fellow, Soapbox
-- **Skills matrix/career frameworks:** Enterprise feature, overkill for MVP
-- **Mobile app:** Web-responsive is sufficient for beta
-- **Integrations (beyond Slack):** HRIS integrations (BambooHR, Rippling) are post-MVP
+### Scalability
+
+- Support teams up to 100 employees initially
+- Handle 10 concurrent review cycles
+- Store 4 years of review history per employee
+
+### Integrations (V2)
+
+- Slack (reminders and notifications)
+- Google Workspace (SSO)
+- CSV import/export
 
 ---
 
-## Technical Constraints
+## Launch Criteria
 
-- **Stack:** Nuxt 4 + Vue 3 + shadcn-vue + PostgreSQL (or SQLite for early beta)
-- **Performance:** Page load <2 seconds on 4G connection
-- **Scalability:** Support 100 teams (5,000 total employees) in Year 1 without infrastructure changes
-- **Security:** SOC 2 Type 1 compliance required before enterprise sales (Year 2)
-- **Data export:** Users can export all data as CSV/PDF (GDPR requirement)
+### Alpha (Internal Testing)
+
+- [ ] Core flows working (signup, create cycle, complete reviews)
+- [ ] Gap analysis displays correctly
+- [ ] Peer feedback anonymization working
+- [ ] Email notifications sending
+
+### Beta (5 Customers)
+
+- [ ] All P0 user stories complete
+- [ ] 3 role templates available
+- [ ] Automatic reminders working
+- [ ] PDF export functional
+- [ ] No critical bugs for 1 week
+
+### GA (General Availability)
+
+- [ ] 10+ customers completed full review cycle
+- [ ] 80%+ self-review completion rate
+- [ ] 70%+ peer feedback response rate
+- [ ] NPS 40+
+- [ ] <5 critical bugs reported
 
 ---
 
-## Success Criteria (Launch +90 Days)
-
-- [ ] **80%+ employee self-review completion rate** (employees actually use it)
-- [ ] **70%+ peer feedback participation rate** (peers respond)
-- [ ] **25%+ trial-to-paid conversion** (validates willingness to pay)
-- [ ] **30 min time savings per review** (managers confirm via testimonial)
-- [ ] **<5% churn after first cycle** (they renew for second cycle)
-- [ ] **NPS >40** (customer satisfaction)
-
----
-
-*Last updated: January 27, 2026*
+*Next artifact: 03-tasks.md*

@@ -1,194 +1,404 @@
 # Product Metrics Dashboard
 
+*Generated for: Performance Evaluation Tool*
+
+---
+
 ## North Star Metric
 
-**Weekly Active Teams (WATs):** Teams who complete at least 1 review action per week
+### Primary: Review Cycles Completed per Month
 
-**Why this metric:**
-- Measures actual usage (not just logins)
-- Predicts retention (active teams renew)
-- Grows with product adoption
+**Definition:** Number of review cycles where all participants have completed their reviews (self-review, peer feedback, manager review)
 
-**Target:**
-- Month 1-3 (Beta): 5-10 WATs
-- Month 4-6 (Launch): 20-30 WATs
-- Month 7-12 (Growth): 50-70 WATs
+**Why This Metric:**
+1. Indicates real product usage (not just signups)
+2. Correlates with customer value delivery
+3. Predicts retention (customers who complete cycles stay)
+4. Represents the core JTBD (job to be done)
 
----
+**Targets:**
 
-## Primary Metrics (Track Weekly)
-
-### 1. Review Completion Rate
-**Definition:** % of launched reviews that reach "shared with employee" status
-
-**Target:** >80%
-
-**Calculation:** (Reviews shared / Reviews launched) × 100
-
-**Why it matters:** Core product loop. If <70%, onboarding or UX is broken.
+| Phase | Target | Notes |
+|-------|--------|-------|
+| Beta | 5 cycles/month | 5 customers, 1 cycle each |
+| Launch | 20 cycles/month | Mix of quarterly cycles |
+| Growth | 50+ cycles/month | Scaling customers |
 
 ---
 
-### 2. Employee Self-Review Completion Rate
-**Definition:** % of employees who submit self-reviews after request sent
+## Funnel Metrics
 
-**Target:** >80%
+### Acquisition Funnel
 
-**Calculation:** (Self-reviews submitted / Self-review requests sent) × 100
+```
+Website Visitors
+    │
+    ▼ (5% conversion)
+Trial Signups
+    │
+    ▼ (70% activation)
+Team Setup Complete
+    │
+    ▼ (60% engagement)
+First Review Cycle Created
+    │
+    ▼ (50% value delivery)
+First Cycle Completed
+    │
+    ▼ (25% conversion)
+Paid Subscription
+    │
+    ▼ (90% retention)
+Month 3 Retained
+```
 
-**Why it matters:** Employee engagement. If <70%, notifications are broken or employees don't see value.
+### Funnel Metrics Table
 
----
-
-### 3. Peer Feedback Participation Rate
-**Definition:** % of peer feedback requests that get responses
-
-**Target:** >70%
-
-**Calculation:** (Peer feedback submitted / Peer requests sent) × 100
-
-**Why it matters:** Differentiation feature. If <50%, peer feedback is too burdensome or poorly designed.
-
----
-
-### 4. Trial-to-Paid Conversion Rate
-**Definition:** % of trial signups who become paying customers
-
-**Target:** >25%
-
-**Calculation:** (Paid customers / Trial signups) × 100
-
-**Why it matters:** Validates willingness to pay. If <15%, pricing or value prop is wrong.
-
----
-
-### 5. Net Revenue Retention (NRR)
-**Definition:** Revenue from existing customers (including expansions, minus churn)
-
-**Target:** >100%
-
-**Calculation:** ((Starting MRR + Expansion MRR - Churned MRR) / Starting MRR) × 100
-
-**Why it matters:** Measures product stickiness and growth. >100% means product pays for itself via expansions.
+| Stage | Metric | Target | Red Flag |
+|-------|--------|--------|----------|
+| **Acquisition** | Website → Trial | 5% | <2% |
+| **Activation** | Trial → Team Setup | 70% | <50% |
+| **Engagement** | Setup → First Cycle | 60% | <40% |
+| **Value** | Cycle → Completed | 50% | <30% |
+| **Revenue** | Trial → Paid | 25% | <15% |
+| **Retention** | M1 → M3 | 90% | <80% |
 
 ---
 
-## Secondary Metrics (Monitor, Don't Obsess)
+## Activation Metrics
 
-### Onboarding Funnel (First 7 Days)
-- `signup_started` → `account_created`: >80%
-- `account_created` → `team_imported`: >70%
-- `team_imported` → `first_review_launched`: >60%
-- **Overall onboarding completion:** >40%
+### Definition of Activated User
 
-### Engagement Metrics
-- **Avg time in gap analysis view:** 3-5 minutes (shows managers are using it)
-- **Peer feedback avg response time:** <3 days (shows urgency)
-- **Goals set per review:** 3-5 goals (shows thoroughness)
+A trial is "activated" when:
+1. Added 3+ team members
+2. Created a review cycle
+3. At least 1 self-review completed
 
-### Retention Metrics
-- **Day 7 retention:** >60% (users return within first week)
-- **Day 30 retention:** >40% (users return before trial ends)
-- **Second cycle start rate:** >80% (strongest retention signal)
+### Activation Tracking
 
----
+| Event | Target % of Trials | Day Target |
+|-------|-------------------|------------|
+| Signup completed | 100% | Day 0 |
+| First employee added | 85% | Day 1 |
+| 3+ employees added | 70% | Day 3 |
+| Template selected | 65% | Day 3 |
+| Review cycle created | 60% | Day 5 |
+| First self-review completed | 40% | Day 7 |
+| **Activated** | 35% | Day 7 |
 
-## Product-Market Fit Scorecard
+### Activation Insights
 
-*Answer these questions monthly to gauge PMF health:*
-
-| Metric | Strong PMF (GO) | Weak PMF (Iterate) | No PMF (Pivot) |
-|--------|-----------------|---------------------|----------------|
-| **Review completion rate** | >85% | 70-85% | <70% |
-| **Employee self-review completion** | >85% | 70-85% | <70% |
-| **Peer feedback participation** | >75% | 60-75% | <60% |
-| **Trial-to-paid conversion** | >30% | 20-30% | <20% |
-| **NPS (customer satisfaction)** | >40 | 20-40 | <20 |
-| **Churn rate (monthly)** | <3% | 3-7% | >7% |
-| **"Would you be disappointed if this product disappeared?"** | >40% say "very" | 20-40% | <20% |
-
-**Decision framework:**
-- **5+ Strong PMF signals:** Scale growth (increase marketing spend, hire)
-- **3-4 Strong PMF signals:** Optimize product (improve weak areas)
-- **<3 Strong PMF signals:** Pivot or kill (product isn't working)
+**If activation is low (<35%):**
+1. Check onboarding friction (where do users drop?)
+2. Add in-app guidance
+3. Offer onboarding call
+4. Simplify team import
 
 ---
 
-## Feature Usage Tracking
+## Engagement Metrics
 
-*Which features drive retention?*
+### Core Engagement
 
-| Feature | Usage Target | Retention Impact |
-|---------|--------------|------------------|
-| **Gap analysis view** | >80% of managers use | High (core differentiator) |
-| **Peer feedback** | >60% of reviews include peer feedback | High (validates 360-degree value) |
-| **Goal setting** | >70% of reviews include goals | Medium (continuity for next cycle) |
-| **Historical reviews** | >30% of managers access past reviews | Medium (signals long-term value) |
-| **Team analytics** | >40% of managers view analytics | Low (nice-to-have, not core) |
-| **Custom templates** | >20% of Growth plan customers create custom | Medium (power user signal) |
+| Metric | Definition | Target |
+|--------|------------|--------|
+| Weekly Active Users (WAU) | Users with activity in past 7 days | 40% of total users |
+| Monthly Active Users (MAU) | Users with activity in past 30 days | 80% of total users |
+| WAU/MAU Ratio | Engagement stickiness | 50%+ |
 
-**Product roadmap prioritization:**
-- **High retention impact** → Double down, improve UX
-- **Low retention impact** → Deprioritize or remove
+### Feature Engagement
 
----
+| Feature | Metric | Target |
+|---------|--------|--------|
+| Self-Reviews | Completion rate | 80%+ |
+| Peer Feedback | Response rate | 70%+ |
+| Gap Analysis | View rate (% of completed reviews) | 90%+ |
+| Templates | % using pre-built vs custom | Track (no target) |
+| Reminders | Email open rate | 40%+ |
+| PDF Export | Export rate per completed review | 30%+ |
 
-## Weekly Metrics Dashboard (Track in Notion/Airtable)
+### Usage Depth
 
-| Metric | Week 1 | Week 2 | Week 3 | Week 4 | Target |
-|--------|--------|--------|--------|--------|--------|
-| **Weekly Active Teams** | 3 | 5 | 7 | 10 | 10+ |
-| **Review Completion Rate** | 75% | 80% | 85% | 85% | >80% |
-| **Self-Review Completion** | 70% | 75% | 80% | 85% | >80% |
-| **Peer Participation** | 60% | 65% | 70% | 75% | >70% |
-| **Trial-to-Paid Conversion** | 20% | 22% | 25% | 28% | >25% |
-| **NRR** | N/A | N/A | 95% | 100% | >100% |
-
----
-
-## Red Flags (When to Investigate)
-
-- [ ] **Review completion rate <70%** → UX issue or managers don't see value
-- [ ] **Self-review completion <70%** → Employee experience is broken (too long, unclear)
-- [ ] **Peer participation <50%** → Peer feedback is too burdensome or feels risky (anonymity concerns)
-- [ ] **Trial-to-paid <15%** → Pricing is wrong or product doesn't deliver promised value
-- [ ] **Churn >7%/month** → Product isn't sticky, customers aren't seeing ROI
-- [ ] **Gap analysis usage <60%** → Core differentiator isn't resonating (positioning problem)
+| Metric | Definition | Target |
+|--------|------------|--------|
+| Reviews per employee/year | Total reviews / employees | 2-4 |
+| Peer reviews per employee | Peers submitted per review cycle | 3+ |
+| Average cycle completion time | Days from launch to all complete | <21 days |
+| Template customization rate | % who modify templates | 20-40% |
 
 ---
 
-## Customer Feedback Collection
+## Retention Metrics
 
-*How to gather qualitative insights:*
+### Cohort Retention
 
-### In-App Surveys (Trigger at Key Moments)
-- **After first review completed:** "How was your experience? (1-5 stars + open text)"
-- **After trial ends:** "What would make you upgrade?" (if they don't convert)
-- **After second cycle starts:** "What keeps you using TeamPulse?" (retention insight)
+| Cohort Week | W1 | W2 | W4 | W8 | W12 |
+|-------------|-----|-----|-----|-----|------|
+| Target | 85% | 80% | 75% | 70% | 65% |
+| Red Flag | <70% | <65% | <55% | <50% | <45% |
 
-### Monthly Customer Interviews (5-10 per month)
-- **Power users (high engagement):** "What would make this a 10/10 product?"
-- **Churned customers:** "Why did you stop using us?"
-- **Free trial non-converters:** "What stopped you from paying?"
+### Monthly Retention (Logo)
 
-### NPS Survey (Quarterly)
-- **Question:** "How likely are you to recommend TeamPulse to another manager? (0-10)"
-- **Follow-up:** "What's the main reason for your score?"
-- **Target:** NPS >40 (Strong PMF), NPS 20-40 (Iterate), NPS <20 (Pivot)
+| Month | M1 | M3 | M6 | M12 |
+|-------|-----|-----|-----|------|
+| Target | 95% | 88% | 80% | 70% |
+
+### Revenue Retention (NRR)
+
+| Period | Target | Red Flag |
+|--------|--------|----------|
+| Monthly NRR | 100%+ | <95% |
+| Annual NRR | 105%+ | <100% |
+
+### Churn Analysis
+
+| Churn Reason | % of Churns | Action |
+|--------------|-------------|--------|
+| Never activated | 35% | Improve onboarding |
+| Used once, didn't return | 25% | Add reminders, value education |
+| Switched to competitor | 15% | Feature parity, win-back campaign |
+| Outgrew our features | 10% | Upmarket expansion (V2) |
+| Budget cuts | 10% | Annual prepay incentives |
+| Other | 5% | Exit interviews |
 
 ---
 
-## Product Analytics Stack
+## Product Quality Metrics
 
-### Must-Have (Free/Cheap)
-- **PostHog (self-hosted or cloud):** Event tracking, funnels, cohort analysis ($0-50/month for <10K events)
-- **Google Analytics:** Traffic sources, page views (free)
-- **Mailgun/SendGrid:** Email delivery rates, open rates (free tier: 1,000 emails/month)
+### Performance
 
-### Nice-to-Have (Post-Launch)
-- **Hotjar or FullStory:** Session recordings, heatmaps ($50-100/month)
-- **Chameleon or Appcues:** In-app tours and tooltips ($100-200/month)
+| Metric | Target | Red Flag |
+|--------|--------|----------|
+| Page load time | <2 sec | >3 sec |
+| API response time (p95) | <500ms | >1 sec |
+| Uptime | 99.9% | <99.5% |
+
+### Reliability
+
+| Metric | Target | Red Flag |
+|--------|--------|----------|
+| Error rate (5xx) | <0.1% | >0.5% |
+| Failed email deliveries | <1% | >3% |
+| Data sync issues | 0 | Any |
+
+### Support Load
+
+| Metric | Target | Red Flag |
+|--------|--------|----------|
+| Support tickets/100 MAU | <5 | >10 |
+| Time to first response | <4 hours | >24 hours |
+| Resolution time | <24 hours | >72 hours |
+| CSAT score | >4.5/5 | <4.0/5 |
 
 ---
 
-*Last updated: January 27, 2026*
+## Feature-Specific Metrics
+
+### Self-Review Performance
+
+| Metric | Target | What It Tells Us |
+|--------|--------|------------------|
+| Completion rate | 80%+ | Employee engagement |
+| Average completion time | <15 min | Form friction |
+| Draft save rate | 30%+ | Complex enough to need saves |
+| Completion by deadline | 70%+ | Reminder effectiveness |
+
+### Peer Feedback Performance
+
+| Metric | Target | What It Tells Us |
+|--------|--------|------------------|
+| Response rate | 70%+ | Peer willingness |
+| Avg responses per employee | 3+ | 360 coverage |
+| Average completion time | <8 min | Form simplicity |
+| Feedback quality (avg length) | >50 chars | Meaningful input |
+
+### Gap Analysis Performance
+
+| Metric | Target | What It Tells Us |
+|--------|--------|------------------|
+| View rate | 90%+ | Feature discovered |
+| Time on gap analysis page | >30 sec | Actually reviewing |
+| Coaching action taken | 50%+ | Actionable insights |
+| Average gap score | Track | Calibration needs |
+
+---
+
+## Business Metrics
+
+### Revenue Metrics
+
+| Metric | Definition | Target |
+|--------|------------|--------|
+| MRR | Monthly recurring revenue | $5K by M6 |
+| ARR | Annual recurring revenue | $60K by M12 |
+| ARPA | Average revenue per account | $120/month |
+| LTV | Lifetime value | $1,440 (12 months) |
+| CAC | Customer acquisition cost | <$150 |
+| LTV:CAC | Ratio | >8:1 |
+
+### Growth Metrics
+
+| Metric | Definition | Target |
+|--------|------------|--------|
+| MoM Growth | Month-over-month MRR growth | 20%+ |
+| Customer Growth | New customers/month | 8-10 |
+| Net Promoter Score | NPS | 40+ |
+
+### Unit Economics
+
+| Metric | Target |
+|--------|--------|
+| Payback period | <6 months |
+| Gross margin | >80% |
+| Monthly burn | <$1,000 |
+
+---
+
+## Dashboard Layout
+
+### Executive Summary (Weekly)
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ WEEKLY DASHBOARD - Week of [Date]                                  │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  NORTH STAR                          REVENUE                       │
+│  ───────────────                     ─────────                     │
+│  Review Cycles: 12/20 target         MRR: $2,450                   │
+│  ████████████░░░░ 60%                vs Last Week: +$180 (+7.9%)   │
+│                                                                    │
+│  FUNNEL THIS WEEK                    RETENTION                     │
+│  ─────────────────                   ──────────                    │
+│  Trials: 15 → Paid: 3 (20%)          M1: 94% | M3: 88%             │
+│  Activation rate: 40%                Churn: 1 customer             │
+│                                                                    │
+│  ENGAGEMENT                          QUALITY                       │
+│  ──────────                          ───────                       │
+│  WAU: 120 (45% of users)             Uptime: 99.97%                │
+│  Self-review completion: 82%         Support tickets: 8            │
+│  Peer feedback rate: 71%             Avg response: 2.3 hrs         │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### Detailed Metrics (Monthly)
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ MONTHLY METRICS - [Month]                                          │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ACQUISITION                                                       │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ Website visits:      2,400                                   │  │
+│  │ Trial signups:       120 (5.0% conv)                         │  │
+│  │ Source breakdown:                                            │  │
+│  │   LinkedIn: 45% | SEO: 30% | Direct: 15% | Other: 10%        │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ACTIVATION (Trial → Activated)                                    │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ Trials:              120                                     │  │
+│  │ Team setup:          84 (70%)                                │  │
+│  │ Cycle created:       72 (60%)                                │  │
+│  │ Self-review done:    48 (40%)                                │  │
+│  │ ACTIVATED:           42 (35%)                                │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  ENGAGEMENT                                                        │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ MAU:                 180                                     │  │
+│  │ WAU/MAU:             52%                                     │  │
+│  │ Reviews completed:   145                                     │  │
+│  │ Peer feedback rate:  73%                                     │  │
+│  │ Gap analysis views:  91%                                     │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+│  RETENTION & REVENUE                                               │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ Trial → Paid:        28%                                     │  │
+│  │ Logo retention:      92%                                     │  │
+│  │ NRR:                 103%                                    │  │
+│  │ MRR:                 $3,200                                  │  │
+│  │ ARPA:                $115                                    │  │
+│  │ New MRR:             $480                                    │  │
+│  │ Churned MRR:         $120                                    │  │
+│  │ Expansion MRR:       $85                                     │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Alerts & Thresholds
+
+### Immediate Alerts (Check Same Day)
+
+| Metric | Threshold | Action |
+|--------|-----------|--------|
+| Uptime | <99% | Investigate outage |
+| Error rate | >1% | Deploy fix |
+| Support spike | >20 tickets/day | Identify root cause |
+| Payment failures | >5% | Check billing provider |
+
+### Weekly Alerts
+
+| Metric | Threshold | Action |
+|--------|-----------|--------|
+| Trial-to-paid | <15% | Review onboarding |
+| Self-review completion | <70% | Improve reminders |
+| Churn | >10% of customers | Exit interviews |
+| NPS | <30 | Customer outreach |
+
+### Monthly Reviews
+
+| Metric | Threshold | Action |
+|--------|-----------|--------|
+| MRR growth | <10% | Marketing push |
+| Feature adoption | <50% any feature | In-app education |
+| Support load | >10 tickets/100 MAU | UX improvement |
+
+---
+
+## Tracking Implementation
+
+### Required Analytics Events
+
+```javascript
+// Core funnel events
+track('signup_started');
+track('signup_completed', { source, company_size });
+track('team_setup_completed', { employee_count });
+track('template_selected', { template_name });
+track('review_cycle_created', { cycle_type, participant_count });
+track('self_review_completed', { time_to_complete });
+track('peer_feedback_completed', { time_to_complete });
+track('manager_review_completed', { time_to_complete });
+track('gap_analysis_viewed', { gap_score });
+track('review_shared', { export_type });
+track('subscription_started', { plan, billing_cycle });
+track('subscription_cancelled', { reason });
+
+// Engagement events
+track('dashboard_viewed');
+track('reminder_sent', { type, manual_or_auto });
+track('reminder_clicked');
+track('pdf_exported');
+track('template_customized');
+```
+
+### Recommended Tools
+
+| Function | Tool | Cost |
+|----------|------|------|
+| Product analytics | Mixpanel or Amplitude | Free tier |
+| Website analytics | Plausible | $9/month |
+| Error tracking | Sentry | Free tier |
+| Uptime monitoring | BetterUptime | Free tier |
+| Customer feedback | Canny or Notion | Free |
+
+---
+
+*Next artifact: 06-interview-template.md*

@@ -1,203 +1,510 @@
 # Follow-Up System
 
+*Generated for: Performance Evaluation Tool*
+
+---
+
 ## Follow-Up Philosophy
-- **Persistence beats talent:** 80% of sales require 5+ follow-ups
-- **Add value every time:** Don't just "check in"—share insight, template, or customer story
-- **Know when to quit:** 3 no-replies = move to long-term nurture
+
+### The Rules
+
+1. **Always have a next step** - Every interaction ends with a scheduled follow-up
+2. **Follow up until you get a clear no** - Most sales are lost to indifference, not rejection
+3. **Add value with every touch** - Don't just "check in" - share something useful
+4. **Track everything** - If it's not in the CRM, it didn't happen
+5. **Respect time** - Be persistent, not annoying
+
+### Follow-Up Frequency by Stage
+
+| Stage | Frequency | Purpose |
+|-------|-----------|---------|
+| Lead (pre-call) | Every 2-3 days | Book discovery call |
+| Qualified (post-call) | Every 3-5 days | Start trial |
+| Trial (active) | Day 1, 3, 7, 10, 13 | Drive activation |
+| Opportunity | Every 2-3 days | Close deal |
+| Stalled deal | Weekly → Bi-weekly → Monthly | Revive interest |
 
 ---
 
-## Follow-Up Cadence by Stage
+## Lead Follow-Up Sequence (Pre-Discovery)
 
-### Stage 1: Post-Connection (LinkedIn)
-*See marketing/04-linkedin-outreach.md for full sequence*
+### Goal: Book a discovery call
 
-- **Day 1:** Value-first message (insight, no pitch)
-- **Day 3:** Curiosity question (soft discovery)
-- **Day 7:** Demo offer (if engaged)
-- **Day 14:** Breakup email (if no response)
+**Day 0: Initial Outreach**
+[LinkedIn connection request - see LinkedIn Outreach artifact]
 
----
-
-### Stage 2: Post-Discovery Call
-
-#### Path A: Qualified → Demo Scheduled
-- **Within 2 hours:** Send calendar invite + pre-demo email (see sales/07-scripts-library.md)
-- **1 day before demo:** Confirmation + "What questions do you have?"
-- **If no-show:** Immediate follow-up ("Missed you! Want to reschedule?")
-
-#### Path B: Qualified → No Demo Scheduled Yet
-- **Within 2 hours:** Send availability + value reminder
-- **Day 3:** "Still interested? Here are 3 times that work for me"
-- **Day 7:** Breakup ("Don't want to be a pest—ping me when timing's better")
-
-#### Path C: Not Qualified → Nurture
-- **Within 24 hours:** Thank you + free resources (templates, blog post)
-- **Month 3:** Check-in ("Circling back—any changes?")
-- **Month 6:** Another check-in or remove from list
-
----
-
-### Stage 3: Post-Demo
-
-#### Path A: Demo → Trial Signup (Success!)
-- **Immediate:** Trial signup link + "Setup takes 15 min—ping me if stuck"
-- **Day 3:** Check-in ("How's it going? Need help importing your team?")
-- **Day 7:** Value reinforcement ("Halfway through trial—seen the gap analysis feature yet?")
-- **Day 12:** Upgrade prompt ("Trial ends in 2 days—ready to upgrade?")
-- **Day 14:** Final nudge ("Last day of trial—$6-8 PEPM, takes 2 min to upgrade: [link]")
-- **Day 15:** If no conversion, ask why ("What would've made this a yes?")
-
-#### Path B: Demo → "Let Me Think"
-- **Within 2 hours:** "No pressure—what specifically are you thinking about?"
-- **Day 3:** Address their concern + customer story ("Manager at [company] had same question—here's how they solved it")
-- **Day 7:** "Ready to try the trial, or still thinking?"
-- **Day 14:** Breakup ("No worries—I'll check back in [X] months before your next review cycle")
-
-#### Path C: Demo → No Response (Ghost)
-- **Day 1:** "How'd the demo land? Questions?"
-- **Day 3:** "Haven't heard back—still interested or bad timing?"
-- **Day 7:** Breakup ("Guessing this isn't a priority—I'll check in [X] months from now")
-
----
-
-### Stage 4: Trial Active (Nurture to Conversion)
-
-**Email sequence (automated or manual):**
-
-**Day 0 (Signup):**
-Subject: "Welcome to TeamPulse! Here's how to get started"
-> Hey [Name]!
+**Day 2: First Follow-Up**
+> Hey [Name], wanted to bump this to the top of your inbox.
 >
-> Your trial is active. Here's how to set up in 15 minutes:
-> 1. Import team (Slack or CSV): [link]
-> 2. Pick template (Engineer, Manager, Sales): [link]
-> 3. Launch first review: [link]
->
-> I'll check in on Day 3 to see how it's going. Hit reply if you get stuck!
->
-> [Your Name]
+> Quick question: are you using spreadsheets for reviews, or do you have something more structured?
 
-**Day 3 (Check-In):**
-Subject: "How's your trial going?"
+**Day 5: Value Add**
+> Hey [Name], whether we chat or not, thought you might find this useful:
+>
+> [Link to free template or relevant blog post]
+>
+> Let me know if you'd like to chat about what you're doing for reviews.
+
+**Day 9: Direct Ask**
+> Hey [Name], I'll keep this short.
+>
+> Would a 15-minute call next week make sense? Happy to share what we're seeing work for teams your size.
+>
+> If not a fit, no worries - just let me know and I'll stop reaching out.
+
+**Day 14: Final Attempt**
+> Hey [Name], I'll take the hint :)
+>
+> If performance reviews ever become a priority, feel free to reach out. Here's my calendar if timing ever makes sense: [link]
+>
+> Best of luck with everything at [Company].
+
+---
+
+## Trial Follow-Up Sequence
+
+### Goal: Drive activation and conversion
+
+**Day 0: Welcome Email**
+
+Subject: Welcome to [Product] - Here's your quick start
+
 > Hey [Name],
 >
-> Quick check-in—have you had a chance to import your team and launch a review?
+> Welcome to [Product]! Excited to have you on board.
 >
-> If you're stuck, I'm happy to hop on a 10-min call and walk you through it.
+> **Quick Start (15 minutes):**
+> 1. Add 3-4 team members: [link]
+> 2. Pick a template: [link]
+> 3. Create a test review cycle: [link]
 >
-> [Your Name]
-
-**Day 7 (Value Reinforcement):**
-Subject: "Halfway through your trial—have you seen the gap analysis?"
-> Hey [Name],
+> That's when the magic happens - you'll see how self-reviews and gap analysis work together.
 >
-> You're halfway through your trial! If you haven't tried the gap analysis feature yet, that's where the magic happens.
+> Questions? Just reply to this email. I'm here to help.
 >
-> Here's how: Have an employee submit their self-review, then open the "Gap Analysis" view. You'll see your ratings side-by-side with theirs. Managers tell us this saves 30 min per review.
->
-> Let me know if you want a quick demo of that feature!
->
-> [Your Name]
-
-**Day 12 (Upgrade Prompt):**
-Subject: "Your trial ends in 2 days—ready to upgrade?"
-> Hey [Name],
->
-> Your trial ends on [Date]. If you're seeing value, upgrading takes 2 minutes: [Upgrade link]
->
-> Pricing reminder:
-> - 20 employees: $120/month or $1,020/year (15% off annual)
-> - All features included
->
-> Questions? Hit reply or book a quick call: [Calendly link]
->
-> [Your Name]
-
-**Day 14 (Final Nudge):**
-Subject: "Last day of your trial"
-> Hey [Name],
->
-> Today's the last day of your trial. If you want to keep using TeamPulse, upgrade here: [link]
->
-> If the timing's not right, no worries—I'll check in before your next review cycle.
->
-> [Your Name]
-
-**Day 15 (If No Conversion):**
-Subject: "What would've made this a yes?"
-> Hey [Name],
->
-> Noticed you didn't upgrade—totally fine! Can I ask what would've made this a yes? Was it pricing, features, timing, or something else?
->
-> Your feedback helps us improve. Thanks!
->
-> [Your Name]
+> [Signature]
 
 ---
 
-### Stage 5: Closed-Lost (Long-Term Nurture)
+**Day 2: Check-In**
 
-**Goal:** Stay top-of-mind without being annoying
+Subject: Quick check-in - How's setup going?
 
-**Month 3:** "Checking in—how are reviews going?"
 > Hey [Name],
 >
-> It's been a few months since we last chatted. Curious—how are performance reviews going? Still using [Google Docs / Lattice / etc.]?
+> Just checking in - did you get a chance to add your team?
 >
-> We've shipped some new features since then (historical review access, custom templates). If timing's better now, happy to show you. If not, I'll check back in another few months.
+> If you ran into any issues or questions, let me know. Happy to hop on a quick call to walk through anything.
 >
-> [Your Name]
+> [Signature]
 
-**Month 6:** "Before your next review cycle..."
+---
+
+**Day 5: Progress + Value**
+
+Subject: [Name], how's the trial going?
+
 > Hey [Name],
 >
-> Your next review cycle is probably coming up in the next 60-90 days. Want to avoid the copy-paste chaos this time?
+> Checking in on your trial.
 >
-> We can get you set up in 15 minutes. Let me know if you want a quick demo.
+> [If they've added team]: Great to see you've added your team! Have you had a chance to create a review cycle?
 >
-> [Your Name]
+> [If they haven't added team]: I noticed you haven't added any team members yet. Want me to walk you through the setup? Takes about 10 minutes.
+>
+> Here's a quick tip: The gap analysis feature is where most managers have their "aha" moment. You'll see how employees rate themselves vs. your ratings - it makes 1:1 conversations so much more productive.
+>
+> [Signature]
 
-**Month 12:** Final check-in or remove
+---
+
+**Day 7: Feature Highlight**
+
+Subject: Try the gap analysis feature
+
 > Hey [Name],
 >
-> Last check-in! If performance reviews still aren't a priority, I'll stop bothering you. But if anything's changed, I'm here.
+> One feature I want to make sure you see: the gap analysis view.
 >
-> [Your Name]
+> Here's how it works:
+> 1. Employee rates themselves (self-review)
+> 2. You rate them (manager review)
+> 3. You see both side by side with gaps highlighted
+>
+> Most managers tell us this is the most valuable part - it surfaces coaching opportunities you'd never see otherwise.
+>
+> Have you gotten a chance to try it? Happy to show you in a quick call.
+>
+> [Signature]
 
 ---
 
-## Follow-Up Tracking (Notion/Airtable Template)
+**Day 10: Conversion Nudge**
 
-| Lead Name | Stage | Last Touch | Next Action | Next Touch Date | Notes |
-|-----------|-------|------------|-------------|-----------------|-------|
-| Sarah Chen | Trial Active | Day 3 check-in sent | Day 7 value email | Jan 30 | Imported team, launched 1 review |
-| Alex Kim | Post-Demo | Demo done, no signup | Follow-up #2 | Jan 28 | Said "let me think", concerned about pricing |
-| Jordan Lee | Nurture | Month 3 check-in | Month 6 check-in | Apr 15 | Next review cycle in May |
+Subject: 4 days left in your trial
 
----
-
-## Follow-Up Rules of Thumb
-
-1. **Always add value:** Don't say "just checking in"—share customer story, free template, or new feature
-2. **Respect the breakup:** After 3 no-replies, move to long-term nurture (don't spam)
-3. **Track everything:** Use CRM/Notion to avoid awkward "did I already follow up?" moments
-4. **Automate where possible:** Use email sequences for trial nurture (Day 0, 3, 7, 12, 14)
-5. **Personalize the important ones:** Hot leads get custom emails, cold leads get templates
-
----
-
-## Follow-Up Mistake to Avoid
-
-❌ **"Just checking in"** → Adds no value, easy to ignore
-✅ **"Saw your team is hiring—reviews about to get more complex. Ready to set up TeamPulse before it's chaos?"** → Personalized, value-driven
-
-❌ **"Did you see my last email?"** → Guilt-tripping, annoying
-✅ **"In case you missed it—here's a free review template I thought you'd find useful: [link]"** → Helpful, assumes best intent
-
-❌ **"Let me know if you're interested"** → Puts onus on them, vague
-✅ **"Want to hop on a 10-min call Thursday at 2pm to discuss? Here's my calendar: [link]"** → Specific, actionable
+> Hey [Name],
+>
+> Your trial wraps up in 4 days.
+>
+> Based on what you've seen so far - is this something that would work for your team?
+>
+> If so, I can answer any questions about pricing or walk you through the upgrade process. For your team of [X], that's $[Y]/month.
+>
+> If not, I'd love to hear what's missing or what we could do better. Either way, happy to chat.
+>
+> [Calendly link]
+>
+> [Signature]
 
 ---
 
-*Last updated: January 27, 2026*
+**Day 13: Last Day Warning**
+
+Subject: Trial ending tomorrow - questions?
+
+> Hey [Name],
+>
+> Your trial ends tomorrow.
+>
+> If you're not ready to decide, no worries - I can extend it for a few days. Just let me know.
+>
+> If you have questions about pricing or features, I'm around. Quick call? [Calendly link]
+>
+> [Signature]
+
+---
+
+**Day 14: Trial Ended**
+
+Subject: Your trial ended - what's next?
+
+> Hey [Name],
+>
+> Your trial just ended.
+>
+> Your data is still there for the next 30 days if you decide to come back.
+>
+> If the timing isn't right, that's totally fine. When's your next review cycle? I can reach out before that so you have time to evaluate.
+>
+> Either way, thanks for giving us a try.
+>
+> [Signature]
+
+---
+
+## Opportunity Follow-Up Sequence
+
+### Goal: Close the deal
+
+**Day 0 (After Conversion Call): Recap + Next Step**
+
+Subject: [Product] - Pricing for [Company]
+
+> Hey [Name],
+>
+> Great chatting today! Here's a quick recap:
+>
+> **For your team of [X] employees:**
+> - Monthly: $[Y]/month
+> - Annual: $[Z]/year (save $[Savings])
+>
+> **Next step:** Ready to get started? [Signup link]
+>
+> Questions? Just reply.
+>
+> [Signature]
+
+---
+
+**Day 2: Soft Follow-Up**
+
+Subject: Re: [Product] - Pricing for [Company]
+
+> Hey [Name],
+>
+> Following up - did you get a chance to look at the pricing I sent?
+>
+> Any questions I can answer?
+>
+> [Signature]
+
+---
+
+**Day 5: Add Value / Urgency**
+
+Subject: Quick thought on timing
+
+> Hey [Name],
+>
+> Just thinking about timing.
+>
+> [If they have upcoming review cycle]: Your next review cycle is in [X] weeks. To get the most value, you'd want to start setup 1-2 weeks before. That means deciding in the next week or so.
+>
+> [If no specific timeline]: Teams typically need 1-2 weeks to get comfortable before their first review cycle. Something to think about based on your timeline.
+>
+> Happy to hop on a quick call if anything's holding you back.
+>
+> [Signature]
+
+---
+
+**Day 8: Direct Ask**
+
+Subject: Quick question
+
+> Hey [Name],
+>
+> I want to be respectful of your time.
+>
+> Are you still considering [Product]? If so, what's holding you back from moving forward?
+>
+> If the timing isn't right, that's okay - just let me know so I can follow up at a better time.
+>
+> [Signature]
+
+---
+
+**Day 12: Final Push**
+
+Subject: Checking in one more time
+
+> Hey [Name],
+>
+> I haven't heard back, so I'll take the hint :)
+>
+> I'll circle back in [30/60/90 days] - around when you mentioned your next review cycle.
+>
+> If you want to chat before then, my door's always open.
+>
+> [Signature]
+
+---
+
+## Stalled Deal Follow-Up
+
+### Goal: Revive interest or get a clear no
+
+**Week 1: Break the Silence**
+
+Subject: Did I lose you?
+
+> Hey [Name],
+>
+> I noticed we haven't connected in a while.
+>
+> Did something change, or did this just fall off your radar? Either way, I'd love to know so I can help or get out of your inbox.
+>
+> [Signature]
+
+---
+
+**Week 3: New Value**
+
+Subject: Thought you might find this useful
+
+> Hey [Name],
+>
+> I came across this [article/template/resource] and thought of our conversation:
+>
+> [Link]
+>
+> Hope things are going well at [Company]. Let me know if you want to pick up where we left off.
+>
+> [Signature]
+
+---
+
+**Week 6: Check-In**
+
+Subject: [Company] + [Product] - still relevant?
+
+> Hey [Name],
+>
+> It's been a while since we chatted.
+>
+> Is improving your review process still on your radar, or have priorities changed?
+>
+> No hard feelings either way - just want to know if I should keep reaching out.
+>
+> [Signature]
+
+---
+
+**Week 10: Last Attempt**
+
+Subject: Should I stop reaching out?
+
+> Hey [Name],
+>
+> I've reached out a few times without hearing back.
+>
+> I'll assume the timing isn't right and stop the emails. If anything changes, you know where to find me.
+>
+> Best of luck with everything!
+>
+> [Signature]
+
+---
+
+## Customer Follow-Up Sequence
+
+### Goal: Ensure success, get referrals
+
+**Day 0: Welcome to Paid**
+
+Subject: Welcome to [Product]!
+
+> Hey [Name],
+>
+> Woohoo! You're officially a [Product] customer.
+>
+> Here's what happens next:
+> 1. You'll get an invoice via email
+> 2. Your full access is now active
+> 3. I'm here for any questions
+>
+> One ask: If you have 10 minutes this week, I'd love to do a quick onboarding call to make sure you're set up for success. [Calendly link]
+>
+> Excited to support you and your team!
+>
+> [Signature]
+
+---
+
+**Week 2: Check-In**
+
+Subject: How's it going with [Product]?
+
+> Hey [Name],
+>
+> Just checking in - how's your first couple weeks been?
+>
+> Any questions or issues I can help with?
+>
+> [Signature]
+
+---
+
+**Post-First Review Cycle: Feedback + Testimonial**
+
+Subject: How did your first review cycle go?
+
+> Hey [Name],
+>
+> I saw your team completed your first review cycle - congrats!
+>
+> I'd love to hear how it went:
+> - What worked well?
+> - What could be better?
+> - How much time did it save compared to before?
+>
+> Also - if you're happy with your experience, would you be open to sharing a quick testimonial? We'd feature you on our website.
+>
+> Here's a simple form: [link]
+>
+> Either way, thanks for being a customer!
+>
+> [Signature]
+
+---
+
+**Month 3: Referral Ask**
+
+Subject: Know anyone else who'd benefit?
+
+> Hey [Name],
+>
+> Hope things are going great with [Product]!
+>
+> Quick ask: Do you know any other managers who are stuck with spreadsheets for reviews?
+>
+> If you send them our way and they sign up, I'll give both of you a month free.
+>
+> Just have them mention your name, or send me their email and I'll reach out.
+>
+> Thanks!
+>
+> [Signature]
+
+---
+
+## Follow-Up Best Practices
+
+### Subject Lines That Work
+
+| Type | Examples |
+|------|----------|
+| Question | "Quick question", "Did I lose you?" |
+| Value | "Thought you'd find this useful" |
+| Direct | "[Company] + [Product] - next steps" |
+| Urgency | "4 days left in your trial" |
+| Personal | "Re: our conversation" |
+
+### What NOT to Do
+
+| Don't | Why | Do Instead |
+|-------|-----|------------|
+| "Just checking in" | No value | Share something useful |
+| "Bumping this up" | Annoying | Provide new information |
+| "Did you get my email?" | Passive aggressive | Be direct about what you need |
+| 5 emails in 5 days | Spam | Space out appropriately |
+| Long paragraphs | Won't be read | Keep it short |
+
+### Timing Tips
+
+- **Best days:** Tuesday, Wednesday, Thursday
+- **Best times:** 9-10 AM or 2-3 PM (their timezone)
+- **Avoid:** Monday mornings, Friday afternoons
+
+---
+
+## CRM Setup for Follow-Ups
+
+### Required Tasks
+
+| Trigger | Task Created | Due Date |
+|---------|-------------|----------|
+| New lead | "Follow up if no response" | +3 days |
+| Trial started | "Day 2 check-in" | +2 days |
+| Trial started | "Day 5 progress" | +5 days |
+| Trial ending | "Conversion nudge" | -4 days |
+| Opportunity created | "Follow up on proposal" | +2 days |
+| Stalled >7 days | "Re-engage stalled deal" | +1 day |
+
+### Automation Rules
+
+1. No reply in 7 days → Move to "Stalled"
+2. Trial signup → Start trial sequence
+3. Paid subscription → Start customer sequence
+4. Demo completed → Create "Send proposal" task
+
+---
+
+## Tracking Follow-Ups
+
+### Weekly Review
+
+| Metric | Target |
+|--------|--------|
+| Follow-ups sent | 50+ |
+| Response rate | 20%+ |
+| Overdue tasks | 0 |
+| Stalled deals actioned | 100% |
+
+### Dashboard
+
+```
+Follow-Up Status This Week:
+──────────────────────────
+Sent:        52 ████████████████████
+Responses:   14 █████
+Meetings:     4 ██
+Conversions:  2 █
+
+Overdue Tasks: 3 (fix today!)
+```
+
+---
+
+*Next artifact: 06-sales-metrics.md*

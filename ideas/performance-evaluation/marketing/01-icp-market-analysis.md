@@ -1,108 +1,220 @@
 # ICP & Market Analysis
 
-## Ideal Customer Profile
-
-### Primary ICP
-- **Job Title:** Engineering Manager, Product Manager, Operations Manager (first-time managers with 4-8 direct reports)
-- **Company Size:** 15-50 employees (sweet spot), expanding to 5-100 employees
-- **Industry:** Tech startups, digital agencies, SaaS companies, professional services firms
-- **Budget Authority:** Yes - typically controls team budget of $5-20K/year for tools
-- **Tech Savviness:** High - comfortable with SaaS tools, expects modern UX
-
-### Psychographics
-- **Daily frustrations:**
-  - Drowning in 1:1s with no structure or documentation
-  - Copy-pasting last quarter's review docs, feeling unprofessional
-  - Anxiety about missing legal documentation for terminations
-  - Guilt about inconsistent feedback across team members (recency bias)
-  - Imposter syndrome: "Am I doing this right?"
-
-- **Goals they're measured on:**
-  - Team retention and engagement scores
-  - Team productivity and velocity
-  - Developing direct reports (succession planning)
-  - Reducing time-to-productivity for new hires
-
-- **Tools they already use:**
-  - Slack/Teams for communication
-  - Jira/Linear for project management
-  - Google Workspace (Docs/Sheets for current reviews)
-  - 1:1 meeting tools (Fellow, Soapbox)
-  - Maybe: BambooHR or Rippling for basic HR
-
-### Where to Find Them (Critical for Distribution)
-| Channel | Specific Places |
-|---------|-----------------|
-| **LinkedIn** | #engineeringmanager #productmanagement #firsttimemanager hashtags; follow Lara Hogan, Julie Zhuo, Will Larson; active in "Engineering Managers" and "People Management" groups |
-| **Communities** | Rands Leadership Slack, Manager's Club Slack, Eng Manager Hub Discord, /r/ExperiencedDevs and /r/managers on Reddit |
-| **Publications** | Read "The Skip Level" newsletter, Manager Tools podcast, "Software Lead Weekly", Lenny's Newsletter, First Round Review |
-| **Events** | LeadDev conferences, local engineering manager meetups, startup CTO/VP Eng dinners, SaaStr |
-
-### Trigger Events (What Makes Them Search)
-*When do they actively look for a solution?*
-1. **Company hits 15-20 employees** - CEO says "we need formal reviews now" (90 days before review cycle)
-2. **First termination goes badly** - realize they have no documentation trail, legal exposure
-3. **New quarter starts** - copy-pasting last quarter's review docs, feel embarrassed by the mess
-4. **Employee complains about lack of feedback** - exit interview or engagement survey exposes problem
-5. **Promoted to manager** - suddenly responsible for 5-8 people, no idea how to do reviews
-
-### Qualifying Questions
-1. "How are you currently handling performance reviews for your team?" (Confirms they have the problem)
-2. "What's your budget for team management tools - do you expense tools like Linear or Notion?" (Confirms budget authority)
-3. "When's your next review cycle?" (Confirms urgency - ideal if <90 days away)
-
-## Market Size (Bottom-Up)
-
-### Total Addressable Market
-- **US companies with 5-100 employees:** ~600,000 companies
-- **Managers per company (avg):** 3-8 managers (assume 5)
-- **Total managers:** ~3 million managers
-- **Employees per manager:** 6-8 (assume 7)
-- **Total employees:** ~21 million employees
-
-### Realistic Addressable Market
-- **Tech-savvy companies (20% of total):** 120,000 companies
-- **Active buyers (those who care about performance tools):** 10% = 12,000 companies
-- **Average team size:** 25 employees
-- **Potential annual revenue:** 12,000 × 25 × $7/month × 12 = $25M ARR potential
-
-### Reachable in Year 1
-- **LinkedIn + community outreach:** Can reach ~2,000 qualified ICPs
-- **Realistic conversion (trial → paid):** 2-5% = 40-100 companies
-- **Year 1 revenue potential:** 70 companies × 20 employees × $7 × 12 = $117,600 ARR
-
-**Source/reasoning:**
-- Company counts from US Census Bureau small business data
-- Tech-savvy filter based on SaaS adoption rates (G2, Gartner data)
-- Conversion assumptions based on similar B2B SaaS benchmarks (ChartMogul, OpenView)
-
-## Competitive Context
-*For detailed competitor analysis, see `product/01-market-research.md`*
-
-**Key positioning gaps we exploit:**
-1. **Price gap:** Enterprise tools (Lattice $11-16 PEPM, 15Five $8-12 PEPM, Culture Amp $10-14 PEPM) ignore teams <50 employees; basic tools (Small Improvements $5-8 PEPM, 7Geese $5-7 PEPM) lack self-review and peer feedback. We fill the $6-8 PEPM gap with enterprise features.
-
-2. **Feature gap:** Basic tools lack employee self-review and manager gap analysis (the "side-by-side comparison" that makes reviews actionable). We're one of the few at SMB price point with this.
-
-3. **UX gap:** Enterprise tools require 1-2 weeks of setup, onboarding training, and admin hand-holding. We offer instant setup with pre-built templates (Software Engineer, Manager, Sales Rep).
-
-4. **Market timing:** COVID accelerated remote work → async feedback is now expected; Gen Z/Millennials demand continuous feedback; manager training is scarce → tools need to guide managers through the process.
-
-## Market Timing
-
-**Why now?**
-- **Remote work normalization:** Post-COVID, companies need structured async feedback tools (can't rely on hallway conversations)
-- **Manager skill gap:** 60% of managers get no training (Gallup) → tools must educate AND execute
-- **Employee expectations shifted:** Gen Z/Millennials expect continuous feedback, not annual reviews
-- **Economic pressure:** 2023-2024 belt-tightening → companies scrutinizing $11-16 PEPM tools, open to cheaper alternatives
-- **Tech enablement:** Modern frontend stacks (Vue, Nuxt) enable beautiful UX at lower cost → can match enterprise UX without enterprise budget
-
-**Risks/headwinds:**
-- **Economic recession:** If budgets freeze, tools with longer sales cycles (3-6 months) will struggle. Mitigation: Self-service, fast time-to-value.
-- **Competitive response:** Lattice/15Five could launch SMB tier. Mitigation: Move fast, own the niche before they notice.
-- **Low willingness to pay:** If managers say "Google Docs is fine", category doesn't exist yet. Mitigation: Validate in first 50 conversations.
-- **Fragmented ICP:** If team managers in different industries have wildly different needs, hard to focus. Mitigation: Start with tech/agencies, expand later.
+*Generated for: Performance Evaluation Tool*
 
 ---
 
-*Last updated: January 27, 2026*
+## Ideal Customer Profile (ICP)
+
+### Primary ICP: The Scaling Startup Manager
+
+**Demographics:**
+- **Title:** Engineering Manager, Product Manager, Operations Lead, Head of People
+- **Company Size:** 15-50 employees (sweet spot: 20-35)
+- **Company Stage:** Series A/B startup or established small business
+- **Industry:** Tech startups, digital agencies, professional services, SaaS companies
+- **Location:** US, Canada, UK, Australia (English-speaking markets)
+- **Budget Authority:** Yes - can approve $100-300/month tools independently
+
+**Psychographics:**
+- First-time or second-time manager (promoted from IC role)
+- Values documentation and process but hates bureaucracy
+- Tech-savvy, prefers self-serve tools over enterprise sales calls
+- Frustrated with expensive enterprise tools that require IT involvement
+- Believes in regular feedback but struggles to make time for it
+- Anxious about legal exposure from undocumented performance issues
+
+**Trigger Events (Why They Buy NOW):**
+1. Just hired employee #15 (or 20, 30) - feeling the pain of informal processes
+2. Failed to document a performance issue that became a termination problem
+3. Received budget for "people tools" after a bad review cycle
+4. CEO or board asking for "more formal HR processes"
+5. Lost a good employee who cited "lack of feedback" in exit interview
+6. Upcoming quarterly review cycle with no system in place
+
+**Watering Holes (Where They Hang Out):**
+- LinkedIn (primary - they're actively networking)
+- Hacker News (for tech managers)
+- Lenny's Newsletter / First Round Review (startup content)
+- Manager Slack communities (Rands Leadership, Engineering Managers)
+- Product Hunt (for tool discovery)
+- r/startups, r/smallbusiness, r/management
+
+### Secondary ICP: The Overwhelmed HR Generalist
+
+**Demographics:**
+- **Title:** HR Manager, People Operations, Office Manager wearing HR hat
+- **Company Size:** 20-75 employees
+- **Reports To:** CEO or COO directly
+- **Industry:** Professional services, healthcare, manufacturing, retail
+- **Budget:** Needs to justify purchases to leadership
+
+**Pain Points:**
+- Wearing 5+ hats (recruiting, benefits, compliance, performance, culture)
+- No HR team support - they ARE the HR team
+- Needs tools that are "set it and forget it"
+- Terrified of compliance issues and lawsuits
+- Previous enterprise tools were too complex to implement
+
+---
+
+## Market Analysis
+
+### Market Size (TAM/SAM/SOM)
+
+**TAM (Total Addressable Market):**
+- US companies with 5-100 employees: ~5.9 million businesses
+- Average 30 employees per company = ~177M employees
+- At $7 PEPM = $1.24B/month = **$14.9B annually**
+
+**SAM (Serviceable Addressable Market):**
+- Companies actively seeking performance management tools: ~15% = 885K companies
+- English-speaking markets (US, UK, Canada, AU): ~600K companies
+- At $100 ARPA/month = **$720M annually**
+
+**SOM (Serviceable Obtainable Market - 3 year):**
+- Realistically capture 0.1% of SAM = 600 companies
+- At $120 ARPA/month = **$864K ARR** (achievable in 3 years)
+
+### Competitive Landscape
+
+| Competitor | Pricing | Target | Strengths | Weaknesses |
+|------------|---------|--------|-----------|------------|
+| **Lattice** | $11-16 PEPM | 100+ employees | Full HRIS, brand recognition | Expensive, complex, enterprise sales |
+| **15Five** | $9-14 PEPM | 50+ employees | Weekly check-ins, engagement | Expensive, feature bloat |
+| **Small Improvements** | $5-8 PEPM | 25+ employees | Simple, affordable | No peer feedback, basic features |
+| **Culture Amp** | $10+ PEPM | 100+ employees | Analytics, surveys | Enterprise-only, complex |
+| **Google Sheets** | Free | Any size | Free, familiar | No structure, chaos, no visibility |
+
+### The Gap We Fill
+
+```
+Price ($PEPM)
+$16 |                    [Lattice]
+$14 |            [15Five]
+$12 |
+$10 |        [Culture Amp]
+$8  |    [Small Improvements]  <-- Basic features only
+$7  |    [US] <-- Enterprise features at SMB price
+$6  |
+$4  |
+$0  |[Spreadsheets] <-- No features
+    +---------------------------------> Features
+         Basic    Self-Review  Peer    Goals   Analytics
+                              Feedback
+```
+
+**Our Position:** Enterprise features (self-review + peer feedback + goals) at SMB pricing ($6-8 PEPM)
+
+### Market Trends
+
+**Tailwinds:**
+1. **Remote/hybrid work** - Documentation more critical when managers don't see employees daily
+2. **Legal awareness** - SMBs increasingly aware of termination liability without documented performance issues
+3. **Tool consolidation** - Companies want fewer, more integrated tools
+4. **Self-serve preference** - SMBs prefer trying tools before sales calls
+5. **Performance culture** - Gen Z employees expect regular, documented feedback
+
+**Headwinds:**
+1. **Budget scrutiny** - Economic uncertainty = tighter SaaS budgets
+2. **Tool fatigue** - "Another HR tool?" resistance
+3. **Change resistance** - "Spreadsheets work fine" inertia
+4. **Enterprise down-market** - Lattice launching SMB tier eventually
+
+---
+
+## ICP Validation Criteria
+
+### Ideal Customer Signals (Green Flags)
+
+| Signal | Why It Matters |
+|--------|----------------|
+| Team grew 50%+ in last year | Outgrowing informal processes |
+| Currently using spreadsheets for reviews | Active problem, ready to upgrade |
+| Has structured 1:1s already | Values process, will adopt tool |
+| Posts about management challenges | Actively learning, engaged |
+| Uses other modern SaaS tools (Slack, Notion, Linear) | Comfortable with new software |
+| First-time manager in role <2 years | Seeking frameworks and tools |
+
+### Disqualification Signals (Red Flags)
+
+| Signal | Why Disqualify |
+|--------|----------------|
+| <10 employees | Too small, won't pay |
+| >100 employees | Need enterprise features we don't have |
+| "We don't do formal reviews" | Not a buyer, would need convincing |
+| Already using Lattice/15Five | Switching cost too high |
+| Price-first questions in first conversation | Will churn at any price |
+| No budget authority | Can't close, wasted time |
+
+---
+
+## Buying Process
+
+### Decision Makers vs. Influencers
+
+| Role | Involvement | Concerns | Win Them By |
+|------|-------------|----------|-------------|
+| **Hiring Manager** (Decision Maker) | Evaluates, implements, approves | Time savings, ease of use | Demo focused on their workflow |
+| **CEO/Founder** (Approver) | Final budget sign-off | ROI, legal protection | ROI calculator, compliance story |
+| **HR (if exists)** (Influencer) | May champion or block | Integration, compliance | Templates, audit trail features |
+| **Employees** (End Users) | Complete reviews | Simple UX, mobile-friendly | Self-serve experience, clear value |
+
+### Typical Buying Journey
+
+1. **Trigger** (Week 0): Painful review cycle or compliance scare
+2. **Research** (Week 1-2): Google "performance review software small teams", ask peers
+3. **Shortlist** (Week 2-3): Compare 3-4 tools, check pricing pages
+4. **Trial** (Week 3-4): Start free trial with small team or mock data
+5. **Evaluate** (Week 4-5): Run one review cycle or test features
+6. **Decide** (Week 5-6): Present to CEO/finance if needed
+7. **Purchase** (Week 6-8): Monthly to start, annual after 3-6 months
+
+**Sales Cycle:** 4-8 weeks (shorter for manager-only decisions)
+
+---
+
+## Outreach Prioritization
+
+### Tier 1: Highest Priority (Contact First)
+
+- Engineering managers at 20-50 person startups
+- People/HR leads at companies that just raised Series A/B
+- Managers posting about "scaling challenges" or "first performance review"
+- Companies using modern stack (Slack + Notion + Linear)
+
+### Tier 2: Good Fit (Contact Second)
+
+- Product managers and ops leads at similar companies
+- HR generalists at professional services firms
+- Managers in companies that recently went remote-first
+- Founders of 15-30 person companies
+
+### Tier 3: Nurture (Content Marketing)
+
+- Managers at <15 person companies (not ready yet)
+- Companies with existing performance tools (wait for renewal frustration)
+- Managers who engage with content but don't respond to outreach
+
+---
+
+## Key Insights for Other Agents
+
+**For Product Manager:**
+- MVP must nail: self-review with gap analysis, peer feedback aggregation
+- Template library is table stakes - need role/level specific
+- Mobile experience matters for employee adoption
+
+**For Sales Manager:**
+- Lead with time savings (30 min/review) and legal protection
+- Discovery must uncover: current process, team size, budget authority
+- Qualify hard on company size (15-50 sweet spot)
+
+**For Marketing Manager (self):**
+- LinkedIn is primary channel - managers are active there
+- Content themes: "performance review templates", "small team management"
+- Product Hunt launch after beta proves value
+
+---
+
+*Next artifact: 02-positioning-messaging.md*

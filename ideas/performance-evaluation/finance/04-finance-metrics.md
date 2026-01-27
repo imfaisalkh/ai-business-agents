@@ -1,137 +1,297 @@
-# Finance Metrics Dashboard
+# Financial Metrics & KPIs
 
-## North Star Metric
-
-**Monthly Recurring Revenue (MRR):** $0 → $7,500 by Month 12
-
-**Target:** $3-5K MRR by Month 6, $7-10K MRR by Month 12
+*Generated for: Performance Evaluation Tool*
 
 ---
 
-## Primary Metrics (Track Monthly)
+## Key Financial Metrics
 
-### 1. MRR (Monthly Recurring Revenue)
-- **Current:** $0 (pre-launch)
-- **Target Month 6:** $3,000-5,000
-- **Target Month 12:** $7,500-10,000
+### Primary Metrics (Track Weekly)
 
-**Calculation:** Sum of all monthly subscription values
+| Metric | Definition | Target | Current |
+|--------|------------|--------|---------|
+| **MRR** | Monthly Recurring Revenue | $3,450 (M6) | - |
+| **Net Burn** | Expenses - Revenue | <$0 (profitable) | - |
+| **Cash Balance** | Cash on hand | >$3,000 | - |
+| **Runway** | Cash / Net Burn | >6 months | - |
 
----
+### Secondary Metrics (Track Monthly)
 
-### 2. ARR (Annual Recurring Revenue)
-- **Formula:** MRR × 12
-- **Target Month 12:** $90,000-120,000
-
----
-
-### 3. MRR Growth Rate
-- **Formula:** ((This Month MRR - Last Month MRR) / Last Month MRR) × 100
-- **Target:** 20-30% month-over-month (Months 1-6), 10-15% (Months 7-12)
-
----
-
-### 4. Net Revenue Retention (NRR)
-- **Formula:** ((Starting MRR + Expansion MRR - Churned MRR) / Starting MRR) × 100
-- **Target:** >100% (expansion offsets churn)
-
-**Expansion sources:**
-- Customers add employees (team growth)
-- Upsells from Starter → Growth tier
+| Metric | Definition | Target | Current |
+|--------|------------|--------|---------|
+| **ARR** | Annual Recurring Revenue | $41,400 (M6) | - |
+| **Gross Margin** | (Revenue - COGS) / Revenue | >80% | - |
+| **LTV:CAC** | Customer Lifetime Value / Acquisition Cost | >5:1 | - |
+| **Payback** | Months to recover CAC | <6 months | - |
 
 ---
 
-### 5. Gross Margin
-- **Formula:** ((Revenue - COGS) / Revenue) × 100
-- **Target:** >85%
+## SaaS Metrics Dashboard
+
+### Revenue Metrics
+
+| Metric | Formula | M1 | M3 | M6 |
+|--------|---------|-----|-----|-----|
+| **MRR** | Sum of monthly subscriptions | $270 | $1,200 | $3,450 |
+| **New MRR** | MRR from new customers | $270 | $500 | $920 |
+| **Expansion MRR** | MRR from upgrades | $0 | $20 | $80 |
+| **Churned MRR** | MRR from lost customers | $0 | $60 | $150 |
+| **Net New MRR** | New + Expansion - Churned | $270 | $460 | $850 |
+| **ARR** | MRR x 12 | $3,240 | $14,400 | $41,400 |
+
+### Growth Metrics
+
+| Metric | Formula | M1 | M3 | M6 |
+|--------|---------|-----|-----|-----|
+| **MRR Growth Rate** | (MRR_t - MRR_t-1) / MRR_t-1 | - | 80% | 25% |
+| **Customer Growth** | (Cust_t - Cust_t-1) / Cust_t-1 | - | 100% | 25% |
+| **Net Revenue Retention** | (Starting MRR + Exp - Churned) / Starting MRR | - | 103% | 105% |
+| **Gross Revenue Retention** | (Starting MRR - Churned) / Starting MRR | - | 95% | 95% |
+
+### Customer Metrics
+
+| Metric | Formula | M1 | M3 | M6 |
+|--------|---------|-----|-----|-----|
+| **Total Customers** | Count of paying customers | 3 | 12 | 30 |
+| **New Customers** | New customers added | 3 | 5 | 8 |
+| **Churned Customers** | Customers lost | 0 | 1 | 2 |
+| **Net Customers** | New - Churned | 3 | 4 | 6 |
+| **ARPA** | MRR / Customers | $90 | $100 | $115 |
+
+### Efficiency Metrics
+
+| Metric | Formula | M1 | M3 | M6 |
+|--------|---------|-----|-----|-----|
+| **CAC** | Total acquisition cost / New customers | $233 | $140 | $88 |
+| **LTV** | ARPA x Gross Margin x Lifetime | $1,530 | $1,700 | $1,955 |
+| **LTV:CAC** | LTV / CAC | 6.6:1 | 12:1 | 22:1 |
+| **Payback Period** | CAC / (ARPA x Gross Margin) | 3.0 mo | 1.6 mo | 0.9 mo |
+| **Magic Number** | Net New ARR / Sales & Mkt Spend | 0.4 | 0.8 | 1.2 |
 
 ---
 
-### 6. Customer Churn Rate
-- **Formula:** (Churned customers / Total customers at start of month) × 100
-- **Target:** <5%/month
+## Financial Health Indicators
+
+### Profitability
+
+| Metric | Definition | Target | Status |
+|--------|------------|--------|--------|
+| **Gross Profit** | Revenue - COGS | >80% of revenue | - |
+| **Operating Profit** | Gross Profit - OpEx | Positive by M3 | - |
+| **Net Profit** | Operating Profit - Taxes | Positive | - |
+| **Profit Margin** | Net Profit / Revenue | >20% at scale | - |
+
+### P&L Summary
+
+| Line Item | M1 | M3 | M6 |
+|-----------|-----|-----|-----|
+| **Revenue** | $270 | $1,200 | $3,450 |
+| COGS | $50 | $180 | $520 |
+| **Gross Profit** | $220 | $1,020 | $2,930 |
+| Operating Expenses | $300 | $350 | $450 |
+| **Operating Profit** | -$80 | $670 | $2,480 |
+| Taxes (estimate) | $0 | $0 | $0 |
+| **Net Profit** | -$80 | $670 | $2,480 |
+| **Profit Margin** | -30% | 56% | 72% |
 
 ---
 
-### 7. Revenue Churn Rate
-- **Formula:** (Churned MRR / Total MRR at start of month) × 100
-- **Target:** <3%/month
+## Churn Analysis
+
+### Churn Metrics
+
+| Metric | Definition | Target | Current |
+|--------|------------|--------|---------|
+| **Logo Churn** | Customers lost / Starting customers | <5% | - |
+| **Revenue Churn** | MRR lost / Starting MRR | <5% | - |
+| **Net Churn** | (Churned MRR - Expansion) / Starting MRR | <0% (negative) | - |
+
+### Churn Cohort Analysis
+
+| Cohort | M1 | M2 | M3 | M4 | M5 | M6 |
+|--------|-----|-----|-----|-----|-----|-----|
+| Jan | 100% | 95% | 92% | 90% | 88% | 86% |
+| Feb | | 100% | 97% | 94% | 91% | 89% |
+| Mar | | | 100% | 96% | 93% | 90% |
+
+### Churn by Reason
+
+| Reason | % of Churn | MRR Lost | Action |
+|--------|------------|----------|--------|
+| Never activated | 35% | $53 | Improve onboarding |
+| Budget cuts | 20% | $30 | Offer annual discount |
+| Switched competitor | 15% | $23 | Feature parity |
+| Outgrew product | 15% | $23 | Upmarket expansion |
+| Other | 15% | $23 | Exit interviews |
 
 ---
 
-### 8. Cash Balance
-- **Target:** Always >3 months of burn in bank
-- **Month 12 target:** $30,000-50,000 cash reserves
+## Cash Flow Metrics
+
+### Cash Position
+
+| Metric | Definition | Target | Current |
+|--------|------------|--------|---------|
+| **Cash Balance** | Current cash on hand | >$3,000 | - |
+| **Monthly Cash Flow** | Cash In - Cash Out | Positive | - |
+| **Runway** | Cash / Monthly Burn | >6 months | - |
+| **Days Sales Outstanding** | Avg days to collect | <7 days | - |
+
+### Cash Flow Breakdown
+
+| Category | Inflows | Outflows | Net |
+|----------|---------|----------|-----|
+| Subscriptions | $3,450 | - | $3,450 |
+| Operations | - | $400 | -$400 |
+| Marketing | - | $200 | -$200 |
+| Infrastructure | - | $50 | -$50 |
+| **Total** | **$3,450** | **$650** | **$2,800** |
+
+### Cash Conversion
+
+| Metric | Formula | Target |
+|--------|---------|--------|
+| Collection efficiency | Cash collected / Revenue billed | >98% |
+| Annual prepay % | Annual revenue / Total revenue | >40% |
+| Payment failure rate | Failed / Total transactions | <3% |
 
 ---
 
-## SaaS Efficiency Metrics
+## Pricing Metrics
 
-### Rule of 40
-**Formula:** MRR Growth Rate + Profit Margin
+### Price Performance
 
-**Target:** >40% (healthy SaaS)
+| Metric | Definition | Target | Current |
+|--------|------------|--------|---------|
+| **ARPA** | Average Revenue Per Account | $115+ | - |
+| **ARPA Growth** | Month-over-month ARPA change | +2% | - |
+| **Discount Rate** | Avg discount from list price | <10% | - |
+| **Annual Mix** | % of customers on annual | >40% | - |
 
-**Example (Month 12):**
-- MRR growth: 15%
-- Profit margin: 65% (revenue $7,500, costs $2,625)
-- **Rule of 40:** 15% + 65% = 80% (excellent)
+### Price Elasticity
 
----
-
-### Months to Recover CAC
-**Formula:** CAC / (ARPA × Gross Margin)
-
-**Target:** <12 months
-
-**Current:** 9.8 months (acceptable)
+| Price Point | Expected Conversion | Expected ARPA | Expected MRR |
+|-------------|---------------------|---------------|--------------|
+| $5 PEPM | 35% | $100 | High volume, low margin |
+| $7 PEPM | 25% | $115 | Target sweet spot |
+| $9 PEPM | 18% | $135 | Premium positioning |
 
 ---
 
-### LTV:CAC Ratio
-**Target:** >3.0x
+## Financial Dashboard
 
-**Current:** 2.0x (needs improvement by reducing CAC or improving retention)
-
----
-
-## Monthly Finance Review
-
-### 1. MRR Growth
-- **This month MRR:** $[X]
-- **Last month MRR:** $[Y]
-- **Growth:** [Z]% (Target: 20-30%)
-
-### 2. Churn Analysis
-- **Customers churned:** [X]
-- **MRR churned:** $[Y]
-- **Reasons:** [Price, not using, competitor, other]
-
-### 3. Cash Runway
-- **Cash balance:** $[X]
-- **Monthly burn:** $[Y]
-- **Runway:** [X/Y] months
-
-### 4. Unit Economics
-- **CAC this month:** $[X]
-- **LTV:** $[Y]
-- **LTV:CAC:** [Y/X]
-
-### 5. Goal Check
-- [ ] On track for $3-5K MRR by Month 6?
-- [ ] Churn <5%?
-- [ ] Gross margin >85%?
-
----
-
-## Red Flags
-
-- [ ] **MRR growth <10%/month for 3 months** → Growth stalled, pivot needed
-- [ ] **Churn >7%/month** → Product-market fit issue, fix product before scaling
-- [ ] **Gross margin <70%** → Unit economics broken, pricing too low or costs too high
-- [ ] **Cash runway <3 months** → Burn too high, cut costs immediately
-- [ ] **LTV:CAC <2.0x** → Unsustainable acquisition, improve retention or reduce CAC
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ FINANCIAL DASHBOARD - Month [X]                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  REVENUE                            PROFITABILITY                  │
+│  ───────                            ─────────────                  │
+│  MRR:           $3,450              Gross Margin:    85%  ✓        │
+│  ARR:           $41,400             Operating Margin: 72%  ✓       │
+│  MRR Growth:    +25%  ✓             Net Profit:      $2,480        │
+│  Net New MRR:   $850                                               │
+│                                                                    │
+│  CUSTOMERS                          EFFICIENCY                     │
+│  ─────────                          ──────────                     │
+│  Total:         30                  CAC:            $88            │
+│  New:           8                   LTV:            $1,955         │
+│  Churned:       2                   LTV:CAC:        22:1  ✓        │
+│  ARPA:          $115                Payback:        0.9 mo  ✓      │
+│                                                                    │
+│  RETENTION                          CASH                           │
+│  ─────────                          ────                           │
+│  Logo:          93%  ✓              Balance:        $10,510        │
+│  Revenue:       95%  ✓              Runway:         Infinite  ✓    │
+│  Net (NRR):     105%  ✓             Monthly CF:     +$2,800        │
+│                                                                    │
+│  TREND (Last 3 Months)                                             │
+│  ─────────────────────                                             │
+│  MRR:    $1,200 → $2,100 → $3,450  ████████████████  ↑ 188%       │
+│  Margin: 56% → 65% → 72%           ████████████      ↑ +16pts     │
+│  NRR:    103% → 104% → 105%        █████             ↑ Improving  │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-*Last updated: January 27, 2026*
+## Financial OKRs
+
+### Month 1-3: Validation
+
+**Objective:** Validate revenue model with first paying customers
+
+| Key Result | Target | Status |
+|------------|--------|--------|
+| Paying customers | 12 | |
+| MRR | $1,200 | |
+| Gross margin | >75% | |
+| CAC | <$200 | |
+
+### Month 4-6: Growth
+
+**Objective:** Achieve sustainable growth and profitability
+
+| Key Result | Target | Status |
+|------------|--------|--------|
+| MRR | $3,450 | |
+| MRR growth rate | >20%/month | |
+| Net profit margin | >60% | |
+| LTV:CAC | >10:1 | |
+
+### Month 7-12: Scale
+
+**Objective:** Scale to $10K+ MRR with strong unit economics
+
+| Key Result | Target | Status |
+|------------|--------|--------|
+| MRR | $10,000+ | |
+| Total customers | 80+ | |
+| NRR | >105% | |
+| Cash reserves | $50,000+ | |
+
+---
+
+## Benchmark Comparisons
+
+### vs. SaaS Benchmarks
+
+| Metric | Our Target | Top 25% SaaS | Median SaaS |
+|--------|------------|--------------|-------------|
+| Gross Margin | 85% | 80% | 70% |
+| LTV:CAC | 14:1 | 5:1 | 3:1 |
+| Payback | 1.4 mo | 12 mo | 18 mo |
+| NRR | 105% | 120% | 100% |
+| Churn | 5% | 3% | 5% |
+
+**Assessment:** Our unit economics are excellent due to low CAC (founder-led sales) and good retention targets.
+
+---
+
+## Reporting Schedule
+
+### Weekly
+
+- MRR and customer count
+- Cash position
+- New vs churned customers
+- Key pipeline metrics
+
+### Monthly
+
+- Full P&L review
+- Unit economics update
+- Cohort retention analysis
+- Cash flow statement
+
+### Quarterly
+
+- Full financial review
+- Budget vs actual analysis
+- OKR assessment
+- Forecast update
+
+---
+
+*Next artifact: 05-fundraising-readiness.md*

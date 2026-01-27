@@ -1,236 +1,311 @@
 # Market Research & Competitor Analysis
 
-## Market Landscape
+*Generated for: Performance Evaluation Tool*
 
-### Market Category
-**Performance Management Software** (specifically 360-degree feedback and review tools for SMBs)
+---
+
+## Market Overview
 
 ### Market Size
-- **Global performance management market:** $2.5B (2024), growing 12% YoY
-- **TAM (Total Addressable Market):** 600K US companies with 5-100 employees = ~21M employees × $7 PEPM × 12 = $1.76B potential
-- **SAM (Serviceable Addressable Market):** Tech-savvy 20% = $352M
-- **SOM (Serviceable Obtainable Market Year 1):** 70 companies × 20 employees × $7 × 12 = $117K ARR realistic
 
-### Market Trends
-1. **Remote work normalization** → Need for async structured feedback (can't rely on hallway conversations)
-2. **Manager skill gap** → 60% of managers get no training (Gallup) → Tools must educate AND execute
-3. **Continuous feedback expectation** → Gen Z/Millennials demand ongoing feedback, not just annual reviews
-4. **Economic efficiency** → Post-2023 belt-tightening → Companies scrutinizing $11-16 PEPM tools
-5. **Self-service preference** → SMBs reject 1-2 week onboarding; want instant setup
+| Segment | Size | Notes |
+|---------|------|-------|
+| **TAM** | $14.9B | All performance management software globally |
+| **SAM** | $720M | SMB performance tools (5-100 employees), English markets |
+| **SOM** | $864K ARR | 0.1% of SAM in 3 years (600 customers at $120 ARPA) |
 
----
+### Market Growth
 
-## Competitive Analysis
+- Performance management software: 12% CAGR through 2028
+- SMB segment growing faster (15%+) due to remote work formalization
+- Shift from annual to continuous feedback driving tool adoption
 
-### Enterprise Tier ($10-16 PEPM)
+### Key Trends
 
-#### Lattice
-- **Pricing:** $11-16 PEPM (minimum ~$5,500/year for 50 employees)
-- **Target:** 100-1,000+ employees, enterprise HR teams
-- **Features:** Performance reviews, engagement surveys, OKRs, 1-on-1s, compensation management, career development
-- **Strengths:**
-  - Feature-rich (covers entire employee lifecycle)
-  - Strong integrations (Slack, Jira, Greenhouse, etc.)
-  - Enterprise sales support, implementation team
-  - Brand recognition (raised $300M+)
-- **Weaknesses:**
-  - **Expensive for SMBs:** $5,500-10,000/year is prohibitive for 20-50 person teams
-  - **Complex setup:** Requires 1-2 weeks onboarding, training sessions
-  - **Feature bloat:** Most SMBs only use 20% of features (paying for engagement surveys they'll never run)
-- **Our positioning vs Lattice:** "Same core review features (self-review, peer feedback, goal tracking) at 50% the cost, 15-minute setup instead of 2 weeks."
-
-#### 15Five
-- **Pricing:** $8-12 PEPM (minimum ~$4,000/year for 50 employees)
-- **Target:** 50-500 employees, HR teams
-- **Features:** Performance reviews, engagement surveys, OKRs, 1-on-1s, pulse surveys, recognition
-- **Strengths:**
-  - Slightly cheaper than Lattice but still enterprise-quality
-  - Strong focus on continuous feedback (weekly check-ins)
-  - Good integrations
-- **Weaknesses:**
-  - Still too expensive for <50 person teams
-  - Requires training and admin setup
-  - Overkill for teams that just want quarterly reviews
-- **Our positioning vs 15Five:** "If you only need performance reviews (not pulse surveys or OKRs), we're 40% cheaper with faster setup."
-
-#### Culture Amp
-- **Pricing:** $10-14 PEPM
-- **Target:** 100-1,000+ employees, enterprise HR
-- **Features:** Employee engagement surveys, performance management, DEI analytics, onboarding surveys
-- **Strengths:**
-  - Best-in-class for engagement surveys and analytics
-  - Strong people analytics and insights
-  - Beautiful dashboards
-- **Weaknesses:**
-  - Extremely expensive for SMBs
-  - Overkill if you don't need engagement surveys
-  - Long sales cycle, requires demos and training
-- **Our positioning vs Culture Amp:** "We focus on performance reviews only—no survey fatigue, no $12K/year price tag."
+1. **Remote/Hybrid Permanence** - Documentation critical when managers don't see employees daily
+2. **Legal Awareness** - SMBs increasingly aware of termination liability
+3. **Continuous Feedback** - Quarterly cycles replacing annual reviews
+4. **Employee Visibility** - Workers expect to see and contribute to their reviews
+5. **Tool Consolidation** - Companies want fewer, integrated tools
 
 ---
 
-### Mid-Market Tier ($5-8 PEPM)
+## Competitor Deep Dive
+
+### Tier 1: Direct Competitors (SMB-Focused)
 
 #### Small Improvements
-- **Pricing:** $5-8 PEPM
-- **Target:** 10-200 employees, lean teams
-- **Features:** Performance reviews, feedback requests, 1-on-1s, praise/recognition, OKRs
-- **Strengths:**
-  - Affordable for SMBs
-  - Simple UX, faster setup than enterprise tools
-  - Good balance of features and price
-- **Weaknesses:**
-  - **Missing self-review gap analysis:** No side-by-side comparison of employee vs manager ratings (our key differentiator)
-  - **Basic peer feedback:** Can request feedback but no anonymization or aggregation
-  - **Limited templates:** Generic review templates, not role-specific (Engineer vs Manager)
-- **Our positioning vs Small Improvements:** "We add the missing piece—employee self-review with gap analysis (see where ratings differ) + anonymized peer feedback aggregation. Same price tier, richer features."
 
-#### 7Geese (acquired by Paycor)
-- **Pricing:** $5-7 PEPM
-- **Target:** 20-500 employees
-- **Features:** OKRs, 1-on-1s, performance reviews, recognition
-- **Strengths:**
-  - OKR-first tool (good for goal tracking)
-  - Affordable
-  - Now part of Paycor HRIS (integration advantage)
-- **Weaknesses:**
-  - OKR focus means reviews are secondary feature
-  - No self-review gap analysis
-  - Weak peer feedback system
-- **Our positioning:** "If you want reviews to be the core (not OKRs), we're purpose-built for that with gap analysis and peer feedback built in."
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | $5-8 PEPM |
+| **Target** | 25-500 employees |
+| **Key Features** | Reviews, 1:1s, objectives, praise |
+| **Strengths** | Affordable, simple, good for basics |
+| **Weaknesses** | No peer feedback, limited self-review, basic analytics |
+| **Customer Quote** | "Good for simple reviews but we outgrew it" |
+
+**Opportunity:** Beat them on features (peer feedback, gap analysis) at similar price.
+
+#### Leapsome
+
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | $8-15 PEPM |
+| **Target** | 50-2000 employees |
+| **Key Features** | Reviews, goals, engagement, learning |
+| **Strengths** | All-in-one people platform, good UX |
+| **Weaknesses** | Expensive for small teams, complex setup |
+| **Customer Quote** | "Great but overkill for our 30-person team" |
+
+**Opportunity:** Similar features, half the price, faster setup.
+
+### Tier 2: Enterprise Competitors (Downmarket Threat)
+
+#### Lattice
+
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | $11-16 PEPM (Performance module) |
+| **Target** | 50-5000 employees |
+| **Key Features** | Full HRIS, OKRs, engagement, compensation |
+| **Strengths** | Market leader, brand recognition, complete platform |
+| **Weaknesses** | Expensive, complex, requires implementation |
+| **Customer Quote** | "Love it but we can't justify $4K/year for 25 people" |
+
+**Opportunity:** Core performance features at 50% the cost.
+
+#### 15Five
+
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | $9-14 PEPM |
+| **Target** | 50-2000 employees |
+| **Key Features** | Weekly check-ins, reviews, OKRs, engagement |
+| **Strengths** | Strong weekly cadence, engagement focus |
+| **Weaknesses** | Check-in heavy (some teams don't want weekly), expensive |
+| **Customer Quote** | "Great product but too much for quarterly reviews" |
+
+**Opportunity:** Simpler, quarterly-focused alternative at lower price.
+
+#### Culture Amp
+
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | $10+ PEPM (custom) |
+| **Target** | 100+ employees |
+| **Key Features** | Engagement surveys, performance, analytics |
+| **Strengths** | Best-in-class analytics, research-backed |
+| **Weaknesses** | Survey-focused, enterprise sales, minimum seats |
+| **Customer Quote** | "Won't even talk to us at 40 employees" |
+
+**Opportunity:** Serve teams too small for Culture Amp.
+
+### Tier 3: Horizontal Tools (Indirect Competitors)
+
+#### Notion / Google Docs
+
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | Free - $10/user |
+| **Usage** | DIY review templates |
+| **Strengths** | Free, familiar, flexible |
+| **Weaknesses** | No structure, no automation, no visibility |
+| **Why They Switch** | "Couldn't find last quarter's reviews" |
+
+**Opportunity:** Add structure without losing simplicity.
+
+#### HRIS with Performance (Gusto, Rippling)
+
+| Aspect | Details |
+|--------|---------|
+| **Pricing** | Included or add-on |
+| **Key Features** | Basic reviews bundled with payroll |
+| **Strengths** | Integrated, one vendor |
+| **Weaknesses** | Basic features, not specialized |
+| **Why They Switch** | "Performance module is an afterthought" |
+
+**Opportunity:** Specialized beats bundled for serious users.
 
 ---
 
-### Basic/Free Tier
+## Feature Comparison Matrix
 
-#### Google Docs/Sheets
-- **Pricing:** Free
-- **Target:** Everyone (default fallback)
-- **Features:** Document templates, manual workflows
-- **Strengths:**
-  - Free, familiar, flexible
-  - No learning curve
-- **Weaknesses:**
-  - No structure, no employee visibility
-  - Manual copy-paste every cycle
-  - No historical tracking, no analytics
-  - Version control chaos ("Review_2024_Q4_FINAL_v3.docx")
-  - No peer feedback workflow
-- **Our positioning:** "We're the tool you graduate to when Google Docs becomes embarrassing. You get structure, history, and peer feedback for $90-150/month."
+| Feature | Us | Small Imp | Lattice | 15Five | Notion |
+|---------|:--:|:---------:|:-------:|:------:|:------:|
+| Manager Reviews | Y | Y | Y | Y | Manual |
+| Self-Reviews | **Y** | Basic | Y | Y | Manual |
+| Gap Analysis | **Y** | N | Y | N | N |
+| Peer Feedback | **Y** | N | Y | Y | Manual |
+| Anonymous Aggregation | **Y** | N | Y | Y | N |
+| Goal Tracking | Y | Y | Y | Y | Manual |
+| Pre-built Templates | **Y** | Some | Y | Y | Community |
+| Role/Level Templates | **Y** | N | Y | Some | N |
+| Automatic Reminders | Y | Y | Y | Y | N |
+| Historical Tracking | Y | Y | Y | Y | Manual |
+| Team Analytics | Y | Basic | Y | Y | N |
+| Export to PDF | Y | Y | Y | Y | Y |
+| Slack Integration | Y | Y | Y | Y | N |
+| Mobile App | Later | Y | Y | Y | Y |
+| **Price (PEPM)** | **$6-8** | $5-8 | $11-16 | $9-14 | Free |
 
-#### Notion/Airtable (DIY)
-- **Pricing:** $8-20/user/month (for Pro plan)
-- **Target:** DIY teams
-- **Features:** Custom databases, templates, workflows
-- **Strengths:**
-  - Flexible, can build anything
-  - Teams already pay for it
-- **Weaknesses:**
-  - Requires someone to build and maintain the system
-  - No purpose-built features (gap analysis, peer anonymization)
-  - Still manual aggregation for peer feedback
-- **Our positioning:** "Stop maintaining a custom Notion system. We're purpose-built for reviews with features Notion can't do (gap analysis, peer anonymization)."
+**Our Differentiator:** Enterprise features (self-review with gap analysis, peer feedback, role templates) at SMB pricing.
 
 ---
 
-## Competitive Positioning Map
+## Pricing Analysis
 
-### Price vs Feature Richness Matrix
+### Market Pricing Tiers
 
 ```
-High Features
-     ↑
-     |  Culture Amp
-     |  ($10-14)          Lattice
-     |                   ($11-16)
-     |           15Five
-     |           ($8-12)
-     |
-     |
-     |  **US**              Small Improvements
-     |  ($6-8)              ($5-8)
-     |                   7Geese ($5-7)
-     |
-     |  Notion (DIY)
-     |  Google Docs (Free)
-     |
-     └──────────────────────────────→ Price
-                                  High
+Premium Enterprise ($15+ PEPM)
+    └─> Culture Amp, Lattice (full), BambooHR
+    └─> Full HRIS, compliance, enterprise features
 
-**Our sweet spot:** Enterprise features (self-review, gap analysis, peer feedback, goal tracking) at mid-market pricing ($6-8 PEPM).
+Standard Enterprise ($10-15 PEPM)
+    └─> Lattice (base), 15Five, Leapsome
+    └─> Complete performance platform
+
+SMB Premium ($7-10 PEPM)
+    └─> [OUR POSITION]
+    └─> Enterprise features, SMB pricing
+
+SMB Basic ($5-7 PEPM)
+    └─> Small Improvements, basic tools
+    └─> Simple reviews, limited features
+
+DIY ($0)
+    └─> Spreadsheets, Notion templates
+    └─> No automation, no structure
 ```
 
----
+### Pricing Insights
 
-## Strategic Opportunities (Where We Win)
+1. **Gap exists** between $5-8 basic tools and $11+ enterprise
+2. **Features justify premium** - Self-review and peer feedback valued at +$3-5 PEPM
+3. **Annual discounts standard** - 15-20% discount for annual prepay
+4. **Flat-fee doesn't scale** - PEPM model expected in market
 
-### Opportunity 1: The "Lattice is Too Expensive" Segment
-- **Who:** 15-50 person companies that researched Lattice, balked at $5K-10K/year
-- **Why we win:** Same core features (self-review, peer feedback, goals) at $1,500-4,000/year
-- **Evidence:** In discovery calls, 40% of prospects mention "looked at Lattice, too expensive"
-- **Attack vector:** LinkedIn ads targeting "Lattice alternatives", SEO for "Lattice for small teams"
+### Our Pricing Rationale
 
-### Opportunity 2: The "Google Docs is Embarrassing" Segment
-- **Who:** First-time managers at 10-30 person companies, currently using Docs/Sheets
-- **Why we win:** Professionalism upgrade without enterprise cost or complexity
-- **Evidence:** "Copy-pasting last quarter's doc" is a top pain point in discovery
-- **Attack vector:** Content marketing ("Performance review templates"), LinkedIn outreach to first-time managers
-
-### Opportunity 3: The "Self-Review Gap Analysis" Niche
-- **Who:** Managers who value coaching over compliance (growth-minded, not HR-driven)
-- **Why we win:** Only tool in this price tier with side-by-side gap analysis
-- **Evidence:** Testimonials highlight gap analysis as transformative for 1:1 conversations
-- **Attack vector:** Differentiation in all messaging, LinkedIn posts showing gap analysis screenshots
-
-### Opportunity 4: The "Agency/Services" Vertical
-- **Who:** Digital agencies, consulting firms (10-50 people)
-- **Why we win:** Billable hours matter → Wasting 5 hours on reviews = $500-1,000 lost revenue
-- **Evidence:** Agencies are cost-conscious and time-sensitive (reviews must be fast)
-- **Attack vector:** Target "agency operations manager" on LinkedIn, emphasize time savings
+| Component | Price Impact |
+|-----------|-------------|
+| Base reviews (like Small Improvements) | $5 PEPM |
+| Self-review with gap analysis | +$1-2 PEPM |
+| Peer feedback | +$1-2 PEPM |
+| Goal tracking | Included |
+| Role templates | Included |
+| **Total** | **$6-8 PEPM** |
 
 ---
 
-## Competitive Threats
+## Customer Research Insights
 
-### Threat 1: Lattice Launches SMB Tier
-- **Risk:** Lattice realizes the 15-50 employee segment is underserved, launches $6-8 PEPM tier
-- **Likelihood:** Medium (they're focused on enterprise, but could happen in 12-18 months)
-- **Mitigation:** Move fast, own the niche before they notice; Build brand as "SMB specialist"
+### Jobs to Be Done
 
-### Threat 2: BambooHR/Rippling Add Review Features
-- **Risk:** Basic HRIS tools (BambooHR, Rippling) add native performance review modules
-- **Likelihood:** High (BambooHR already has basic reviews; Rippling is expanding)
-- **Mitigation:** Partner with them (integration or referral deal) or differentiate on depth (gap analysis, peer feedback quality)
+| Job | Frequency | Importance | Current Solution |
+|-----|-----------|------------|------------------|
+| Run structured review cycles | Quarterly | Critical | Spreadsheets, ad-hoc |
+| Get employee self-perspective | Each review | High | Skipped or basic form |
+| Collect peer feedback | Each review | High | Skipped or manual |
+| Track goals over time | Quarterly | Medium | Separate tool or docs |
+| Document for legal protection | Always | High | Nothing or scattered |
+| Show employees their reviews | Each review | Medium | PDF email or verbal |
 
-### Threat 3: Incumbent Loyalty
-- **Risk:** Companies using Small Improvements or 7Geese don't switch (switching cost > benefit)
-- **Likelihood:** Medium (SMBs switch tools more easily than enterprises)
-- **Mitigation:** Offer migration support (import historical review data), free 3-month trial for switchers
+### Pain Points (Ranked)
 
-### Threat 4: Market Doesn't Value the Category
-- **Risk:** SMBs say "Google Docs is fine, reviews aren't worth paying for"
-- **Likelihood:** Low (discovery calls show pain is real), but monitor closely
-- **Mitigation:** Focus on teams with 15+ employees (pain is acute) and first-time managers (they want to do it right)
+1. **Time wasted on manual processes** - 5+ hours per review cycle
+2. **No employee visibility** - Can't show employees their own reviews
+3. **Missing peer perspective** - No easy way to collect 360 feedback
+4. **Version control chaos** - Can't find historical reviews
+5. **No gap visibility** - Don't know how self-perception differs from manager view
+6. **Legal exposure** - Undocumented performance issues
 
----
+### Willingness to Pay
 
-## Market Entry Strategy
-
-### Phase 1: Niche Domination (Months 1-6)
-- **Target:** Engineering managers at 15-30 person tech startups (narrowest ICP)
-- **Goal:** 30-50 customers, $3-5K MRR
-- **Tactic:** LinkedIn outreach, "gap analysis" differentiation, community presence
-
-### Phase 2: Adjacent Expansion (Months 7-12)
-- **Target:** Product managers, operations managers (same company size, adjacent roles)
-- **Goal:** 70-100 customers, $8-12K MRR
-- **Tactic:** Case studies from Phase 1, referral incentives, content marketing
-
-### Phase 3: Vertical Expansion (Months 13-18)
-- **Target:** Digital agencies, consulting firms (services vertical)
-- **Goal:** 150-200 customers, $15-20K MRR
-- **Tactic:** Agency-specific marketing ("Billable hours saved"), partnerships
+| Segment | WTP (Monthly) | WTP (Annual) |
+|---------|---------------|--------------|
+| 15-25 employees | $80-150 | $800-1,500 |
+| 25-50 employees | $150-300 | $1,500-3,000 |
+| 50-100 employees | $300-600 | $3,000-6,000 |
 
 ---
 
-*Last updated: January 27, 2026*
+## Strategic Opportunities
+
+### Opportunity 1: Feature Parity at Lower Price
+
+**Play:** Match Lattice's core performance features at 50% the price
+**Target:** Teams who want Lattice but can't justify the cost
+**Messaging:** "Get Lattice features without the Lattice price"
+
+### Opportunity 2: Structured Upgrade from Spreadsheets
+
+**Play:** Easy migration path from spreadsheets with 10x better experience
+**Target:** Teams using Google Docs/Sheets who feel the pain
+**Messaging:** "Upgrade from spreadsheets in 15 minutes"
+
+### Opportunity 3: Self-Review Gap Analysis
+
+**Play:** Unique feature that surfaces coaching opportunities
+**Target:** Managers who want better 1:1 conversations
+**Messaging:** "Finally see how your team sees themselves"
+
+### Opportunity 4: Peer Feedback Made Easy
+
+**Play:** Anonymous, aggregated peer feedback without complexity
+**Target:** Teams who want 360 feedback but find it overwhelming
+**Messaging:** "360-degree reviews without the hassle"
+
+---
+
+## Risk Analysis
+
+### Competitive Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Lattice launches SMB tier | Medium | High | Move fast, build relationships |
+| Small Improvements adds peer feedback | Medium | Medium | Differentiate on UX, templates |
+| New entrant with VC funding | Medium | Medium | Focus on profitability, not growth |
+| HRIS players improve performance modules | Low | Medium | Specialize deeper |
+
+### Market Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Economic downturn cuts SaaS budgets | Medium | Medium | Position as cost-saver vs enterprise |
+| Remote work reversal | Low | Low | Reviews still needed in-office |
+| Regulatory changes | Low | Medium | Stay compliant, monitor |
+
+---
+
+## Product Implications
+
+### Must-Have Features (MVP)
+
+1. Self-review with manager gap analysis
+2. Peer feedback with anonymization
+3. Pre-built role/level templates
+4. Basic goal tracking
+5. Automatic reminders
+
+### Nice-to-Have Features (V2)
+
+1. Team analytics dashboard
+2. 1:1 meeting integration
+3. Slack bot for reminders
+4. Mobile app
+5. Advanced reporting
+
+### Won't Build (Stay Focused)
+
+1. Full HRIS functionality
+2. Engagement surveys
+3. Compensation management
+4. Learning management
+5. Org chart management
+
+---
+
+*Next artifact: 02-prd.md*

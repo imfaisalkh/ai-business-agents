@@ -1,242 +1,375 @@
 # Landing Page Strategy
 
+*Generated for: Performance Evaluation Tool*
+
+---
+
 ## Page Structure
 
-### Above the Fold
+### Hero Section
 
-**Headline:**
-"Run 360-Degree Performance Reviews Without the $2K/Month Enterprise Price Tag"
+**Headline (Primary):**
+> Performance Reviews That Don't Cost $11/Employee
 
 **Subheadline:**
-"Give your 15-50 person team structured self-review, peer feedback, and goal tracking for $6-8 per employee/month—50% cheaper than Lattice, zero setup time."
+> Get self-reviews, peer feedback, and gap analysis at 50% less than Lattice. Built for teams of 15-50.
 
-**Primary CTA:**
-"Book a 15-Minute Demo" (Calendly link)
+**CTA:** "Start Free Trial" (primary) | "Watch Demo" (secondary)
 
-**Secondary CTA:**
-"Join the Waitlist" (Email capture form)
+**Hero Visual:** Dashboard screenshot showing self-review vs manager review comparison (gap analysis)
 
-**Social proof element:**
-- **Option A (Early stage):** "Built by engineering managers who were tired of copying last quarter's Google Docs"
-- **Option B (With traction):** Logo bar of 5-10 beta customers (if allowed) OR "Trusted by 15+ teams at startups and agencies"
-- **Option C (With testimonials):** One-line quote: "Saved us 8 hours and $1,800/year vs Lattice" - Engineering Manager, 25-person startup
+**Social Proof Bar:**
+> "Trusted by 25+ teams" | Star ratings | "Saves managers 30 min per review"
 
 ---
 
 ### Problem Section
 
-**Header:** "Sound familiar?"
+**Header:** "Spreadsheets worked. Until they didn't."
 
-**Pain points (3):**
+**Pain Points (3 columns):**
 
-1. **"Copy-pasting last quarter's Google Doc… again."**
-   You know you should have templates and structure, but every review cycle you're scrambling. Your team deserves better, and so do you.
+| Icon | Pain | Description |
+|------|------|-------------|
+| Folder Chaos | **No structure** | Hunting for last quarter's feedback across 4 folders |
+| Clock | **Hours wasted** | Chasing people for peer reviews, manual reminders |
+| Blind Spot | **One-sided** | Managers review employees, but employees can't review themselves |
 
-2. **"Peer feedback is a manual nightmare."**
-   You send a Google Form, then spend 2 hours anonymizing responses and aggregating feedback. By the time you're done, reviews feel like data entry.
-
-3. **"You're paying $11-16 per employee for features you don't use."**
-   Lattice and 15Five have engagement surveys, OKRs, and integrations you'll never touch. You just want clean performance reviews without the enterprise bloat.
+**Transition:** "Enterprise tools fix this. But at $11/employee, they're built for Fortune 500s, not your 25-person team."
 
 ---
 
 ### Solution Section
 
-**Header:** "There's a better way"
+**Header:** "Enterprise features. Startup pricing."
 
-**Key benefits (3):**
+**Feature Cards (4 columns):**
 
-1. **See the gap between self-ratings and your ratings—before the 1:1**
-   Side-by-side comparison shows where employees under- or over-rate themselves. Turn reviews into coaching conversations, not surprises. (This is what managers tell us saves them 30 min per review.)
-
-2. **Peer feedback that doesn't require a spreadsheet PhD**
-   Your team gives peer feedback in 5 minutes. We anonymize, aggregate, and surface themes automatically. You focus on the conversation, not the data wrangling.
-
-3. **Pre-built templates for Engineers, Managers, and Sales Reps**
-   Pick "Mid-Level Software Engineer" or "Senior Product Manager," customize if needed, and launch reviews in 15 minutes. No training, no onboarding calls, no 2-week setup.
+| Feature | Title | Description | Icon |
+|---------|-------|-------------|------|
+| Self-Review | **See how they see themselves** | Employees rate themselves. Compare to your ratings. Spot the gaps. | Mirror |
+| Peer Feedback | **360-degree insights** | Automated peer requests. Anonymized feedback. No awkwardness. | Users |
+| Goal Tracking | **Connect reviews to goals** | Set quarterly goals. Track progress. Reference in reviews. | Target |
+| Templates | **Ready in 15 minutes** | Pre-built templates for Engineering, Product, Sales by level. | FileText |
 
 ---
 
-### How It Works (3 steps)
+### How It Works Section
 
-1. **Import your team (15 min)**
-   Connect Slack or upload a CSV. Pick role-based templates (Junior Engineer, Senior Manager, etc.). Customize questions if you want (or use ours as-is).
+**Header:** "Run your first review in 15 minutes"
 
-2. **Launch self-review + peer feedback (5 min)**
-   Employees rate themselves on 5-8 competencies and request peer feedback from 2-3 teammates. Peers respond in 5-10 minutes with anonymized, structured feedback.
+**Steps:**
 
-3. **Review the gap analysis + have better 1:1s**
-   Open the side-by-side view: employee's self-ratings vs your ratings vs aggregated peer feedback. Walk into the 1:1 with clarity on what to coach, not just what to say.
+1. **Set up your team** (2 min)
+   - Import from Slack, Google, or CSV
+   - Assign managers and direct reports
+
+2. **Choose a template** (3 min)
+   - Pick from role-specific templates
+   - Customize questions if needed
+
+3. **Launch review cycle** (5 min)
+   - Set timeline and deadlines
+   - Auto-send invitations and reminders
+
+4. **Analyze results** (5 min)
+   - View gap analysis (self vs manager)
+   - See aggregated peer feedback
+   - Export for 1:1 conversations
+
+**Visual:** 4-step horizontal flow with screenshots
 
 ---
 
-### Feature Highlights
+### Social Proof Section
 
-**Keep this section visual—use icons or screenshots if possible**
+**Header:** "What managers are saying"
 
-- **Self-Review with Gap Analysis:** Employees rate themselves, you see the gaps before the meeting
-- **Anonymous Peer Feedback:** Collect 360-degree insights without manual aggregation
-- **Goal Tracking:** Set quarterly goals, track progress, review in next cycle
-- **Role-Based Templates:** Pre-built for Engineers, Managers, Sales Reps (Junior/Mid/Senior)
-- **Review History:** Access past reviews for promotion decisions or performance plans
-- **Team Analytics:** Completion rates, performance distribution, trend tracking
-
----
-
-### Social Proof
-
-**Testimonial focus:** Highlight time saved, clarity gained, and cost savings
-
-**Format:** 2-3 testimonial cards
-
-#### Testimonial 1: Time Savings
-> "The gap analysis changed my 1:1s completely. I used to spend 2 hours prepping for reviews; now I spend 30 minutes and walk in way more prepared. Seeing my engineer rated themselves 2/5 on Impact (I had them at 5/5) opened up a 30-minute conversation about imposter syndrome. Without the side-by-side view, I wouldn't have known."
+**Testimonial 1:**
+> "We went from spreadsheet chaos to structured reviews in one afternoon. The gap analysis feature alone is worth it - I finally know where my reports and I see things differently."
 >
-> **— Alex Chen, Engineering Manager, 30-person SaaS startup**
+> **- Sarah K., Engineering Manager at [Startup]** (25 employees)
 
-#### Testimonial 2: Cost Savings
-> "We almost signed up for Lattice ($2,640/year for our 20-person team). Found this instead, saved $1,200/year and got the same features we actually need. Setup took 20 minutes."
+**Testimonial 2:**
+> "Lattice wanted $3,300/year for our 30-person team. This does everything we need for half the price."
 >
-> **— Priya Sharma, Head of People, digital agency**
+> **- Michael R., Head of People at [Company]** (32 employees)
 
-#### Testimonial 3: Peer Feedback
-> "Collecting peer feedback used to take me 3 hours per review cycle (Google Forms + manual aggregation). Now it's automatic. Employees give feedback in 5 minutes, and I get clean, anonymized summaries. Game changer."
+**Testimonial 3:**
+> "My team actually fills out their self-reviews now because they know I'll see them. The peer feedback is anonymous so people are actually honest."
 >
-> **— Jordan Lee, Product Manager, 25-person fintech startup**
+> **- David L., Product Manager at [Startup]** (18 employees)
 
-**Numbers to highlight (if available):**
-- "Saves managers 30+ minutes per review"
-- "50% cheaper than Lattice ($6-8 PEPM vs $11-16)"
-- "80%+ employee self-review completion rate"
-- "15 minutes to launch your first review cycle"
+**Logos:** Company logos of 5-6 customers (once available)
 
 ---
 
-### FAQ (Top 5 questions)
+### Pricing Section
 
-1. **"How is this different from Lattice or 15Five?"**
-   We focus exclusively on performance reviews (self-review, peer feedback, goal tracking) without the enterprise bloat (engagement surveys, OKRs, pulse surveys). You get the same core features at $6-8 PEPM instead of $11-16. Built for teams of 15-50, not enterprise HR departments.
+**Header:** "Simple pricing. No surprises."
 
-2. **"What if my team is smaller than 15 people?"**
-   We support teams as small as 5 people. Pricing starts at ~$50/month minimum. If you're doing performance reviews for 5+ people, you'll still save time vs Google Docs and money vs enterprise tools.
+**Pricing Card:**
 
-3. **"How long does setup take?"**
-   15 minutes. Import your team from Slack or CSV, pick role-based templates (or create custom), and send the first self-review. No training calls, no onboarding sessions. If you can use Notion, you can use this.
+```
+┌─────────────────────────────────────────────┐
+│              TEAM PLAN                       │
+│                                             │
+│         $7 / employee / month               │
+│           (billed monthly)                  │
+│                                             │
+│         $6 / employee / month               │
+│           (billed annually)                 │
+│                                             │
+├─────────────────────────────────────────────┤
+│  Everything you need:                       │
+│  ✓ Unlimited review cycles                  │
+│  ✓ Self-review + Manager review             │
+│  ✓ Peer feedback (360-degree)               │
+│  ✓ Goal setting & tracking                  │
+│  ✓ Pre-built templates by role/level        │
+│  ✓ Gap analysis dashboard                   │
+│  ✓ Historical review tracking               │
+│  ✓ Export to PDF/CSV                        │
+│  ✓ Email & Slack reminders                  │
+│  ✓ Priority support                         │
+├─────────────────────────────────────────────┤
+│        [Start 14-Day Free Trial]            │
+│         No credit card required             │
+└─────────────────────────────────────────────┘
+```
 
-4. **"Can employees see each other's reviews?"**
-   No. Reviews are private between the employee and their manager. Peer feedback is anonymized and aggregated (individual peer responses are never shown). You control visibility.
+**Price Calculator:**
+> Team size: [Slider: 10-100]
+> Monthly cost: $XX | Annual cost: $XX (save 14%)
 
-5. **"Do you integrate with our HR system (BambooHR, Rippling, etc.)?"**
-   Not yet—this is on our roadmap. For now, you can import team data via CSV or Slack. Takes 5 minutes. We'll sync updates manually with you each quarter if needed.
+**Comparison Mini-Table:**
 
----
+| Tool | Per Employee | 25-Person Team/Year |
+|------|-------------|---------------------|
+| Lattice | $11-16 | $3,300-4,800 |
+| 15Five | $9-14 | $2,700-4,200 |
+| **Us** | **$6-7** | **$1,800-2,100** |
+| Small Improvements | $5-8 | $1,500-2,400* |
 
-### Pricing Section (Optional—Test Visibility)
-
-**Headline:** "Transparent pricing. No enterprise sales calls required."
-
-| Plan | Price | What's Included |
-|------|-------|-----------------|
-| **Starter** | $6 PEPM (monthly billing) | All features, up to 25 employees |
-| **Growth** | $7 PEPM (monthly) or $72/employee/year (save 14%) | All features, 26-100 employees |
-| **Custom** | Contact us | 100+ employees, custom templates, onboarding support |
-
-**Fine print:**
-- 14-day free trial, no credit card required
-- Billed monthly or annually
-- All users who receive evaluations are counted (not just active users)
-- Cancel anytime, export your data
-
-**Comparison table (optional—test if this increases or decreases conversions):**
-
-| Feature | Google Docs | Us | Lattice |
-|---------|-------------|-------|---------|
-| Self-Review | Manual | ✅ | ✅ |
-| Gap Analysis | No | ✅ | ✅ |
-| Peer Feedback | Manual aggregation | ✅ Auto-aggregated | ✅ |
-| Goal Tracking | Manual | ✅ | ✅ |
-| Price (20 employees) | Free (but 10 hrs/cycle) | $1,440-1,680/year | $2,640-3,840/year |
-
----
-
-### Final CTA
-
-**Headline:** "Ready to stop copy-pasting last quarter's Google Doc?"
-
-**Subheadline:** "See how side-by-side gap analysis transforms your review conversations—book a 15-minute demo or join the waitlist."
-
-**Button text (Primary):** "Book a Demo" (Calendly link)
-
-**Button text (Secondary):** "Join Waitlist" (Email form)
-
-**Urgency element (optional—test if it helps or feels pushy):**
-- "Only 10 beta spots left for Q1 2026 review cycle" (if true)
-- "Join 50+ managers already on the waitlist"
+*\*Lacks self-review and peer feedback*
 
 ---
 
-## Copy Guidelines
+### FAQ Section
 
-- **Reading level:** 8th grade (use Hemingway Editor to check)
-- **Tone:** Helpful manager-to-manager (not salesy, not corporate HR speak)
-- **Word count target:** 800-1,000 words total (scannability > length)
-- **Scannability:**
-  - Short paragraphs (2-3 lines max)
-  - Bullet points and numbered lists
-  - Bold key phrases (e.g., "side-by-side comparison," "30 min per review")
-  - Use "you" and "your" (make it personal)
+**Q: How is this different from Lattice?**
+> Same core features (self-review, peer feedback, goals) at 50% lower cost. We don't have HRIS, engagement surveys, or enterprise compliance features - just what small teams actually use.
 
-**Words to use:**
-- Side-by-side, gap analysis, anonymized, structured, clarity, coaching conversations, time-saving
+**Q: What if we already use spreadsheets?**
+> You can import your existing team structure and historical reviews. Most teams are up and running in under an hour. We'll even help you migrate for free.
 
-**Words to avoid:**
-- Synergy, leverage, optimize, facilitate, best-in-class, revolutionary (sounds like corporate BS)
+**Q: How does peer feedback stay anonymous?**
+> Peer feedback is aggregated and anonymized. Employees see summary insights, not who said what. Managers can see patterns but not attribute specific feedback.
 
----
+**Q: What templates are included?**
+> We have templates for Engineering, Product, Sales, Customer Success, and Management - each with Junior, Mid, and Senior level variations. You can customize any template or build your own.
 
-## A/B Test Ideas
+**Q: Can I try before I buy?**
+> Yes! 14-day free trial, no credit card required. Run a real review cycle with your team before deciding.
 
-*Once you have traffic (100+ visitors), test these variations:*
-
-- [ ] **Headline:** Problem-focused ("Stop copying last quarter's Google Doc") vs Outcome-focused ("Run 360-degree reviews in 15 minutes") vs Price-focused ("Enterprise reviews for $6-8 PEPM")
-
-- [ ] **CTA:** "Book Demo" vs "See a Demo" vs "Get Started Free" vs "Start Free Trial"
-
-- [ ] **Social proof:** Customer logos vs Testimonial quotes vs Stats ("50+ teams, 80%+ completion rate")
-
-- [ ] **Pricing visibility:** Pricing table on landing page vs "See Pricing" button vs No pricing (force demo)
-
-- [ ] **Feature emphasis:** Lead with "Gap Analysis" (differentiator) vs "Peer Feedback" (common need) vs "Time Savings" (ROI)
+**Q: What integrations do you support?**
+> Slack (reminders), Google Workspace (SSO), and CSV import/export. HRIS integrations coming soon based on demand.
 
 ---
 
-## Mobile Optimization
+### Final CTA Section
 
-*30-40% of traffic will be mobile—test these:*
+**Header:** "Your team deserves better than spreadsheets"
 
-- [ ] Headline fits on one line (mobile viewport)
-- [ ] CTA button is thumb-friendly (48x48px minimum)
-- [ ] Form fields are minimal (Name + Email only for waitlist)
-- [ ] Page loads in <3 seconds on 4G
-- [ ] No horizontal scrolling on 375px width (iPhone SE)
+**Subheader:** "Start your free trial and run your first review cycle today."
 
----
+**CTA Button:** "Start Free Trial - No Credit Card"
 
-## Analytics Setup
-
-**Track these events (use product/02-prd.md MVP Funnel events):**
-
-- `landing_page_view` - Total visitors
-- `cta_clicked` (with property: `button_type: "demo" or "waitlist"`)
-- `demo_booked` - Calendly confirmation
-- `waitlist_joined` - Email submitted
-- `scroll_depth` (25%, 50%, 75%, 100%) - Engagement depth
-
-**Success metrics:**
-- **Demo booking rate:** >5% of visitors (100 visitors → 5 demo bookings)
-- **Waitlist conversion:** >10% of visitors (100 visitors → 10 emails)
-- **Bounce rate:** <60% (if >70%, headline or messaging is off)
+**Trust Elements:**
+- "14-day free trial"
+- "No credit card required"
+- "Cancel anytime"
 
 ---
 
-*Last updated: January 27, 2026*
+## Technical Specifications
+
+### Page Requirements
+
+| Element | Specification |
+|---------|--------------|
+| Load time | <2 seconds |
+| Mobile responsive | Required |
+| Analytics | Plausible or GA4 |
+| A/B testing | Built-in or Splitbee |
+| Form handling | Native or Formspree |
+| CMS | Optional (static fine for MVP) |
+
+### Tracking Events
+
+| Event | Description | Priority |
+|-------|-------------|----------|
+| `page_view` | Landing page loaded | High |
+| `cta_click_hero` | Hero CTA clicked | High |
+| `cta_click_pricing` | Pricing CTA clicked | High |
+| `demo_video_play` | Demo video started | Medium |
+| `pricing_calculator_used` | Slider moved | Medium |
+| `faq_expanded` | FAQ question clicked | Low |
+| `trial_started` | Trial signup completed | High |
+
+### SEO Requirements
+
+| Element | Content |
+|---------|---------|
+| Title | "Performance Reviews for Small Teams | [Product Name]" |
+| Meta Description | "Run structured 360-degree reviews with self-review, peer feedback, and gap analysis. 50% cheaper than Lattice. Try free for 14 days." |
+| H1 | "Performance Reviews That Don't Cost $11/Employee" |
+| URL | /performance-review-software or / |
+| Schema | SoftwareApplication, FAQPage |
+
+---
+
+## Wireframe (Text-Based)
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ [Logo]                              [Features] [Pricing] [Login]   │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│   Performance Reviews That                    ┌─────────────────┐  │
+│   Don't Cost $11/Employee                     │                 │  │
+│                                               │   Dashboard     │  │
+│   Get self-reviews, peer feedback,            │   Screenshot    │  │
+│   and gap analysis at 50% less                │                 │  │
+│   than Lattice.                               │                 │  │
+│                                               └─────────────────┘  │
+│   [Start Free Trial]  [Watch Demo]                                 │
+│                                                                    │
+│   ───────────────────────────────────────────────────────────────  │
+│   "Trusted by 25+ teams" | ★★★★★ | "Saves 30 min per review"      │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│               Spreadsheets worked. Until they didn't.              │
+│                                                                    │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+│   │  No structure │  │ Hours wasted │  │  One-sided   │            │
+│   │  Hunting for  │  │ Chasing peer │  │  No employee │            │
+│   │  feedback     │  │ reviews      │  │  self-review │            │
+│   └──────────────┘  └──────────────┘  └──────────────┘            │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│               Enterprise features. Startup pricing.                │
+│                                                                    │
+│   ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐     │
+│   │Self-Review │ │   Peer     │ │   Goal     │ │ Templates  │     │
+│   │Compare self│ │ Feedback   │ │ Tracking   │ │ Ready in   │     │
+│   │vs manager  │ │ Anonymous  │ │ Quarterly  │ │ 15 minutes │     │
+│   └────────────┘ └────────────┘ └────────────┘ └────────────┘     │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│            Run your first review in 15 minutes                     │
+│                                                                    │
+│   [1. Setup] ──> [2. Template] ──> [3. Launch] ──> [4. Analyze]   │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│                   What managers are saying                         │
+│                                                                    │
+│   ┌────────────────────────────────────────────────────────────┐  │
+│   │ "We went from spreadsheet chaos to structured reviews..."   │  │
+│   │ - Sarah K., Engineering Manager                             │  │
+│   └────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│                 Simple pricing. No surprises.                      │
+│                                                                    │
+│   ┌────────────────────────────────────────────────────────────┐  │
+│   │                     TEAM PLAN                               │  │
+│   │               $7/employee/month                             │  │
+│   │                                                             │  │
+│   │  ✓ Self-review + Manager review                             │  │
+│   │  ✓ Peer feedback (360-degree)                               │  │
+│   │  ✓ Goal setting & tracking                                  │  │
+│   │  ✓ Pre-built templates                                      │  │
+│   │                                                             │  │
+│   │              [Start Free Trial]                             │  │
+│   └────────────────────────────────────────────────────────────┘  │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│                    Frequently Asked Questions                      │
+│                                                                    │
+│   [+] How is this different from Lattice?                          │
+│   [+] What if we already use spreadsheets?                         │
+│   [+] How does peer feedback stay anonymous?                       │
+│   [+] What templates are included?                                 │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│           Your team deserves better than spreadsheets              │
+│                                                                    │
+│                    [Start Free Trial]                              │
+│              14-day free trial. No credit card.                    │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│ [Logo]    [Features] [Pricing] [Blog] [Support]    [Twitter]       │
+│           © 2026 [Company]. All rights reserved.   [LinkedIn]      │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## A/B Tests to Run
+
+### Test 1: Headline Variants
+
+| Variant | Headline |
+|---------|----------|
+| A (Control) | "Performance Reviews That Don't Cost $11/Employee" |
+| B | "Your Team Outgrew Spreadsheets. Your Budget Didn't Outgrow Itself." |
+| C | "Run Your First 360-Degree Review in 15 Minutes" |
+
+**Metric:** Trial signup rate
+
+### Test 2: CTA Copy
+
+| Variant | CTA |
+|---------|-----|
+| A (Control) | "Start Free Trial" |
+| B | "Try Free for 14 Days" |
+| C | "Get Started Free" |
+
+**Metric:** CTA click rate
+
+### Test 3: Social Proof Placement
+
+| Variant | Placement |
+|---------|-----------|
+| A (Control) | Below hero |
+| B | Above hero |
+| C | Floating sidebar |
+
+**Metric:** Scroll depth + trial signup rate
+
+---
+
+## Launch Checklist
+
+- [ ] Domain purchased and configured
+- [ ] SSL certificate active
+- [ ] Analytics installed (Plausible/GA4)
+- [ ] Meta tags and OG images set
+- [ ] Mobile responsive tested
+- [ ] Page speed <2 seconds
+- [ ] Form submissions working
+- [ ] Email notifications configured
+- [ ] 404 page created
+- [ ] Privacy policy page
+- [ ] Terms of service page
+- [ ] Cookie consent (if needed)
+- [ ] Trial signup flow tested end-to-end
+
+---
+
+*Next artifact: 06-lead-validation.md*

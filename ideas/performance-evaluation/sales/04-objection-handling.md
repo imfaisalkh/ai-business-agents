@@ -1,204 +1,419 @@
 # Objection Handling Playbook
 
-## Framework: Listen → Validate → Reframe → Close
-
-1. **Listen:** Let them finish, don't interrupt
-2. **Validate:** "I hear you—that's a fair concern"
-3. **Reframe:** Address root cause with data/story
-4. **Close:** Ask for next step
+*Generated for: Performance Evaluation Tool*
 
 ---
 
-## Top 10 Objections & Responses
+## Objection Handling Framework
 
-### 1. "Too expensive—we're bootstrapped"
+### The Formula: Acknowledge → Clarify → Respond → Confirm
 
-**Listen:** "I get it—budget is tight."
-
-**Validate:** "A lot of teams we work with are bootstrapped too."
-
-**Reframe:**
-"Let's look at ROI. You're spending 2-4 hours per review × 10 people = 20-40 hours per quarter = 80-160 hours/year. At your hourly rate ($50-100), that's $4K-16K in opportunity cost. We cost $720-1,440/year—you're actually saving money by NOT using Google Docs."
-
-**Close:** "Does that ROI make sense? Want to try the 14-day trial and measure the time savings yourself?"
+1. **Acknowledge** - Show you heard them and understand
+2. **Clarify** - Make sure you understand the real concern
+3. **Respond** - Address with relevant information
+4. **Confirm** - Check if concern is resolved, move forward
 
 ---
 
-### 2. "We already use Lattice/15Five"
+## Price Objections
 
-**Listen:** "Got it—you've already invested in a tool."
+### "It's too expensive"
 
-**Validate:** "Lattice is great for enterprises. Can I ask—do you use their peer feedback and gap analysis features?"
+**Acknowledge:**
+> "I hear you - no one wants to overspend on tools."
 
-**Reframe (if NO):**
-"So you're paying $11-16 per person for features you're not using. We focus exclusively on performance reviews (self-review, gap analysis, peer feedback, goals). You'd save $5-10 per person—that's $1,200-2,400/year for a 20-person team. Same features you actually use, half the cost."
+**Clarify:**
+> "Help me understand - is it that the total cost is too high, or that you're comparing to something cheaper?"
 
-**Reframe (if YES):**
-"Fair—if you're using all of Lattice's features, we're probably not the right fit. But if your team is <50 people and you're only using reviews, worth comparing. Want to see our gap analysis feature side-by-side?"
+**Respond (based on their answer):**
 
-**Close:** "Would it make sense to run a pilot with 5 people and compare?"
+*If total cost:*
+> "For your team of 25, that's $175/month. Consider that each review probably takes you 30+ minutes today. With 25 reviews per cycle, that's 12+ hours.
+>
+> At even $50/hour, that's $625 in time - and you'd be using this quarterly. The tool pays for itself in saved time in the first cycle."
 
----
+*If comparing to cheaper:*
+> "What are you comparing to? If it's a basic tool like Small Improvements, we're about the same price. The difference is we include self-review with gap analysis and peer feedback - features they don't have."
 
-### 3. "Not a priority right now"
+**Confirm:**
+> "Does that help put the cost in perspective?"
 
-**Listen:** "Totally fair—you've got a lot on your plate."
+### "We don't have budget for another tool"
 
-**Validate:** "Reviews often fall to the bottom of the list."
+**Acknowledge:**
+> "I get it - tool spending adds up fast."
 
-**Reframe:**
-"Quick question—when's your next review cycle? If it's <90 days away, you'll be copy-pasting docs again. What if we set this up in 15 minutes today, so you don't have to think about it until then?"
+**Clarify:**
+> "Is there truly no budget, or is it more that this hasn't been prioritized yet?"
 
-**Alternative reframe:**
-"What would make this a priority? Usually it's one of three things: employee complained about lack of feedback, termination with no documentation, or new quarter starting. Have any of those happened recently?"
+**Respond:**
 
-**Close:** "Want to hop on the waitlist and I'll ping you 60 days before your next cycle?"
+*If no budget at all:*
+> "Understood. Let me share a free template that might help in the meantime. When budgets open up, I'd love to reconnect."
 
----
+*If not prioritized:*
+> "What would need to happen for this to become a priority? Is it about proving value first, or timing with review cycles?"
 
-### 4. "Google Docs works fine for us"
+[Then work toward a pilot or wait for better timing]
 
-**Listen:** "Makes sense—Docs is flexible and free."
+**Confirm:**
+> "Would a smaller pilot with just your team make this more feasible?"
 
-**Validate:** "Lots of teams start with Docs. We did too."
+### "Competitor X is cheaper"
 
-**Reframe:**
-"Can I ask—do your employees see their self-review ratings next to yours before the 1:1? Do you have historical review data for promotion decisions? Is peer feedback anonymized automatically?"
+**Acknowledge:**
+> "Good to know you're comparing options."
 
-*[Wait for NO to at least one]*
+**Clarify:**
+> "Which tool are you looking at? I want to make sure we're comparing apples to apples."
 
-"Those gaps become painful around 15-20 employees. That's when managers tell us Docs stops working. You're at [X] people now—have you felt that pain yet?"
+**Respond (by competitor):**
 
-**Close:** "Want to try us for one review cycle and compare? If Docs is still better, no hard feelings."
+*If Small Improvements ($5-8):*
+> "They're great for basic reviews. The difference is we include self-review with gap analysis and peer feedback - features they charge extra for or don't have. For an extra $1-2 per person, you get a more complete 360 view."
 
----
+*If spreadsheets (free):*
+> "Spreadsheets are free, but think about your time. How many hours do you spend setting up forms, chasing responses, organizing files? Even 5 hours per cycle at your rate is worth more than our tool costs."
 
-### 5. "I need to talk to my team first"
+*If Lattice/15Five ($11-16):*
+> "Actually, we're 40-50% cheaper than them. Same core features - self-review, peer feedback, goals - just without the enterprise bells and whistles."
 
-**Listen:** "Of course—team buy-in is important."
+**Confirm:**
+> "Does that comparison help? What features are most important to you?"
 
-**Validate (but probe for real objection):**
-"What specifically do you want their input on? Pricing? Features? Workflow?"
+### "Can you give us a discount?"
 
-*[They'll reveal the real objection—price, authority, or uncertainty]*
+**Acknowledge:**
+> "I appreciate you asking."
 
-**Reframe (if authority issue):**
-"Got it. Are you the decision maker, or does someone else need to approve?"
+**Clarify:**
+> "What would make this a yes for you? Is it the total price, or something else?"
 
-**Reframe (if feature concern):**
-"Makes sense. What if I send you a trial link—you can test it with 2-3 people on your team, get their feedback, then decide?"
+**Respond:**
 
-**Close:** "Does a 3-person pilot make sense, or do you need to involve your whole team?"
+*Standard response:*
+> "Our pricing is already 40-50% below enterprise tools. We keep it simple - same price for everyone, no complex negotiations.
+>
+> What I can offer is 15% off if you commit to annual - that saves you about $[X] over the year."
 
----
+*If they push:*
+> "Here's what I can do - if you sign up this week, I can lock you in at our early adopter rate: $6/employee instead of $7. That's the best I can do."
 
-### 6. "We only do reviews once a year—not worth it"
-
-**Listen:** "Annual reviews—that's a long gap."
-
-**Validate:** "Lots of companies do annual reviews."
-
-**Reframe:**
-"Even if you only review once a year, you're still spending 2-4 hours per person. For a 20-person team, that's 40-80 hours once a year = ~$2K-4K in time cost. We cost $1,440/year and save you half that time. You're still cash-flow positive."
-
-**Alternative reframe:**
-"Plus, annual reviews mean documentation matters even more—if you need to terminate someone, having a paper trail from the last review is critical. We store history automatically."
-
-**Close:** "Want to try it for your next annual cycle and measure the time savings?"
-
----
-
-### 7. "Seems complex to set up"
-
-**Listen:** "I hear you—setup can be a blocker."
-
-**Validate:** "That's exactly why we built this. Lattice takes 1-2 weeks to set up."
-
-**Reframe:**
-"Our setup is 15 minutes: Import team from Slack or CSV, pick a template (Engineer, Manager, Sales), send requests. No training, no onboarding calls. I can walk you through it on this call if you want—literally takes less time than this conversation."
-
-**Close:** "Want to screen share right now and I'll help you set it up in 10 minutes?"
+**Confirm:**
+> "Would that work for you?"
 
 ---
 
-### 8. "What if employees don't fill out self-reviews?"
+## Competition Objections
 
-**Listen:** "That's a valid concern—adoption is key."
+### "We already use [Competitor]"
 
-**Validate:** "We see 80%+ self-review completion rates with our customers."
+**Acknowledge:**
+> "Good to know. How's that working for you?"
 
-**Reframe:**
-"Two things drive completion: (1) Email + Slack reminders (we send 3, 1, and 0 days before deadline), and (2) employees see value—they know their self-review is part of the conversation, not just a formality. In beta, managers who explained 'I want to see your perspective first' got 90%+ completion."
+**Clarify:**
+> "What made you take this call then? Is there something that's not working?"
 
-**Close:** "Want to try it with your team and see? We'll send you completion rate data after the first cycle."
+**Respond (if they have pain with competitor):**
 
----
+> "Sounds like [pain point] is frustrating. That's actually one of the main reasons people switch to us.
+>
+> We focus specifically on [their pain] - here's how it works differently..."
 
-### 9. "We need [enterprise feature X] first" (SSO, SAML, API)
+*If they're happy with competitor:*
+> "Sounds like you've got a good setup. If that ever changes, keep us in mind. What would need to happen for you to consider switching?"
 
-**Listen:** "Got it—[feature X] is important for you."
+**Confirm:**
+> "Is [pain point] significant enough to make a change?"
 
-**Validate:** "That's on our roadmap for [timeline]."
+### "Lattice is the industry standard"
 
-**Reframe (if <100 employees):**
-"Can I ask—is [feature X] a hard blocker, or a nice-to-have? Most teams your size (50 people) use email/password + Google OAuth. Would that work for now, and we can add [feature X] in [3-6 months]?"
+**Acknowledge:**
+> "They're definitely well-known, especially with bigger companies."
 
-**Reframe (if >100 employees):**
-"For enterprise teams, we have a custom plan with [feature X] included. Let me connect you with our enterprise team—they can scope timeline and pricing. Does [X] weeks work?"
+**Clarify:**
+> "Have you used Lattice, or is it more that you've heard of them?"
 
-**Close:** "Want to start with Starter plan now and upgrade to Enterprise when [feature X] is ready?"
+**Respond:**
 
----
+> "Lattice is great for teams of 100+. For smaller teams like yours, you end up paying for a lot of features you'll never use - HRIS integrations, complex workflows, enterprise compliance.
+>
+> We focus on the 20% of features that 80% of managers actually need - self-reviews, peer feedback, gap analysis. At half the price.
+>
+> The question is: do you need enterprise features, or do you need something that works?"
 
-### 10. "Let me think about it"
+**Confirm:**
+> "What features are must-haves for you?"
 
-**Listen:** "Of course—no pressure."
+### "What if you don't survive as a startup?"
 
-**Validate (but uncover real objection):**
-"Totally fair. Can I ask—what specifically do you need to think about? Is it pricing, features, timing, or something else?"
+**Acknowledge:**
+> "That's a fair concern - you want something that'll be around."
 
-*[They'll reveal the real objection—handle it using above scripts]*
+**Clarify:**
+> "Is that the main thing holding you back, or is there something else?"
 
-**Reframe (if stalling):**
-"I hear you. Here's what I'll do—I'll send you a 14-day trial link. No credit card required. You can test it with your team, and if it doesn't work, no hard feelings. Sound fair?"
+**Respond:**
 
-**Close:** "Does it make sense to try it during your next review cycle, or would you rather wait until [next quarter]?"
+> "A few things:
+>
+> First, your data is always yours. You can export everything to CSV or PDF anytime - you're never locked in.
+>
+> Second, we're bootstrapped and profitable [or: we're building sustainably]. We're not chasing unsustainable growth that leads to shutdowns.
+>
+> Third, even if the worst happened, your historical reviews would be exported and you'd switch to something else. The data doesn't disappear."
 
----
-
-## Objection Patterns (When to Walk Away)
-
-### Red Flag Objections (Politely Exit)
-- **"We're happy with [current solution]" + no pain expressed** → Not a fit, nurture for 6-12 months
-- **"I need to check with [boss/team]" after 3+ follow-ups** → No authority, disqualify
-- **"Maybe in 12 months"** → No urgency, add to long-term nurture
-- **"Can you build [custom feature]?"** → Wrong fit (too small for custom dev), suggest Enterprise plan or exit
-
-### Objection as Buying Signal
-Sometimes objections mean "I'm interested but need reassurance":
-- **"Too expensive"** → They're considering it (give ROI data)
-- **"Not sure about [feature]"** → They're evaluating deeply (demo the feature)
-- **"We use [competitor]"** → They're open to switching (show differentiation)
-
-**Rule of thumb:** If they ask 3+ questions or raise 2+ objections, they're engaged. Keep selling.
-
----
-
-## Objection Handling Cheat Sheet (Print This)
-
-| Objection | Quick Response |
-|-----------|----------------|
-| "Too expensive" | "ROI: 30 min/review savings × 10 people = 20 hrs/year = $1K value for $720/year" |
-| "Use Lattice" | "Using peer feedback + gap analysis? If not, you're paying for features you don't use." |
-| "Not a priority" | "When's your next cycle? Let's set up in 15 min today so you're ready." |
-| "Docs works" | "Do employees see self-review gaps? Have historical data? Peer feedback anonymized?" |
-| "Need team buy-in" | "3-person pilot first, then expand?" |
-| "Annual reviews" | "Even 1x/year = 40-80 hours for 20 people. We save half that time + store history." |
-| "Seems complex" | "15 min setup—I can walk you through it right now." |
-| "Low adoption risk" | "80%+ completion rate in beta—email + Slack reminders + employees see value." |
-| "Need SSO/SAML" | "Roadmap for [timeline]. Email/Google OAuth work for now?" |
-| "Let me think" | "What specifically? Pricing, features, timing? Let's address it now." |
+**Confirm:**
+> "Does that address your concern?"
 
 ---
 
-*Last updated: January 27, 2026*
+## Timing Objections
+
+### "We're not ready yet"
+
+**Acknowledge:**
+> "Timing is important - I don't want to push something you don't need yet."
+
+**Clarify:**
+> "What would make you ready? Is it a specific event, or just not a priority right now?"
+
+**Respond:**
+
+*If specific event:*
+> "Got it. Let me reach out [timeframe before event] so you have time to evaluate. Would that work?"
+
+*If not a priority:*
+> "Understood. Just so I understand - is it that reviews are working fine, or that other things are more urgent?"
+
+[If reviews are working fine, they may not be ICP - probe further or disqualify]
+
+**Confirm:**
+> "When's a good time for me to check back?"
+
+### "Let me think about it"
+
+**Acknowledge:**
+> "Of course - I want you to make the right decision."
+
+**Clarify:**
+> "Totally reasonable. What specifically are you thinking through? I might be able to help."
+
+**Respond (based on their answer):**
+
+*If they reveal real concern:*
+[Address that specific concern]
+
+*If they're being polite:*
+> "I understand. What would help you decide one way or the other? Is there info I can send, or would it help to see a specific feature?"
+
+*If they're clearly not interested:*
+> "I appreciate your time. Sounds like this isn't the right fit. If that changes, you know where to find us."
+
+**Confirm:**
+> "What's the one thing that would make this an easy yes?"
+
+### "We need to wait until next quarter"
+
+**Acknowledge:**
+> "Makes sense - new quarter, new budget."
+
+**Clarify:**
+> "Is it a budget thing, or timing with your review cycles?"
+
+**Respond:**
+
+*If budget:*
+> "Got it. Would it help to start the trial now so you're ready to go when budget opens up? No commitment, but you'd have evaluated it already."
+
+*If timing:*
+> "When does your next review cycle start? I'd want you to have at least a few weeks to set up and test before you're in the thick of it."
+
+**Confirm:**
+> "Can I reach out [specific date] to reconnect?"
+
+### "We're too busy right now"
+
+**Acknowledge:**
+> "I totally understand - there's always something urgent."
+
+**Clarify:**
+> "Is it that you're busy right now, or that reviews specifically aren't a priority?"
+
+**Respond:**
+
+*If generally busy:*
+> "The irony is, a tool like this saves you time during review season. Setting up takes about 30 minutes, and then each review takes half the time.
+>
+> Would it help to do a quick setup call so it's ready when you have bandwidth?"
+
+*If reviews not priority:*
+> "When do you think reviews will become more top-of-mind? I don't want to bug you until it makes sense."
+
+**Confirm:**
+> "Would a 15-minute setup call now save you time later?"
+
+---
+
+## Feature/Product Objections
+
+### "We need [feature you don't have]"
+
+**Acknowledge:**
+> "Good to know that's important to you."
+
+**Clarify:**
+> "Help me understand - how would you use [feature]? What problem would it solve?"
+
+**Respond:**
+
+*If it's on our roadmap:*
+> "That's actually on our roadmap for [timeframe]. In the meantime, [workaround or alternative]."
+
+*If it's not planned:*
+> "That's not something we have right now. Can you tell me more about why that's critical? I want to understand if it's a deal-breaker or a nice-to-have."
+
+*If it's truly a deal-breaker:*
+> "If that's a must-have, we might not be the right fit right now. [Competitor] has that feature if that's the priority."
+
+**Confirm:**
+> "Is [feature] a deal-breaker, or could you work without it?"
+
+### "What about integrations with [tool]?"
+
+**Acknowledge:**
+> "Integrations are important for workflow."
+
+**Clarify:**
+> "What would you want the integration to do specifically?"
+
+**Respond:**
+
+*If Slack:*
+> "We integrate with Slack for reminders and notifications. You can customize which alerts go to Slack."
+
+*If HRIS (Gusto, Rippling, etc.):*
+> "We don't have that integration yet. For now, you can import employees via CSV, which takes about 5 minutes. We're building HRIS integrations based on demand."
+
+*If SSO:*
+> "We support Google SSO. Other SSO providers are on the roadmap."
+
+**Confirm:**
+> "Would [what we have] work for now, or is [integration] a must-have?"
+
+### "It seems complicated"
+
+**Acknowledge:**
+> "Last thing I want is another complicated tool to manage."
+
+**Clarify:**
+> "What part seems complicated? I want to make sure I'm explaining it clearly."
+
+**Respond:**
+
+> "It's actually designed to be simple. Here's the reality:
+>
+> 1. Setup takes 15-30 minutes - add your team, pick a template
+> 2. Launch a review cycle - 5 clicks
+> 3. Reviews come in automatically - you just review when they're done
+>
+> No training, no implementation project. Most managers are up and running same day."
+
+**Confirm:**
+> "Would you be open to trying the trial just to see how easy it is?"
+
+---
+
+## Trust/Risk Objections
+
+### "How do I know this will work for us?"
+
+**Acknowledge:**
+> "You should have confidence before committing."
+
+**Clarify:**
+> "What would 'working' look like for your team?"
+
+**Respond:**
+
+> "Here's my suggestion: Start the free trial. Add 3-4 team members. Create one test review cycle.
+>
+> You'll see within a week if the workflow makes sense. If it doesn't, you've lost nothing but an hour of time."
+
+**Confirm:**
+> "Would trying it risk-free help you feel confident?"
+
+### "What's the catch?"
+
+**Acknowledge:**
+> "Fair question - pricing is transparent in this industry."
+
+**Clarify:**
+> "What specifically are you worried about?"
+
+**Respond:**
+
+> "No catch. Price is $7/employee/month (or $6 annual). That includes everything - no hidden fees, no per-feature pricing, no implementation costs.
+>
+> You can cancel anytime. Your data is exportable. We don't do long-term contracts unless you want the annual discount."
+
+**Confirm:**
+> "Does that answer your concern?"
+
+### "I've been burned by tools before"
+
+**Acknowledge:**
+> "Sorry to hear that - nothing worse than investing in something that doesn't deliver."
+
+**Clarify:**
+> "What happened? What tool was it?"
+
+**Respond:**
+
+> "That's exactly why we do a no-commitment trial. You can test it with your actual team, run a real review cycle, and decide after you've seen it work.
+>
+> If it doesn't deliver, you haven't spent a dollar."
+
+**Confirm:**
+> "Would a hands-on trial help you feel more confident before committing?"
+
+---
+
+## Handling Objections in Practice
+
+### If you don't know the answer
+
+> "That's a great question - I don't want to give you the wrong answer. Let me check and get back to you by [tomorrow/this afternoon]."
+
+### If they keep objecting
+
+After 3+ objections, pause:
+
+> "It sounds like there might be something deeper here. Can I ask - what would need to be true for you to move forward?"
+
+This often reveals the real blocker.
+
+### If they won't give a straight answer
+
+> "I want to be respectful of your time. It sounds like this might not be a fit right now - is that fair?"
+
+Sometimes being direct helps them be direct.
+
+---
+
+## Objection Prevention
+
+### Address objections before they come up
+
+**On pricing (during demo):**
+> "Before I forget - pricing is $7/employee. For your team, that's about $175/month. Just wanted to put that out there."
+
+**On complexity (during demo):**
+> "This is literally all you do to launch a review cycle. [Show simple flow]"
+
+**On risk (when closing):**
+> "Remember, it's a 14-day trial with no credit card. Worst case, you learn what you don't like."
+
+---
+
+*Next artifact: 05-followup-system.md*

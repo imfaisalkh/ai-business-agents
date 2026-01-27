@@ -1,98 +1,234 @@
-# Positioning & Messaging Framework
+# Positioning & Messaging
+
+*Generated for: Performance Evaluation Tool*
+
+---
 
 ## Positioning Statement
-For first-time engineering and product managers in 15-50 person companies who struggle with inconsistent, undocumented performance reviews, TeamPulse is a 360-degree evaluation platform that enables structured self-review, peer feedback, and goal tracking in one place. Unlike Lattice at $11-16 PEPM or Google Docs chaos, we deliver enterprise-quality reviews at $6-8 PEPM with zero setup time.
 
-## One-Liner Variations
+### The Formula
 
-**Problem-focused:**
-"Stop copying last quarter's review docs. Run structured 360-degree performance reviews with self-review, peer feedback, and goal tracking—without the $2K/month enterprise price tag."
+**For** [small team managers (15-50 employees)]
+**Who** [need structured performance evaluations but can't afford enterprise tools]
+**Our product is** [an affordable 360-degree performance management platform]
+**That** [provides self-review, peer feedback, and goal tracking at half the cost of Lattice]
+**Unlike** [spreadsheets that lack structure or enterprise tools that cost $11+ per employee]
+**We** [deliver enterprise-grade features at SMB pricing with zero setup complexity]
 
-**Outcome-focused:**
-"Give your team consistent, documented feedback with employee self-review and peer insights—all at 50% the cost of Lattice."
+### One-Liner (Elevator Pitch)
 
-**Curiosity hook:**
-"What if performance reviews actually helped your team grow instead of checking a compliance box?"
+> "Performance reviews that don't suck - and don't cost $11/employee. Get self-reviews, peer feedback, and gap analysis at 50% less than Lattice."
 
-## Core Messages (Pick 3)
+### Tagline Options
 
-### Message 1: Enterprise Features Without Enterprise Pricing
-- **Headline:** "360-degree reviews shouldn't cost $2,000/month for a 20-person team"
-- **Supporting point:** Lattice charges $11-16 PEPM ($2,640-3,840/year for 20 people). You get the same features—self-review with gap analysis, peer feedback, goal tracking—for $6-8 PEPM ($1,440-1,920/year). That's $1,200-2,400 saved annually.
-- **Proof point:** "We built this because we couldn't justify Lattice's pricing for our 15-person team. Now we use our own product and save $1,800/year."
-
-### Message 2: Self-Review Gap Analysis (The Differentiator)
-- **Headline:** "See where your ratings differ from your team's self-ratings—before the review conversation"
-- **Supporting point:** The most valuable coaching moments happen when you see the gap: employee rates themselves 3/5 on "Code Quality," you rated them 5/5. That's a confidence issue, not a skill issue. Our side-by-side comparison makes this visible before you meet, so you coach instead of surprise.
-- **Proof point:** "My best 1:1 ever was when I saw my engineer rated themselves 2/5 on 'Impact' but I had them at 5/5. Turned into a 30-minute conversation about imposter syndrome. Without the gap view, I wouldn't have known." - Engineering Manager, 30-person startup
-
-### Message 3: Launch in 15 Minutes, Not 2 Weeks
-- **Headline:** "Pre-built templates for Engineers, Managers, and Sales Reps (Junior/Mid/Senior levels)—just add your team"
-- **Supporting point:** Enterprise tools require implementation consultants, training sessions, and 1-2 weeks of admin setup. You import your team from Slack/CSV, pick role-based templates, and send your first review in 15 minutes. No training needed.
-- **Proof point:** "We started our Q1 reviews the same day we signed up. Imported 12 people from Slack, picked the 'Mid-Level Engineer' template, and sent self-reviews by lunch." - Product Manager, digital agency
-
-## Voice & Tone
-
-**We sound like:**
-- A senior manager mentoring a first-time manager over coffee
-- Confident but not arrogant (we've been there)
-- Data-informed but not robotic (we prioritize outcomes over features)
-- Pragmatic and time-conscious (bootstrap mindset)
-
-**We never sound like:**
-- HR consultants with corporate jargon ("synergize performance alignment")
-- Sales-y or hype-driven ("Revolutionary! Game-changing!")
-- Academic or theoretical ("Research shows that 360-degree feedback correlates with...")
-- Dismissive of spreadsheets (we respect the hustle, just offer a better way)
-
-**Example phrases we use:**
-- "Run reviews that actually help your team grow"
-- "Stop copy-pasting last quarter's Google Doc"
-- "Side-by-side gap analysis" (our feature differentiator)
-- "15 minutes to launch" (speed to value)
-- "Built for teams of 15-50, priced like it"
-
-**Words we avoid:**
-- "Synergy," "leverage," "360-degree feedback ecosystem" (corporate speak)
-- "Revolutionary," "industry-leading," "best-in-class" (unsubstantiated hype)
-- "Utilize," "facilitate," "optimize" (use simple verbs: use, help, improve)
-- "Solution," "platform" (when "tool" or "product" is clearer)
-
-## Objection Pre-Handlers
-
-| Objection | Response Theme |
-|-----------|----------------|
-| "Too expensive—we're bootstrapped" | "We're $6-8 PEPM = $90-150/month for 15 people. That's 1-2 hours of your time saved per review cycle. If you're doing quarterly reviews, that's 8+ hours saved/year = $400-800 value. Plus, poor reviews cost you people (replacement = $50-100K)." |
-| "We use Lattice/15Five" | "Great—you value structured reviews. Question: Are you using peer feedback and self-review features? If not, you're paying $11+ PEPM for what we offer at $6-8. If yes, how's the ROI for a <50 person team? We're built specifically for your size." |
-| "Not a priority now" | "When's your next review cycle? If it's <90 days out, you'll be copying last quarter's Google Docs again. Take 15 min today to set up templates, save 5+ hours during the cycle. If >90 days out, let's chat 60 days before—sound fair?" |
-| "Google Docs works fine" | "Totally—we used Docs too. Question: Can your team see their self-review next to your ratings? Do you have historical review data for promotion decisions? Are peer reviews anonymized and aggregated? If no, those gaps bite you during terminations or promotions." |
-| "We're too small for this" | "If you have 5+ direct reports, you're doing 5+ reviews per quarter. That's 20+ hours/year. We save you 30 min per review (gap analysis + templates) = 10+ hours/year. At your hourly rate, that's worth way more than $90/month." |
-| "Seems complex to set up" | "15 minutes: Import team from Slack/CSV, pick role templates (Engineer/Manager/Sales), send first self-review. No training, no onboarding calls. If you can use Notion, you can use this." |
+1. **Primary:** "Enterprise reviews. Startup pricing."
+2. **Alternative:** "360-degree reviews without the enterprise price tag"
+3. **Action-focused:** "Run your first structured review cycle in 15 minutes"
 
 ---
 
-## Messaging by Channel
+## Messaging Framework
 
-### LinkedIn Posts
-- **Tone:** Vulnerable + insightful (share manager challenges)
-- **Format:** Story → Insight → Provocative question
-- **Example:** "Had a review yesterday where my engineer rated themselves 2/5 on Impact. I had them at 5/5. Spent 30 minutes unpacking imposter syndrome—wouldn't have known without the gap view. How do you spot confidence issues vs skill gaps in your 1:1s?"
+### Core Value Propositions
 
-### Cold Outreach (LinkedIn DMs)
-- **Tone:** Respectful + curious (not pitching immediately)
-- **Format:** Context → Value share → Soft question
-- **Example:** "Saw you manage an engineering team at [Company]. Just finished Q4 reviews for my team—curious how you handle self-review + peer feedback? We built a tool to stop copy-pasting Google Docs (side-by-side gap analysis has been a game changer). Happy to share what's worked if useful."
+| Value Prop | Customer Pain | Our Solution | Proof Point |
+|------------|---------------|--------------|-------------|
+| **Affordable** | "Lattice costs $2,200/year for my 20-person team" | $6-8 PEPM = $1,440-1,920/year | 40-50% cheaper than enterprise tools |
+| **Complete** | "Basic tools don't have self-review or peer feedback" | Full 360 reviews: self + peer + manager | Gap analysis shows rating differences |
+| **Simple** | "Enterprise tools take weeks to set up" | Run first review in 15 minutes | Pre-built templates by role and level |
+| **Documented** | "No record of performance discussions" | Full audit trail for legal protection | Historical tracking across quarters |
 
-### Landing Page
-- **Tone:** Confident + practical (you understand their pain)
-- **Format:** Problem → Solution → Proof → CTA
-- **Example headline:** "Run 360-Degree Performance Reviews Without the $2K/Month Enterprise Price Tag"
+### Messaging by Awareness Level
 
-### Email Follow-Ups
-- **Tone:** Helpful + persistent (not pushy)
-- **Format:** Recap → New insight → Clear next step
-- **Example:** "Thanks for the call on Tuesday. You mentioned peer feedback is a pain to collect in Docs—we anonymize and aggregate responses automatically. Want to see a 5-min walkthrough of how [similar company] runs their quarterly peer reviews?"
+**Unaware** (Don't know they have a problem)
+> "Your 20-person team is too big for informal feedback. Here's what that costs you."
+
+**Problem Aware** (Know the pain, not solutions)
+> "Spreadsheets for reviews aren't cutting it anymore. But you don't need Lattice's $11/employee price tag."
+
+**Solution Aware** (Comparing options)
+> "Get self-reviews, peer feedback, and gap analysis - features Lattice charges $11+ for - at $6-8 per employee."
+
+**Product Aware** (Know us, evaluating)
+> "Start your free trial. Run a real review cycle with your team. No credit card required."
+
+**Most Aware** (Ready to buy)
+> "Ready to upgrade from spreadsheets? Get 20% off annual plans this month."
 
 ---
 
-*Last updated: January 27, 2026*
+## ICP-Specific Messaging
+
+### For Engineering Managers
+
+**Pain:** "I want to give good feedback but I don't have time to manage spreadsheets and forms"
+
+**Hook:** "Run engineering performance reviews in 15 minutes - not 15 hours"
+
+**Message:**
+> Your engineers deserve structured feedback. But managing Google Docs, chasing peer reviews, and comparing self-assessments shouldn't take a full day per person. Our platform automates the busywork so you can focus on the conversations that matter.
+
+**Features to emphasize:**
+- Technical competency templates (Junior/Mid/Senior Engineer)
+- Peer review automation with anonymization
+- Gap analysis for coaching conversations
+
+### For HR Generalists / People Ops
+
+**Pain:** "I'm the only HR person and I need tools that just work"
+
+**Hook:** "Finally, performance reviews you can set up in an afternoon - not a quarter"
+
+**Message:**
+> You're handling recruiting, benefits, compliance, AND performance. You don't have time to implement a complex system. Our platform gives you pre-built templates, automatic reminders, and a full audit trail - without the enterprise setup nightmare.
+
+**Features to emphasize:**
+- Pre-built role templates (plug and play)
+- Automatic reminder system
+- Compliance-ready documentation and audit trail
+
+### For Startup Founders/CEOs
+
+**Pain:** "I know we need better processes but I'm not paying enterprise prices"
+
+**Hook:** "Give your team Lattice-quality reviews without the Lattice budget"
+
+**Message:**
+> Your team outgrew informal feedback. But at 25 employees, you shouldn't pay $3,300/year for performance software. Get the features that matter - self-reviews, peer feedback, goal tracking - at half the price. Your employees get better feedback, you get documented processes, and finance stays happy.
+
+**Features to emphasize:**
+- ROI: 40-50% savings vs enterprise tools
+- Legal protection from documented performance history
+- Team analytics for company-wide visibility
+
+---
+
+## Objection Handling (Messaging)
+
+### "Spreadsheets work fine for us"
+
+**Reframe:** "Spreadsheets work until they don't. When you need to fire someone and have no documentation, or a good employee leaves citing 'lack of feedback,' spreadsheets become a liability."
+
+**Follow-up:** "What happens when you need to reference what you discussed with someone 3 quarters ago?"
+
+### "We'll just use Lattice/15Five"
+
+**Reframe:** "For a 25-person team, Lattice costs $3,300-4,800/year. We're $1,800-2,400. You get the same core features - self-review, peer feedback, goals - without paying for enterprise features you'll never use."
+
+**Follow-up:** "What features are worth paying 2x for?"
+
+### "Our team is too small for formal reviews"
+
+**Reframe:** "At 15 employees, informal feedback becomes impossible. You can't remember conversations from 3 months ago. Your employees feel like they're not getting feedback. And if you need to let someone go, you have no documentation."
+
+**Follow-up:** "How do you handle it when an employee asks why they didn't get a raise?"
+
+### "We don't have budget for another tool"
+
+**Reframe:** "The average manager spends 5 hours per quarter on manual review processes. At $100/hour loaded cost, that's $500/quarter = $2,000/year. Our tool costs $1,200-1,800/year and saves that time."
+
+**Follow-up:** "What's your time worth?"
+
+---
+
+## Content Pillars
+
+### Pillar 1: Performance Review Best Practices
+- "How to write a self-review that gets you promoted"
+- "The manager's guide to gap analysis"
+- "360-degree feedback: worth the effort?"
+
+### Pillar 2: Small Team Management
+- "When to formalize your review process (hint: at 15 employees)"
+- "Performance management on a bootstrap budget"
+- "The first-time manager's review checklist"
+
+### Pillar 3: Templates & Frameworks
+- "Engineering performance review template (free download)"
+- "Manager competency framework for startups"
+- "Quarterly goal-setting templates"
+
+### Pillar 4: Comparison & Alternatives
+- "Lattice vs. spreadsheets: the $2,000 question"
+- "Performance tools for teams under 50"
+- "What to look for in a performance management tool (and what to skip)"
+
+---
+
+## Brand Voice
+
+### Tone Attributes
+
+| Attribute | What It Means | Example |
+|-----------|---------------|---------|
+| **Direct** | No corporate fluff | "Save 30 minutes per review" not "Enhance your feedback efficiency" |
+| **Practical** | Focused on getting things done | "Here's the template" not "Let's explore frameworks" |
+| **Empathetic** | We've been there | "We know review season is painful" |
+| **Confident** | We know this works | "Your team deserves better than spreadsheets" |
+| **Anti-enterprise** | Against bureaucracy | "No 6-month implementation. No sales calls required." |
+
+### Voice Do's and Don'ts
+
+| Do | Don't |
+|----|-------|
+| "Run your first review in 15 minutes" | "Streamline your performance management journey" |
+| "Your employees can finally see their own reviews" | "Enable transparent bidirectional feedback" |
+| "Save 30 minutes per review" | "Optimize manager time investment" |
+| "Get peer feedback without the awkwardness" | "Facilitate multi-rater assessment processes" |
+| "Half the price of Lattice" | "Competitive pricing structure" |
+
+---
+
+## Competitive Differentiation
+
+### Against Spreadsheets
+
+> "You've outgrown spreadsheets. No more hunting for last quarter's feedback, chasing people for peer reviews, or hoping you remember what you discussed 6 months ago. Get structure without losing simplicity."
+
+### Against Lattice / 15Five
+
+> "Same features. Half the price. Self-reviews, peer feedback, goal tracking - everything you need from Lattice, without the enterprise price tag or 6-week implementation."
+
+### Against Small Improvements / Basic Tools
+
+> "You need more than basic reviews. Self-assessments, peer feedback, gap analysis - features basic tools don't have. But you shouldn't have to pay enterprise prices to get them."
+
+---
+
+## Landing Page Headlines (A/B Test)
+
+### Primary (Value + Differentiation)
+**H1:** "Performance Reviews That Don't Cost $11/Employee"
+**Sub:** Get self-reviews, peer feedback, and gap analysis at 50% less than Lattice.
+
+### Alternative 1 (Pain Point)
+**H1:** "Your Team Outgrew Spreadsheets. Your Budget Didn't Outgrow Itself."
+**Sub:** Enterprise-grade reviews. Startup-friendly pricing. Starting at $6/employee/month.
+
+### Alternative 2 (Speed)
+**H1:** "Run Your First 360-Degree Review in 15 Minutes"
+**Sub:** Pre-built templates. Automatic peer requests. Gap analysis built-in.
+
+### Alternative 3 (Specific Outcome)
+**H1:** "Finally See How Your Team Sees Themselves"
+**Sub:** Self-reviews + manager reviews side by side. Spot the gaps. Coach with confidence.
+
+---
+
+## Email Subject Lines (Test Bank)
+
+**Cold Outreach:**
+1. "Quick question about your review process"
+2. "Spreadsheets for reviews at [Company]?"
+3. "[Name], how do you handle peer feedback?"
+4. "What if reviews took 15 minutes, not 15 hours?"
+
+**Nurture Sequence:**
+1. "The $2,000 question: Lattice or spreadsheets?"
+2. "Why your team stopped trusting reviews"
+3. "Free template: Engineering performance review"
+4. "3 things every self-review should include"
+
+---
+
+*Next artifact: 03-gtm-strategy.md*

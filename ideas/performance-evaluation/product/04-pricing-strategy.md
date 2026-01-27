@@ -1,210 +1,407 @@
 # Pricing Strategy
 
+*Generated for: Performance Evaluation Tool*
+
+---
+
 ## Pricing Model
 
-**Per-Employee-Per-Month (PEPM)** - Industry standard for HR/performance tools
+### Selected Model: Per-Employee-Per-Month (PEPM)
 
-**Who gets counted:** All employees who receive performance evaluations (not just active users or managers)
+**Why PEPM:**
+1. Industry standard for HR/performance tools
+2. Scales naturally with customer growth (built-in expansion revenue)
+3. Easy to compare with competitors
+4. Predictable for customers (know cost before trial)
 
-**Billing cycle:** Monthly or annual (annual gets 15% discount)
+**Alternatives Considered:**
 
----
-
-## Pricing Tiers
-
-### Starter Plan: $6 PEPM (Monthly) | $61/employee/year (Annual)
-
-**Target:** 5-25 employees
-
-**Pricing example:**
-- 10 employees: $60/month or $610/year (save $110)
-- 15 employees: $90/month or $915/year (save $165)
-- 25 employees: $150/month or $1,525/year (save $275)
-
-**Included features:**
-- ✅ Employee self-review + manager gap analysis
-- ✅ Anonymous peer feedback (up to 5 peers per review)
-- ✅ Pre-built role templates (Engineer, Manager, Sales Rep)
-- ✅ Goal setting & tracking
-- ✅ Team analytics dashboard
-- ✅ Review history (unlimited)
-- ✅ Email + Slack notifications
-- ✅ CSV/PDF export
-- ✅ Email support
-
-**Why this price:**
-- **50% cheaper than Lattice** ($11-16 PEPM) → Saves teams $600-1,200/year
-- **Competitive with basic tools** (Small Improvements $5-8 PEPM) but with richer features
-- **Target ARPA:** $90-150/month = sustainable unit economics with <$200 CAC
+| Model | Pros | Cons | Verdict |
+|-------|------|------|---------|
+| Flat monthly fee | Simple, predictable | Doesn't scale with value | Too simple |
+| Per-manager | Aligns with buyers | Small teams = tiny revenue | Underprices value |
+| Per-review-cycle | Usage-based fairness | Unpredictable revenue | Too complex |
+| **Per-employee** | **Industry standard, scales** | **Requires employee tracking** | **Winner** |
 
 ---
 
-### Growth Plan: $7 PEPM (Monthly) | $72/employee/year (Annual)
+## Price Points
 
-**Target:** 26-100 employees
+### Core Pricing
 
-**Pricing example:**
-- 30 employees: $210/month or $2,160/year (save $360)
-- 50 employees: $350/month or $3,600/year (save $600)
-- 75 employees: $525/month or $5,400/year (save $900)
+| Plan | Monthly | Annual (per month) | Annual Discount |
+|------|---------|-------------------|-----------------|
+| **Standard** | $8/employee | $7/employee | 12.5% |
+| **Early Adopter** | $7/employee | $6/employee | 14% |
+| **Founding Member** | $6/employee | $5/employee | 17% |
 
-**Everything in Starter, plus:**
-- ✅ Custom review templates (create your own competencies)
-- ✅ BambooHR/Rippling integration (auto-import team data)
-- ✅ Advanced analytics (trend tracking, calibration insights)
-- ✅ Priority email support (24-hour response time)
+### Minimum Team Size
 
-**Why $7 vs $6:**
-- Larger teams have more budget ($2,160/year for 30 people is still 50% cheaper than Lattice)
-- Advanced features (custom templates, integrations) justify $1 premium
-- **Target ARPA:** $210-525/month = healthy revenue per customer
+- **Minimum:** 10 employees (or $70/month minimum)
+- **No maximum** (but focus on 15-50 sweet spot)
 
----
+### What's Included (Everything)
 
-### Enterprise Plan: Custom Pricing
+| Feature | All Plans |
+|---------|-----------|
+| Unlimited review cycles | Yes |
+| Self-review + Manager review | Yes |
+| Peer feedback (360-degree) | Yes |
+| Goal setting & tracking | Yes |
+| Pre-built templates | Yes |
+| Template customization | Yes |
+| Gap analysis dashboard | Yes |
+| Historical review tracking | Yes |
+| PDF/CSV export | Yes |
+| Email reminders | Yes |
+| Slack integration | Yes |
+| Priority support | Yes |
 
-**Target:** 100+ employees
-
-**Contact sales for quote**
-
-**Everything in Growth, plus:**
-- ✅ SSO (SAML/OKTA)
-- ✅ Dedicated onboarding & training
-- ✅ API access for custom integrations
-- ✅ SLA & uptime guarantees
-- ✅ SOC 2 Type 2 compliance documentation
-- ✅ Dedicated customer success manager
-
-**Pricing guidance:** $6-8 PEPM depending on volume (discounts at 200+, 500+ employees)
-
-**Why custom pricing:**
-- Enterprise buyers expect negotiation
-- Volume discounts incentivize larger deals
-- Custom features require services agreement
+**Why one plan:**
+- Simple for bootstrapped operation
+- No decision paralysis for customers
+- Can add tiers later based on enterprise requests
 
 ---
 
-## Pricing Rationale
+## Pricing Psychology
 
-### Value-Based Pricing Calculation
+### Anchoring Strategy
 
-**Time savings:**
-- Managers save 30 min per review (gap analysis + automation)
-- 10-person team = 10 reviews/quarter = 5 hours saved/quarter = 20 hours/year
-- Manager hourly rate: $50-100/hour
-- **Value created:** $1,000-2,000/year
+**Present pricing like this:**
 
-**Cost of current alternatives:**
-- Lattice: $11-16 PEPM × 10 employees × 12 months = $1,320-1,920/year
-- Our price: $6-7 PEPM × 10 employees × 12 months = $720-840/year
-- **Savings:** $600-1,080/year (45-56% cheaper)
+```
+"Lattice costs $11-16 per employee. We're $7-8."
+"That's 40-50% less for the same core features."
+"For a 25-person team: $2,100/year vs $3,300-4,800."
+```
 
-**ROI for customer:**
-- Pay $720/year, save 20 hours ($1,000-2,000 value) + avoid Lattice cost ($1,320)
-- **Net ROI:** $1,600-2,600/year
-- **Payback period:** <1 month
+### Price Framing
 
----
+| Frame | Message |
+|-------|---------|
+| Per employee | "$7/employee/month" |
+| Per team (25 ppl) | "$175/month for your team" |
+| Per year | "$2,100/year" (sounds cheaper than monthly x 12) |
+| Per review cycle | "$43 per review cycle" (quarterly) |
+| Per hour saved | "Saves 30 min/review = pays for itself in 1 review" |
 
-## Competitive Pricing Comparison
+### Decoy Effect
 
-| Tool | Price (PEPM) | 20 employees | 50 employees | Our savings (20 ppl) |
-|------|--------------|--------------|--------------|----------------------|
-| **Us (Starter)** | **$6** | **$1,440/yr** | **$3,600/yr** | **—** |
-| **Us (Growth)** | **$7** | **$1,680/yr** | **$4,200/yr** | **—** |
-| Small Improvements | $5-8 | $1,200-1,920 | $3,000-4,800 | $0-480/yr |
-| 7Geese | $5-7 | $1,200-1,680 | $3,000-4,200 | $0-240/yr |
-| 15Five | $8-12 | $1,920-2,880 | $4,800-7,200 | $480-1,440/yr |
-| Lattice | $11-16 | $2,640-3,840 | $6,600-9,600 | $1,200-2,400/yr |
-| Culture Amp | $10-14 | $2,400-3,360 | $6,000-8,400 | $960-1,920/yr |
-
-**Strategic position:** Premium features at mid-market pricing (gap between $5 basic tools and $11+ enterprise tools)
+Don't offer multiple plans, but do offer:
+- Monthly vs Annual (annual looks like great deal)
+- Standard vs Early Adopter pricing (urgency)
 
 ---
 
-## Discounts & Promotions
+## Launch Pricing Tiers
 
-### Early Adopter Discount (First 50 Customers)
-- **20% off first year** ($4.80 PEPM instead of $6)
-- **Why:** Incentivize early adoption, get testimonials, validate pricing
-- **Condition:** Must provide testimonial + agree to case study
+### Tier 1: Founding Members (First 20 customers)
 
-### Annual Billing Discount
-- **15% off** (pay upfront for 12 months)
-- **Example:** $6 PEPM monthly = $72/year, Annual = $61/employee/year
-- **Why:** Improve cash flow, reduce churn (harder to cancel annual)
+**Price:** $5/employee/month (annual) or $6/month
 
-### Referral Incentive
-- **$200 credit per referral** (applied to next invoice)
-- **Why:** Customer acquisition via referrals is $0 CAC
+**Benefits:**
+- Locked-in pricing forever
+- Direct founder access
+- Feature request priority
+- Logo on website (with permission)
 
-### Non-Profit/Startup Discount
-- **30% off for verified non-profits** or companies <2 years old with <$500K revenue
-- **Why:** Build goodwill, expand TAM, these customers grow into paying customers
+**Criteria:**
+- Sign up in first 60 days
+- Minimum 15 employees
+- Complete 1 review cycle
+- Provide testimonial
 
----
+**Marketing Message:**
+> "Join as a Founding Member - lock in $5/employee forever. Only 20 spots available."
 
-## Pricing Experiments (Validate in Beta)
+### Tier 2: Early Adopters (Customers 21-50)
 
-### Experiment 1: $6 vs $7 PEPM (Starter Plan)
-- **Hypothesis:** $6 converts better (lower friction) but $7 is still 50% cheaper than Lattice
-- **Test:** Show $6 to first 25 trials, $7 to next 25 trials
-- **Measure:** Trial-to-paid conversion rate (target: >25%)
-- **Decision:** If $7 converts >20%, go with $7 (higher revenue, still competitive)
+**Price:** $6/employee/month (annual) or $7/month
 
-### Experiment 2: Show Pricing on Landing Page vs "Contact Sales"
-- **Hypothesis:** Transparent pricing increases trust and conversion
-- **Test:** A/B test landing page (Pricing visible vs "Book Demo to see pricing")
-- **Measure:** Demo booking rate, trial signup rate
-- **Decision:** If transparent pricing increases signups >15%, keep it visible
+**Benefits:**
+- Discounted pricing for 2 years
+- Priority support
+- Beta access to new features
 
-### Experiment 3: Free Trial Length (14 days vs 30 days)
-- **Hypothesis:** 14 days is enough to run one review cycle (most cycles are <2 weeks)
-- **Test:** First 50 trials get 14 days, next 50 get 30 days
-- **Measure:** Trial-to-paid conversion (target: >25%)
-- **Decision:** If 14 days converts >25%, stick with it (faster sales cycle)
+**Criteria:**
+- Sign up in first 6 months
+- Minimum 10 employees
 
----
+**Marketing Message:**
+> "Early Adopter pricing ends [date]. Get 15% off standard pricing."
 
-## Monetization Strategy
+### Tier 3: Standard Pricing (Post-launch)
 
-### Phase 1: Land (Months 1-6)
-- **Focus:** Acquire 30-50 customers at Starter Plan ($6 PEPM)
-- **Goal:** $3-5K MRR
-- **Tactics:** Early adopter discount, LinkedIn outreach, community engagement
-- **Success:** 25%+ trial-to-paid conversion, <$200 CAC
+**Price:** $7/employee/month (annual) or $8/month
 
-### Phase 2: Expand (Months 7-12)
-- **Focus:** Upsell Starter customers to Growth Plan as they add team members
-- **Goal:** $8-12K MRR
-- **Tactics:** Usage-based triggers ("You're at 26 employees—upgrade to Growth for custom templates"), email campaigns
-- **Success:** Net Revenue Retention >100% (team growth > churn)
-
-### Phase 3: Enterprise (Months 13-18)
-- **Focus:** Sign 3-5 Enterprise customers (100-500 employees)
-- **Goal:** $15-25K MRR
-- **Tactics:** Inbound leads from Starter/Growth customers, referrals, outbound to VP Eng at growth-stage startups
-- **Success:** $10K+ ACV deals, <6-month sales cycle
+**Benefits:**
+- All features
+- Standard support
+- Regular feature updates
 
 ---
 
-## Pricing FAQs (For Sales Enablement)
+## Revenue Projections
 
-**Q: "Why not just use Google Docs for free?"**
-A: Google Docs works until you have 10+ employees. Then you're copy-pasting docs, losing review history, manually aggregating peer feedback. We save you 30 min per review = 20 hours/year for a 10-person team. That's $1,000-2,000 value for $720/year.
+### Customer Scenarios
 
-**Q: "How is this different from Lattice at $11-16 PEPM?"**
-A: We focus on the 20% of features that drive 80% of value (self-review, gap analysis, peer feedback, goal tracking). Lattice adds engagement surveys, OKRs, compensation management—features most SMBs don't use. We're 50% cheaper because we don't charge for bloat.
+| Team Size | Monthly | Annual | Notes |
+|-----------|---------|--------|-------|
+| 15 employees | $105-120 | $1,050-1,200 | Small team |
+| 25 employees | $175-200 | $1,750-2,000 | Sweet spot |
+| 40 employees | $280-320 | $2,800-3,200 | Larger SMB |
+| 75 employees | $525-600 | $5,250-6,000 | Upper limit |
 
-**Q: "What if we only need to run reviews twice a year (semi-annual)?"**
-A: Our pricing is annual (you pay for the year, use it as often as you want). If you run reviews twice a year, that's $720/year ÷ 2 cycles = $360 per cycle for a 10-person team. Still cheaper than hiring a consultant or wasting 10+ hours on manual process.
+### Target ARPA (Average Revenue Per Account)
 
-**Q: "Can we pay per review cycle instead of monthly?"**
-A: Not yet. PEPM is industry standard and allows us to invest in continuous improvements (we ship features between your review cycles). Annual billing gives you 15% discount if cash flow is a concern.
+| Phase | Target ARPA | Why |
+|-------|-------------|-----|
+| Beta | $80-100/month | Smaller teams, heavy discounts |
+| Launch | $100-120/month | Mix of founding/early adopter |
+| Growth | $120-150/month | Standard pricing, larger teams |
 
-**Q: "Do managers count as users?"**
-A: Yes, if they're receiving reviews from their manager. If they only give reviews (e.g., CEO who doesn't get reviewed), they don't count.
+### MRR Milestones
+
+| Milestone | Customers | Avg ARPA | MRR |
+|-----------|-----------|----------|-----|
+| Month 3 | 15 | $100 | $1,500 |
+| Month 6 | 35 | $110 | $3,850 |
+| Month 9 | 60 | $120 | $7,200 |
+| Month 12 | 100 | $130 | $13,000 |
+
+### ARR Path
+
+| Year | End MRR | ARR | Notes |
+|------|---------|-----|-------|
+| Year 1 | $13K | $156K | 100 customers |
+| Year 2 | $35K | $420K | 250 customers |
+| Year 3 | $75K | $900K | 500 customers |
 
 ---
 
-*Last updated: January 27, 2026*
+## Competitive Pricing Analysis
+
+### Price Positioning Map
+
+```
+Price ($PEPM)
+$16 |                              [Lattice Full]
+$14 |                    [15Five]
+$12 |          [Lattice Base]
+$10 |    [Culture Amp]  [Leapsome]
+$8  |    [Standard Pricing] ← US (at launch)
+$7  |    [Early Adopter] ← US
+$6  |    [Small Improvements]  [Founding] ← US
+$5  |
+$0  |    [Spreadsheets]
+    +────────────────────────────────────────→ Features
+         Basic    Self-Review  Peer    Goals   Full HRIS
+                              Feedback
+```
+
+### Competitive Response
+
+**If competitor drops price:**
+- Hold pricing, compete on features/support
+- Emphasize gap analysis differentiation
+
+**If competitor adds features:**
+- Assess if feature matches our ICP needs
+- If yes, add to roadmap
+- If no, stay focused
+
+---
+
+## Trial & Conversion
+
+### Trial Structure
+
+| Element | Specification |
+|---------|--------------|
+| Length | 14 days |
+| Credit card required | No |
+| Full features | Yes |
+| Team size limit | None during trial |
+| Data retention | 30 days after trial ends |
+
+### Trial-to-Paid Optimization
+
+**Day 1:**
+- Welcome email with quick start guide
+- Prompt to add team members
+
+**Day 3:**
+- Check-in: "Need help setting up?"
+- Case study of similar team
+
+**Day 7:**
+- Progress check: "You're halfway through your trial"
+- Highlight features not yet used
+
+**Day 10:**
+- Value summary: "Here's what you've accomplished"
+- Pricing reminder with ROI calculator
+
+**Day 13:**
+- "Trial ending tomorrow" reminder
+- Special offer for annual prepay
+
+**Day 14:**
+- Trial ended notification
+- 7-day grace period offer
+
+### Conversion Targets
+
+| Trial Stage | Target |
+|-------------|--------|
+| Trial starts | 100% |
+| Team added (3+ employees) | 70% |
+| Review cycle created | 50% |
+| 1 review completed | 35% |
+| Converts to paid | 25% |
+
+---
+
+## Discounting Policy
+
+### Approved Discounts
+
+| Discount | Amount | Criteria |
+|----------|--------|----------|
+| Annual prepay | 12-15% | Standard offer |
+| Founding Member | 30% | First 20 customers |
+| Early Adopter | 15% | Customers 21-50 |
+| Non-profit | 25% | Verified 501(c)(3) |
+| Multi-year | 20% | 2-year commitment |
+
+### Not Approved
+
+| Request | Response |
+|---------|----------|
+| "Competitor is cheaper" | "We offer more features at this price" |
+| "We need 50% off" | "Our pricing is already 50% below enterprise alternatives" |
+| "Free pilot" | "14-day trial is free, no credit card needed" |
+| "Just for this quarter" | "We don't do one-time discounts" |
+
+---
+
+## Upsell & Expansion
+
+### Natural Expansion Revenue
+
+1. **Team Growth:** Customer adds employees = automatic revenue increase
+2. **Annual Prepay:** Move from monthly to annual (improves cash flow)
+3. **Additional Teams:** Add departments/locations (future)
+
+### Expansion Tracking
+
+| Metric | Target |
+|--------|--------|
+| Net Revenue Retention | 105%+ |
+| Expansion MRR % | 10%+ of total MRR |
+| Annual upgrade rate | 40% of monthly customers |
+
+### Future Upsell Opportunities (V2+)
+
+| Feature | Price | When |
+|---------|-------|------|
+| Advanced Analytics | +$2 PEPM | Year 2 |
+| HRIS Integration | +$1 PEPM | Year 2 |
+| Custom Branding | +$50/month flat | Year 2 |
+| API Access | +$3 PEPM | Year 2 |
+| Dedicated Support | +$200/month | Year 2 |
+
+---
+
+## Pricing Page Copy
+
+### Headline
+> Simple, transparent pricing
+
+### Subhead
+> Everything you need at a price that won't break your budget. No surprises, no hidden fees.
+
+### Price Display
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                    $7/employee/month                        │
+│                    (billed annually)                        │
+│                                                             │
+│                 or $8/employee/month                        │
+│                    (billed monthly)                         │
+│                                                             │
+│     ──────────────────────────────────────────────────      │
+│                                                             │
+│     Your team (25 employees): $175/month                    │
+│     Annual: $2,100/year (save $300)                         │
+│                                                             │
+│                  [Start Free Trial]                         │
+│               14 days free • No credit card                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Feature List
+- Unlimited review cycles
+- Self-review with gap analysis
+- 360-degree peer feedback
+- Goal setting & tracking
+- Pre-built role templates
+- Automatic reminders
+- PDF & CSV export
+- Slack integration
+- Priority support
+
+### Comparison
+```
+vs Lattice: 50% less ($7 vs $11-16)
+vs 15Five: 40% less ($7 vs $9-14)
+vs Spreadsheets: 30 minutes saved per review
+```
+
+### FAQ
+**How do you count employees?**
+> We count all employees who receive reviews. If someone is on your team roster, they count toward your bill.
+
+**Can we change team size?**
+> Yes, add or remove employees anytime. We prorate charges for mid-cycle changes.
+
+**What happens after the trial?**
+> You'll be prompted to add a payment method. No auto-charge without your consent.
+
+---
+
+## Pricing Experiments
+
+### Test 1: Price Point (Month 2-3)
+
+| Variant | Price | Test Group |
+|---------|-------|------------|
+| A | $7 PEPM | 50% of trials |
+| B | $8 PEPM | 50% of trials |
+
+**Measure:** Conversion rate, ARPA, payback period
+
+### Test 2: Annual Discount (Month 4-5)
+
+| Variant | Discount | Test Group |
+|---------|----------|------------|
+| A | 12% off annual | 50% |
+| B | 15% off annual | 50% |
+
+**Measure:** Annual vs monthly mix, LTV
+
+### Test 3: Minimum Team Size (Month 5-6)
+
+| Variant | Minimum | Test Group |
+|---------|---------|------------|
+| A | 10 employees | 50% |
+| B | 5 employees | 50% |
+
+**Measure:** ARPA, churn rate, support load
+
+---
+
+*Next artifact: 05-product-metrics.md*

@@ -1,199 +1,361 @@
-# Architecture Decision Record (ADR)
+# Architecture Decision Record
 
-## Tech Stack
-
-**Frontend:** Nuxt 4 + Vue 3 + shadcn-vue
-**Backend:** Nuxt Server API Routes (full-stack framework)
-**Database:** PostgreSQL (production) / SQLite (local dev)
-**ORM:** Prisma
-**Auth:** Nuxt Auth (email/password + Google OAuth)
-**Hosting:** Vercel (frontend + serverless functions) or Railway (full-stack)
-**File Storage:** Cloudinary or AWS S3 (for avatars, exports)
-**Email:** Resend or SendGrid
-**Analytics:** PostHog (self-hosted or cloud)
+*Generated for: Performance Evaluation Tool*
 
 ---
 
-## Why This Stack?
+## Architecture Overview
 
-### Nuxt 4 + Vue 3
-- **Full-stack framework:** API routes + frontend in one codebase
-- **SSR/SSG:** Better SEO, faster initial load
-- **File-based routing:** Fast development
-- **Built-in state management:** Pinia integrated
-- **TypeScript support:** Type safety across stack
+### System Architecture
 
-### shadcn-vue
-- **Unstyled components:** Full design control
-- **Accessible by default:** WCAG compliance
-- **Copy-paste components:** No package bloat
-- **Tailwind-based:** Fast styling
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                              FRONTEND                                    │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                    Nuxt 4 (Client-only SPA)                      │   │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │   │
+│  │  │  Vue 3 +     │  │  shadcn-vue  │  │  Pinia       │          │   │
+│  │  │  Composition │  │  Components  │  │  State Mgmt  │          │   │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘          │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                │ HTTP/JSON                              │
+│                                ▼                                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                              BACKEND                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                    Fastify API Server                            │   │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │   │
+│  │  │  Routes      │  │  Auth        │  │  Validation  │          │   │
+│  │  │  /api/*      │  │  JWT/Session │  │  Zod Schemas │          │   │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘          │   │
+│  │                                                                  │   │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │   │
+│  │  │  Drizzle ORM │  │  Email       │  │  Jobs        │          │   │
+│  │  │  SQLite/PG   │  │  Resend      │  │  BullMQ      │          │   │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘          │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                │                                        │
+│                                ▼                                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                            DATABASE                                      │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │               SQLite (dev) / PostgreSQL (prod)                   │   │
+│  │                        Drizzle ORM                               │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-### PostgreSQL
-- **Relational data:** Reviews, goals, peer feedback have complex relationships
-- **JSON support:** Flexible for template storage (competencies vary by role)
-- **Scalability:** Can handle 100K+ employees without redesign
-- **Free tier:** Neon, Supabase, Railway all offer free PostgreSQL
+### Technology Stack
 
-### Prisma ORM
-- **Type-safe queries:** Autocomplete + compile-time errors
-- **Migrations:** Version-controlled schema changes
-- **Introspection:** Generate types from existing database
-- **Dev experience:** Best-in-class TypeScript ORM
+| Layer | Technology | Why |
+|-------|------------|-----|
+| **Frontend** | Nuxt 4 (SPA mode) | Modern Vue framework, fast DX |
+| **UI Components** | shadcn-vue | Beautiful, accessible, customizable |
+| **State** | Pinia | Vue's official state management |
+| **Backend** | Fastify | Fast, lightweight, TypeScript-native |
+| **ORM** | Drizzle | Type-safe, performant, SQL-like |
+| **Database** | SQLite → PostgreSQL | Simple to start, scales when needed |
+| **Auth** | Better Auth | Simple, secure authentication |
+| **Email** | Resend | Developer-friendly, reliable |
+| **Jobs** | BullMQ (later) | Background job processing |
+| **Hosting** | Railway / Render | Simple deployment, good free tiers |
 
 ---
 
-## Architecture Diagram
+## ADR 1: Frontend Framework
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Frontend (Nuxt 4 + Vue 3)             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │  Dashboard  │  │ Gap Analysis│  │  Analytics  │        │
-│  │  (Manager)  │  │    View     │  │  Dashboard  │        │
-│  └─────────────┘  └─────────────┘  └─────────────┘        │
-│         ↓                  ↓                  ↓              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │         Nuxt Server API Routes (Backend)           │    │
-│  │  /api/auth  /api/reviews  /api/teams  /api/goals  │    │
-│  └────────────────────────────────────────────────────┘    │
-│                            ↓                                 │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │              Prisma ORM (Data Layer)               │    │
-│  └────────────────────────────────────────────────────┘    │
-│                            ↓                                 │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │         PostgreSQL Database (Production)           │    │
-│  │   Tables: Users, Teams, Reviews, Goals, Feedback   │    │
-│  └────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-         ↓                  ↓                  ↓
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  Email       │  │  Analytics   │  │  File        │
-│  (Resend)    │  │  (PostHog)   │  │  Storage(S3) │
-└──────────────┘  └──────────────┘  └──────────────┘
-```
+### Decision: Nuxt 4 in SPA Mode
+
+**Context:**
+- Need to build a performant web app quickly
+- Team has Vue experience
+- SEO not critical for app (authenticated pages)
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| Nuxt 4 SSR | SEO, initial load | Complexity, server costs |
+| **Nuxt 4 SPA** | **Simple, fast DX** | **No SEO** |
+| Vue 3 + Vite | Lightweight | Missing routing, etc. |
+| React + Next | Popular | Team has Vue experience |
+
+**Decision:** Nuxt 4 in SPA mode
+
+**Rationale:**
+- All app pages are behind auth (no SEO needed)
+- SPA mode is simpler to deploy (static hosting)
+- Nuxt provides routing, composables, auto-imports
+- Can switch to SSR later if needed
 
 ---
 
-## Database Schema (Core Tables)
+## ADR 2: Component Library
 
-### Users
-```prisma
-model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  name        String
-  avatar      String?
-  role        String   // "manager", "employee"
-  teamId      String
-  team        Team     @relation(fields: [teamId], references: [id])
-  createdAt   DateTime @default(now())
+### Decision: shadcn-vue
 
-  managedReviews     Review[]  @relation("ManagerReviews")
-  employeeReviews    Review[]  @relation("EmployeeReviews")
-  peerFeedbackGiven  PeerFeedback[]
-}
+**Context:**
+- Need professional-looking UI fast
+- Want customizable components (not locked to a library)
+- Accessibility matters
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| **shadcn-vue** | **Beautiful, customizable, accessible** | **Newer, smaller community** |
+| Vuetify | Mature, comprehensive | Heavy, opinionated styling |
+| PrimeVue | Feature-rich | Complex, learning curve |
+| Headless UI | Accessible, minimal | More work to style |
+
+**Decision:** shadcn-vue
+
+**Rationale:**
+- Copy-paste components we own and customize
+- Radix-based accessibility built-in
+- Modern, clean aesthetic matches our target users
+- Can modify without fighting the library
+
+---
+
+## ADR 3: Backend Framework
+
+### Decision: Fastify
+
+**Context:**
+- Need fast, reliable API server
+- TypeScript support required
+- Team can manage own infrastructure
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| **Fastify** | **Fast, great TS support** | **Less ecosystem than Express** |
+| Express | Mature, huge ecosystem | Slow, poor TS support |
+| Hono | Ultra-fast, modern | Very new |
+| tRPC | Type-safe E2E | Locks you in, learning curve |
+
+**Decision:** Fastify
+
+**Rationale:**
+- Best-in-class performance
+- Native TypeScript support
+- Schema validation built-in
+- Rich plugin ecosystem
+- Easy to test
+
+---
+
+## ADR 4: Database & ORM
+
+### Decision: Drizzle ORM + SQLite/PostgreSQL
+
+**Context:**
+- Need relational database for reviews, users, teams
+- Want type-safety with TypeScript
+- Start simple, scale later
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| **Drizzle + SQLite/PG** | **Type-safe, performant, SQL-like** | **Newer** |
+| Prisma | Popular, good DX | Slow queries, complex migrations |
+| Knex | Flexible | Not type-safe |
+| TypeORM | Mature | Buggy, complex |
+
+**Decision:** Drizzle ORM
+
+**Rationale:**
+- SQL-like syntax (what you write = what runs)
+- Excellent TypeScript inference
+- Fast migrations with drizzle-kit
+- Works great with both SQLite and PostgreSQL
+- No runtime overhead
+
+**Database Strategy:**
+- Development: SQLite (zero setup)
+- Production: PostgreSQL (Railway provides free tier)
+- Same Drizzle code works for both
+
+---
+
+## ADR 5: Authentication
+
+### Decision: Better Auth
+
+**Context:**
+- Need secure authentication
+- Email/password required, Google SSO nice to have
+- Don't want to build auth from scratch
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| **Better Auth** | **Simple, self-hosted, full-featured** | **Newer** |
+| Lucia Auth | Lightweight | More manual setup |
+| NextAuth | Popular | React-focused |
+| Auth0/Clerk | Managed | Expensive at scale, vendor lock-in |
+
+**Decision:** Better Auth
+
+**Rationale:**
+- Full-featured (sessions, OAuth, email verification)
+- Self-hosted (no monthly costs, no vendor lock-in)
+- Works great with Fastify and Drizzle
+- Active development and good docs
+
+---
+
+## ADR 6: Email Service
+
+### Decision: Resend
+
+**Context:**
+- Need to send transactional emails (invites, reminders)
+- Developer-friendly API preferred
+- Low volume initially (<1000/month)
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| **Resend** | **Beautiful API, great DX** | **Newer** |
+| SendGrid | Mature, reliable | Complex API |
+| Postmark | Great deliverability | More expensive |
+| AWS SES | Cheap | Complex setup |
+
+**Decision:** Resend
+
+**Rationale:**
+- Clean, modern API
+- React Email templates (works with Vue too)
+- Generous free tier (3,000 emails/month)
+- Great deliverability
+
+---
+
+## ADR 7: Deployment
+
+### Decision: Railway (Monorepo)
+
+**Context:**
+- Need simple deployment
+- Budget-conscious (< $30/month target)
+- Want to focus on product, not infrastructure
+
+**Options Considered:**
+| Option | Pros | Cons |
+|--------|------|------|
+| **Railway** | **Simple, monorepo support, good free tier** | **Newer** |
+| Render | Similar to Railway | Slightly less DX |
+| Vercel | Great for frontend | Complex for backend |
+| Digital Ocean | Flexible | More manual setup |
+| Self-hosted | Full control | Time sink |
+
+**Decision:** Railway
+
+**Rationale:**
+- Deploy from GitHub with zero config
+- PostgreSQL included
+- Good free tier to start
+- Easy to scale when needed
+- Supports monorepo structure
+
+---
+
+## Data Model
+
+### Entity Relationship Diagram
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│    User     │────<│  TeamMember │>────│    Team     │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                   │                   │
+       │                   │                   │
+       ▼                   ▼                   ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Review    │────<│ReviewCycle  │>────│  Template   │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                   │
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│  Response   │     │PeerFeedback │
+└─────────────┘     └─────────────┘
 ```
 
-### Teams
-```prisma
-model Team {
-  id          String   @id @default(uuid())
-  name        String
-  companyName String
-  plan        String   // "starter", "growth", "enterprise"
-  stripeId    String?
-  createdAt   DateTime @default(now())
+### Core Tables
 
-  users        User[]
-  reviewCycles ReviewCycle[]
-}
+| Table | Purpose |
+|-------|---------|
+| `users` | User accounts |
+| `teams` | Organizations/companies |
+| `team_members` | Users belonging to teams |
+| `templates` | Review templates |
+| `template_questions` | Questions in templates |
+| `review_cycles` | Review periods |
+| `reviews` | Individual review instances |
+| `responses` | Answers to questions |
+| `peer_feedback_requests` | Peer review assignments |
+| `peer_feedback` | Submitted peer feedback |
+
+### Key Relationships
+
+- User belongs to many Teams (via TeamMember)
+- Team has many ReviewCycles
+- ReviewCycle uses one Template
+- Review belongs to ReviewCycle
+- Review has many Responses
+- PeerFeedback links to Review
+
+---
+
+## API Structure
+
+### Route Organization
+
 ```
-
-### ReviewCycles
-```prisma
-model ReviewCycle {
-  id         String   @id @default(uuid())
-  name       String   // "Q1 2026"
-  teamId     String
-  team       Team     @relation(fields: [teamId], references: [id])
-  startDate  DateTime
-  endDate    DateTime
-  status     String   // "active", "completed"
-  templateId String
-
-  reviews    Review[]
-}
-```
-
-### Reviews
-```prisma
-model Review {
-  id          String   @id @default(uuid())
-  cycleId     String
-  cycle       ReviewCycle  @relation(fields: [cycleId], references: [id])
-  employeeId  String
-  employee    User     @relation("EmployeeReviews", fields: [employeeId], references: [id])
-  managerId   String
-  manager     User     @relation("ManagerReviews", fields: [managerId], references: [id])
-  status      String   // "pending", "self_review_done", "manager_review_done", "shared"
-
-  selfReview      SelfReview?
-  managerReview   ManagerReview?
-  peerFeedback    PeerFeedback[]
-  goals           Goal[]
-}
-```
-
-### SelfReviews
-```prisma
-model SelfReview {
-  id          String   @id @default(uuid())
-  reviewId    String   @unique
-  review      Review   @relation(fields: [reviewId], references: [id])
-  ratings     Json     // {"code_quality": 4, "impact": 2, ...}
-  reflections Json     // {"code_quality": "Shipped dashboard...", ...}
-  submittedAt DateTime @default(now())
-}
-```
-
-### ManagerReviews
-```prisma
-model ManagerReview {
-  id          String   @id @default(uuid())
-  reviewId    String   @unique
-  review      Review   @relation(fields: [reviewId], references: [id])
-  ratings     Json     // {"code_quality": 5, "impact": 5, ...}
-  comments    String
-  submittedAt DateTime @default(now())
-}
-```
-
-### PeerFeedback
-```prisma
-model PeerFeedback {
-  id          String   @id @default(uuid())
-  reviewId    String
-  review      Review   @relation(fields: [reviewId], references: [id])
-  peerId      String
-  peer        User     @relation(fields: [peerId], references: [id])
-  responses   Json     // {"strengths": "...", "improvements": "...", ...}
-  submittedAt DateTime @default(now())
-}
-```
-
-### Goals
-```prisma
-model Goal {
-  id          String   @id @default(uuid())
-  reviewId    String
-  review      Review   @relation(fields: [reviewId], references: [id])
-  description String
-  status      String   // "not_started", "in_progress", "completed"
-  dueDate     DateTime
-  createdAt   DateTime @default(now())
-}
+/api
+├── /auth
+│   ├── POST /signup
+│   ├── POST /login
+│   ├── POST /logout
+│   └── GET  /me
+│
+├── /teams
+│   ├── GET  /
+│   ├── POST /
+│   ├── GET  /:id
+│   └── PUT  /:id
+│
+├── /members
+│   ├── GET  /
+│   ├── POST /
+│   ├── POST /invite
+│   └── DELETE /:id
+│
+├── /templates
+│   ├── GET  /
+│   ├── GET  /:id
+│   ├── POST /
+│   └── PUT  /:id
+│
+├── /cycles
+│   ├── GET  /
+│   ├── POST /
+│   ├── GET  /:id
+│   ├── PUT  /:id
+│   └── POST /:id/launch
+│
+├── /reviews
+│   ├── GET  /
+│   ├── GET  /:id
+│   ├── PUT  /:id
+│   └── POST /:id/submit
+│
+└── /feedback
+    ├── GET  /pending
+    ├── GET  /:id
+    └── POST /:id/submit
 ```
 
 ---
@@ -201,106 +363,98 @@ model Goal {
 ## Security Considerations
 
 ### Authentication
-- **Nuxt Auth** with session-based auth (httpOnly cookies)
-- **Password hashing:** bcrypt (cost factor 12)
-- **OAuth:** Google OAuth for faster signup
+
+- Sessions stored in database (not JWT)
+- CSRF protection enabled
+- Secure cookie settings (httpOnly, sameSite, secure)
 
 ### Authorization
-- **Row-level security:** Users can only access their team's data
-- **Middleware:** Check `user.teamId === resource.teamId` on every API call
-- **Role-based access:** Managers can view all team reviews, employees only see their own
 
-### Data Privacy
-- **Peer feedback anonymization:** Never expose `peerId` to manager or employee
-- **Encryption at rest:** PostgreSQL supports TDE (Transparent Data Encryption)
-- **HTTPS only:** Enforce SSL in production
-- **GDPR compliance:** Users can export all data as CSV/PDF, request deletion
+- Role-based access (admin, manager, employee)
+- Team-scoped permissions
+- Managers can only see their direct reports
+- Peer feedback anonymized at database level
+
+### Data Protection
+
+- Passwords hashed with Argon2
+- PII encrypted at rest
+- SQL injection prevented via Drizzle parameterization
+- Rate limiting on auth endpoints
 
 ---
 
 ## Performance Considerations
 
-### Database Indexing
+### Frontend
+
+- Code splitting by route
+- Lazy loading for heavy components
+- Image optimization (if needed)
+- CDN for static assets
+
+### Backend
+
+- Database connection pooling
+- Query optimization (indexes on foreign keys)
+- Caching for templates (rarely change)
+- Background jobs for emails
+
+### Database Indexes
+
 ```sql
-CREATE INDEX idx_reviews_employee ON reviews(employee_id);
-CREATE INDEX idx_reviews_manager ON reviews(manager_id);
+-- Critical indexes
+CREATE INDEX idx_team_members_team ON team_members(team_id);
+CREATE INDEX idx_team_members_user ON team_members(user_id);
 CREATE INDEX idx_reviews_cycle ON reviews(cycle_id);
+CREATE INDEX idx_reviews_employee ON reviews(employee_id);
+CREATE INDEX idx_responses_review ON responses(review_id);
 CREATE INDEX idx_peer_feedback_review ON peer_feedback(review_id);
 ```
 
-### Caching
-- **API response caching:** Use Nitro (Nuxt server) caching for slow queries
-- **Static generation:** Pre-render marketing pages (landing, pricing) at build time
-- **CDN:** Vercel Edge Network caches static assets
+---
 
-### Lazy Loading
-- **Code splitting:** Nuxt auto-splits routes
-- **Lazy components:** Load heavy components (charts, tables) only when visible
-- **Pagination:** Limit reviews list to 20 per page
+## Scalability Path
+
+### Phase 1: MVP (Current)
+- Single Railway instance
+- SQLite or PostgreSQL
+- <100 concurrent users
+
+### Phase 2: Growth
+- PostgreSQL with connection pooling
+- Redis for sessions/caching
+- Background job queue (BullMQ)
+- 100-1000 concurrent users
+
+### Phase 3: Scale
+- Database read replicas
+- CDN for frontend
+- Horizontal API scaling
+- 1000+ concurrent users
 
 ---
 
-## Deployment Strategy
+## Technical Debt Boundaries
 
-### Phase 1: MVP (Vercel)
-- **Frontend + API:** Vercel serverless functions
-- **Database:** Neon PostgreSQL (free tier: 500MB, 100 hours compute)
-- **Cost:** $0/month for <1K users
+### Acceptable for MVP
+- No mobile app (web only)
+- Basic error handling
+- Manual deployments (not CI/CD)
+- Minimal logging
 
-### Phase 2: Growth (Railway or Render)
-- **Full-stack:** Railway (Nuxt app + PostgreSQL in one platform)
-- **Database:** Railway PostgreSQL (starts at $5/month)
-- **Cost:** $20-50/month for 1K-10K users
+### Must Fix Before Scale
+- Proper error tracking (Sentry)
+- CI/CD pipeline
+- Comprehensive logging
+- Database backups
+- Monitoring dashboards
 
-### Phase 3: Scale (AWS or GCP)
-- **Frontend:** Vercel or Cloudflare Pages
-- **Backend:** AWS Lambda or GCP Cloud Run
-- **Database:** AWS RDS or GCP Cloud SQL
-- **Cost:** $200-500/month for 10K-100K users
-
----
-
-## CI/CD Pipeline
-
-### GitHub Actions Workflow
-```yaml
-name: Deploy
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm run build
-      - run: npx prisma migrate deploy
-      - uses: vercel/actions/deploy@v2
-```
-
-### Pre-Deployment Checks
-- [ ] Run tests (`npm run test`)
-- [ ] Run linter (`npm run lint`)
-- [ ] Run Prisma migrations (`npx prisma migrate deploy`)
-- [ ] Check bundle size (<500KB initial load)
+### Never Compromise
+- Security (auth, encryption)
+- Data integrity (transactions)
+- User privacy (peer feedback anonymization)
 
 ---
 
-## Monitoring & Observability
-
-### Error Tracking
-- **Sentry:** Catch frontend + backend errors
-- **Slack alerts:** Notify #tech channel on critical errors
-
-### Performance Monitoring
-- **Vercel Analytics:** Core Web Vitals (LCP, FID, CLS)
-- **PostHog:** Page load times, API response times
-
-### Logging
-- **Structured logging:** Use `console.log` with JSON format
-- **Log retention:** 30 days (free tier) or 90 days (paid)
-
----
-
-*Last updated: January 27, 2026*
+*Next artifact: 02-setup-guide.md*
