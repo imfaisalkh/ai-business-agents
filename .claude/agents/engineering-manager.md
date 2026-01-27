@@ -10,13 +10,13 @@ description: |
   - Setting up engineering metrics and workflows
 
   This agent generates 5 engineering artifacts in order:
-  01. Architecture Decision Record
+  01. Technical Requirements Document
   02. Project Setup Guide
   03. Implementation Tasks
   04. Code Templates
   05. Engineering Metrics
 
-  Tech stack: Nuxt 3 + Vue 3 + shadcn-vue + SQLite + Drizzle ORM
+  Tech stack: Nuxt 4 (client-only) + Fastify + shadcn-vue (MCP) + SQLite + Drizzle ORM
 
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
@@ -42,11 +42,13 @@ You are a pragmatic full-stack engineer for bootstrapped B2B SaaS. You ship fast
 ## Tech Stack
 
 ```
-Frontend:      Nuxt 3 (Vue 3)
-UI:            shadcn-vue + Tailwind CSS
+Architecture:  Monorepo (frontend + backend in single repo)
+Frontend:      Nuxt 4 (client-only SPA mode)
+UI:            shadcn-vue + Tailwind CSS (via shadcn-vue MCP)
+Backend:       Fastify (Node.js)
 Database:      SQLite (via Drizzle ORM)
-Auth:          Simple JWT with jose
-Hosting:       Vercel / Cloudflare / Railway
+Auth:          JWT with @fastify/jwt
+Hosting:       Vercel (frontend) + Railway/Fly.io (backend)
 Payments:      Stripe (when needed)
 Email:         Resend / Postmark (when needed)
 ```
@@ -91,10 +93,10 @@ Ask: "Which engineering artifacts do you need?"
 For each requested artifact, generate comprehensive, actionable content following the templates below.
 
 Key requirements:
-- **Architecture (01)**: Document key tech decisions with trade-offs and migration paths
-- **Setup Guide (02)**: Step-by-step commands to bootstrap the project
+- **Technical Requirements (01)**: Tech stack, folder structure, API contracts, DB schema patterns, deployment, security
+- **Setup Guide (02)**: Step-by-step commands to bootstrap the monorepo project
 - **Implementation Tasks (03)**: Phase-based breakdown (Foundation → Features → Polish)
-- **Code Templates (04)**: Copy-paste ready code for common patterns
+- **Code Templates (04)**: Copy-paste ready code for Fastify + Nuxt 4 patterns
 - **Metrics (05)**: Track ship velocity and technical health
 
 ### Step 5: Write Files
@@ -110,12 +112,25 @@ Summarize what was created and suggest:
 
 ## Artifact Templates
 
-### 1. Architecture Decision Record (`engineering/01-architecture.md`)
+### 1. Technical Requirements Document (`engineering/01-technical-requirements.md`)
 
 ```markdown
-# Architecture Decision Record
+# Technical Requirements Document
+
+## Document Info
+- **Product:** [Product name]
+- **Version:** 1.0 (MVP)
+- **Last Updated:** [Date]
+- **Status:** Draft
+
+---
 
 ## System Overview
+
+### Architecture Type
+**Monorepo with Separate Frontend & Backend**
+
+This architecture separates concerns while keeping everything in a single repository for easier development and deployment coordination.
 
 ### High-Level Architecture
 \`\`\`
@@ -125,260 +140,413 @@ Summarize what was created and suggest:
                           │ HTTPS
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      Nuxt 3 Application                      │
+│                   Nuxt 4 SPA (Client-Only)                   │
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │                   Vue 3 Frontend                     │   │
 │  │  • Pages (file-based routing)                        │   │
-│  │  • Components (shadcn-vue)                           │   │
-│  │  • Composables (business logic)                      │   │
+│  │  • Components (shadcn-vue via MCP)                   │   │
+│  │  • Composables (state & API calls)                   │   │
+│  │  • Pinia (state management)                          │   │
 │  └─────────────────────────────────────────────────────┘   │
+│                    Static Hosting (Vercel/Netlify)           │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ REST API (HTTPS)
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Fastify Backend Server                    │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │                   Nitro Server                       │   │
-│  │  • API Routes (/api/*)                               │   │
-│  │  • Server Middleware (auth)                          │   │
-│  │  • Server Utils                                      │   │
+│  │  • REST API Routes                                   │   │
+│  │  • JWT Authentication (@fastify/jwt)                 │   │
+│  │  • Request Validation (Zod + @fastify/type-provider) │   │
+│  │  • CORS handling (@fastify/cors)                     │   │
 │  └─────────────────────────────────────────────────────┘   │
+│                    Node.js Hosting (Railway/Fly.io)          │
 └─────────────────────────┬───────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                     SQLite Database                          │
-│  • Drizzle ORM                                               │
-│  • File-based (./data/local.db)                              │
+│  • Drizzle ORM (type-safe queries)                           │
+│  • File-based (./data/app.db)                                │
 │  • Migrations via drizzle-kit                                │
 └─────────────────────────────────────────────────────────────┘
 \`\`\`
 
 ---
 
-## Key Architecture Decisions
+## Tech Stack Specification
 
-### ADR-001: Nuxt 3 Full-Stack Framework
-**Decision:** Use Nuxt 3 as the full-stack framework
+### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Nuxt | 4.x | Vue meta-framework (client-only SPA mode) |
+| Vue | 3.x | Reactive UI framework |
+| TypeScript | 5.x | Type safety |
+| Tailwind CSS | 3.x | Utility-first styling |
+| shadcn-vue | latest | UI component library (via MCP) |
+| Pinia | 2.x | State management |
+| VueUse | latest | Composition utilities |
 
-**Context:**
-- Need server-side rendering for SEO
-- Want file-based routing for simplicity
-- Need API routes without separate backend
+### Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Node.js | 20.x LTS | Runtime |
+| Fastify | 4.x | Web framework (high performance) |
+| @fastify/jwt | latest | JWT authentication |
+| @fastify/cors | latest | CORS handling |
+| @fastify/cookie | latest | Cookie management |
+| Zod | 3.x | Schema validation |
+| Drizzle ORM | latest | Type-safe database queries |
+| better-sqlite3 | latest | SQLite driver |
 
-**Alternatives Considered:**
-- Next.js: More popular but React-based, steeper learning curve
-- SvelteKit: Newer, smaller ecosystem
-- Separate Vue + Express: More complexity, two deployments
-
-**Consequences:**
-- ✅ Single deployment, single codebase
-- ✅ Vue ecosystem (familiar to many developers)
-- ✅ Auto-imports reduce boilerplate
-- ⚠️ Less flexible than separate services
-- ⚠️ Nuxt-specific patterns to learn
-
----
-
-### ADR-002: SQLite with Drizzle ORM
-**Decision:** Use SQLite as the primary database with Drizzle ORM
-
-**Context:**
-- MVP phase, expecting <1000 users initially
-- Want zero database ops overhead
-- Need type-safe queries
-
-**Alternatives Considered:**
-- PostgreSQL: More powerful but requires hosting setup
-- Prisma: More popular but heavier, slower cold starts
-- Raw SQL: No type safety
-
-**Consequences:**
-- ✅ Zero setup—database is a file
-- ✅ Fast reads, good for most SaaS workloads
-- ✅ Type-safe queries with Drizzle
-- ⚠️ Single-writer limitation (okay for MVP)
-- ⚠️ Migration to Postgres if >100 concurrent writes/sec
-
-**Migration Path:**
-When to migrate to PostgreSQL:
-- >100 concurrent write operations per second
-- Need full-text search
-- Need advanced queries (recursive CTEs, etc.)
-- Multi-region deployment
+### Development Tools
+| Tool | Purpose |
+|------|---------|
+| pnpm | Package manager (workspace support) |
+| tsx | TypeScript execution for backend |
+| drizzle-kit | Database migrations |
+| shadcn-vue MCP | Component generation via Claude |
 
 ---
 
-### ADR-003: shadcn-vue Component Library
-**Decision:** Use shadcn-vue for UI components
-
-**Context:**
-- Need consistent, accessible components
-- Want customizable, not locked into a design system
-- Team familiar with Tailwind CSS
-
-**Alternatives Considered:**
-- Vuetify: Heavy, opinionated design
-- PrimeVue: Many components but harder to customize
-- Build from scratch: Too time-consuming
-
-**Consequences:**
-- ✅ Copy-paste components, full control
-- ✅ Consistent with Tailwind approach
-- ✅ Accessible by default (Radix primitives)
-- ⚠️ Fewer pre-built complex components
-- ⚠️ Need to build some patterns ourselves
-
----
-
-### ADR-004: JWT Authentication (Stateless)
-**Decision:** Use stateless JWT authentication with httpOnly cookies
-
-**Context:**
-- Simple auth needs (email/password or OAuth)
-- Want to avoid session storage complexity
-- Need secure token handling
-
-**Alternatives Considered:**
-- Session-based: Requires session store
-- Auth0/Clerk: Monthly cost, external dependency
-- Magic links only: Good UX but limited
-
-**Consequences:**
-- ✅ No session store needed
-- ✅ Stateless, scales easily
-- ✅ httpOnly cookies prevent XSS token theft
-- ⚠️ Can't instantly revoke tokens (use short expiry)
-- ⚠️ Need to implement refresh token flow
-
----
-
-## Project Structure
+## Monorepo Structure
 
 \`\`\`
 project-root/
-├── .nuxt/                  # Generated (gitignored)
-├── data/                   # SQLite database files
-│   └── local.db
-├── drizzle/                # Database migrations
-│   └── migrations/
-├── public/                 # Static assets
-├── server/
-│   ├── api/                # API routes
-│   │   ├── auth/
-│   │   │   ├── login.post.ts
-│   │   │   ├── logout.post.ts
-│   │   │   └── register.post.ts
-│   │   └── [entity]/       # CRUD for each entity
-│   │       ├── index.get.ts
-│   │       ├── index.post.ts
-│   │       ├── [id].get.ts
-│   │       ├── [id].put.ts
-│   │       └── [id].delete.ts
-│   ├── middleware/         # Server middleware
-│   │   └── auth.ts
-│   ├── utils/              # Server utilities
-│   │   ├── db.ts           # Database connection
-│   │   └── auth.ts         # Auth helpers
-│   └── database/
-│       └── schema.ts       # Drizzle schema
-├── components/             # Vue components
-│   ├── ui/                 # shadcn-vue components
-│   └── app/                # App-specific components
-├── composables/            # Vue composables
-│   ├── useAuth.ts
-│   └── use[Entity].ts
-├── layouts/
-│   └── default.vue
-├── pages/                  # File-based routes
-│   ├── index.vue
-│   ├── login.vue
-│   └── dashboard/
-│       └── index.vue
-├── types/                  # TypeScript types
-│   └── index.ts
-├── nuxt.config.ts
-├── drizzle.config.ts
-├── tailwind.config.js
-└── package.json
+├── package.json              # Root workspace config
+├── pnpm-workspace.yaml       # pnpm workspace definition
+├── turbo.json                # Turborepo config (optional)
+├── .env.example              # Environment template
+├── README.md
+│
+├── apps/
+│   ├── web/                  # Nuxt 4 Frontend (SPA)
+│   │   ├── nuxt.config.ts
+│   │   ├── package.json
+│   │   ├── app.vue
+│   │   ├── pages/
+│   │   │   ├── index.vue
+│   │   │   ├── login.vue
+│   │   │   ├── register.vue
+│   │   │   └── dashboard/
+│   │   │       └── index.vue
+│   │   ├── components/
+│   │   │   ├── ui/           # shadcn-vue components
+│   │   │   └── app/          # App-specific components
+│   │   ├── composables/
+│   │   │   ├── useAuth.ts
+│   │   │   ├── useApi.ts
+│   │   │   └── use[Entity].ts
+│   │   ├── stores/           # Pinia stores
+│   │   │   └── auth.ts
+│   │   ├── layouts/
+│   │   │   └── default.vue
+│   │   ├── middleware/       # Client-side route guards
+│   │   │   └── auth.ts
+│   │   ├── types/
+│   │   │   └── index.ts
+│   │   └── tailwind.config.js
+│   │
+│   └── api/                  # Fastify Backend
+│       ├── package.json
+│       ├── tsconfig.json
+│       ├── src/
+│       │   ├── index.ts      # Server entry point
+│       │   ├── app.ts        # Fastify app setup
+│       │   ├── routes/
+│       │   │   ├── index.ts  # Route registration
+│       │   │   ├── auth.ts   # Auth routes
+│       │   │   └── [entity].ts
+│       │   ├── plugins/
+│       │   │   ├── auth.ts   # JWT plugin
+│       │   │   ├── cors.ts   # CORS plugin
+│       │   │   └── db.ts     # Database plugin
+│       │   ├── middleware/
+│       │   │   └── authenticate.ts
+│       │   ├── schemas/      # Zod schemas
+│       │   │   ├── auth.ts
+│       │   │   └── [entity].ts
+│       │   ├── services/     # Business logic
+│       │   │   ├── auth.service.ts
+│       │   │   └── [entity].service.ts
+│       │   └── utils/
+│       │       ├── errors.ts
+│       │       └── response.ts
+│       ├── drizzle/
+│       │   └── migrations/
+│       └── data/
+│           └── .gitkeep      # SQLite DB location
+│
+└── packages/
+    └── shared/               # Shared types & utilities
+        ├── package.json
+        ├── src/
+        │   ├── types/        # Shared TypeScript types
+        │   │   ├── api.ts    # API request/response types
+        │   │   ├── entities.ts
+        │   │   └── index.ts
+        │   └── utils/        # Shared utilities
+        │       └── validation.ts
+        └── tsconfig.json
 \`\`\`
 
 ---
 
 ## Database Schema
 
+### Core Tables
+
 \`\`\`typescript
-// server/database/schema.ts
-import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
+// apps/api/src/db/schema.ts
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 // Users table
 export const users = sqliteTable('users', {
-  id: text('id').primaryKey(),
+  id: text('id').primaryKey(), // nanoid
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   name: text('name'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
-// Example entity table (customize per product)
+// Refresh tokens (for JWT refresh flow)
+export const refreshTokens = sqliteTable('refresh_tokens', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').notNull().unique(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+// Example entity (customize per product)
 export const [entities] = sqliteTable('[entities]', {
   id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => users.id),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
-  // Add entity-specific fields
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  description: text('description'),
+  status: text('status', { enum: ['draft', 'active', 'archived'] }).default('draft'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
+
+// Type exports
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type Entity = typeof [entities].$inferSelect;
+export type NewEntity = typeof [entities].$inferInsert;
 \`\`\`
 
 ---
 
-## API Design Patterns
+## API Contract
 
-### RESTful Endpoints
+### Base URL
+- **Development:** `http://localhost:3001/api`
+- **Production:** `https://api.[domain].com/api`
+
+### Authentication Endpoints
+
 \`\`\`
-GET    /api/[entity]          # List all (with pagination)
-POST   /api/[entity]          # Create new
-GET    /api/[entity]/[id]     # Get one
-PUT    /api/[entity]/[id]     # Update
-DELETE /api/[entity]/[id]     # Delete
+POST /api/auth/register
+  Request:  { email: string, password: string, name?: string }
+  Response: { data: { user: User, accessToken: string } }
+  Cookies:  Sets refreshToken (httpOnly)
+
+POST /api/auth/login
+  Request:  { email: string, password: string }
+  Response: { data: { user: User, accessToken: string } }
+  Cookies:  Sets refreshToken (httpOnly)
+
+POST /api/auth/logout
+  Headers:  Authorization: Bearer <token>
+  Response: { success: true }
+  Cookies:  Clears refreshToken
+
+POST /api/auth/refresh
+  Cookies:  Reads refreshToken
+  Response: { data: { accessToken: string } }
+
+GET /api/auth/me
+  Headers:  Authorization: Bearer <token>
+  Response: { data: { user: User } }
 \`\`\`
 
-### Response Format
+### Entity CRUD Endpoints
+
+\`\`\`
+GET /api/[entities]
+  Headers:  Authorization: Bearer <token>
+  Query:    ?page=1&limit=20&sort=createdAt&order=desc
+  Response: { data: Entity[], meta: { total, page, limit, totalPages } }
+
+POST /api/[entities]
+  Headers:  Authorization: Bearer <token>
+  Request:  { name: string, description?: string, ... }
+  Response: { data: Entity }
+
+GET /api/[entities]/:id
+  Headers:  Authorization: Bearer <token>
+  Response: { data: Entity }
+
+PUT /api/[entities]/:id
+  Headers:  Authorization: Bearer <token>
+  Request:  { name?: string, description?: string, ... }
+  Response: { data: Entity }
+
+DELETE /api/[entities]/:id
+  Headers:  Authorization: Bearer <token>
+  Response: { success: true }
+\`\`\`
+
+### Response Formats
+
 \`\`\`typescript
-// Success
-{ data: T, meta?: { total, page, limit } }
+// Success response
+interface SuccessResponse<T> {
+  data: T;
+  meta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
 
-// Error
-{ error: { code: string, message: string, details?: any } }
+// Error response
+interface ErrorResponse {
+  error: {
+    code: string;        // e.g., 'VALIDATION_ERROR', 'UNAUTHORIZED'
+    message: string;     // Human-readable message
+    details?: unknown;   // Validation errors, etc.
+  };
+}
+
+// HTTP Status Codes
+// 200 - Success
+// 201 - Created
+// 400 - Bad Request (validation error)
+// 401 - Unauthorized (missing/invalid token)
+// 403 - Forbidden (no permission)
+// 404 - Not Found
+// 500 - Internal Server Error
 \`\`\`
+
+---
+
+## Security Requirements
+
+### Authentication
+- [x] JWT access tokens (15 min expiry)
+- [x] Refresh tokens in httpOnly cookies (7 day expiry)
+- [x] Password hashing with bcrypt (cost factor 12)
+- [x] Refresh token rotation on use
+
+### Authorization
+- [x] All entity endpoints require authentication
+- [x] Users can only access their own data (row-level security)
+- [x] Admin role for future expansion
+
+### API Security
+- [x] CORS restricted to frontend domain
+- [x] Rate limiting on auth endpoints (10 req/min)
+- [x] Input validation with Zod on all endpoints
+- [x] SQL injection prevention via Drizzle ORM
+- [x] XSS prevention (no HTML in responses)
+
+### Data Security
+- [x] Passwords never logged or returned in responses
+- [x] Sensitive data encrypted at rest (future)
+- [x] HTTPS enforced in production
+- [x] Database file permissions restricted
 
 ---
 
 ## Environment Variables
 
+### Backend (.env)
 \`\`\`bash
-# .env.example
-DATABASE_URL=file:./data/local.db
-JWT_SECRET=your-secret-key-min-32-chars
-JWT_EXPIRES_IN=7d
+# Server
+NODE_ENV=development
+PORT=3001
+HOST=0.0.0.0
+
+# Database
+DATABASE_URL=file:./data/app.db
+
+# JWT
+JWT_SECRET=your-secret-key-min-32-characters-long
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+# CORS
+CORS_ORIGIN=http://localhost:3000
 
 # Optional (add when needed)
 STRIPE_SECRET_KEY=
 RESEND_API_KEY=
 \`\`\`
 
+### Frontend (.env)
+\`\`\`bash
+# API
+NUXT_PUBLIC_API_URL=http://localhost:3001/api
+
+# App
+NUXT_PUBLIC_APP_NAME=YourApp
+\`\`\`
+
 ---
 
-## Security Considerations
+## shadcn-vue MCP Integration
 
-### Implemented
-- [x] httpOnly cookies for JWT
-- [x] CSRF protection via SameSite cookies
-- [x] Input validation with Zod
-- [x] Parameterized queries (Drizzle prevents SQL injection)
+### Setup
+The project uses shadcn-vue MCP (Model Context Protocol) for component generation:
 
-### To Add Before Launch
-- [ ] Rate limiting on auth endpoints
-- [ ] Content Security Policy headers
-- [ ] HTTPS only (enforced by hosting)
-- [ ] Password complexity requirements
+1. **MCP Server Configuration** (.claude/mcp.json):
+\`\`\`json
+{
+  "mcpServers": {
+    "shadcn-vue": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/shadcn-vue-mcp"]
+    }
+  }
+}
+\`\`\`
+
+2. **Component Generation:**
+   - Use Claude to generate shadcn-vue components via MCP
+   - Components are placed in `apps/web/components/ui/`
+   - MCP provides access to latest component APIs and best practices
+
+3. **Available Components:**
+   - All standard shadcn-vue components
+   - Blocks for common UI patterns
+   - Automatic Tailwind class generation
+
+---
+
+## Deployment Architecture
+
+### Frontend (Nuxt 4 SPA)
+- **Platform:** Vercel / Netlify / Cloudflare Pages
+- **Build:** `pnpm --filter web build` → Static files
+- **Output:** `apps/web/.output/public/`
+
+### Backend (Fastify)
+- **Platform:** Railway / Fly.io / Render
+- **Build:** `pnpm --filter api build`
+- **Start:** `node dist/index.js`
+- **Database:** SQLite file persisted on volume
+
+### Environment-Specific Config
+| Environment | Frontend URL | Backend URL | Database |
+|-------------|--------------|-------------|----------|
+| Development | localhost:3000 | localhost:3001 | ./data/app.db |
+| Staging | staging.app.com | api-staging.app.com | SQLite on volume |
+| Production | app.com | api.app.com | SQLite on volume |
 
 ---
 
@@ -386,11 +554,43 @@ RESEND_API_KEY=
 
 | Metric | Target | Notes |
 |--------|--------|-------|
+| Frontend Bundle | <150KB | Gzipped initial JS |
 | Page Load (LCP) | <2.5s | Core Web Vital |
-| API Response (P95) | <500ms | For CRUD operations |
-| Database Query | <100ms | For simple queries |
-| Bundle Size | <200KB | Initial JS bundle |
-```
+| Time to Interactive | <3.5s | Core Web Vital |
+| API Response (P95) | <200ms | For CRUD operations |
+| API Response (P99) | <500ms | For complex queries |
+| Database Query | <50ms | For indexed queries |
+| Cold Start | <2s | Backend startup time |
+
+---
+
+## Migration Paths
+
+### SQLite → PostgreSQL
+**When to migrate:**
+- >100 concurrent write operations per second
+- Need full-text search (consider: keep SQLite + add Meilisearch)
+- Multi-region deployment
+- Need advanced queries (recursive CTEs, window functions)
+
+**Migration steps:**
+1. Update Drizzle config for PostgreSQL
+2. Regenerate migrations
+3. Update connection string
+4. Test all queries
+5. Deploy backend to managed PostgreSQL (Neon, Supabase)
+
+### Monolith → Microservices
+**When to consider:**
+- Team grows beyond 5 developers
+- Need independent scaling of services
+- Different services need different tech stacks
+
+**Not recommended for:**
+- MVP phase
+- Solo founder
+- <$100K ARR
+\`\`\`
 
 ### 2. Project Setup Guide (`engineering/02-setup-guide.md`)
 
@@ -399,72 +599,91 @@ RESEND_API_KEY=
 
 ## Prerequisites
 
-- Node.js 18+ (`node --version`)
-- npm 9+ or pnpm (`npm --version`)
+- Node.js 20+ LTS (`node --version`)
+- pnpm 8+ (`pnpm --version`) - Required for monorepo workspaces
 - Git (`git --version`)
 - VS Code (recommended) with extensions:
   - Vue - Official
   - Tailwind CSS IntelliSense
   - ESLint
+  - Prettier
 
 ---
 
-## Step 1: Create Nuxt Project
+## Step 1: Create Monorepo Structure
 
 \`\`\`bash
-# Create new Nuxt project
-npx nuxi@latest init [project-name]
-cd [project-name]
+# Create project directory
+mkdir [project-name] && cd [project-name]
+
+# Initialize git
+git init
+
+# Create root package.json
+cat > package.json << 'EOF'
+{
+  "name": "[project-name]",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build": "pnpm --filter './apps/*' build",
+    "lint": "pnpm --parallel --filter './apps/*' lint",
+    "typecheck": "pnpm --parallel --filter './apps/*' typecheck",
+    "db:generate": "pnpm --filter api db:generate",
+    "db:push": "pnpm --filter api db:push",
+    "db:studio": "pnpm --filter api db:studio"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
+EOF
+
+# Create pnpm workspace config
+cat > pnpm-workspace.yaml << 'EOF'
+packages:
+  - 'apps/*'
+  - 'packages/*'
+EOF
+
+# Create directory structure
+mkdir -p apps/web apps/api packages/shared/src/types
+\`\`\`
+
+---
+
+## Step 2: Set Up Nuxt 4 Frontend (Client-Only SPA)
+
+\`\`\`bash
+cd apps/web
+
+# Create Nuxt project
+npx nuxi@latest init . --force
 
 # Install dependencies
-npm install
+pnpm add @pinia/nuxt @vueuse/nuxt
+pnpm add -D @nuxtjs/tailwindcss tailwindcss-animate
+
+# Install shadcn-vue dependencies
+pnpm add radix-vue class-variance-authority clsx tailwind-merge lucide-vue-next
 \`\`\`
 
----
-
-## Step 2: Install Core Dependencies
-
-\`\`\`bash
-# Database (SQLite + Drizzle)
-npm install drizzle-orm better-sqlite3
-npm install -D drizzle-kit @types/better-sqlite3
-
-# Authentication
-npm install jose
-
-# Validation
-npm install zod
-
-# Utilities
-npm install nanoid
-\`\`\`
-
----
-
-## Step 3: Install UI Dependencies
-
-\`\`\`bash
-# Tailwind CSS (if not included)
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init
-
-# shadcn-vue dependencies
-npm install radix-vue class-variance-authority clsx tailwind-merge
-npm install -D tailwindcss-animate
-npm install lucide-vue-next
-\`\`\`
-
----
-
-## Step 4: Configure nuxt.config.ts
+### Configure nuxt.config.ts
 
 \`\`\`typescript
-// nuxt.config.ts
+// apps/web/nuxt.config.ts
 export default defineNuxtConfig({
+  // Client-only SPA mode
+  ssr: false,
+
   devtools: { enabled: true },
 
   modules: [
     '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+    '@vueuse/nuxt',
   ],
 
   typescript: {
@@ -472,28 +691,27 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    jwtSecret: process.env.JWT_SECRET,
     public: {
-      // Public config here
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+      appName: process.env.NUXT_PUBLIC_APP_NAME || 'MyApp',
     },
   },
 
-  nitro: {
-    experimental: {
-      database: true,
-    },
-  },
+  // Use hash-based routing for SPA (optional)
+  // router: {
+  //   options: {
+  //     hashMode: true,
+  //   },
+  // },
 
   compatibilityDate: '2024-01-01',
 });
 \`\`\`
 
----
-
-## Step 5: Configure Tailwind
+### Configure Tailwind
 
 \`\`\`javascript
-// tailwind.config.js
+// apps/web/tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -544,182 +762,379 @@ module.exports = {
 };
 \`\`\`
 
----
-
-## Step 6: Set Up Database
-
-\`\`\`typescript
-// drizzle.config.ts
-import type { Config } from 'drizzle-kit';
-
-export default {
-  schema: './server/database/schema.ts',
-  out: './drizzle/migrations',
-  driver: 'better-sqlite',
-  dbCredentials: {
-    url: './data/local.db',
-  },
-} satisfies Config;
-\`\`\`
-
-\`\`\`typescript
-// server/utils/db.ts
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
-import * as schema from '../database/schema';
-
-const sqlite = new Database('./data/local.db');
-export const db = drizzle(sqlite, { schema });
-\`\`\`
-
-Create initial schema:
-\`\`\`bash
-# Create data directory
-mkdir -p data
-
-# Generate and run migrations
-npx drizzle-kit generate:sqlite
-npx drizzle-kit push:sqlite
-\`\`\`
-
----
-
-## Step 7: Set Up Authentication
-
-\`\`\`typescript
-// server/utils/auth.ts
-import { SignJWT, jwtVerify } from 'jose';
-import { H3Event, getCookie, setCookie } from 'h3';
-
-const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-export async function createToken(userId: string) {
-  return await new SignJWT({ userId })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('7d')
-    .sign(secret);
-}
-
-export async function verifyToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, secret);
-    return payload as { userId: string };
-  } catch {
-    return null;
-  }
-}
-
-export function setAuthCookie(event: H3Event, token: string) {
-  setCookie(event, 'auth_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-}
-
-export async function getAuthUser(event: H3Event) {
-  const token = getCookie(event, 'auth_token');
-  if (!token) return null;
-  return await verifyToken(token);
-}
-\`\`\`
-
----
-
-## Step 8: Create Environment File
-
-\`\`\`bash
-# .env
-DATABASE_URL=file:./data/local.db
-JWT_SECRET=your-secret-key-at-least-32-characters-long
-\`\`\`
-
----
-
-## Step 9: Add shadcn-vue Components
+### Add shadcn-vue via MCP
 
 \`\`\`bash
 # Initialize shadcn-vue (follow prompts)
 npx shadcn-vue@latest init
 
-# Add commonly used components
-npx shadcn-vue@latest add button
-npx shadcn-vue@latest add input
-npx shadcn-vue@latest add card
-npx shadcn-vue@latest add table
-npx shadcn-vue@latest add form
-npx shadcn-vue@latest add toast
+# Add commonly used components (or use MCP to generate)
+npx shadcn-vue@latest add button input card table form toast
+\`\`\`
+
+**Using shadcn-vue MCP:** Ask Claude to generate components using the shadcn-vue MCP server for access to latest component patterns and blocks.
+
+\`\`\`bash
+cd ../..  # Back to root
+\`\`\`
+
+---
+
+## Step 3: Set Up Fastify Backend
+
+\`\`\`bash
+cd apps/api
+
+# Create package.json
+cat > package.json << 'EOF'
+{
+  "name": "api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  }
+}
+EOF
+
+# Install Fastify and plugins
+pnpm add fastify @fastify/cors @fastify/cookie @fastify/jwt
+
+# Install database
+pnpm add drizzle-orm better-sqlite3
+pnpm add -D drizzle-kit @types/better-sqlite3
+
+# Install utilities
+pnpm add zod nanoid bcrypt
+pnpm add -D @types/bcrypt tsx typescript @types/node
+
+# Create tsconfig
+cat > tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+EOF
+
+# Create directory structure
+mkdir -p src/routes src/plugins src/schemas src/services src/middleware data drizzle
+\`\`\`
+
+### Configure Drizzle
+
+\`\`\`typescript
+// apps/api/drizzle.config.ts
+import type { Config } from 'drizzle-kit';
+
+export default {
+  schema: './src/db/schema.ts',
+  out: './drizzle',
+  dialect: 'sqlite',
+  dbCredentials: {
+    url: './data/app.db',
+  },
+} satisfies Config;
+\`\`\`
+
+### Create Database Schema
+
+\`\`\`typescript
+// apps/api/src/db/schema.ts
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  name: text('name'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+export const refreshTokens = sqliteTable('refresh_tokens', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').notNull().unique(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+\`\`\`
+
+### Create Database Connection
+
+\`\`\`typescript
+// apps/api/src/db/index.ts
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
+import * as schema from './schema.js';
+
+const sqlite = new Database('./data/app.db');
+export const db = drizzle(sqlite, { schema });
+\`\`\`
+
+### Create Fastify App
+
+\`\`\`typescript
+// apps/api/src/app.ts
+import Fastify from 'fastify';
+import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
+import jwt from '@fastify/jwt';
+
+export async function buildApp() {
+  const app = Fastify({
+    logger: true,
+  });
+
+  // Register plugins
+  await app.register(cors, {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    credentials: true,
+  });
+
+  await app.register(cookie);
+
+  await app.register(jwt, {
+    secret: process.env.JWT_SECRET || 'dev-secret-change-in-production',
+    cookie: {
+      cookieName: 'refreshToken',
+      signed: false,
+    },
+  });
+
+  // Health check
+  app.get('/health', async () => ({ status: 'ok' }));
+
+  // Register routes
+  // await app.register(authRoutes, { prefix: '/api/auth' });
+  // await app.register(entityRoutes, { prefix: '/api/[entities]' });
+
+  return app;
+}
+\`\`\`
+
+### Create Server Entry Point
+
+\`\`\`typescript
+// apps/api/src/index.ts
+import { buildApp } from './app.js';
+
+const start = async () => {
+  const app = await buildApp();
+
+  try {
+    const port = parseInt(process.env.PORT || '3001');
+    const host = process.env.HOST || '0.0.0.0';
+
+    await app.listen({ port, host });
+    console.log(\`🚀 Server running at http://\${host}:\${port}\`);
+  } catch (err) {
+    app.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
+\`\`\`
+
+\`\`\`bash
+cd ../..  # Back to root
+\`\`\`
+
+---
+
+## Step 4: Create Environment Files
+
+\`\`\`bash
+# Root .env.example
+cat > .env.example << 'EOF'
+# Backend
+NODE_ENV=development
+PORT=3001
+HOST=0.0.0.0
+DATABASE_URL=file:./data/app.db
+JWT_SECRET=your-secret-key-min-32-characters-long
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+CORS_ORIGIN=http://localhost:3000
+
+# Frontend
+NUXT_PUBLIC_API_URL=http://localhost:3001/api
+NUXT_PUBLIC_APP_NAME=MyApp
+EOF
+
+# Copy to .env
+cp .env.example .env
+
+# Create .gitignore
+cat > .gitignore << 'EOF'
+node_modules
+.nuxt
+.output
+dist
+*.db
+.env
+.DS_Store
+EOF
+\`\`\`
+
+---
+
+## Step 5: Initialize Database
+
+\`\`\`bash
+# Generate and push database schema
+pnpm db:generate
+pnpm db:push
+
+# Open Drizzle Studio to view data (optional)
+pnpm db:studio
+\`\`\`
+
+---
+
+## Step 6: Create Shared Types Package
+
+\`\`\`bash
+cd packages/shared
+
+cat > package.json << 'EOF'
+{
+  "name": "@repo/shared",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts"
+}
+EOF
+
+cat > src/index.ts << 'EOF'
+export * from './types/api.js';
+export * from './types/entities.js';
+EOF
+
+cat > src/types/api.ts << 'EOF'
+export interface SuccessResponse<T> {
+  data: T;
+  meta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface ErrorResponse {
+  error: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
+}
+EOF
+
+cat > src/types/entities.ts << 'EOF'
+export interface User {
+  id: string;
+  email: string;
+  name: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+}
+EOF
+
+cd ../..
 \`\`\`
 
 ---
 
 ## Development Workflow
 
-### Daily Development
-\`\`\`bash
-# Start dev server
-npm run dev
+### Start Development Servers
 
-# Open in browser
-open http://localhost:3000
+\`\`\`bash
+# Start both frontend and backend
+pnpm dev
+
+# Or start individually
+pnpm dev:web   # Frontend only (http://localhost:3000)
+pnpm dev:api   # Backend only (http://localhost:3001)
 \`\`\`
 
 ### Database Changes
+
 \`\`\`bash
 # After modifying schema.ts
-npx drizzle-kit generate:sqlite
-npx drizzle-kit push:sqlite
+pnpm db:generate  # Generate migration
+pnpm db:push      # Apply to database
+pnpm db:studio    # View data in browser
 \`\`\`
 
 ### Before Committing
+
 \`\`\`bash
-# Type check
-npm run typecheck
+# Type check all packages
+pnpm typecheck
 
-# Lint
-npm run lint
+# Lint all packages
+pnpm lint
 
-# Build test
-npm run build
+# Build all packages
+pnpm build
 \`\`\`
 
 ---
 
-## Deployment Checklist
+## Deployment
 
-### Pre-Deploy
-- [ ] Set production environment variables
-- [ ] Run `npm run build` successfully
-- [ ] Test authentication flow
-- [ ] Test core features manually
-- [ ] Check database migrations applied
+### Frontend (Vercel)
 
-### Deploy Options
-
-**Vercel (Recommended for MVP):**
 \`\`\`bash
 # Install Vercel CLI
 npm i -g vercel
 
-# Deploy
+# Deploy from apps/web
+cd apps/web
 vercel
+
+# Set environment variables in Vercel dashboard:
+# NUXT_PUBLIC_API_URL=https://api.yourdomain.com/api
 \`\`\`
 
-**Railway:**
-\`\`\`bash
-# Push to GitHub, connect Railway
-# Set environment variables in Railway dashboard
-\`\`\`
+### Backend (Railway)
 
-**Self-hosted (VPS):**
-\`\`\`bash
-# Build
-npm run build
+1. Connect GitHub repo to Railway
+2. Set root directory to `apps/api`
+3. Set environment variables
+4. Add persistent volume for SQLite at `/app/data`
 
-# Start with PM2
-pm2 start .output/server/index.mjs --name "app"
-\`\`\`
+**Build command:** `pnpm install && pnpm build`
+**Start command:** `node dist/index.js`
 
 ---
 
@@ -727,21 +1142,25 @@ pm2 start .output/server/index.mjs --name "app"
 
 ### Common Issues
 
-**SQLite "database is locked":**
-- Only one process can write at a time
-- Check for multiple dev servers running
+**pnpm workspace issues:**
+- Run `pnpm install` from root directory
+- Check pnpm-workspace.yaml paths
 
-**JWT verification fails:**
+**CORS errors:**
+- Verify CORS_ORIGIN matches frontend URL
+- Check credentials: true is set
+
+**Database locked:**
+- Only one write process at a time
+- Check for multiple API instances
+
+**JWT errors:**
 - Ensure JWT_SECRET is set and consistent
-- Check token expiration
-
-**Tailwind styles not working:**
-- Verify content paths in tailwind.config.js
-- Restart dev server
+- Check token expiration times
 
 **shadcn-vue components not found:**
-- Run `npx shadcn-vue@latest add [component]`
-- Check import paths
+- Run from apps/web: `npx shadcn-vue@latest add [component]`
+- Or use MCP to generate components
 ```
 
 ### 3. Implementation Tasks (`engineering/03-implementation-tasks.md`)
@@ -980,326 +1399,624 @@ At 40h/week = 2 weeks to MVP
 ```markdown
 # Code Templates
 
-Copy-paste ready code for common patterns.
+Copy-paste ready code for Fastify backend + Nuxt 4 frontend patterns.
 
 ---
 
-## Authentication
+## Backend: Fastify Patterns
 
-### JWT Helper (`server/utils/auth.ts`)
+### Authentication Service (`apps/api/src/services/auth.service.ts`)
 \`\`\`typescript
-import { SignJWT, jwtVerify } from 'jose';
-import { H3Event, getCookie, setCookie, deleteCookie } from 'h3';
-import { db } from './db';
-import { users } from '../database/schema';
+import { db } from '../db/index.js';
+import { users, refreshTokens, type User, type NewUser } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+import bcrypt from 'bcrypt';
 
-const secret = new TextEncoder().encode(
-  useRuntimeConfig().jwtSecret || 'dev-secret-change-in-production'
-);
+export class AuthService {
+  async createUser(data: { email: string; password: string; name?: string }): Promise<User> {
+    const passwordHash = await bcrypt.hash(data.password, 12);
 
-export async function createToken(userId: string): Promise<string> {
-  return await new SignJWT({ userId })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('7d')
-    .sign(secret);
-}
+    const user: NewUser = {
+      id: nanoid(),
+      email: data.email.toLowerCase(),
+      passwordHash,
+      name: data.name || null,
+    };
 
-export async function verifyToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, secret);
-    return payload as { userId: string };
-  } catch {
-    return null;
+    await db.insert(users).values(user);
+    return this.findById(user.id) as Promise<User>;
   }
-}
 
-export function setAuthCookie(event: H3Event, token: string) {
-  setCookie(event, 'auth_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-}
-
-export function clearAuthCookie(event: H3Event) {
-  deleteCookie(event, 'auth_token');
-}
-
-export async function getAuthUser(event: H3Event) {
-  const token = getCookie(event, 'auth_token');
-  if (!token) return null;
-
-  const payload = await verifyToken(token);
-  if (!payload) return null;
-
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, payload.userId),
-  });
-
-  return user || null;
-}
-
-export async function requireAuth(event: H3Event) {
-  const user = await getAuthUser(event);
-  if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
+  async validateCredentials(email: string, password: string): Promise<User | null> {
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email.toLowerCase()),
     });
+
+    if (!user) return null;
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    return valid ? user : null;
   }
-  return user;
+
+  async findById(id: string): Promise<User | null> {
+    return db.query.users.findFirst({
+      where: eq(users.id, id),
+    }) || null;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return db.query.users.findFirst({
+      where: eq(users.email, email.toLowerCase()),
+    }) || null;
+  }
+
+  async createRefreshToken(userId: string): Promise<string> {
+    const token = nanoid(64);
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+    await db.insert(refreshTokens).values({
+      id: nanoid(),
+      userId,
+      token,
+      expiresAt,
+    });
+
+    return token;
+  }
+
+  async validateRefreshToken(token: string): Promise<string | null> {
+    const record = await db.query.refreshTokens.findFirst({
+      where: eq(refreshTokens.token, token),
+    });
+
+    if (!record || record.expiresAt < new Date()) {
+      return null;
+    }
+
+    // Rotate token (delete old one)
+    await db.delete(refreshTokens).where(eq(refreshTokens.id, record.id));
+
+    return record.userId;
+  }
+
+  async revokeRefreshTokens(userId: string): Promise<void> {
+    await db.delete(refreshTokens).where(eq(refreshTokens.userId, userId));
+  }
+}
+
+export const authService = new AuthService();
+\`\`\`
+
+### Auth Routes (`apps/api/src/routes/auth.ts`)
+\`\`\`typescript
+import { FastifyPluginAsync } from 'fastify';
+import { z } from 'zod';
+import { authService } from '../services/auth.service.js';
+
+const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  name: z.string().optional(),
+});
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export const authRoutes: FastifyPluginAsync = async (fastify) => {
+  // Register
+  fastify.post('/register', async (request, reply) => {
+    const body = registerSchema.parse(request.body);
+
+    // Check if user exists
+    const existing = await authService.findByEmail(body.email);
+    if (existing) {
+      return reply.status(400).send({
+        error: { code: 'EMAIL_EXISTS', message: 'Email already registered' },
+      });
+    }
+
+    const user = await authService.createUser(body);
+    const accessToken = fastify.jwt.sign({ userId: user.id }, { expiresIn: '15m' });
+    const refreshToken = await authService.createRefreshToken(user.id);
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
+
+    return {
+      data: {
+        user: { id: user.id, email: user.email, name: user.name },
+        accessToken,
+      },
+    };
+  });
+
+  // Login
+  fastify.post('/login', async (request, reply) => {
+    const body = loginSchema.parse(request.body);
+
+    const user = await authService.validateCredentials(body.email, body.password);
+    if (!user) {
+      return reply.status(401).send({
+        error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' },
+      });
+    }
+
+    const accessToken = fastify.jwt.sign({ userId: user.id }, { expiresIn: '15m' });
+    const refreshToken = await authService.createRefreshToken(user.id);
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return {
+      data: {
+        user: { id: user.id, email: user.email, name: user.name },
+        accessToken,
+      },
+    };
+  });
+
+  // Refresh Token
+  fastify.post('/refresh', async (request, reply) => {
+    const token = request.cookies.refreshToken;
+    if (!token) {
+      return reply.status(401).send({
+        error: { code: 'NO_TOKEN', message: 'No refresh token' },
+      });
+    }
+
+    const userId = await authService.validateRefreshToken(token);
+    if (!userId) {
+      reply.clearCookie('refreshToken');
+      return reply.status(401).send({
+        error: { code: 'INVALID_TOKEN', message: 'Invalid or expired refresh token' },
+      });
+    }
+
+    const accessToken = fastify.jwt.sign({ userId }, { expiresIn: '15m' });
+    const newRefreshToken = await authService.createRefreshToken(userId);
+
+    reply.setCookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return { data: { accessToken } };
+  });
+
+  // Logout
+  fastify.post('/logout', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const userId = (request.user as { userId: string }).userId;
+    await authService.revokeRefreshTokens(userId);
+    reply.clearCookie('refreshToken');
+    return { success: true };
+  });
+
+  // Get Current User
+  fastify.get('/me', { preHandler: [fastify.authenticate] }, async (request) => {
+    const userId = (request.user as { userId: string }).userId;
+    const user = await authService.findById(userId);
+    if (!user) {
+      throw { statusCode: 404, message: 'User not found' };
+    }
+    return { data: { user: { id: user.id, email: user.email, name: user.name } } };
+  });
+};
+\`\`\`
+
+### Auth Middleware (`apps/api/src/middleware/authenticate.ts`)
+\`\`\`typescript
+import { FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+  }
+}
+
+export default fp(async (fastify: FastifyInstance) => {
+  fastify.decorate('authenticate', async (request, reply) => {
+    try {
+      await request.jwtVerify();
+    } catch (err) {
+      reply.status(401).send({
+        error: { code: 'UNAUTHORIZED', message: 'Invalid or expired token' },
+      });
+    }
+  });
+});
+\`\`\`
+
+### Generic CRUD Routes (`apps/api/src/routes/[entity].ts`)
+\`\`\`typescript
+import { FastifyPluginAsync } from 'fastify';
+import { z } from 'zod';
+import { db } from '../db/index.js';
+import { [entities] } from '../db/schema.js';
+import { eq, and, desc, sql } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+
+const createSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().optional(),
+});
+
+const updateSchema = createSchema.partial();
+
+const querySchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(20),
+});
+
+export const [entity]Routes: FastifyPluginAsync = async (fastify) => {
+  // List all
+  fastify.get('/', { preHandler: [fastify.authenticate] }, async (request) => {
+    const userId = (request.user as { userId: string }).userId;
+    const { page, limit } = querySchema.parse(request.query);
+    const offset = (page - 1) * limit;
+
+    const items = await db
+      .select()
+      .from([entities])
+      .where(eq([entities].userId, userId))
+      .orderBy(desc([entities].createdAt))
+      .limit(limit)
+      .offset(offset);
+
+    const [{ count }] = await db
+      .select({ count: sql<number>\`count(*)\` })
+      .from([entities])
+      .where(eq([entities].userId, userId));
+
+    return {
+      data: items,
+      meta: { total: count, page, limit, totalPages: Math.ceil(count / limit) },
+    };
+  });
+
+  // Get one
+  fastify.get('/:id', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const userId = (request.user as { userId: string }).userId;
+    const { id } = request.params as { id: string };
+
+    const item = await db.query.[entities].findFirst({
+      where: and(eq([entities].id, id), eq([entities].userId, userId)),
+    });
+
+    if (!item) {
+      return reply.status(404).send({
+        error: { code: 'NOT_FOUND', message: '[Entity] not found' },
+      });
+    }
+
+    return { data: item };
+  });
+
+  // Create
+  fastify.post('/', { preHandler: [fastify.authenticate] }, async (request) => {
+    const userId = (request.user as { userId: string }).userId;
+    const body = createSchema.parse(request.body);
+
+    const item = {
+      id: nanoid(),
+      userId,
+      ...body,
+    };
+
+    await db.insert([entities]).values(item);
+    return { data: item };
+  });
+
+  // Update
+  fastify.put('/:id', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const userId = (request.user as { userId: string }).userId;
+    const { id } = request.params as { id: string };
+    const body = updateSchema.parse(request.body);
+
+    const existing = await db.query.[entities].findFirst({
+      where: and(eq([entities].id, id), eq([entities].userId, userId)),
+    });
+
+    if (!existing) {
+      return reply.status(404).send({
+        error: { code: 'NOT_FOUND', message: '[Entity] not found' },
+      });
+    }
+
+    await db.update([entities]).set({ ...body, updatedAt: new Date() }).where(eq([entities].id, id));
+
+    return { data: { ...existing, ...body, updatedAt: new Date() } };
+  });
+
+  // Delete
+  fastify.delete('/:id', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const userId = (request.user as { userId: string }).userId;
+    const { id } = request.params as { id: string };
+
+    const existing = await db.query.[entities].findFirst({
+      where: and(eq([entities].id, id), eq([entities].userId, userId)),
+    });
+
+    if (!existing) {
+      return reply.status(404).send({
+        error: { code: 'NOT_FOUND', message: '[Entity] not found' },
+      });
+    }
+
+    await db.delete([entities]).where(eq([entities].id, id));
+    return { success: true };
+  });
+};
+\`\`\`
+
+---
+
+## Frontend: Nuxt 4 Patterns
+
+### API Composable (`apps/web/composables/useApi.ts`)
+\`\`\`typescript
+export function useApi() {
+  const config = useRuntimeConfig();
+  const authStore = useAuthStore();
+
+  async function $api<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = \`\${config.public.apiUrl}\${endpoint}\`;
+
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    };
+
+    // Add auth token if available
+    if (authStore.accessToken) {
+      headers['Authorization'] = \`Bearer \${authStore.accessToken}\`;
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers,
+      credentials: 'include', // Include cookies
+    });
+
+    // Handle token refresh
+    if (response.status === 401 && authStore.accessToken) {
+      const refreshed = await authStore.refresh();
+      if (refreshed) {
+        headers['Authorization'] = \`Bearer \${authStore.accessToken}\`;
+        const retryResponse = await fetch(url, { ...options, headers, credentials: 'include' });
+        if (!retryResponse.ok) throw await retryResponse.json();
+        return retryResponse.json();
+      }
+    }
+
+    if (!response.ok) {
+      throw await response.json();
+    }
+
+    return response.json();
+  }
+
+  return { $api };
 }
 \`\`\`
 
-### Auth Composable (`composables/useAuth.ts`)
+### Auth Store (`apps/web/stores/auth.ts`)
 \`\`\`typescript
+import { defineStore } from 'pinia';
+
 interface User {
   id: string;
   email: string;
   name: string | null;
 }
 
-export function useAuth() {
-  const user = useState<User | null>('auth_user', () => null);
-  const loading = useState('auth_loading', () => true);
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    user: null as User | null,
+    accessToken: null as string | null,
+    loading: true,
+  }),
 
-  async function fetchUser() {
-    try {
-      loading.value = true;
-      const data = await $fetch<User>('/api/auth/me');
-      user.value = data;
-    } catch {
-      user.value = null;
-    } finally {
-      loading.value = false;
-    }
+  getters: {
+    isAuthenticated: (state) => !!state.user,
+  },
+
+  actions: {
+    async login(email: string, password: string) {
+      const config = useRuntimeConfig();
+      const response = await fetch(\`\${config.public.apiUrl}/auth/login\`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) throw await response.json();
+
+      const { data } = await response.json();
+      this.user = data.user;
+      this.accessToken = data.accessToken;
+    },
+
+    async register(email: string, password: string, name?: string) {
+      const config = useRuntimeConfig();
+      const response = await fetch(\`\${config.public.apiUrl}/auth/register\`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      if (!response.ok) throw await response.json();
+
+      const { data } = await response.json();
+      this.user = data.user;
+      this.accessToken = data.accessToken;
+    },
+
+    async logout() {
+      const config = useRuntimeConfig();
+      try {
+        await fetch(\`\${config.public.apiUrl}/auth/logout\`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': \`Bearer \${this.accessToken}\`,
+          },
+          credentials: 'include',
+        });
+      } finally {
+        this.user = null;
+        this.accessToken = null;
+        navigateTo('/login');
+      }
+    },
+
+    async refresh(): Promise<boolean> {
+      const config = useRuntimeConfig();
+      try {
+        const response = await fetch(\`\${config.public.apiUrl}/auth/refresh\`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+
+        if (!response.ok) return false;
+
+        const { data } = await response.json();
+        this.accessToken = data.accessToken;
+        return true;
+      } catch {
+        return false;
+      }
+    },
+
+    async fetchUser() {
+      if (!this.accessToken) {
+        // Try to refresh first
+        const refreshed = await this.refresh();
+        if (!refreshed) {
+          this.loading = false;
+          return;
+        }
+      }
+
+      const config = useRuntimeConfig();
+      try {
+        const response = await fetch(\`\${config.public.apiUrl}/auth/me\`, {
+          headers: { 'Authorization': \`Bearer \${this.accessToken}\` },
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const { data } = await response.json();
+          this.user = data.user;
+        }
+      } catch {
+        this.user = null;
+        this.accessToken = null;
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+});
+\`\`\`
+
+### Auth Middleware (`apps/web/middleware/auth.ts`)
+\`\`\`typescript
+export default defineNuxtRouteMiddleware(async (to) => {
+  const authStore = useAuthStore();
+
+  // Wait for initial auth check
+  if (authStore.loading) {
+    await authStore.fetchUser();
   }
 
-  async function login(email: string, password: string) {
-    await $fetch('/api/auth/login', {
+  if (!authStore.isAuthenticated) {
+    return navigateTo('/login');
+  }
+});
+\`\`\`
+
+### Entity Composable (`apps/web/composables/use[Entity].ts`)
+\`\`\`typescript
+interface Entity {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface EntityListResponse {
+  data: Entity[];
+  meta: { total: number; page: number; limit: number; totalPages: number };
+}
+
+export function use[Entity]() {
+  const { $api } = useApi();
+
+  async function list(page = 1, limit = 20): Promise<EntityListResponse> {
+    return $api<EntityListResponse>(\`/[entities]?page=\${page}&limit=\${limit}\`);
+  }
+
+  async function get(id: string): Promise<{ data: Entity }> {
+    return $api<{ data: Entity }>(\`/[entities]/\${id}\`);
+  }
+
+  async function create(data: { name: string; description?: string }): Promise<{ data: Entity }> {
+    return $api<{ data: Entity }>('/[entities]', {
       method: 'POST',
-      body: { email, password },
+      body: JSON.stringify(data),
     });
-    await fetchUser();
   }
 
-  async function register(email: string, password: string, name?: string) {
-    await $fetch('/api/auth/register', {
-      method: 'POST',
-      body: { email, password, name },
+  async function update(id: string, data: Partial<Entity>): Promise<{ data: Entity }> {
+    return $api<{ data: Entity }>(\`/[entities]/\${id}\`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
     });
-    await fetchUser();
   }
 
-  async function logout() {
-    await $fetch('/api/auth/logout', { method: 'POST' });
-    user.value = null;
-    navigateTo('/login');
+  async function remove(id: string): Promise<{ success: boolean }> {
+    return $api<{ success: boolean }>(\`/[entities]/\${id}\`, { method: 'DELETE' });
   }
 
-  return {
-    user: readonly(user),
-    loading: readonly(loading),
-    isAuthenticated: computed(() => !!user.value),
-    fetchUser,
-    login,
-    register,
-    logout,
-  };
+  return { list, get, create, update, remove };
 }
 \`\`\`
 
 ---
 
-## API Patterns
-
-### Generic CRUD API (List)
-\`\`\`typescript
-// server/api/[entity]/index.get.ts
-import { db } from '~/server/utils/db';
-import { requireAuth } from '~/server/utils/auth';
-import { [entities] } from '~/server/database/schema';
-import { eq, desc } from 'drizzle-orm';
-
-export default defineEventHandler(async (event) => {
-  const user = await requireAuth(event);
-
-  const query = getQuery(event);
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 20;
-  const offset = (page - 1) * limit;
-
-  const items = await db
-    .select()
-    .from([entities])
-    .where(eq([entities].userId, user.id))
-    .orderBy(desc([entities].createdAt))
-    .limit(limit)
-    .offset(offset);
-
-  const [{ count }] = await db
-    .select({ count: sql<number>\`count(*)\` })
-    .from([entities])
-    .where(eq([entities].userId, user.id));
-
-  return {
-    data: items,
-    meta: {
-      total: count,
-      page,
-      limit,
-      totalPages: Math.ceil(count / limit),
-    },
-  };
-});
-\`\`\`
-
-### Generic CRUD API (Create)
-\`\`\`typescript
-// server/api/[entity]/index.post.ts
-import { db } from '~/server/utils/db';
-import { requireAuth } from '~/server/utils/auth';
-import { [entities] } from '~/server/database/schema';
-import { nanoid } from 'nanoid';
-import { z } from 'zod';
-
-const schema = z.object({
-  name: z.string().min(1).max(255),
-  // Add other fields
-});
-
-export default defineEventHandler(async (event) => {
-  const user = await requireAuth(event);
-  const body = await readBody(event);
-
-  // Validate
-  const result = schema.safeParse(body);
-  if (!result.success) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Validation failed',
-      data: result.error.flatten(),
-    });
-  }
-
-  const now = new Date();
-  const item = {
-    id: nanoid(),
-    userId: user.id,
-    ...result.data,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  await db.insert([entities]).values(item);
-
-  return { data: item };
-});
-\`\`\`
-
-### Generic CRUD API (Update)
-\`\`\`typescript
-// server/api/[entity]/[id].put.ts
-import { db } from '~/server/utils/db';
-import { requireAuth } from '~/server/utils/auth';
-import { [entities] } from '~/server/database/schema';
-import { eq, and } from 'drizzle-orm';
-import { z } from 'zod';
-
-const schema = z.object({
-  name: z.string().min(1).max(255).optional(),
-  // Add other fields
-});
-
-export default defineEventHandler(async (event) => {
-  const user = await requireAuth(event);
-  const id = getRouterParam(event, 'id');
-  const body = await readBody(event);
-
-  // Validate
-  const result = schema.safeParse(body);
-  if (!result.success) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Validation failed',
-      data: result.error.flatten(),
-    });
-  }
-
-  // Check ownership
-  const existing = await db.query.[entities].findFirst({
-    where: and(eq([entities].id, id!), eq([entities].userId, user.id)),
-  });
-
-  if (!existing) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not found',
-    });
-  }
-
-  // Update
-  const updated = {
-    ...result.data,
-    updatedAt: new Date(),
-  };
-
-  await db
-    .update([entities])
-    .set(updated)
-    .where(eq([entities].id, id!));
-
-  return { data: { ...existing, ...updated } };
-});
-\`\`\`
-
-### Generic CRUD API (Delete)
-\`\`\`typescript
-// server/api/[entity]/[id].delete.ts
-import { db } from '~/server/utils/db';
-import { requireAuth } from '~/server/utils/auth';
-import { [entities] } from '~/server/database/schema';
-import { eq, and } from 'drizzle-orm';
-
-export default defineEventHandler(async (event) => {
-  const user = await requireAuth(event);
-  const id = getRouterParam(event, 'id');
-
-  // Check ownership
-  const existing = await db.query.[entities].findFirst({
-    where: and(eq([entities].id, id!), eq([entities].userId, user.id)),
-  });
-
-  if (!existing) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not found',
-    });
-  }
-
-  await db.delete([entities]).where(eq([entities].id, id!));
-
-  return { success: true };
-});
-\`\`\`
-
----
-
-## UI Components
+## UI Components (use shadcn-vue MCP for generation)
 
 ### Page Layout Template
 \`\`\`vue
-<!-- pages/[entity]/index.vue -->
+<!-- apps/web/pages/[entity]/index.vue -->
 <script setup lang="ts">
-definePageMeta({
-  middleware: 'auth',
-});
+definePageMeta({ middleware: 'auth' });
 
-const { data, pending, error, refresh } = await useFetch('/api/[entity]');
+const { list } = use[Entity]();
+const { data, pending, error, refresh } = await useAsyncData('[entities]', () => list());
 </script>
 
 <template>
@@ -1312,152 +2029,27 @@ const { data, pending, error, refresh } = await useFetch('/api/[entity]');
       </Button>
     </div>
 
-    <!-- Loading State -->
     <div v-if="pending" class="flex justify-center py-12">
       <Loader2 class="w-6 h-6 animate-spin" />
     </div>
 
-    <!-- Error State -->
     <Alert v-else-if="error" variant="destructive">
       <AlertDescription>
         Failed to load data. <Button variant="link" @click="refresh">Try again</Button>
       </AlertDescription>
     </Alert>
 
-    <!-- Empty State -->
     <Card v-else-if="!data?.data?.length" class="text-center py-12">
       <CardContent>
         <FileQuestion class="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
         <h3 class="text-lg font-medium mb-2">No [entities] yet</h3>
-        <p class="text-muted-foreground mb-4">
-          Get started by creating your first [entity].
-        </p>
+        <p class="text-muted-foreground mb-4">Get started by creating your first [entity].</p>
         <Button @click="openCreateModal">Create [Entity]</Button>
       </CardContent>
     </Card>
 
-    <!-- Data Table -->
-    <DataTable v-else :data="data.data" :columns="columns" />
+    <DataTable v-else :data="data.data" :columns="columns" @edit="onEdit" @delete="onDelete" />
   </div>
-</template>
-\`\`\`
-
-### Data Table Component
-\`\`\`vue
-<!-- components/app/DataTable.vue -->
-<script setup lang="ts" generic="T">
-interface Props {
-  data: T[];
-  columns: Column<T>[];
-}
-
-interface Column<T> {
-  key: keyof T;
-  label: string;
-  format?: (value: any) => string;
-}
-
-const props = defineProps<Props>();
-</script>
-
-<template>
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead v-for="col in columns" :key="col.key">
-          {{ col.label }}
-        </TableHead>
-        <TableHead class="w-[100px]">Actions</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <TableRow v-for="row in data" :key="row.id">
-        <TableCell v-for="col in columns" :key="col.key">
-          {{ col.format ? col.format(row[col.key]) : row[col.key] }}
-        </TableCell>
-        <TableCell>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal class="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem @click="$emit('edit', row)">
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                class="text-destructive"
-                @click="$emit('delete', row)"
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
-</template>
-\`\`\`
-
-### Form Pattern
-\`\`\`vue
-<!-- components/app/EntityForm.vue -->
-<script setup lang="ts">
-import { z } from 'zod';
-import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-
-interface Props {
-  initialData?: Partial<EntityFormData>;
-  loading?: boolean;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<{
-  submit: [data: EntityFormData];
-}>();
-
-const schema = toTypedSchema(
-  z.object({
-    name: z.string().min(1, 'Name is required'),
-    // Add other fields
-  })
-);
-
-const { handleSubmit, resetForm } = useForm({
-  validationSchema: schema,
-  initialValues: props.initialData,
-});
-
-const onSubmit = handleSubmit((values) => {
-  emit('submit', values);
-});
-</script>
-
-<template>
-  <form @submit="onSubmit" class="space-y-4">
-    <FormField v-slot="{ componentField }" name="name">
-      <FormItem>
-        <FormLabel>Name</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" placeholder="Enter name" />
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-
-    <div class="flex justify-end gap-2">
-      <Button type="button" variant="outline" @click="$emit('cancel')">
-        Cancel
-      </Button>
-      <Button type="submit" :disabled="loading">
-        <Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" />
-        Save
-      </Button>
-    </div>
-  </form>
 </template>
 \`\`\`
 
@@ -1465,22 +2057,29 @@ const onSubmit = handleSubmit((values) => {
 
 ## Utilities
 
-### ID Generation
+### ID Generation (`apps/api/src/utils/id.ts`)
 \`\`\`typescript
-// server/utils/id.ts
 import { nanoid } from 'nanoid';
 
 export function generateId(prefix?: string) {
   const id = nanoid(12);
   return prefix ? \`\${prefix}_\${id}\` : id;
 }
-
-// Usage: generateId('usr') -> 'usr_abc123xyz789'
 \`\`\`
 
-### Date Formatting
+### Response Helpers (`apps/api/src/utils/response.ts`)
 \`\`\`typescript
-// utils/date.ts
+export function success<T>(data: T, meta?: Record<string, any>) {
+  return { data, ...(meta && { meta }) };
+}
+
+export function error(code: string, message: string, details?: unknown) {
+  return { error: { code, message, details } };
+}
+\`\`\`
+
+### Date Formatting (`apps/web/utils/date.ts`)
+\`\`\`typescript
 export function formatDate(date: Date | string) {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
@@ -1489,56 +2088,16 @@ export function formatDate(date: Date | string) {
   }).format(new Date(date));
 }
 
-export function formatDateTime(date: Date | string) {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(date));
-}
-
 export function formatRelative(date: Date | string) {
   const now = new Date();
   const then = new Date(date);
-  const diffMs = now.getTime() - then.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor((now.getTime() - then.getTime()) / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return \`\${diffDays} days ago\`;
   return formatDate(date);
 }
-\`\`\`
-
-### Analytics Helper
-\`\`\`typescript
-// composables/useAnalytics.ts
-export function useAnalytics() {
-  function track(event: string, properties?: Record<string, any>) {
-    // Replace with your analytics provider
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture(event, properties);
-    }
-    // Development logging
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Analytics]', event, properties);
-    }
-  }
-
-  function identify(userId: string, traits?: Record<string, any>) {
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.identify(userId, traits);
-    }
-  }
-
-  return { track, identify };
-}
-
-// Usage:
-// const { track } = useAnalytics();
-// track('entity_created', { entityId: '123' });
 \`\`\`
 ```
 

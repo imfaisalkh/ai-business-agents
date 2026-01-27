@@ -44,7 +44,7 @@
 │   ├── 05-interview-template.md
 │   └── 06-pricing-strategy.md
 ├── engineering/           # Engineering artifacts
-│   ├── 01-architecture.md
+│   ├── 01-technical-requirements.md
 │   ├── 02-setup-guide.md
 │   ├── 03-implementation-tasks.md
 │   ├── 04-code-templates.md

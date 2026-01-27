@@ -91,7 +91,8 @@ cp -r ideas/_template ideas/my-idea-name
    - **Best for:** Sales process design, founder-led sales systems
 
 5. **`engineering-manager`** - Generates 5 engineering artifacts
-   - Architecture, setup guide, implementation tasks, code templates, metrics
+   - Technical requirements, setup guide, implementation tasks, code templates, metrics
+   - Tech stack: Nuxt 4 (client-only SPA) + Fastify + Drizzle/SQLite + shadcn-vue MCP
    - Auto-generates product dependencies if missing
    - **Best for:** Technical architecture, development planning, code scaffolding
 
@@ -166,8 +167,8 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Focus: Converting prospects to customers
 
 4. **Engineering Manager** (`.claude/agents/engineering-manager.md`)
-   - Generates 5 artifacts: Architecture, setup guide, implementation tasks, code templates, metrics
-   - Focus: Ship velocity and quality (Nuxt 3 + Vue 3 + SQLite stack)
+   - Generates 5 artifacts: Technical requirements, setup guide, implementation tasks, code templates, metrics
+   - Focus: Ship velocity and quality (Nuxt 4 + Fastify + SQLite monorepo stack)
 
 5. **CEO Orchestrator** (`.claude/agents/ceo-orchestrator.md`)
    - Chains all 5 department agents to generate complete 21-day launch strategy
