@@ -1,0 +1,40 @@
+{
+  "name": "ai-business-agents-frontend",
+  "version": "1.0.0",
+  "description": "Frontend dashboard for AI Business Agents - view and manage your business ideas and artifacts",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "keywords": [
+    "nuxt",
+    "vue",
+    "shadcn-vue",
+    "ai-agents",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vueuse/core": "^14.1.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.563.0",
+    "nuxt": "^4.3.0",
+    "radix-vue": "^1.9.17",
+    "tailwind-merge": "^3.4.0",
+    "vue": "^3.5.27"
+  },
+  "devDependencies": {
+    "@nuxtjs/color-mode": "^4.0.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "^25.0.10",
+    "sass": "^1.97.3",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
+  }
+}

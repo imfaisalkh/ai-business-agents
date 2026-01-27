@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222.2 84% 4.9%);
+
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222.2 84% 4.9%);
+
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222.2 84% 4.9%);
+
+  --color-primary: hsl(222.2 47.4% 11.2%);
+  --color-primary-foreground: hsl(210 40% 98%);
+
+  --color-secondary: hsl(210 40% 96.1%);
+  --color-secondary-foreground: hsl(222.2 47.4% 11.2%);
+
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
+
+  --color-accent: hsl(210 40% 96.1%);
+  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
+
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(222.2 84% 4.9%);
+
+  --radius-lg: 0.5rem;
+  --radius-md: calc(var(--radius-lg) - 2px);
+  --radius-sm: calc(var(--radius-lg) - 4px);
+
+  /* Category colors */
+  --color-marketing: hsl(142.1 76.2% 36.3%);
+  --color-marketing-foreground: hsl(355.7 100% 97.3%);
+
+  --color-product: hsl(221.2 83.2% 53.3%);
+  --color-product-foreground: hsl(210 40% 98%);
+
+  --color-sales: hsl(262.1 83.3% 57.8%);
+  --color-sales-foreground: hsl(210 40% 98%);
+
+  --color-engineering: hsl(24.6 95% 53.1%);
+  --color-engineering-foreground: hsl(60 9.1% 97.8%);
+
+  --color-finance: hsl(47.9 95.8% 53.1%);
+  --color-finance-foreground: hsl(26 83.3% 14.1%);
+
+  /* Sidebar */
+  --color-sidebar: hsl(0 0% 98%);
+  --color-sidebar-foreground: hsl(240 5.3% 26.1%);
+  --color-sidebar-primary: hsl(240 5.9% 10%);
+  --color-sidebar-primary-foreground: hsl(0 0% 98%);
+  --color-sidebar-accent: hsl(240 4.8% 95.9%);
+  --color-sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --color-sidebar-border: hsl(220 13% 91%);
+  --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --color-background: hsl(222.2 84% 4.9%);
+  --color-foreground: hsl(210 40% 98%);
+
+  --color-card: hsl(222.2 84% 4.9%);
+  --color-card-foreground: hsl(210 40% 98%);
+
+  --color-popover: hsl(222.2 84% 4.9%);
+  --color-popover-foreground: hsl(210 40% 98%);
+
+  --color-primary: hsl(210 40% 98%);
+  --color-primary-foreground: hsl(222.2 47.4% 11.2%);
+
+  --color-secondary: hsl(217.2 32.6% 17.5%);
+  --color-secondary-foreground: hsl(210 40% 98%);
+
+  --color-muted: hsl(217.2 32.6% 17.5%);
+  --color-muted-foreground: hsl(215 20.2% 65.1%);
+
+  --color-accent: hsl(217.2 32.6% 17.5%);
+  --color-accent-foreground: hsl(210 40% 98%);
+
+  --color-destructive: hsl(0 62.8% 30.6%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+
+  --color-border: hsl(217.2 32.6% 17.5%);
+  --color-input: hsl(217.2 32.6% 17.5%);
+  --color-ring: hsl(212.7 26.8% 83.9%);
+
+  --color-sidebar: hsl(240 5.9% 10%);
+  --color-sidebar-foreground: hsl(240 4.8% 95.9%);
+  --color-sidebar-primary: hsl(224.3 76.3% 48%);
+  --color-sidebar-primary-foreground: hsl(0 0% 100%);
+  --color-sidebar-accent: hsl(240 3.7% 15.9%);
+  --color-sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --color-sidebar-border: hsl(240 3.7% 15.9%);
+  --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Prose styling for markdown content */
+.prose {
+  @apply max-w-none;
+}
+
+.prose h1 {
+  @apply text-2xl font-bold mt-6 mb-4 first:mt-0;
+}
+
+.prose h2 {
+  @apply text-xl font-semibold mt-5 mb-3;
+}
+
+.prose h3 {
+  @apply text-lg font-semibold mt-4 mb-2;
+}
+
+.prose h4 {
+  @apply text-base font-semibold mt-3 mb-2;
+}
+
+.prose p {
+  @apply my-3 leading-7;
+}
+
+.prose ul {
+  @apply my-3 ml-6 list-disc;
+}
+
+.prose ol {
+  @apply my-3 ml-6 list-decimal;
+}
+
+.prose li {
+  @apply my-1;
+}
+
+.prose code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-muted p-4 rounded-lg overflow-x-auto my-4;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-border pl-4 italic my-4;
+}
+
+.prose table {
+  @apply w-full my-4 border-collapse;
+}
+
+.prose th {
+  @apply border border-border px-3 py-2 bg-muted text-left font-semibold;
+}
+
+.prose td {
+  @apply border border-border px-3 py-2;
+}
+
+.prose a {
+  @apply text-primary underline underline-offset-4 hover:text-primary/80;
+}
+
+.prose hr {
+  @apply my-6 border-border;
+}
+
+.prose strong {
+  @apply font-semibold;
+}
+
+.prose em {
+  @apply italic;
+}
