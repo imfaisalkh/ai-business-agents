@@ -17,10 +17,11 @@ This is an artifact-driven AI agent system for solo founders building bootstrapp
 ### Agent System Flow
 ```
 business-context.md (foundation)
-    ├─> Marketing Manager  → marketing/*.md
-    ├─> Product Manager    → product/*.md  (needs marketing/01-icp-market-analysis.md)
-    ├─> Sales Manager      → sales/*.md    (needs marketing/01, 02)
-    └─> Engineering Manager → engineering/*.md (needs product/02-prd.md, 03-tasks.md)
+    ├─> Marketing Manager   → marketing/*.md
+    ├─> Product Manager     → product/*.md  (needs marketing/01-icp-market-analysis.md)
+    ├─> Sales Manager       → sales/*.md    (needs marketing/01, 02)
+    ├─> Engineering Manager → engineering/*.md (needs product/02-prd.md, 03-tasks.md)
+    └─> Bootstrap Finance   → finance/*.md  (needs product/06-pricing, marketing/07-metrics)
 ```
 
 ### Directory Structure
@@ -36,9 +37,10 @@ Each idea in `ideas/[idea-name]/` follows this structure:
 ├── README.md              # Idea status tracker
 ├── business-context.md    # Foundation document (fill this first)
 ├── marketing/             # 7 marketing artifacts
-├── product/               # 5 product artifacts
+├── product/               # 6 product artifacts (includes pricing strategy)
 ├── sales/                 # 7 sales artifacts
-└── engineering/           # 5 engineering artifacts
+├── engineering/           # 5 engineering artifacts
+└── finance/               # 5 financial artifacts
 ```
 
 ## Common Commands
@@ -78,10 +80,10 @@ cp -r ideas/_template ideas/my-idea-name
    - ICP analysis, positioning, GTM, LinkedIn outreach, landing page, validation, metrics
    - **Best for:** Marketing strategy, customer research, go-to-market planning
 
-3. **`product-manager`** - Generates 5 product artifacts
-   - Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview template
+3. **`product-manager`** - Generates 6 product artifacts
+   - Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview template, pricing strategy
    - Auto-generates marketing dependencies if missing
-   - **Best for:** Product strategy, feature planning, PRD creation
+   - **Best for:** Product strategy, feature planning, PRD creation, pricing
 
 4. **`sales-manager`** - Generates 7 sales artifacts
    - Sales process, discovery calls, qualification, objections, follow-up, metrics, scripts
@@ -92,6 +94,11 @@ cp -r ideas/_template ideas/my-idea-name
    - Architecture, setup guide, implementation tasks, code templates, metrics
    - Auto-generates product dependencies if missing
    - **Best for:** Technical architecture, development planning, code scaffolding
+
+6. **`bootstrap-finance`** - Generates 5 financial artifacts
+   - Revenue model, unit economics, burn rate/runway, financial metrics, fundraising readiness
+   - Auto-generates pricing and marketing metrics dependencies if missing
+   - **Best for:** Financial planning, unit economics, runway tracking
 
 #### How to Use Native Agents
 
@@ -107,6 +114,7 @@ This coordinates all 5 departments and generates 30 artifacts + executive summar
 @product-manager generate all artifacts for [idea-name]
 @sales-manager generate all artifacts for [idea-name]
 @engineering-manager generate all artifacts for [idea-name]
+@bootstrap-finance generate all artifacts for [idea-name]
 ```
 
 **Method 3: Specific Artifacts**
@@ -129,6 +137,7 @@ Native agents automatically check for and generate missing dependencies:
 2. Product Manager (requires: business-context.md + marketing/01-icp-market-analysis.md)
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
 4. Engineering Manager (requires: product/02-prd.md + product/03-tasks.md)
+5. Bootstrap Finance (requires: product/06-pricing-strategy.md + marketing/07-marketing-metrics.md)
 
 ## Key Concepts
 
@@ -149,7 +158,7 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Focus: Distribution channels and customer messaging
 
 2. **Product Manager** (`.claude/agents/product-manager.md`)
-   - Generates 5 artifacts: Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview templates
+   - Generates 6 artifacts: Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview templates, pricing strategy
    - Focus: What to build and why (validate before building)
 
 3. **Sales Manager** (`.claude/agents/sales-manager.md`)
@@ -160,10 +169,14 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Generates 5 artifacts: Architecture, setup guide, implementation tasks, code templates, metrics
    - Focus: Ship velocity and quality (Nuxt 3 + Vue 3 + SQLite stack)
 
-5. **Launch Orchestrator** (`.claude/agents/launch-orchestrator.md`)
-   - Chains all 4 agents to generate complete 21-day launch strategy
-   - Creates comprehensive launch summary
+5. **CEO Orchestrator** (`.claude/agents/ceo-orchestrator.md`)
+   - Chains all 5 department agents to generate complete 21-day launch strategy
+   - Creates comprehensive launch summary with 30 artifacts
    - Focus: Complete strategy generation from idea to launch
+
+6. **Bootstrap Finance** (`.claude/agents/bootstrap-finance.md`)
+   - Generates 5 artifacts: Revenue model, unit economics, burn/runway, financial metrics, fundraising readiness
+   - Focus: Financial sustainability and path to profitability
 
 ### When to Re-run Agents
 Don't update artifacts randomly. Triggers include:
@@ -229,6 +242,7 @@ Track only these north stars per function:
 - Sales: Close Rate %
 - Product: Weekly Active Users
 - Engineering: Ship Velocity
+- Finance: Months of Runway
 
 ### Voice and Tone
 Agents are opinionated and direct:

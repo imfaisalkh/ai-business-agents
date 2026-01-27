@@ -12,6 +12,7 @@
    - Product Manager → outputs to `product/`
    - Sales Manager → outputs to `sales/`
    - Engineering Manager → outputs to `engineering/`
+   - Bootstrap Finance → outputs to `finance/`
 
 ## Folder Structure
 
@@ -40,13 +41,20 @@
 │   ├── 02-prd.md
 │   ├── 03-tasks.md
 │   ├── 04-product-metrics.md
-│   └── 05-interview-template.md
-└── engineering/           # Engineering artifacts
-    ├── 01-architecture.md
-    ├── 02-setup-guide.md
-    ├── 03-implementation-tasks.md
-    ├── 04-code-templates.md
-    └── 05-engineering-metrics.md
+│   ├── 05-interview-template.md
+│   └── 06-pricing-strategy.md
+├── engineering/           # Engineering artifacts
+│   ├── 01-architecture.md
+│   ├── 02-setup-guide.md
+│   ├── 03-implementation-tasks.md
+│   ├── 04-code-templates.md
+│   └── 05-engineering-metrics.md
+└── finance/               # Financial artifacts
+    ├── 01-revenue-model.md
+    ├── 02-unit-economics.md
+    ├── 03-burn-runway.md
+    ├── 04-financial-metrics.md
+    └── 05-fundraising-readiness.md
 ```
 
 ---
@@ -60,6 +68,7 @@
 | Product | ⬜ Not Started | |
 | Sales | ⬜ Not Started | |
 | Engineering | ⬜ Not Started | |
+| Finance | ⬜ Not Started | |
 | **Launched** | ⬜ | |
 
 **Status Legend:** ⬜ Not Started | 🔄 In Progress | ✅ Complete

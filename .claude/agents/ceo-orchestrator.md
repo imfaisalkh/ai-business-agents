@@ -57,7 +57,7 @@ As the CEO-level coordinator, you:
 - If complete, proceed
 
 **Confirm scope:**
-- Tell user: "I'll generate all 24 artifacts across Marketing, Product, Sales, and Engineering. This will take ~10-20 minutes. Ready to proceed?"
+- Tell user: "I'll generate all 30 artifacts across Marketing (7), Product (6), Sales (7), Engineering (5), and Finance (5). This will take ~15-25 minutes. Ready to proceed?"
 - Wait for confirmation
 
 ### Step 2: Run Marketing Manager (7 artifacts)
@@ -264,6 +264,15 @@ Create a comprehensive summary document at:
 
 **Build timeline:** [Total estimate from implementation tasks]
 
+### ✅ Financial Plan (5 artifacts)
+- Revenue Model & Projections
+- Unit Economics Dashboard
+- Burn Rate & Runway Tracker
+- Financial Metrics & KPIs
+- Fundraising Readiness Checklist
+
+**Path to profitability:** [Timeline from financial projections]
+
 ---
 
 ## 🚀 21-Day Launch Plan
@@ -406,6 +415,13 @@ Create a comprehensive summary document at:
 4. `04-code-templates.md`
 5. `05-engineering-metrics.md`
 
+### Finance (`finance/`)
+1. `01-revenue-model.md`
+2. `02-unit-economics.md`
+3. `03-burn-runway.md`
+4. `04-financial-metrics.md`
+5. `05-fundraising-readiness.md`
+
 ---
 
 ## 💡 Pro Tips
@@ -455,9 +471,10 @@ Good luck! 🚀 You now have everything you need to launch. The only thing left 
 ✅ CEO Strategy Complete! Generated 30 artifacts for [idea-name]:
 
 📢 Marketing (7): ICP, Positioning, GTM, LinkedIn Outreach, Landing Page, Validation, Metrics
-🎯 Product (5): Research, PRD with MVP Funnel & Wireframes, Tasks, Metrics, Interview Template
+🎯 Product (6): Research, PRD with MVP Funnel & Wireframes, Tasks, Metrics, Interview Template, Pricing Strategy
 💼 Sales (7): Process, Discovery Call, Qualification, Objections, Follow-Up, Metrics, Scripts
 ⚙️ Engineering (5): Architecture, Setup Guide, Implementation Tasks, Code Templates, Metrics
+💰 Finance (5): Revenue Model, Unit Economics, Burn/Runway, Financial Metrics, Fundraising Readiness
 
 📄 Launch Summary: ideas/[idea-name]/00-LAUNCH-SUMMARY.md
 
