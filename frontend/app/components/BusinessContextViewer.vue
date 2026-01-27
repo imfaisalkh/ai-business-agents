@@ -12,8 +12,9 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
 
-const { data: businessContext, status, refresh } = await useFetch('/api/business-context', {
+const { data: businessContext, status, refresh } = useFetch('/api/business-context', {
   query: { idea: props.ideaName },
+  watch: false,
   immediate: false,
 })
 
@@ -29,8 +30,16 @@ async function copyToClipboard() {
   }
 }
 
+// Fetch content when sheet opens
 watch(() => props.open, async (isOpen) => {
-  if (isOpen && !businessContext.value) {
+  if (isOpen) {
+    await refresh()
+  }
+}, { immediate: true })
+
+// Refetch when idea changes while open
+watch(() => props.ideaName, async () => {
+  if (props.open) {
     await refresh()
   }
 })

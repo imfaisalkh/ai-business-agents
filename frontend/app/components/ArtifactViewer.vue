@@ -13,9 +13,9 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
 
-const { data: artifact, status } = await useFetch('/api/artifact', {
+const { data: artifact, status, refresh } = useFetch('/api/artifact', {
   query: { path: props.path },
-  watch: [() => props.path],
+  watch: false,
   immediate: false,
 })
 
@@ -31,9 +31,17 @@ async function copyToClipboard() {
   }
 }
 
+// Fetch content when sheet opens
 watch(() => props.open, async (isOpen) => {
-  if (isOpen && !artifact.value) {
-    await refreshNuxtData()
+  if (isOpen) {
+    await refresh()
+  }
+}, { immediate: true })
+
+// Refetch when path changes while open
+watch(() => props.path, async () => {
+  if (props.open) {
+    await refresh()
   }
 })
 
