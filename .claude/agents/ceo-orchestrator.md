@@ -88,18 +88,19 @@ Generate all 7 marketing artifacts for [idea-name]:
 - Primary GTM channel
 - Validation experiments
 
-### Step 3: Run Product Manager (5 artifacts)
+### Step 3: Run Product Manager (6 artifacts)
 
 **Status update:** "🎯 Running Product Manager agent..."
 
 Use the Task tool to invoke product-manager agent:
 ```
-Generate all 5 product artifacts for [idea-name]:
+Generate all 6 product artifacts for [idea-name]:
 - 01. Market Research & Competitor Analysis
 - 02. Product Requirements Document (with PRD at a Glance, MVP Funnel, Text Wireframes)
 - 03. Development Tasks (Epics, Stories, Tasks)
 - 04. Product Metrics Dashboard
 - 05. User Interview Template
+- 06. Pricing Strategy & Model
 
 Use marketing/01-icp-market-analysis.md as input.
 ```
@@ -235,12 +236,13 @@ Create a comprehensive summary document at:
 
 **Key insight:** [Top insight from ICP/positioning]
 
-### ✅ Product Strategy (5 artifacts)
+### ✅ Product Strategy (6 artifacts)
 - Market Research & Competitor Analysis
 - Product Requirements Document
 - Development Tasks
 - Product Metrics Dashboard
 - User Interview Template
+- Pricing Strategy & Model
 
 **MVP scope:** [3-5 features from PRD at a Glance]
 
@@ -398,6 +400,7 @@ Create a comprehensive summary document at:
 3. `03-tasks.md`
 4. `04-product-metrics.md`
 5. `05-interview-template.md`
+6. `06-pricing-strategy.md`
 
 ### Sales (`sales/`)
 1. `01-sales-process.md`
@@ -492,7 +495,7 @@ Good luck! 🚀 You now have everything you need to launch. The only thing left 
 ⏱️ Build timeline: [X weeks based on engineering estimates]
 🎯 Launch target: [Date 4 weeks from today]
 
-💡 Pro tip: Don't read all 24 files today. Start with the 4 artifacts above, then follow the 21-Day Launch Plan in the summary.
+💡 Pro tip: Don't read all 30 files today. Start with the 4 artifacts above, then follow the 21-Day Launch Plan in the summary.
 
 Questions? Ask me to explain any specific artifact or strategy decision.
 ```
