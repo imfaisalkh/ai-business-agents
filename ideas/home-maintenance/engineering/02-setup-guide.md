@@ -1,55 +1,48 @@
 # Project Setup Guide
 
-*Generated on January 28, 2026*
-
----
+> **Purpose:** Bootstrap HomeCrew from zero to running locally. Follow once at project start.
 
 ## Prerequisites
 
-Before starting, ensure you have:
-
-- [ ] Node.js 20+ (`node --version`)
-- [ ] pnpm 8+ (`pnpm --version`)
-- [ ] Git (`git --version`)
-- [ ] VS Code (recommended)
-- [ ] Stripe account (for payments)
-- [ ] Twilio account (for SMS)
-- [ ] Resend account (for email)
+- Node.js 20+ LTS (`node --version`)
+- pnpm 8+ (`pnpm --version`) - Required for monorepo workspaces
+- Git (`git --version`)
+- VS Code (recommended) with extensions:
+  - Vue - Official
+  - Tailwind CSS IntelliSense
+  - ESLint
+  - Prettier
 
 ---
 
-## Step 1: Initialize Monorepo
-
-### Create project directory
+## Step 1: Create Monorepo Structure
 
 ```bash
-mkdir home-maintenance-app
-cd home-maintenance-app
+# Create project directory
+mkdir homecrew && cd homecrew
+
+# Initialize git
 git init
-```
 
-### Initialize pnpm workspace
-
-```bash
-# Create package.json
+# Create root package.json
 cat > package.json << 'EOF'
 {
-  "name": "home-maintenance-app",
+  "name": "homecrew",
   "private": true,
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "db:push": "pnpm --filter @app/db push",
-    "db:studio": "pnpm --filter @app/db studio",
-    "db:generate": "pnpm --filter @app/db generate"
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build": "pnpm --filter './apps/*' build",
+    "lint": "pnpm --parallel --filter './apps/*' lint",
+    "typecheck": "pnpm --parallel --filter './apps/*' typecheck",
+    "db:generate": "pnpm --filter api db:generate",
+    "db:push": "pnpm --filter api db:push",
+    "db:studio": "pnpm --filter api db:studio"
   },
-  "devDependencies": {
-    "turbo": "^2.0.0",
-    "typescript": "^5.3.0"
-  },
-  "packageManager": "pnpm@8.15.0"
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }
 EOF
 
@@ -60,87 +53,267 @@ packages:
   - 'packages/*'
 EOF
 
-# Create turbo config
-cat > turbo.json << 'EOF'
-{
-  "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".output/**", ".nuxt/**", "dist/**"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "lint": {},
-    "test": {}
-  }
-}
-EOF
-```
-
-### Create directory structure
-
-```bash
-mkdir -p apps/admin apps/worker apps/api
-mkdir -p packages/shared packages/db
+# Create directory structure
+mkdir -p apps/web apps/api packages/shared/src/types
 ```
 
 ---
 
-## Step 2: Setup Database Package
-
-### Initialize db package
+## Step 2: Set Up Nuxt 4 Frontend
 
 ```bash
-cd packages/db
+cd apps/web
 
-cat > package.json << 'EOF'
-{
-  "name": "@app/db",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "push": "drizzle-kit push:sqlite",
-    "generate": "drizzle-kit generate:sqlite",
-    "studio": "drizzle-kit studio"
+# Create Nuxt project
+npx nuxi@latest init . --force
+
+# Install dependencies
+pnpm add @pinia/nuxt @vueuse/nuxt
+pnpm add -D @nuxtjs/tailwindcss tailwindcss-animate
+
+# Install shadcn-vue dependencies
+pnpm add radix-vue class-variance-authority clsx tailwind-merge lucide-vue-next
+
+# Install analytics
+pnpm add posthog-js
+```
+
+### Configure nuxt.config.ts
+
+```typescript
+// apps/web/nuxt.config.ts
+export default defineNuxtConfig({
+  // Client-only SPA mode (no SSR)
+  ssr: false,
+
+  devtools: { enabled: true },
+
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+    '@vueuse/nuxt',
+  ],
+
+  typescript: {
+    strict: true,
   },
-  "dependencies": {
-    "better-sqlite3": "^9.4.0",
-    "drizzle-orm": "^0.29.0"
+
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+      appName: process.env.NUXT_PUBLIC_APP_NAME || 'HomeCrew',
+      posthogKey: process.env.NUXT_PUBLIC_POSTHOG_KEY || '',
+      posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+    },
   },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.8",
-    "drizzle-kit": "^0.20.0"
+
+  compatibilityDate: '2024-01-01',
+});
+```
+
+### Configure Tailwind
+
+```javascript
+// apps/web/tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ['class'],
+  content: [
+    './components/**/*.{js,vue,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './plugins/**/*.{js,ts}',
+    './app.vue',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+    },
+  },
+  plugins: [require('tailwindcss-animate')],
+};
+```
+
+### Add CSS Variables
+
+```css
+/* apps/web/assets/css/main.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
   }
 }
-EOF
+```
+
+### Initialize shadcn-vue
+
+```bash
+# Initialize shadcn-vue (follow prompts)
+npx shadcn-vue@latest init
+
+# Add commonly used components
+npx shadcn-vue@latest add button input label card table form toast dialog dropdown-menu avatar badge calendar select textarea tabs
 
 cd ../..
 ```
 
-### Create database schema
+---
+
+## Step 3: Set Up Fastify Backend
 
 ```bash
-cat > packages/db/schema.ts << 'EOF'
+cd apps/api
+
+# Create package.json
+cat > package.json << 'EOF'
+{
+  "name": "api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  }
+}
+EOF
+
+# Install Fastify and plugins
+pnpm add fastify @fastify/cors @fastify/cookie @fastify/jwt @fastify/rate-limit
+
+# Install database
+pnpm add drizzle-orm better-sqlite3
+pnpm add -D drizzle-kit @types/better-sqlite3
+
+# Install utilities
+pnpm add zod nanoid bcrypt
+pnpm add -D @types/bcrypt tsx typescript @types/node
+
+# Install external service SDKs
+pnpm add stripe @twilio/conversations resend
+
+# Create tsconfig
+cat > tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+EOF
+
+# Create directory structure
+mkdir -p src/routes src/plugins src/schemas src/services src/middleware src/db data drizzle
+```
+
+### Configure Drizzle
+
+```typescript
+// apps/api/drizzle.config.ts
+import type { Config } from 'drizzle-kit';
+
+export default {
+  schema: './src/db/schema.ts',
+  out: './drizzle',
+  dialect: 'sqlite',
+  dbCredentials: {
+    url: './data/app.db',
+  },
+} satisfies Config;
+```
+
+### Create Database Connection
+
+```typescript
+// apps/api/src/db/index.ts
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
+import * as schema from './schema.js';
+
+const sqlite = new Database('./data/app.db');
+export const db = drizzle(sqlite, { schema });
+```
+
+### Create Database Schema
+
+```typescript
+// apps/api/src/db/schema.ts
+// Full schema - see 01-technical-requirements.md for complete version
+
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 
-// Users table
-export const users = sqliteTable('users', {
-  id: text('id').primaryKey(),
-  email: text('email').notNull().unique(),
-  passwordHash: text('password_hash').notNull(),
-  name: text('name').notNull(),
-  phone: text('phone'),
-  role: text('role', { enum: ['owner', 'worker', 'admin'] }).notNull(),
-  businessId: text('business_id').references(() => businesses.id),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow(),
-});
+export const userRoles = ['owner', 'admin', 'worker'] as const;
+export const subscriptionStatuses = ['trial', 'active', 'cancelled', 'past_due'] as const;
+export const jobStatuses = ['scheduled', 'in_progress', 'completed', 'cancelled'] as const;
+export const invoiceStatuses = ['draft', 'sent', 'paid', 'overdue'] as const;
 
-// Businesses table
 export const businesses = sqliteTable('businesses', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -149,388 +322,165 @@ export const businesses = sqliteTable('businesses', {
   email: text('email'),
   timezone: text('timezone').default('America/Chicago'),
   stripeCustomerId: text('stripe_customer_id'),
-  subscriptionStatus: text('subscription_status', {
-    enum: ['trial', 'active', 'cancelled', 'past_due']
-  }).default('trial'),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  subscriptionStatus: text('subscription_status', { enum: subscriptionStatuses }).default('trial'),
   trialEndsAt: integer('trial_ends_at', { mode: 'timestamp' }),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
-// Customers table
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  businessId: text('business_id').references(() => businesses.id, { onDelete: 'cascade' }),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  name: text('name').notNull(),
+  phone: text('phone'),
+  role: text('role', { enum: userRoles }).notNull().default('owner'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
+export const refreshTokens = sqliteTable('refresh_tokens', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').notNull().unique(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+});
+
 export const customers = sqliteTable('customers', {
   id: text('id').primaryKey(),
-  businessId: text('business_id').notNull().references(() => businesses.id),
+  businessId: text('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   email: text('email'),
   phone: text('phone'),
   address: text('address'),
   notes: text('notes'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
-// Jobs table
 export const jobs = sqliteTable('jobs', {
   id: text('id').primaryKey(),
-  businessId: text('business_id').notNull().references(() => businesses.id),
-  customerId: text('customer_id').notNull().references(() => customers.id),
+  businessId: text('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   workerId: text('worker_id').references(() => users.id),
   title: text('title').notNull(),
   description: text('description'),
-  scheduledDate: text('scheduled_date').notNull(), // ISO date string
-  scheduledTime: text('scheduled_time').notNull(), // HH:MM format
+  scheduledDate: text('scheduled_date').notNull(),
+  scheduledTime: text('scheduled_time').notNull(),
   durationMinutes: integer('duration_minutes').default(60),
-  status: text('status', {
-    enum: ['scheduled', 'in_progress', 'completed', 'cancelled']
-  }).default('scheduled'),
+  status: text('status', { enum: jobStatuses }).default('scheduled'),
   price: real('price'),
   notes: text('notes'),
   startedAt: integer('started_at', { mode: 'timestamp' }),
   completedAt: integer('completed_at', { mode: 'timestamp' }),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
-// Invoices table
 export const invoices = sqliteTable('invoices', {
   id: text('id').primaryKey(),
-  businessId: text('business_id').notNull().references(() => businesses.id),
-  customerId: text('customer_id').notNull().references(() => customers.id),
+  businessId: text('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   jobId: text('job_id').references(() => jobs.id),
+  invoiceNumber: text('invoice_number').notNull(),
   amount: real('amount').notNull(),
-  status: text('status', {
-    enum: ['draft', 'sent', 'paid', 'overdue']
-  }).default('draft'),
+  status: text('status', { enum: invoiceStatuses }).default('draft'),
   dueDate: text('due_date'),
   sentAt: integer('sent_at', { mode: 'timestamp' }),
   paidAt: integer('paid_at', { mode: 'timestamp' }),
-  stripePaymentLink: text('stripe_payment_link'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
+  stripePaymentLinkUrl: text('stripe_payment_link_url'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
-// Messages table
 export const messages = sqliteTable('messages', {
   id: text('id').primaryKey(),
-  businessId: text('business_id').notNull().references(() => businesses.id),
-  customerId: text('customer_id').notNull().references(() => customers.id),
+  businessId: text('business_id').notNull().references(() => businesses.id, { onDelete: 'cascade' }),
+  customerId: text('customer_id').notNull().references(() => customers.id, { onDelete: 'cascade' }),
   direction: text('direction', { enum: ['inbound', 'outbound'] }).notNull(),
   body: text('body').notNull(),
   twilioSid: text('twilio_sid'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
-});
-
-// Sessions table
-export const sessions = sqliteTable('sessions', {
-  id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => users.id),
-  refreshToken: text('refresh_token').notNull(),
-  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 
 // Type exports
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
 export type Business = typeof businesses.$inferSelect;
-export type NewBusiness = typeof businesses.$inferInsert;
+export type User = typeof users.$inferSelect;
 export type Customer = typeof customers.$inferSelect;
-export type NewCustomer = typeof customers.$inferInsert;
 export type Job = typeof jobs.$inferSelect;
-export type NewJob = typeof jobs.$inferInsert;
 export type Invoice = typeof invoices.$inferSelect;
-export type NewInvoice = typeof invoices.$inferInsert;
 export type Message = typeof messages.$inferSelect;
-export type NewMessage = typeof messages.$inferInsert;
-EOF
 ```
 
-### Create Drizzle config
+### Create Fastify App
 
-```bash
-cat > packages/db/drizzle.config.ts << 'EOF'
-import type { Config } from 'drizzle-kit';
-
-export default {
-  schema: './schema.ts',
-  out: './migrations',
-  driver: 'better-sqlite3',
-  dbCredentials: {
-    url: process.env.DATABASE_URL || './data/app.db',
-  },
-} satisfies Config;
-EOF
-```
-
-### Create database connection
-
-```bash
-cat > packages/db/index.ts << 'EOF'
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import * as schema from './schema';
-
-const sqlite = new Database(process.env.DATABASE_URL || './data/app.db');
-export const db = drizzle(sqlite, { schema });
-
-export * from './schema';
-EOF
-```
-
----
-
-## Step 3: Setup Shared Package
-
-### Initialize shared package
-
-```bash
-cd packages/shared
-
-cat > package.json << 'EOF'
-{
-  "name": "@app/shared",
-  "version": "0.0.1",
-  "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "dependencies": {
-    "zod": "^3.22.0"
-  }
-}
-EOF
-
-cd ../..
-```
-
-### Create shared types and utilities
-
-```bash
-cat > packages/shared/index.ts << 'EOF'
-// Re-export everything
-export * from './types';
-export * from './validation';
-export * from './utils';
-EOF
-
-cat > packages/shared/types.ts << 'EOF'
-// API Response types
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: ApiError;
-}
-
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: Record<string, unknown>;
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    pages: number;
-  };
-}
-
-// Job status type
-export type JobStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
-
-// Invoice status type
-export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue';
-
-// User role type
-export type UserRole = 'owner' | 'worker' | 'admin';
-EOF
-
-cat > packages/shared/validation.ts << 'EOF'
-import { z } from 'zod';
-
-// Customer validation
-export const customerSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  notes: z.string().optional(),
-});
-
-// Job validation
-export const jobSchema = z.object({
-  customerId: z.string().min(1, 'Customer is required'),
-  workerId: z.string().optional(),
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().optional(),
-  scheduledDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format'),
-  scheduledTime: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
-  durationMinutes: z.number().min(15).max(480).default(60),
-  price: z.number().min(0).optional(),
-  notes: z.string().optional(),
-});
-
-// Invoice validation
-export const invoiceSchema = z.object({
-  customerId: z.string().min(1, 'Customer is required'),
-  jobId: z.string().optional(),
-  amount: z.number().min(0, 'Amount must be positive'),
-  dueDate: z.string().optional(),
-});
-
-// Auth validation
-export const signupSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  name: z.string().min(1, 'Name is required'),
-  businessName: z.string().min(1, 'Business name is required'),
-});
-
-export const loginSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(1, 'Password is required'),
-});
-EOF
-
-cat > packages/shared/utils.ts << 'EOF'
-import { customAlphabet } from 'nanoid';
-
-// Generate short IDs for database records
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 12);
-export const generateId = () => nanoid();
-
-// Format currency
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
-};
-
-// Format date
-export const formatDate = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  }).format(d);
-};
-
-// Format time
-export const formatTime = (time: string): string => {
-  const [hours, minutes] = time.split(':').map(Number);
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 || 12;
-  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
-};
-EOF
-```
-
-Add nanoid dependency:
-```bash
-cd packages/shared
-pnpm add nanoid
-cd ../..
-```
-
----
-
-## Step 4: Setup Fastify API
-
-### Initialize API app
-
-```bash
-cd apps/api
-
-cat > package.json << 'EOF'
-{
-  "name": "@app/api",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
-  },
-  "dependencies": {
-    "@app/db": "workspace:*",
-    "@app/shared": "workspace:*",
-    "@fastify/cookie": "^9.3.0",
-    "@fastify/cors": "^9.0.0",
-    "@fastify/jwt": "^8.0.0",
-    "bcrypt": "^5.1.1",
-    "fastify": "^4.26.0",
-    "stripe": "^14.0.0",
-    "twilio": "^4.20.0",
-    "resend": "^3.0.0"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20.11.0",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.0"
-  }
-}
-EOF
-
-cd ../..
-```
-
-### Create API entry point
-
-```bash
-mkdir -p apps/api/src/routes apps/api/src/services apps/api/src/middleware
-
-cat > apps/api/src/index.ts << 'EOF'
+```typescript
+// apps/api/src/app.ts
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
+import rateLimit from '@fastify/rate-limit';
 
-// Import routes
-import { authRoutes } from './routes/auth';
-import { customerRoutes } from './routes/customers';
-import { jobRoutes } from './routes/jobs';
-import { invoiceRoutes } from './routes/invoices';
-import { messageRoutes } from './routes/messages';
-import { workerRoutes } from './routes/workers';
-import { webhookRoutes } from './routes/webhooks';
+export async function buildApp() {
+  const app = Fastify({
+    logger: true,
+  });
 
-const app = Fastify({
-  logger: true,
-});
+  // Register plugins
+  await app.register(cors, {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    credentials: true,
+  });
 
-// Register plugins
-app.register(cors, {
-  origin: process.env.APP_URL || 'http://localhost:3000',
-  credentials: true,
-});
+  await app.register(cookie);
 
-app.register(cookie, {
-  secret: process.env.COOKIE_SECRET || 'your-cookie-secret',
-});
+  await app.register(jwt, {
+    secret: process.env.JWT_SECRET || 'dev-secret-change-in-production',
+    cookie: {
+      cookieName: 'refreshToken',
+      signed: false,
+    },
+  });
 
-app.register(jwt, {
-  secret: process.env.JWT_SECRET || 'your-jwt-secret',
-});
+  await app.register(rateLimit, {
+    max: 100,
+    timeWindow: '1 minute',
+  });
 
-// Health check
-app.get('/health', async () => ({ status: 'ok' }));
+  // Health check
+  app.get('/health', async () => ({ status: 'ok' }));
 
-// Register routes
-app.register(authRoutes, { prefix: '/api/auth' });
-app.register(customerRoutes, { prefix: '/api/customers' });
-app.register(jobRoutes, { prefix: '/api/jobs' });
-app.register(invoiceRoutes, { prefix: '/api/invoices' });
-app.register(messageRoutes, { prefix: '/api/messages' });
-app.register(workerRoutes, { prefix: '/api/workers' });
-app.register(webhookRoutes, { prefix: '/api/webhooks' });
+  // Register routes (add as you build)
+  // await app.register(authRoutes, { prefix: '/api/auth' });
+  // await app.register(customerRoutes, { prefix: '/api/customers' });
+  // await app.register(jobRoutes, { prefix: '/api/jobs' });
+  // await app.register(invoiceRoutes, { prefix: '/api/invoices' });
+  // await app.register(messageRoutes, { prefix: '/api/messages' });
+  // await app.register(webhookRoutes, { prefix: '/api/webhooks' });
 
-// Start server
+  return app;
+}
+```
+
+### Create Server Entry Point
+
+```typescript
+// apps/api/src/index.ts
+import { buildApp } from './app.js';
+
 const start = async () => {
+  const app = await buildApp();
+
   try {
     const port = parseInt(process.env.PORT || '3001');
-    await app.listen({ port, host: '0.0.0.0' });
-    console.log(`Server running on port ${port}`);
+    const host = process.env.HOST || '0.0.0.0';
+
+    await app.listen({ port, host });
+    console.log(`Server running at http://${host}:${port}`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
@@ -538,416 +488,355 @@ const start = async () => {
 };
 
 start();
-EOF
 ```
 
-### Create auth routes
-
 ```bash
-cat > apps/api/src/routes/auth.ts << 'EOF'
-import { FastifyInstance } from 'fastify';
-import bcrypt from 'bcrypt';
-import { db, users, businesses, sessions } from '@app/db';
-import { generateId, signupSchema, loginSchema } from '@app/shared';
-import { eq } from 'drizzle-orm';
-
-export async function authRoutes(app: FastifyInstance) {
-  // Signup
-  app.post('/signup', async (request, reply) => {
-    const result = signupSchema.safeParse(request.body);
-    if (!result.success) {
-      return reply.status(400).send({
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: result.error.message },
-      });
-    }
-
-    const { email, password, name, businessName } = result.data;
-
-    // Check if user exists
-    const existing = await db.query.users.findFirst({
-      where: eq(users.email, email),
-    });
-
-    if (existing) {
-      return reply.status(400).send({
-        success: false,
-        error: { code: 'USER_EXISTS', message: 'Email already registered' },
-      });
-    }
-
-    // Create business and user
-    const businessId = generateId();
-    const userId = generateId();
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    const trialEndsAt = new Date();
-    trialEndsAt.setDate(trialEndsAt.getDate() + 14);
-
-    await db.insert(businesses).values({
-      id: businessId,
-      name: businessName,
-      trialEndsAt,
-    });
-
-    await db.insert(users).values({
-      id: userId,
-      email,
-      passwordHash,
-      name,
-      role: 'owner',
-      businessId,
-    });
-
-    // Generate tokens
-    const accessToken = app.jwt.sign(
-      { userId, businessId, role: 'owner' },
-      { expiresIn: '15m' }
-    );
-
-    const refreshToken = generateId() + generateId();
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30);
-
-    await db.insert(sessions).values({
-      id: generateId(),
-      userId,
-      refreshToken,
-      expiresAt,
-    });
-
-    reply.setCookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    });
-
-    return { success: true, data: { accessToken, user: { id: userId, email, name } } };
-  });
-
-  // Login
-  app.post('/login', async (request, reply) => {
-    const result = loginSchema.safeParse(request.body);
-    if (!result.success) {
-      return reply.status(400).send({
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: result.error.message },
-      });
-    }
-
-    const { email, password } = result.data;
-
-    const user = await db.query.users.findFirst({
-      where: eq(users.email, email),
-    });
-
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-      return reply.status(401).send({
-        success: false,
-        error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' },
-      });
-    }
-
-    // Generate tokens
-    const accessToken = app.jwt.sign(
-      { userId: user.id, businessId: user.businessId, role: user.role },
-      { expiresIn: '15m' }
-    );
-
-    const refreshToken = generateId() + generateId();
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30);
-
-    await db.insert(sessions).values({
-      id: generateId(),
-      userId: user.id,
-      refreshToken,
-      expiresAt,
-    });
-
-    reply.setCookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-
-    return {
-      success: true,
-      data: {
-        accessToken,
-        user: { id: user.id, email: user.email, name: user.name, role: user.role },
-      },
-    };
-  });
-
-  // Refresh token
-  app.post('/refresh', async (request, reply) => {
-    const refreshToken = request.cookies.refreshToken;
-    if (!refreshToken) {
-      return reply.status(401).send({
-        success: false,
-        error: { code: 'NO_TOKEN', message: 'No refresh token' },
-      });
-    }
-
-    const session = await db.query.sessions.findFirst({
-      where: eq(sessions.refreshToken, refreshToken),
-    });
-
-    if (!session || session.expiresAt < new Date()) {
-      return reply.status(401).send({
-        success: false,
-        error: { code: 'INVALID_TOKEN', message: 'Invalid or expired token' },
-      });
-    }
-
-    const user = await db.query.users.findFirst({
-      where: eq(users.id, session.userId),
-    });
-
-    if (!user) {
-      return reply.status(401).send({
-        success: false,
-        error: { code: 'USER_NOT_FOUND', message: 'User not found' },
-      });
-    }
-
-    const accessToken = app.jwt.sign(
-      { userId: user.id, businessId: user.businessId, role: user.role },
-      { expiresIn: '15m' }
-    );
-
-    return { success: true, data: { accessToken } };
-  });
-
-  // Logout
-  app.post('/logout', async (request, reply) => {
-    const refreshToken = request.cookies.refreshToken;
-    if (refreshToken) {
-      await db.delete(sessions).where(eq(sessions.refreshToken, refreshToken));
-    }
-    reply.clearCookie('refreshToken');
-    return { success: true };
-  });
-}
-EOF
+cd ../..  # Back to root
 ```
 
-### Create placeholder route files
+---
+
+## Step 4: Create Environment Files
 
 ```bash
-# Create placeholder files for other routes
-for route in customers jobs invoices messages workers webhooks; do
-  cat > apps/api/src/routes/${route}.ts << EOF
-import { FastifyInstance } from 'fastify';
+# Root .env.example
+cat > .env.example << 'EOF'
+# Backend
+NODE_ENV=development
+PORT=3001
+HOST=0.0.0.0
+DATABASE_URL=file:./data/app.db
+JWT_SECRET=your-secret-key-min-32-characters-long
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+CORS_ORIGIN=http://localhost:3000
 
-export async function ${route}Routes(app: FastifyInstance) {
-  // TODO: Implement ${route} routes
-  app.get('/', async () => ({ message: '${route} endpoint' }));
-}
+# Stripe (get from https://dashboard.stripe.com/test/apikeys)
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_STARTER=price_...
+STRIPE_PRICE_PRO=price_...
+
+# Twilio (get from https://console.twilio.com)
+TWILIO_ACCOUNT_SID=AC...
+TWILIO_AUTH_TOKEN=...
+TWILIO_PHONE_NUMBER=+1...
+
+# Email (get from https://resend.com)
+RESEND_API_KEY=re_...
+FROM_EMAIL=noreply@homecrew.app
+
+# Frontend
+NUXT_PUBLIC_API_URL=http://localhost:3001/api
+NUXT_PUBLIC_APP_NAME=HomeCrew
+NUXT_PUBLIC_POSTHOG_KEY=phc_...
+NUXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+
+# App
+APP_URL=http://localhost:3000
 EOF
-done
-```
 
-### Create tsconfig for API
+# Copy to .env
+cp .env.example .env
 
-```bash
-cat > apps/api/tsconfig.json << 'EOF'
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "strict": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
-}
+# Create .gitignore
+cat > .gitignore << 'EOF'
+node_modules
+.nuxt
+.output
+dist
+*.db
+.env
+.DS_Store
+*.log
 EOF
 ```
 
 ---
 
-## Step 5: Setup Nuxt Admin App
-
-### Initialize admin app
+## Step 5: Initialize Database
 
 ```bash
-cd apps/admin
-npx nuxi init . --force
+# Generate and push database schema
+pnpm db:generate
+pnpm db:push
+
+# Open Drizzle Studio to view data (optional)
+pnpm db:studio
 ```
 
-### Update nuxt.config.ts
+---
+
+## Step 6: Create Shared Types Package
 
 ```bash
-cat > apps/admin/nuxt.config.ts << 'EOF'
-export default defineNuxtConfig({
-  ssr: false,
-  devtools: { enabled: true },
-  modules: [
-    '@nuxtjs/tailwindcss',
-    'shadcn-nuxt',
-  ],
-  shadcn: {
-    prefix: '',
-    componentDir: './components/ui',
-  },
-  runtimeConfig: {
-    public: {
-      apiUrl: process.env.API_URL || 'http://localhost:3001',
-    },
-  },
-});
+cd packages/shared
+
+cat > package.json << 'EOF'
+{
+  "name": "@homecrew/shared",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts"
+}
 EOF
-```
 
-### Setup Tailwind and shadcn
+cat > src/index.ts << 'EOF'
+export * from './types/api.js';
+export * from './types/entities.js';
+export * from './constants.js';
+EOF
 
-```bash
-cd apps/admin
-npx nuxi module add @nuxtjs/tailwindcss
-npx nuxi module add shadcn-nuxt
-npx shadcn-vue@latest init
+cat > src/types/api.ts << 'EOF'
+export interface SuccessResponse<T> {
+  data: T;
+  meta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface ErrorResponse {
+  error: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
+}
+EOF
+
+cat > src/types/entities.ts << 'EOF'
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  phone: string | null;
+  role: 'owner' | 'admin' | 'worker';
+  businessId: string | null;
+  createdAt: Date;
+}
+
+export interface Business {
+  id: string;
+  name: string;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  subscriptionStatus: 'trial' | 'active' | 'cancelled' | 'past_due';
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  notes: string | null;
+}
+
+export interface Job {
+  id: string;
+  customerId: string;
+  workerId: string | null;
+  title: string;
+  description: string | null;
+  scheduledDate: string;
+  scheduledTime: string;
+  durationMinutes: number;
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  price: number | null;
+  notes: string | null;
+}
+
+export interface Invoice {
+  id: string;
+  customerId: string;
+  jobId: string | null;
+  invoiceNumber: string;
+  amount: number;
+  status: 'draft' | 'sent' | 'paid' | 'overdue';
+  dueDate: string | null;
+}
+
+export interface Message {
+  id: string;
+  customerId: string;
+  direction: 'inbound' | 'outbound';
+  body: string;
+  createdAt: Date;
+}
+EOF
+
+cat > src/constants.ts << 'EOF'
+export const JOB_STATUSES = ['scheduled', 'in_progress', 'completed', 'cancelled'] as const;
+export const INVOICE_STATUSES = ['draft', 'sent', 'paid', 'overdue'] as const;
+export const USER_ROLES = ['owner', 'admin', 'worker'] as const;
+
+export const TRIAL_DAYS = 14;
+export const STARTER_PRICE_CENTS = 4900; // $49
+export const PRO_PRICE_CENTS = 7900;     // $79
+EOF
 
 cd ../..
 ```
 
 ---
 
-## Step 6: Create Environment Files
+## Development Workflow
 
-### Root .env.example
+### Start Development Servers
 
 ```bash
-cat > .env.example << 'EOF'
-# Database
-DATABASE_URL=./data/app.db
+# Start both frontend and backend
+pnpm dev
 
-# Auth
-JWT_SECRET=your-jwt-secret-change-this
-COOKIE_SECRET=your-cookie-secret-change-this
+# Or start individually
+pnpm dev:web   # Frontend only (http://localhost:3000)
+pnpm dev:api   # Backend only (http://localhost:3001)
+```
 
-# API
-PORT=3001
-API_URL=http://localhost:3001
-APP_URL=http://localhost:3000
+### Database Changes
 
-# Stripe
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-STRIPE_PRICE_ID_MONTHLY=price_...
-STRIPE_PRICE_ID_ANNUAL=price_...
+```bash
+# After modifying schema.ts
+pnpm db:generate  # Generate migration
+pnpm db:push      # Apply to database
+pnpm db:studio    # View data in browser
+```
 
-# Twilio
-TWILIO_ACCOUNT_SID=AC...
-TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=+1...
+### Before Committing
 
-# Email
-RESEND_API_KEY=re_...
+```bash
+# Type check all packages
+pnpm typecheck
+
+# Lint all packages
+pnpm lint
+
+# Build all packages
+pnpm build
+```
+
+---
+
+## Mobile Setup (Capacitor - Phase 2)
+
+When ready to add native mobile apps:
+
+```bash
+cd apps && mkdir mobile && cd mobile
+
+pnpm add @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
+pnpm add @capacitor/camera @capacitor/geolocation @capacitor/push-notifications
+
+cat > capacitor.config.ts << 'EOF'
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'app.homecrew.mobile',
+  appName: 'HomeCrew',
+  webDir: '../web/.output/public',
+  server: {
+    // Remove for production
+    url: 'http://localhost:3000',
+    cleartext: true,
+  },
+};
+
+export default config;
 EOF
-```
 
-### Create .gitignore
+npx cap add ios
+npx cap add android
 
-```bash
-cat > .gitignore << 'EOF'
-# Dependencies
-node_modules/
+cd ../..
 
-# Build outputs
-.output/
-.nuxt/
-dist/
+# Build & sync workflow:
+# pnpm --filter web build && npx cap sync
 
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Database
-*.db
-data/
-
-# IDE
-.vscode/
-.idea/
-
-# Turbo
-.turbo/
-
-# OS
-.DS_Store
-EOF
+# Open native IDE:
+# npx cap open ios
+# npx cap open android
 ```
 
 ---
 
-## Step 7: Install Dependencies & Run
+## Deployment
 
-### Install all dependencies
-
-```bash
-pnpm install
-```
-
-### Initialize database
+### Frontend (Vercel)
 
 ```bash
-mkdir -p data
-pnpm db:push
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy from apps/web
+cd apps/web
+vercel
+
+# Set environment variables in Vercel dashboard:
+# NUXT_PUBLIC_API_URL=https://api.homecrew.app/api
+# NUXT_PUBLIC_APP_NAME=HomeCrew
+# NUXT_PUBLIC_POSTHOG_KEY=phc_...
 ```
 
-### Start development servers
+### Backend (Railway)
 
-```bash
-# Terminal 1: Start API
-pnpm --filter @app/api dev
+1. Connect GitHub repo to Railway
+2. Set root directory to `apps/api`
+3. Set environment variables (copy from .env)
+4. Add persistent volume for SQLite at `/app/data`
 
-# Terminal 2: Start Admin app
-pnpm --filter @app/admin dev
-```
+**Build command:** `pnpm install && pnpm build`
+**Start command:** `node dist/index.js`
 
 ---
 
-## Quick Reference Commands
+## External Service Setup
 
-```bash
-# Development
-pnpm dev                    # Start all apps in dev mode
-pnpm --filter @app/api dev  # Start API only
-pnpm --filter @app/admin dev # Start Admin only
+### Stripe Setup
 
-# Database
-pnpm db:push               # Push schema changes
-pnpm db:studio             # Open Drizzle Studio
-pnpm db:generate           # Generate migrations
+1. Create account at https://dashboard.stripe.com
+2. Create two products: "Starter" ($49/mo) and "Professional" ($79/mo)
+3. Copy API keys to .env
+4. Set up webhook endpoint: `https://api.homecrew.app/api/webhooks/stripe`
+5. Subscribe to events: `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated`
 
-# Build
-pnpm build                 # Build all apps
+### Twilio Setup
 
-# Lint
-pnpm lint                  # Lint all apps
-```
+1. Create account at https://console.twilio.com
+2. Get a phone number with SMS capability
+3. Copy Account SID, Auth Token, and Phone Number to .env
+4. Set webhook URL for inbound SMS: `https://api.homecrew.app/api/webhooks/twilio`
 
----
+### Resend Setup
 
-## Next Steps
+1. Create account at https://resend.com
+2. Verify your domain
+3. Copy API key to .env
 
-1. [ ] Copy `.env.example` to `.env` and fill in values
-2. [ ] Create Stripe account and add keys
-3. [ ] Create Twilio account and add keys
-4. [ ] Create Resend account and add keys
-5. [ ] Run `pnpm db:push` to create database
-6. [ ] Run `pnpm dev` to start development
-7. [ ] Open http://localhost:3000 to see the app
+### PostHog Setup
+
+1. Create account at https://posthog.com
+2. Create new project
+3. Copy Project API Key to .env
 
 ---
 
-*Next artifact: 03-implementation-tasks.md*
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| CORS errors | Check CORS_ORIGIN matches frontend URL exactly |
+| Database locked | Only one write process at a time; restart API |
+| JWT errors | Ensure JWT_SECRET is set and consistent |
+| Workspace issues | Run `pnpm install` from root directory |
+| Port already in use | Kill process: `lsof -ti:3001 \| xargs kill` |
+| Migration failed | Delete `drizzle/` folder and `data/app.db`, re-run setup |
+| Stripe webhooks not working | Use Stripe CLI for local testing: `stripe listen` |
+
+---
+
+*Last updated: January 29, 2026*

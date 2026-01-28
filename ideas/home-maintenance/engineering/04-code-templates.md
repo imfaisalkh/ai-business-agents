@@ -1,186 +1,914 @@
 # Code Templates
 
-*Generated on January 28, 2026*
+> **Purpose:** Production-ready code patterns for HomeCrew. Copy-paste and customize.
 
 ---
 
-## API Route Templates
+## Backend: Authentication
 
-### Basic CRUD Route (Fastify)
+### Auth Service (`apps/api/src/services/auth.service.ts`)
 
 ```typescript
-// apps/api/src/routes/customers.ts
-import { FastifyInstance } from 'fastify';
-import { db, customers } from '@app/db';
-import { generateId, customerSchema } from '@app/shared';
-import { eq, and, like } from 'drizzle-orm';
+import { db } from '../db/index.js';
+import { users, businesses, refreshTokens } from '../db/schema.js';
+import { eq } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+import bcrypt from 'bcrypt';
 
-export async function customerRoutes(app: FastifyInstance) {
-  // Auth middleware decorator
-  app.addHook('preHandler', async (request, reply) => {
-    try {
-      await request.jwtVerify();
-    } catch (err) {
-      reply.status(401).send({ success: false, error: { code: 'UNAUTHORIZED', message: 'Invalid token' } });
+export const authService = {
+  async createUser(data: {
+    email: string;
+    password: string;
+    name: string;
+    businessName: string;
+  }) {
+    const passwordHash = await bcrypt.hash(data.password, 12);
+
+    // Create business first
+    const businessId = nanoid();
+    const trialEndsAt = new Date();
+    trialEndsAt.setDate(trialEndsAt.getDate() + 14); // 14-day trial
+
+    await db.insert(businesses).values({
+      id: businessId,
+      name: data.businessName,
+      trialEndsAt,
+    });
+
+    // Create user
+    const userId = nanoid();
+    await db.insert(users).values({
+      id: userId,
+      businessId,
+      email: data.email.toLowerCase(),
+      passwordHash,
+      name: data.name,
+      role: 'owner',
+    });
+
+    return this.findById(userId);
+  },
+
+  async validateCredentials(email: string, password: string) {
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email.toLowerCase()),
+    });
+    if (!user) return null;
+    return (await bcrypt.compare(password, user.passwordHash)) ? user : null;
+  },
+
+  async findById(id: string) {
+    return db.query.users.findFirst({ where: eq(users.id, id) });
+  },
+
+  async findByEmail(email: string) {
+    return db.query.users.findFirst({ where: eq(users.email, email.toLowerCase()) });
+  },
+
+  async createRefreshToken(userId: string) {
+    const token = nanoid(64);
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await db.insert(refreshTokens).values({ id: nanoid(), userId, token, expiresAt });
+    return token;
+  },
+
+  async validateRefreshToken(token: string) {
+    const record = await db.query.refreshTokens.findFirst({
+      where: eq(refreshTokens.token, token),
+    });
+    if (!record || record.expiresAt < new Date()) return null;
+    await db.delete(refreshTokens).where(eq(refreshTokens.id, record.id)); // Rotate
+    return record.userId;
+  },
+
+  async revokeRefreshTokens(userId: string) {
+    await db.delete(refreshTokens).where(eq(refreshTokens.userId, userId));
+  },
+
+  async getBusinessForUser(userId: string) {
+    const user = await this.findById(userId);
+    if (!user?.businessId) return null;
+    return db.query.businesses.findFirst({ where: eq(businesses.id, user.businessId) });
+  },
+};
+```
+
+### Auth Routes (`apps/api/src/routes/auth.ts`)
+
+```typescript
+import { FastifyPluginAsync } from 'fastify';
+import { z } from 'zod';
+import { authService } from '../services/auth.service.js';
+
+const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  name: z.string().min(1),
+  businessName: z.string().min(1),
+});
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export const authRoutes: FastifyPluginAsync = async (fastify) => {
+  // Register
+  fastify.post('/register', async (req, reply) => {
+    const body = registerSchema.parse(req.body);
+
+    const existing = await authService.findByEmail(body.email);
+    if (existing) {
+      return reply.status(400).send({
+        error: { code: 'EMAIL_EXISTS', message: 'Email already registered' }
+      });
     }
-  });
 
-  // GET /api/customers - List all customers
-  app.get('/', async (request) => {
-    const { businessId } = request.user as { businessId: string };
-    const { search, page = '1', limit = '20' } = request.query as Record<string, string>;
+    const user = await authService.createUser(body);
+    const accessToken = fastify.jwt.sign(
+      { userId: user!.id, businessId: user!.businessId, role: user!.role },
+      { expiresIn: '15m' }
+    );
+    const refreshToken = await authService.createRefreshToken(user!.id);
 
-    let query = db.select().from(customers).where(eq(customers.businessId, businessId));
-
-    if (search) {
-      query = query.where(
-        and(
-          eq(customers.businessId, businessId),
-          like(customers.name, `%${search}%`)
-        )
-      );
-    }
-
-    const offset = (parseInt(page) - 1) * parseInt(limit);
-    const items = await query.limit(parseInt(limit)).offset(offset);
-    const total = await db.select({ count: sql`count(*)` }).from(customers).where(eq(customers.businessId, businessId));
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
 
     return {
-      success: true,
       data: {
-        items,
-        pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
-          total: total[0].count,
-          pages: Math.ceil(total[0].count / parseInt(limit)),
-        },
-      },
+        user: { id: user!.id, email: user!.email, name: user!.name, role: user!.role },
+        accessToken,
+      }
     };
   });
 
-  // GET /api/customers/:id - Get single customer
-  app.get('/:id', async (request, reply) => {
-    const { id } = request.params as { id: string };
-    const { businessId } = request.user as { businessId: string };
+  // Login
+  fastify.post('/login', async (req, reply) => {
+    const body = loginSchema.parse(req.body);
+
+    const user = await authService.validateCredentials(body.email, body.password);
+    if (!user) {
+      return reply.status(401).send({
+        error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }
+      });
+    }
+
+    const accessToken = fastify.jwt.sign(
+      { userId: user.id, businessId: user.businessId, role: user.role },
+      { expiresIn: '15m' }
+    );
+    const refreshToken = await authService.createRefreshToken(user.id);
+
+    reply.setCookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return {
+      data: {
+        user: { id: user.id, email: user.email, name: user.name, role: user.role },
+        accessToken,
+      }
+    };
+  });
+
+  // Refresh
+  fastify.post('/refresh', async (req, reply) => {
+    const token = req.cookies.refreshToken;
+    if (!token) {
+      return reply.status(401).send({
+        error: { code: 'NO_TOKEN', message: 'No refresh token' }
+      });
+    }
+
+    const userId = await authService.validateRefreshToken(token);
+    if (!userId) {
+      reply.clearCookie('refreshToken');
+      return reply.status(401).send({
+        error: { code: 'INVALID_TOKEN', message: 'Invalid or expired refresh token' }
+      });
+    }
+
+    const user = await authService.findById(userId);
+    const accessToken = fastify.jwt.sign(
+      { userId, businessId: user!.businessId, role: user!.role },
+      { expiresIn: '15m' }
+    );
+    const newRefreshToken = await authService.createRefreshToken(userId);
+
+    reply.setCookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return { data: { accessToken } };
+  });
+
+  // Logout
+  fastify.post('/logout', { preHandler: [fastify.authenticate] }, async (req, reply) => {
+    const { userId } = req.user as { userId: string };
+    await authService.revokeRefreshTokens(userId);
+    reply.clearCookie('refreshToken');
+    return { success: true };
+  });
+
+  // Me
+  fastify.get('/me', { preHandler: [fastify.authenticate] }, async (req) => {
+    const { userId } = req.user as { userId: string };
+    const user = await authService.findById(userId);
+    const business = await authService.getBusinessForUser(userId);
+    return {
+      data: {
+        user: { id: user!.id, email: user!.email, name: user!.name, role: user!.role },
+        business,
+      }
+    };
+  });
+};
+```
+
+### Auth Middleware (`apps/api/src/plugins/authenticate.ts`)
+
+```typescript
+import fp from 'fastify-plugin';
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    requireOwner: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    requireWorker: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+  }
+}
+
+export default fp(async (fastify: FastifyInstance) => {
+  // Generic auth
+  fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      await request.jwtVerify();
+    } catch {
+      reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'Invalid token' } });
+    }
+  });
+
+  // Owner/admin only
+  fastify.decorate('requireOwner', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      await request.jwtVerify();
+      const { role } = request.user as { role: string };
+      if (role !== 'owner' && role !== 'admin') {
+        reply.status(403).send({ error: { code: 'FORBIDDEN', message: 'Owner access required' } });
+      }
+    } catch {
+      reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'Invalid token' } });
+    }
+  });
+
+  // Worker access
+  fastify.decorate('requireWorker', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      await request.jwtVerify();
+      const { role } = request.user as { role: string };
+      if (role !== 'worker' && role !== 'owner' && role !== 'admin') {
+        reply.status(403).send({ error: { code: 'FORBIDDEN', message: 'Worker access required' } });
+      }
+    } catch {
+      reply.status(401).send({ error: { code: 'UNAUTHORIZED', message: 'Invalid token' } });
+    }
+  });
+});
+```
+
+---
+
+## Backend: CRUD Pattern
+
+### Customer Routes (`apps/api/src/routes/customers.ts`)
+
+```typescript
+import { FastifyPluginAsync } from 'fastify';
+import { z } from 'zod';
+import { db } from '../db/index.js';
+import { customers } from '../db/schema.js';
+import { eq, and, like, desc, sql } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+
+const createSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+export const customerRoutes: FastifyPluginAsync = async (fastify) => {
+  // All routes require authentication
+  fastify.addHook('preHandler', fastify.authenticate);
+
+  // List with search and pagination
+  fastify.get('/', async (req) => {
+    const { businessId } = req.user as { businessId: string };
+    const { page = '1', limit = '20', search } = req.query as Record<string, string>;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+
+    let whereClause = eq(customers.businessId, businessId);
+    if (search) {
+      whereClause = and(whereClause, like(customers.name, `%${search}%`))!;
+    }
+
+    const items = await db
+      .select()
+      .from(customers)
+      .where(whereClause)
+      .orderBy(desc(customers.createdAt))
+      .limit(parseInt(limit))
+      .offset(offset);
+
+    const [{ count }] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(customers)
+      .where(whereClause);
+
+    return {
+      data: items,
+      meta: { total: count, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(count / parseInt(limit)) },
+    };
+  });
+
+  // Get one
+  fastify.get('/:id', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
 
     const customer = await db.query.customers.findFirst({
       where: and(eq(customers.id, id), eq(customers.businessId, businessId)),
     });
 
     if (!customer) {
-      return reply.status(404).send({
-        success: false,
-        error: { code: 'NOT_FOUND', message: 'Customer not found' },
-      });
+      return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Customer not found' } });
     }
 
-    return { success: true, data: customer };
+    return { data: customer };
   });
 
-  // POST /api/customers - Create customer
-  app.post('/', async (request, reply) => {
-    const { businessId } = request.user as { businessId: string };
-    const result = customerSchema.safeParse(request.body);
+  // Create
+  fastify.post('/', async (req) => {
+    const { businessId } = req.user as { businessId: string };
+    const body = createSchema.parse(req.body);
 
-    if (!result.success) {
-      return reply.status(400).send({
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: result.error.message },
-      });
-    }
-
-    const customer = await db.insert(customers).values({
-      id: generateId(),
-      businessId,
-      ...result.data,
-    }).returning();
-
-    return { success: true, data: customer[0] };
+    const customer = { id: nanoid(), businessId, ...body };
+    await db.insert(customers).values(customer);
+    return { data: customer };
   });
 
-  // PATCH /api/customers/:id - Update customer
-  app.patch('/:id', async (request, reply) => {
-    const { id } = request.params as { id: string };
-    const { businessId } = request.user as { businessId: string };
-    const result = customerSchema.partial().safeParse(request.body);
+  // Update
+  fastify.put('/:id', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
+    const body = createSchema.partial().parse(req.body);
 
-    if (!result.success) {
-      return reply.status(400).send({
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: result.error.message },
-      });
+    const existing = await db.query.customers.findFirst({
+      where: and(eq(customers.id, id), eq(customers.businessId, businessId)),
+    });
+    if (!existing) {
+      return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Customer not found' } });
     }
 
-    const updated = await db.update(customers)
-      .set(result.data)
-      .where(and(eq(customers.id, id), eq(customers.businessId, businessId)))
-      .returning();
-
-    if (updated.length === 0) {
-      return reply.status(404).send({
-        success: false,
-        error: { code: 'NOT_FOUND', message: 'Customer not found' },
-      });
-    }
-
-    return { success: true, data: updated[0] };
+    await db.update(customers).set({ ...body, updatedAt: new Date() }).where(eq(customers.id, id));
+    return { data: { ...existing, ...body } };
   });
 
-  // DELETE /api/customers/:id - Delete customer
-  app.delete('/:id', async (request, reply) => {
-    const { id } = request.params as { id: string };
-    const { businessId } = request.user as { businessId: string };
+  // Delete
+  fastify.delete('/:id', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
 
-    const deleted = await db.delete(customers)
-      .where(and(eq(customers.id, id), eq(customers.businessId, businessId)))
-      .returning();
-
-    if (deleted.length === 0) {
-      return reply.status(404).send({
-        success: false,
-        error: { code: 'NOT_FOUND', message: 'Customer not found' },
-      });
+    const existing = await db.query.customers.findFirst({
+      where: and(eq(customers.id, id), eq(customers.businessId, businessId)),
+    });
+    if (!existing) {
+      return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Customer not found' } });
     }
 
-    return { success: true, data: { deleted: true } };
+    await db.delete(customers).where(eq(customers.id, id));
+    return { success: true };
   });
+};
+```
+
+### Job Routes (`apps/api/src/routes/jobs.ts`)
+
+```typescript
+import { FastifyPluginAsync } from 'fastify';
+import { z } from 'zod';
+import { db } from '../db/index.js';
+import { jobs, customers, users } from '../db/schema.js';
+import { eq, and, between, desc, sql } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+
+const createSchema = z.object({
+  customerId: z.string().min(1),
+  workerId: z.string().optional(),
+  title: z.string().min(1),
+  description: z.string().optional(),
+  scheduledDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  scheduledTime: z.string().regex(/^\d{2}:\d{2}$/),
+  durationMinutes: z.number().min(15).max(480).default(60),
+  price: z.number().min(0).optional(),
+  notes: z.string().optional(),
+});
+
+export const jobRoutes: FastifyPluginAsync = async (fastify) => {
+  fastify.addHook('preHandler', fastify.authenticate);
+
+  // List with filters
+  fastify.get('/', async (req) => {
+    const { businessId } = req.user as { businessId: string };
+    const { page = '1', limit = '20', status, workerId, startDate, endDate } = req.query as Record<string, string>;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+
+    let whereClause = eq(jobs.businessId, businessId);
+    if (status) whereClause = and(whereClause, eq(jobs.status, status as any))!;
+    if (workerId) whereClause = and(whereClause, eq(jobs.workerId, workerId))!;
+    if (startDate && endDate) {
+      whereClause = and(whereClause, between(jobs.scheduledDate, startDate, endDate))!;
+    }
+
+    const items = await db
+      .select()
+      .from(jobs)
+      .where(whereClause)
+      .orderBy(desc(jobs.scheduledDate))
+      .limit(parseInt(limit))
+      .offset(offset);
+
+    const [{ count }] = await db.select({ count: sql<number>`count(*)` }).from(jobs).where(whereClause);
+
+    return {
+      data: items,
+      meta: { total: count, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(count / parseInt(limit)) },
+    };
+  });
+
+  // Calendar view (jobs grouped by date)
+  fastify.get('/calendar', async (req) => {
+    const { businessId } = req.user as { businessId: string };
+    const { startDate, endDate } = req.query as { startDate: string; endDate: string };
+
+    const items = await db
+      .select()
+      .from(jobs)
+      .where(and(eq(jobs.businessId, businessId), between(jobs.scheduledDate, startDate, endDate)))
+      .orderBy(jobs.scheduledDate, jobs.scheduledTime);
+
+    // Group by date
+    const grouped: Record<string, typeof items> = {};
+    items.forEach((job) => {
+      if (!grouped[job.scheduledDate]) grouped[job.scheduledDate] = [];
+      grouped[job.scheduledDate].push(job);
+    });
+
+    return { data: grouped };
+  });
+
+  // Today's jobs (for worker app)
+  fastify.get('/today', async (req) => {
+    const { userId, businessId } = req.user as { userId: string; businessId: string };
+    const today = new Date().toISOString().split('T')[0];
+
+    const items = await db
+      .select()
+      .from(jobs)
+      .where(and(
+        eq(jobs.businessId, businessId),
+        eq(jobs.workerId, userId),
+        eq(jobs.scheduledDate, today)
+      ))
+      .orderBy(jobs.scheduledTime);
+
+    return { data: items };
+  });
+
+  // Create
+  fastify.post('/', async (req) => {
+    const { businessId } = req.user as { businessId: string };
+    const body = createSchema.parse(req.body);
+
+    const job = { id: nanoid(), businessId, ...body, status: 'scheduled' as const };
+    await db.insert(jobs).values(job);
+    return { data: job };
+  });
+
+  // Get one
+  fastify.get('/:id', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
+
+    const job = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, id), eq(jobs.businessId, businessId)),
+    });
+    if (!job) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Job not found' } });
+    return { data: job };
+  });
+
+  // Update
+  fastify.put('/:id', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
+    const body = createSchema.partial().parse(req.body);
+
+    const existing = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, id), eq(jobs.businessId, businessId)),
+    });
+    if (!existing) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Job not found' } });
+
+    await db.update(jobs).set({ ...body, updatedAt: new Date() }).where(eq(jobs.id, id));
+    return { data: { ...existing, ...body } };
+  });
+
+  // Start job
+  fastify.post('/:id/start', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
+
+    const existing = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, id), eq(jobs.businessId, businessId)),
+    });
+    if (!existing) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Job not found' } });
+
+    await db.update(jobs).set({ status: 'in_progress', startedAt: new Date(), updatedAt: new Date() }).where(eq(jobs.id, id));
+    return { data: { ...existing, status: 'in_progress', startedAt: new Date() } };
+  });
+
+  // Complete job
+  fastify.post('/:id/complete', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
+
+    const existing = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, id), eq(jobs.businessId, businessId)),
+    });
+    if (!existing) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Job not found' } });
+
+    await db.update(jobs).set({ status: 'completed', completedAt: new Date(), updatedAt: new Date() }).where(eq(jobs.id, id));
+    return { data: { ...existing, status: 'completed', completedAt: new Date() } };
+  });
+
+  // Delete
+  fastify.delete('/:id', async (req, reply) => {
+    const { businessId } = req.user as { businessId: string };
+    const { id } = req.params as { id: string };
+
+    const existing = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, id), eq(jobs.businessId, businessId)),
+    });
+    if (!existing) return reply.status(404).send({ error: { code: 'NOT_FOUND', message: 'Job not found' } });
+
+    await db.delete(jobs).where(eq(jobs.id, id));
+    return { success: true };
+  });
+};
+```
+
+---
+
+## Frontend: Core Patterns
+
+### API Composable (`apps/web/composables/useApi.ts`)
+
+```typescript
+export function useApi() {
+  const config = useRuntimeConfig();
+  const authStore = useAuthStore();
+
+  async function $api<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const headers: any = { 'Content-Type': 'application/json', ...options.headers };
+    if (authStore.accessToken) headers['Authorization'] = `Bearer ${authStore.accessToken}`;
+
+    const response = await fetch(`${config.public.apiUrl}${endpoint}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+
+    // Handle 401 - try refresh
+    if (response.status === 401 && authStore.accessToken) {
+      if (await authStore.refresh()) {
+        headers['Authorization'] = `Bearer ${authStore.accessToken}`;
+        const retry = await fetch(`${config.public.apiUrl}${endpoint}`, {
+          ...options,
+          headers,
+          credentials: 'include',
+        });
+        if (!retry.ok) throw await retry.json();
+        return retry.json();
+      } else {
+        navigateTo('/login');
+      }
+    }
+
+    if (!response.ok) throw await response.json();
+    return response.json();
+  }
+
+  return { $api };
+}
+```
+
+### Auth Store (`apps/web/stores/auth.ts`)
+
+```typescript
+import { defineStore } from 'pinia';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'owner' | 'admin' | 'worker';
+}
+
+interface Business {
+  id: string;
+  name: string;
+  subscriptionStatus: string;
+}
+
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    user: null as User | null,
+    business: null as Business | null,
+    accessToken: null as string | null,
+    loading: true,
+  }),
+
+  getters: {
+    isAuthenticated: (state) => !!state.user,
+    isOwner: (state) => state.user?.role === 'owner' || state.user?.role === 'admin',
+    isWorker: (state) => state.user?.role === 'worker',
+  },
+
+  actions: {
+    async login(email: string, password: string) {
+      const config = useRuntimeConfig();
+      const res = await fetch(`${config.public.apiUrl}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) throw await res.json();
+      const { data } = await res.json();
+      this.user = data.user;
+      this.accessToken = data.accessToken;
+    },
+
+    async register(email: string, password: string, name: string, businessName: string) {
+      const config = useRuntimeConfig();
+      const res = await fetch(`${config.public.apiUrl}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, name, businessName }),
+      });
+      if (!res.ok) throw await res.json();
+      const { data } = await res.json();
+      this.user = data.user;
+      this.accessToken = data.accessToken;
+    },
+
+    async logout() {
+      const config = useRuntimeConfig();
+      await fetch(`${config.public.apiUrl}/auth/logout`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+        credentials: 'include',
+      }).catch(() => {});
+      this.user = null;
+      this.business = null;
+      this.accessToken = null;
+      navigateTo('/login');
+    },
+
+    async refresh(): Promise<boolean> {
+      const config = useRuntimeConfig();
+      try {
+        const res = await fetch(`${config.public.apiUrl}/auth/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+        if (!res.ok) return false;
+        const { data } = await res.json();
+        this.accessToken = data.accessToken;
+        return true;
+      } catch {
+        return false;
+      }
+    },
+
+    async fetchUser() {
+      if (!this.accessToken) {
+        const refreshed = await this.refresh();
+        if (!refreshed) {
+          this.loading = false;
+          return;
+        }
+      }
+
+      const config = useRuntimeConfig();
+      try {
+        const res = await fetch(`${config.public.apiUrl}/auth/me`, {
+          headers: { Authorization: `Bearer ${this.accessToken}` },
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const { data } = await res.json();
+          this.user = data.user;
+          this.business = data.business;
+        }
+      } catch {
+        this.user = null;
+        this.accessToken = null;
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+});
+```
+
+### Auth Middleware (`apps/web/middleware/auth.ts`)
+
+```typescript
+export default defineNuxtRouteMiddleware(async () => {
+  const authStore = useAuthStore();
+  if (authStore.loading) await authStore.fetchUser();
+  if (!authStore.isAuthenticated) return navigateTo('/login');
+});
+```
+
+### Owner Middleware (`apps/web/middleware/owner.ts`)
+
+```typescript
+export default defineNuxtRouteMiddleware(async () => {
+  const authStore = useAuthStore();
+  if (authStore.loading) await authStore.fetchUser();
+  if (!authStore.isAuthenticated) return navigateTo('/login');
+  if (!authStore.isOwner) return navigateTo('/worker/today');
+});
+```
+
+### Entity Composable (`apps/web/composables/useCustomers.ts`)
+
+```typescript
+interface Customer {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  notes: string | null;
+}
+
+interface ListResponse {
+  data: Customer[];
+  meta: { total: number; page: number; limit: number; totalPages: number };
+}
+
+export function useCustomers() {
+  const { $api } = useApi();
+
+  return {
+    list: (page = 1, search?: string) =>
+      $api<ListResponse>(`/customers?page=${page}${search ? `&search=${search}` : ''}`),
+    get: (id: string) => $api<{ data: Customer }>(`/customers/${id}`),
+    create: (data: Partial<Customer>) =>
+      $api<{ data: Customer }>('/customers', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: string, data: Partial<Customer>) =>
+      $api<{ data: Customer }>(`/customers/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id: string) => $api<{ success: boolean }>(`/customers/${id}`, { method: 'DELETE' }),
+  };
+}
+```
+
+### Jobs Composable (`apps/web/composables/useJobs.ts`)
+
+```typescript
+interface Job {
+  id: string;
+  customerId: string;
+  workerId: string | null;
+  title: string;
+  scheduledDate: string;
+  scheduledTime: string;
+  durationMinutes: number;
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  price: number | null;
+}
+
+export function useJobs() {
+  const { $api } = useApi();
+
+  return {
+    list: (filters?: { page?: number; status?: string; workerId?: string; startDate?: string; endDate?: string }) => {
+      const params = new URLSearchParams();
+      if (filters?.page) params.set('page', filters.page.toString());
+      if (filters?.status) params.set('status', filters.status);
+      if (filters?.workerId) params.set('workerId', filters.workerId);
+      if (filters?.startDate) params.set('startDate', filters.startDate);
+      if (filters?.endDate) params.set('endDate', filters.endDate);
+      return $api<{ data: Job[]; meta: any }>(`/jobs?${params}`);
+    },
+    calendar: (startDate: string, endDate: string) =>
+      $api<{ data: Record<string, Job[]> }>(`/jobs/calendar?startDate=${startDate}&endDate=${endDate}`),
+    today: () => $api<{ data: Job[] }>('/jobs/today'),
+    get: (id: string) => $api<{ data: Job }>(`/jobs/${id}`),
+    create: (data: Partial<Job>) =>
+      $api<{ data: Job }>('/jobs', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: string, data: Partial<Job>) =>
+      $api<{ data: Job }>(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    start: (id: string) => $api<{ data: Job }>(`/jobs/${id}/start`, { method: 'POST' }),
+    complete: (id: string) => $api<{ data: Job }>(`/jobs/${id}/complete`, { method: 'POST' }),
+    remove: (id: string) => $api<{ success: boolean }>(`/jobs/${id}`, { method: 'DELETE' }),
+  };
 }
 ```
 
 ---
 
-## Vue Component Templates
-
-### Page Component (Nuxt)
+## Frontend: Page Template
 
 ```vue
-<!-- apps/admin/pages/customers/index.vue -->
+<!-- apps/web/pages/customers/index.vue -->
+<script setup lang="ts">
+definePageMeta({ middleware: 'owner' });
+
+const { list, remove } = useCustomers();
+const searchQuery = ref('');
+const page = ref(1);
+
+const { data, pending, refresh } = await useAsyncData(
+  'customers',
+  () => list(page.value, searchQuery.value),
+  { watch: [page, searchQuery] }
+);
+
+const customers = computed(() => data.value?.data || []);
+const meta = computed(() => data.value?.meta);
+
+async function handleDelete(id: string) {
+  if (!confirm('Are you sure you want to delete this customer?')) return;
+  await remove(id);
+  refresh();
+}
+</script>
+
 <template>
-  <div class="space-y-6">
+  <div class="container py-6 space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-semibold">Customers</h1>
+        <h1 class="text-2xl font-bold">Customers</h1>
         <p class="text-muted-foreground">Manage your customer list</p>
       </div>
-      <Button @click="showAddModal = true">
+      <Button @click="navigateTo('/customers/new')">
         <Plus class="w-4 h-4 mr-2" />
         Add Customer
       </Button>
     </div>
 
     <!-- Search -->
-    <div class="flex gap-4">
-      <Input
-        v-model="searchQuery"
-        placeholder="Search customers..."
-        class="max-w-sm"
-      />
+    <div class="max-w-sm">
+      <Input v-model="searchQuery" placeholder="Search customers..." />
     </div>
 
+    <!-- Loading -->
+    <div v-if="pending" class="flex justify-center py-12">
+      <Loader2 class="w-6 h-6 animate-spin" />
+    </div>
+
+    <!-- Empty state -->
+    <Card v-else-if="!customers.length" class="text-center py-12">
+      <CardContent>
+        <Users class="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+        <h3 class="text-lg font-medium mb-2">No customers yet</h3>
+        <p class="text-muted-foreground mb-4">Get started by adding your first customer.</p>
+        <Button @click="navigateTo('/customers/new')">Add Customer</Button>
+      </CardContent>
+    </Card>
+
     <!-- Table -->
-    <Card>
+    <Card v-else>
       <Table>
         <TableHeader>
           <TableRow>
@@ -193,10 +921,7 @@ export async function customerRoutes(app: FastifyInstance) {
         <TableBody>
           <TableRow v-for="customer in customers" :key="customer.id">
             <TableCell>
-              <NuxtLink
-                :to="`/customers/${customer.id}`"
-                class="font-medium hover:underline"
-              >
+              <NuxtLink :to="`/customers/${customer.id}`" class="font-medium hover:underline">
                 {{ customer.name }}
               </NuxtLink>
             </TableCell>
@@ -210,13 +935,13 @@ export async function customerRoutes(app: FastifyInstance) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem @click="editCustomer(customer)">
+                  <DropdownMenuItem @click="navigateTo(`/customers/${customer.id}`)">
+                    View
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @click="navigateTo(`/customers/${customer.id}/edit`)">
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    class="text-destructive"
-                    @click="deleteCustomer(customer.id)"
-                  >
+                  <DropdownMenuItem class="text-destructive" @click="handleDelete(customer.id)">
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -225,613 +950,133 @@ export async function customerRoutes(app: FastifyInstance) {
           </TableRow>
         </TableBody>
       </Table>
-
-      <!-- Empty State -->
-      <div v-if="customers.length === 0" class="p-8 text-center">
-        <Users class="w-12 h-12 mx-auto text-muted-foreground" />
-        <h3 class="mt-4 text-lg font-medium">No customers yet</h3>
-        <p class="text-muted-foreground">Add your first customer to get started</p>
-        <Button class="mt-4" @click="showAddModal = true">
-          Add Customer
-        </Button>
-      </div>
     </Card>
 
-    <!-- Add/Edit Modal -->
-    <CustomerModal
-      v-model:open="showAddModal"
-      :customer="editingCustomer"
-      @saved="onCustomerSaved"
-    />
+    <!-- Pagination -->
+    <div v-if="meta && meta.totalPages > 1" class="flex justify-center gap-2">
+      <Button variant="outline" :disabled="page === 1" @click="page--">Previous</Button>
+      <span class="py-2 px-4">Page {{ page }} of {{ meta.totalPages }}</span>
+      <Button variant="outline" :disabled="page === meta.totalPages" @click="page++">Next</Button>
+    </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { Plus, MoreHorizontal, Users } from 'lucide-vue-next';
-import type { Customer } from '@app/shared';
-
-const searchQuery = ref('');
-const showAddModal = ref(false);
-const editingCustomer = ref<Customer | null>(null);
-
-const { data: customersData, refresh } = await useFetch('/api/customers', {
-  query: { search: searchQuery },
-});
-
-const customers = computed(() => customersData.value?.data?.items || []);
-
-function editCustomer(customer: Customer) {
-  editingCustomer.value = customer;
-  showAddModal.value = true;
-}
-
-async function deleteCustomer(id: string) {
-  if (!confirm('Are you sure you want to delete this customer?')) return;
-
-  await $fetch(`/api/customers/${id}`, { method: 'DELETE' });
-  refresh();
-}
-
-function onCustomerSaved() {
-  showAddModal.value = false;
-  editingCustomer.value = null;
-  refresh();
-}
-</script>
-```
-
-### Modal Component
-
-```vue
-<!-- apps/admin/components/CustomerModal.vue -->
-<template>
-  <Dialog v-model:open="open">
-    <DialogContent class="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>
-          {{ customer ? 'Edit Customer' : 'Add Customer' }}
-        </DialogTitle>
-      </DialogHeader>
-
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="space-y-2">
-          <Label for="name">Name *</Label>
-          <Input
-            id="name"
-            v-model="form.name"
-            placeholder="Customer name"
-            required
-          />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="phone">Phone</Label>
-          <Input
-            id="phone"
-            v-model="form.phone"
-            type="tel"
-            placeholder="(555) 123-4567"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="email">Email</Label>
-          <Input
-            id="email"
-            v-model="form.email"
-            type="email"
-            placeholder="customer@example.com"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="address">Address</Label>
-          <Input
-            id="address"
-            v-model="form.address"
-            placeholder="123 Main St, City, State"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="notes">Notes</Label>
-          <Textarea
-            id="notes"
-            v-model="form.notes"
-            placeholder="Internal notes about this customer..."
-            rows="3"
-          />
-        </div>
-
-        <DialogFooter>
-          <Button type="button" variant="outline" @click="open = false">
-            Cancel
-          </Button>
-          <Button type="submit" :disabled="loading">
-            <Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" />
-            {{ customer ? 'Save Changes' : 'Add Customer' }}
-          </Button>
-        </DialogFooter>
-      </form>
-    </DialogContent>
-  </Dialog>
-</template>
-
-<script setup lang="ts">
-import { Loader2 } from 'lucide-vue-next';
-import type { Customer } from '@app/shared';
-
-const props = defineProps<{
-  customer?: Customer | null;
-}>();
-
-const emit = defineEmits<{
-  saved: [];
-}>();
-
-const open = defineModel<boolean>('open', { default: false });
-const loading = ref(false);
-
-const form = reactive({
-  name: '',
-  phone: '',
-  email: '',
-  address: '',
-  notes: '',
-});
-
-// Reset form when modal opens
-watch(open, (isOpen) => {
-  if (isOpen && props.customer) {
-    Object.assign(form, props.customer);
-  } else if (isOpen) {
-    Object.assign(form, { name: '', phone: '', email: '', address: '', notes: '' });
-  }
-});
-
-async function handleSubmit() {
-  loading.value = true;
-  try {
-    if (props.customer) {
-      await $fetch(`/api/customers/${props.customer.id}`, {
-        method: 'PATCH',
-        body: form,
-      });
-    } else {
-      await $fetch('/api/customers', {
-        method: 'POST',
-        body: form,
-      });
-    }
-    emit('saved');
-  } catch (error) {
-    console.error('Failed to save customer:', error);
-    // TODO: Show toast error
-  } finally {
-    loading.value = false;
-  }
-}
-</script>
 ```
 
 ---
 
-## Composables
+## Analytics (PostHog)
 
-### useApi Composable
+### Plugin (`apps/web/plugins/posthog.client.ts`)
 
 ```typescript
-// apps/admin/composables/useApi.ts
-export function useApi() {
+import posthog from 'posthog-js';
+
+export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
+  if (config.public.posthogKey) {
+    posthog.init(config.public.posthogKey, {
+      api_host: config.public.posthogHost || 'https://us.i.posthog.com',
+      capture_pageview: true,
+      capture_pageleave: true,
+    });
+  }
+  return { provide: { posthog } };
+});
+```
+
+### Composable (`apps/web/composables/useAnalytics.ts`)
+
+```typescript
+import posthog from 'posthog-js';
+
+export function useAnalytics() {
   const authStore = useAuthStore();
 
-  const api = $fetch.create({
-    baseURL: config.public.apiUrl,
-
-    async onRequest({ options }) {
-      const token = authStore.accessToken;
-      if (token) {
-        options.headers = {
-          ...options.headers,
-          Authorization: `Bearer ${token}`,
-        };
-      }
-    },
-
-    async onResponseError({ response }) {
-      if (response.status === 401) {
-        // Try to refresh token
-        const refreshed = await authStore.refreshToken();
-        if (!refreshed) {
-          navigateTo('/login');
-        }
-      }
-    },
-  });
-
-  return { api };
-}
-```
-
-### useAuth Composable
-
-```typescript
-// apps/admin/composables/useAuth.ts
-export function useAuth() {
-  const user = useState<User | null>('user', () => null);
-  const accessToken = useState<string | null>('accessToken', () => null);
-
-  async function login(email: string, password: string) {
-    const response = await $fetch('/api/auth/login', {
-      method: 'POST',
-      body: { email, password },
-    });
-
-    if (response.success) {
-      user.value = response.data.user;
-      accessToken.value = response.data.accessToken;
-      return true;
-    }
-    return false;
-  }
-
-  async function logout() {
-    await $fetch('/api/auth/logout', { method: 'POST' });
-    user.value = null;
-    accessToken.value = null;
-    navigateTo('/login');
-  }
-
-  async function refreshToken() {
-    try {
-      const response = await $fetch('/api/auth/refresh', { method: 'POST' });
-      if (response.success) {
-        accessToken.value = response.data.accessToken;
-        return true;
-      }
-    } catch {
-      return false;
-    }
-    return false;
-  }
-
   return {
-    user: readonly(user),
-    accessToken: readonly(accessToken),
-    isAuthenticated: computed(() => !!user.value),
-    login,
-    logout,
-    refreshToken,
+    identify: () => {
+      if (authStore.user) {
+        posthog.identify(authStore.user.id, {
+          email: authStore.user.email,
+          name: authStore.user.name,
+          role: authStore.user.role,
+        });
+      }
+    },
+    reset: () => posthog.reset(),
+    track: (event: string, props?: Record<string, any>) => posthog.capture(event, props),
   };
 }
+
+// Usage:
+// const { track } = useAnalytics();
+// track('customer_created', { customerId: 'xxx' });
 ```
 
 ---
 
-## Service Templates
+## External Services
 
-### External Service Integration (Stripe)
+### Stripe Service (`apps/api/src/services/stripe.service.ts`)
 
 ```typescript
-// apps/api/src/services/stripe.ts
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' });
 
-export async function createCustomer(email: string, name: string) {
-  return stripe.customers.create({ email, name });
-}
+export const stripeService = {
+  async createCustomer(email: string, name: string) {
+    return stripe.customers.create({ email, name });
+  },
 
-export async function createSubscriptionCheckout(
-  customerId: string,
-  priceId: string,
-  successUrl: string,
-  cancelUrl: string
-) {
-  return stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: 'subscription',
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: successUrl,
-    cancel_url: cancelUrl,
-  });
-}
+  async createPaymentLink(amount: number, invoiceId: string) {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          unit_amount: Math.round(amount * 100),
+          product_data: { name: `Invoice #${invoiceId}` },
+        },
+        quantity: 1,
+      }],
+      metadata: { invoiceId },
+      success_url: `${process.env.APP_URL}/invoices/${invoiceId}?paid=true`,
+      cancel_url: `${process.env.APP_URL}/invoices/${invoiceId}`,
+    });
+    return session.url;
+  },
 
-export async function createPaymentLink(amount: number, invoiceId: string) {
-  const product = await stripe.products.create({
-    name: `Invoice #${invoiceId}`,
-  });
-
-  const price = await stripe.prices.create({
-    product: product.id,
-    unit_amount: Math.round(amount * 100),
-    currency: 'usd',
-  });
-
-  const paymentLink = await stripe.paymentLinks.create({
-    line_items: [{ price: price.id, quantity: 1 }],
-    metadata: { invoiceId },
-  });
-
-  return paymentLink.url;
-}
-
-export async function handleWebhook(
-  body: Buffer,
-  signature: string
-) {
-  const event = stripe.webhooks.constructEvent(
-    body,
-    signature,
-    process.env.STRIPE_WEBHOOK_SECRET!
-  );
-
-  switch (event.type) {
-    case 'checkout.session.completed':
-      // Handle successful subscription
-      break;
-    case 'invoice.paid':
-      // Handle invoice payment
-      break;
-    case 'customer.subscription.deleted':
-      // Handle subscription cancellation
-      break;
-  }
-
-  return event;
-}
+  async handleWebhook(body: Buffer, signature: string) {
+    return stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+  },
+};
 ```
 
-### SMS Service (Twilio)
+### Twilio Service (`apps/api/src/services/sms.service.ts`)
 
 ```typescript
-// apps/api/src/services/twilio.ts
 import twilio from 'twilio';
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const fromNumber = process.env.TWILIO_PHONE_NUMBER;
 
-export async function sendSMS(to: string, body: string) {
-  return client.messages.create({
-    body,
-    from: fromNumber,
-    to: formatPhoneNumber(to),
-  });
-}
+export const smsService = {
+  async send(to: string, body: string) {
+    const digits = to.replace(/\D/g, '');
+    const formattedTo = digits.length === 10 ? `+1${digits}` : `+${digits}`;
+    return client.messages.create({ body, from: fromNumber, to: formattedTo });
+  },
 
-export async function sendAppointmentReminder(
-  to: string,
-  customerName: string,
-  date: string,
-  time: string
-) {
-  const body = `Hi ${customerName}! Just a reminder that you have an appointment scheduled for ${date} at ${time}. Reply CONFIRM to confirm or RESCHEDULE to reschedule.`;
-  return sendSMS(to, body);
-}
+  async sendReminder(to: string, customerName: string, date: string, time: string) {
+    return this.send(to, `Hi ${customerName}! Reminder: Your appointment is scheduled for ${date} at ${time}.`);
+  },
 
-export async function sendOnMyWay(to: string, workerName: string, eta: string) {
-  const body = `${workerName} is on the way! Estimated arrival: ${eta}`;
-  return sendSMS(to, body);
-}
-
-function formatPhoneNumber(phone: string): string {
-  // Remove all non-digits
-  const digits = phone.replace(/\D/g, '');
-  // Add US country code if not present
-  if (digits.length === 10) {
-    return `+1${digits}`;
-  }
-  return `+${digits}`;
-}
-```
-
-### Email Service (Resend)
-
-```typescript
-// apps/api/src/services/email.ts
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export async function sendInvoiceEmail(
-  to: string,
-  customerName: string,
-  invoiceNumber: string,
-  amount: number,
-  paymentLink: string
-) {
-  return resend.emails.send({
-    from: 'invoices@yourdomain.com',
-    to,
-    subject: `Invoice #${invoiceNumber} from [Your Business Name]`,
-    html: `
-      <h1>Invoice #${invoiceNumber}</h1>
-      <p>Hi ${customerName},</p>
-      <p>Here's your invoice for recent services:</p>
-      <p><strong>Amount Due: $${amount.toFixed(2)}</strong></p>
-      <p><a href="${paymentLink}" style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Pay Now</a></p>
-      <p>Thank you for your business!</p>
-    `,
-  });
-}
-
-export async function sendWorkerInvite(
-  to: string,
-  businessName: string,
-  inviteLink: string
-) {
-  return resend.emails.send({
-    from: 'noreply@yourdomain.com',
-    to,
-    subject: `You've been invited to join ${businessName}`,
-    html: `
-      <h1>Welcome to ${businessName}!</h1>
-      <p>You've been invited to join the team. Click below to set up your account:</p>
-      <p><a href="${inviteLink}" style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Accept Invitation</a></p>
-      <p>This link expires in 7 days.</p>
-    `,
-  });
-}
+  async sendOnMyWay(to: string, workerName: string) {
+    return this.send(to, `${workerName} is on the way to you now!`);
+  },
+};
 ```
 
 ---
 
-## Utility Functions
-
-### Date/Time Helpers
-
-```typescript
-// packages/shared/date-utils.ts
-import { format, parseISO, addDays, startOfWeek, endOfWeek } from 'date-fns';
-
-export function formatJobDate(date: string): string {
-  return format(parseISO(date), 'EEE, MMM d');
-}
-
-export function formatJobTime(time: string): string {
-  const [hours, minutes] = time.split(':').map(Number);
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 || 12;
-  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
-}
-
-export function getWeekRange(date: Date) {
-  return {
-    start: startOfWeek(date, { weekStartsOn: 0 }),
-    end: endOfWeek(date, { weekStartsOn: 0 }),
-  };
-}
-
-export function getWeekDays(date: Date): Date[] {
-  const { start } = getWeekRange(date);
-  return Array.from({ length: 7 }, (_, i) => addDays(start, i));
-}
-
-export function formatDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes}min`;
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-}
-```
-
-### Validation Helpers
-
-```typescript
-// packages/shared/validation-utils.ts
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-export function isValidPhone(phone: string): boolean {
-  const digits = phone.replace(/\D/g, '');
-  return digits.length === 10 || digits.length === 11;
-}
-
-export function formatPhoneDisplay(phone: string): string {
-  const digits = phone.replace(/\D/g, '');
-  if (digits.length === 10) {
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-  }
-  if (digits.length === 11 && digits[0] === '1') {
-    return `(${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
-  }
-  return phone;
-}
-```
-
----
-
-## Error Handling
-
-### API Error Handler
-
-```typescript
-// apps/api/src/middleware/error-handler.ts
-import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
-
-export function errorHandler(
-  error: FastifyError,
-  request: FastifyRequest,
-  reply: FastifyReply
-) {
-  request.log.error(error);
-
-  // Validation errors
-  if (error.validation) {
-    return reply.status(400).send({
-      success: false,
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'Invalid request data',
-        details: error.validation,
-      },
-    });
-  }
-
-  // JWT errors
-  if (error.code === 'FST_JWT_NO_AUTHORIZATION_IN_HEADER') {
-    return reply.status(401).send({
-      success: false,
-      error: {
-        code: 'UNAUTHORIZED',
-        message: 'Authentication required',
-      },
-    });
-  }
-
-  // Default error
-  return reply.status(error.statusCode || 500).send({
-    success: false,
-    error: {
-      code: 'INTERNAL_ERROR',
-      message: process.env.NODE_ENV === 'production'
-        ? 'An unexpected error occurred'
-        : error.message,
-    },
-  });
-}
-```
-
-### Frontend Error Toast
-
-```typescript
-// apps/admin/composables/useToast.ts
-export function useToast() {
-  const toasts = useState<Toast[]>('toasts', () => []);
-
-  function showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
-    const id = Date.now().toString();
-    toasts.value.push({ id, message, type });
-
-    setTimeout(() => {
-      toasts.value = toasts.value.filter((t) => t.id !== id);
-    }, 5000);
-  }
-
-  function showError(error: unknown) {
-    const message = error instanceof Error
-      ? error.message
-      : 'An unexpected error occurred';
-    showToast(message, 'error');
-  }
-
-  function showSuccess(message: string) {
-    showToast(message, 'success');
-  }
-
-  return { toasts, showToast, showError, showSuccess };
-}
-```
-
----
-
-*Next artifact: 05-engineering-metrics.md*
+*Last updated: January 29, 2026*

@@ -1,346 +1,539 @@
 # Implementation Tasks
 
-*Generated on January 28, 2026*
+> **Purpose:** Phased breakdown of development work for HomeCrew. Your daily work tracker.
+>
+> **References:** product/03-tasks.md for user stories, Code Templates (04) for implementation patterns.
+
+## Task Format
+
+- **Depends On:** Task IDs that must complete first (- = no blockers)
+- **Acceptance Criteria:** Testable conditions for "done"
+- **API Contract:** Request/response schema where applicable
 
 ---
 
-## Phase Overview
+## Summary
 
-| Phase | Focus | Duration | Hours |
-|-------|-------|----------|-------|
-| **Phase 1** | Foundation | Week 1 | 35-40h |
-| **Phase 2** | Core Features | Week 2 | 35-40h |
-| **Phase 3** | Mobile & Polish | Week 3 | 30-35h |
-| **Phase 4** | Launch Prep | Week 4 | 20-25h |
+| Phase | Estimate | Timeline |
+|-------|----------|----------|
+| Phase 1: Foundation | 34h | Week 1 |
+| Phase 2: Core Features | 50h | Weeks 2-3 |
+| Phase 3: Polish & Launch | 28h | Week 4 |
+| **Total** | **112h** | **4 weeks** |
 
-**Total estimated:** 120-140 hours (3-4 weeks at 20-30 hrs/week)
+At 20h/week = 6 weeks to MVP
+At 30h/week = 4 weeks to MVP
 
 ---
 
 ## Phase 1: Foundation (Week 1)
 
-### 1.1 Project Setup (Day 1)
+### 1.1 Project Setup
 
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Initialize monorepo with pnpm workspaces | P0 | 1h | [ ] |
-| Setup Turborepo configuration | P0 | 1h | [ ] |
-| Create packages/db with Drizzle schema | P0 | 2h | [ ] |
-| Create packages/shared with types | P0 | 1h | [ ] |
-| Setup apps/api with Fastify | P0 | 2h | [ ] |
-| Setup apps/admin with Nuxt 4 | P0 | 2h | [ ] |
-| Configure ESLint and Prettier | P1 | 1h | [ ] |
-| Setup environment variables | P0 | 0.5h | [ ] |
+**Reference:** Product Story 1.1
 
-**Day 1 Total:** 10.5 hours
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-1.1.1 | Run setup guide commands (monorepo, packages) | - | 2h | [ ] |
+| E-1.1.2 | Configure environment variables | E-1.1.1 | 30m | [ ] |
+| E-1.1.3 | Deploy empty app to staging | E-1.1.2 | 1h | [ ] |
 
-### 1.2 Authentication (Days 2-3)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Implement signup API endpoint | P0 | 2h | [ ] |
-| Implement login API endpoint | P0 | 2h | [ ] |
-| Implement JWT token generation | P0 | 1h | [ ] |
-| Implement refresh token flow | P0 | 2h | [ ] |
-| Implement logout endpoint | P0 | 0.5h | [ ] |
-| Create auth middleware for protected routes | P0 | 1h | [ ] |
-| Build signup page UI | P0 | 2h | [ ] |
-| Build login page UI | P0 | 1.5h | [ ] |
-| Build password reset flow | P1 | 2h | [ ] |
-| Test auth flows end-to-end | P0 | 1h | [ ] |
-
-**Days 2-3 Total:** 15 hours
-
-### 1.3 Business Setup (Day 4)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Create business setup wizard UI | P0 | 3h | [ ] |
-| Implement business CRUD API | P0 | 1.5h | [ ] |
-| Build settings page | P1 | 2h | [ ] |
-| Add timezone selection | P1 | 1h | [ ] |
-
-**Day 4 Total:** 7.5 hours
-
-### 1.4 App Shell & Navigation (Day 5)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Create main layout component | P0 | 2h | [ ] |
-| Build sidebar navigation | P0 | 1.5h | [ ] |
-| Implement mobile responsive nav | P0 | 1h | [ ] |
-| Create dashboard placeholder | P0 | 1h | [ ] |
-| Setup route guards | P0 | 1h | [ ] |
-
-**Day 5 Total:** 6.5 hours
+**Acceptance Criteria:**
+- [ ] `pnpm dev` starts frontend (3000) and backend (3001)
+- [ ] `curl localhost:3001/health` returns `{"status":"ok"}`
+- [ ] Staging URL responds with app shell
 
 ---
 
-## Phase 2: Core Features (Week 2)
+### 1.2 Database Schema
 
-### 2.1 Customer Management (Days 6-7)
+**Reference:** Product Story 1.1
 
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Implement customer list API with search | P0 | 2h | [ ] |
-| Implement customer CRUD API | P0 | 2h | [ ] |
-| Build customer list page with table | P0 | 3h | [ ] |
-| Build add customer modal | P0 | 1.5h | [ ] |
-| Build edit customer modal | P0 | 1h | [ ] |
-| Build customer profile page | P0 | 2.5h | [ ] |
-| Add customer search component | P1 | 1h | [ ] |
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-1.2.1 | Create users table with role column | E-1.1.1 | 30m | [ ] |
+| E-1.2.2 | Create businesses table | E-1.2.1 | 30m | [ ] |
+| E-1.2.3 | Create customers table | E-1.2.2 | 30m | [ ] |
+| E-1.2.4 | Create jobs table | E-1.2.3 | 30m | [ ] |
+| E-1.2.5 | Create invoices table | E-1.2.4 | 30m | [ ] |
+| E-1.2.6 | Create messages table | E-1.2.5 | 30m | [ ] |
+| E-1.2.7 | Add foreign keys and indexes | E-1.2.6 | 30m | [ ] |
+| E-1.2.8 | Run migrations | E-1.2.7 | 15m | [ ] |
 
-**Days 6-7 Total:** 13 hours
-
-### 2.2 Job Scheduling (Days 8-10)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Implement job CRUD API | P0 | 2h | [ ] |
-| Implement job status update API | P0 | 1h | [ ] |
-| Build calendar component (day/week view) | P0 | 4h | [ ] |
-| Render jobs on calendar | P0 | 2h | [ ] |
-| Build create job modal | P0 | 2.5h | [ ] |
-| Build edit job modal | P0 | 1.5h | [ ] |
-| Implement drag-drop rescheduling | P1 | 2h | [ ] |
-| Add job list view | P1 | 2h | [ ] |
-| Build worker assignment UI | P0 | 1.5h | [ ] |
-
-**Days 8-10 Total:** 18.5 hours
-
-### 2.3 Worker Management (Day 11)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Implement worker invite API | P0 | 2h | [ ] |
-| Implement worker list API | P0 | 1h | [ ] |
-| Build team management page | P0 | 2h | [ ] |
-| Build invite worker modal | P0 | 1.5h | [ ] |
-| Create worker invite email template | P0 | 1h | [ ] |
-| Implement worker onboarding flow | P1 | 2h | [ ] |
-
-**Day 11 Total:** 9.5 hours
+**Acceptance Criteria:**
+- [ ] `pnpm db:push` applies schema without errors
+- [ ] `pnpm db:studio` shows all tables with correct columns
 
 ---
 
-## Phase 3: Mobile & Invoicing (Week 3)
+### 1.3 Authentication
 
-### 3.1 Mobile Worker App (Days 12-14)
+**Reference:** Product Story 1.2
 
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Setup apps/worker as Nuxt PWA | P0 | 2h | [ ] |
-| Configure service worker | P0 | 1.5h | [ ] |
-| Build worker login flow | P0 | 2h | [ ] |
-| Build today's jobs view | P0 | 3h | [ ] |
-| Build job detail page | P0 | 2h | [ ] |
-| Add navigation button (open Maps) | P0 | 0.5h | [ ] |
-| Implement start job action | P0 | 1h | [ ] |
-| Implement complete job action | P0 | 1h | [ ] |
-| Add photo capture | P1 | 2h | [ ] |
-| Configure push notifications | P1 | 2h | [ ] |
-| Test on real mobile devices | P0 | 2h | [ ] |
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-1.3.1 | Auth service (createUser, validateCredentials) | E-1.2.8 | 2h | [ ] |
+| E-1.3.2 | POST /api/auth/register endpoint | E-1.3.1 | 2h | [ ] |
+| E-1.3.3 | POST /api/auth/login endpoint | E-1.3.1 | 1.5h | [ ] |
+| E-1.3.4 | Auth middleware (JWT verification) | E-1.3.2 | 1h | [ ] |
+| E-1.3.5 | POST /api/auth/logout endpoint | E-1.3.4 | 30m | [ ] |
+| E-1.3.6 | POST /api/auth/refresh endpoint | E-1.3.4 | 1h | [ ] |
+| E-1.3.7 | GET /api/auth/me endpoint | E-1.3.4 | 30m | [ ] |
+| E-1.3.8 | Register page UI | E-1.3.2 | 2h | [ ] |
+| E-1.3.9 | Login page UI | E-1.3.3 | 1.5h | [ ] |
+| E-1.3.10 | Auth store (Pinia) | E-1.3.3 | 1h | [ ] |
+| E-1.3.11 | Route guards (auth middleware) | E-1.3.10 | 1h | [ ] |
 
-**Days 12-14 Total:** 19 hours
+**API Contract:**
+```
+POST /api/auth/register
+  Request:  { email, password, name, businessName }
+  Response: { data: { user: { id, email, name, role }, accessToken } }
+  Cookies:  Sets refreshToken (httpOnly)
+  Errors:   400 EMAIL_EXISTS
 
-### 3.2 Invoicing (Days 15-17)
+POST /api/auth/login
+  Request:  { email, password }
+  Response: { data: { user, accessToken } }
+  Errors:   401 INVALID_CREDENTIALS
 
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Implement invoice CRUD API | P0 | 2h | [ ] |
-| Implement generate invoice from job | P0 | 1.5h | [ ] |
-| Build invoice list page | P0 | 2.5h | [ ] |
-| Build invoice detail view | P0 | 2h | [ ] |
-| Integrate Stripe for payments | P0 | 3h | [ ] |
-| Create payment link generation | P0 | 1.5h | [ ] |
-| Build send invoice UI (email/SMS) | P0 | 2h | [ ] |
-| Create invoice email template | P0 | 1.5h | [ ] |
-| Implement Stripe webhook handler | P0 | 2h | [ ] |
-| Build mark as paid functionality | P0 | 1h | [ ] |
+POST /api/auth/refresh
+  Cookies:  Reads refreshToken
+  Response: { data: { accessToken } }
+  Errors:   401 INVALID_TOKEN
 
-**Days 15-17 Total:** 19 hours
+GET /api/auth/me
+  Headers:  Authorization: Bearer <token>
+  Response: { data: { user, business } }
+```
 
-### 3.3 Two-Way Messaging (Day 18)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Integrate Twilio for SMS | P0 | 2h | [ ] |
-| Implement send message API | P0 | 1h | [ ] |
-| Implement Twilio webhook for incoming | P0 | 2h | [ ] |
-| Build conversation list UI | P0 | 2h | [ ] |
-| Build conversation thread UI | P0 | 2h | [ ] |
-| Add message compose and send | P0 | 1h | [ ] |
-
-**Day 18 Total:** 10 hours
+**Acceptance Criteria:**
+- [ ] Register creates user + business, returns JWT, sets httpOnly refresh cookie
+- [ ] Login returns JWT for valid credentials, 401 for invalid
+- [ ] Middleware returns 401 for missing/expired token
+- [ ] Route guard redirects unauthenticated users to /login
+- [ ] After login, user redirected to dashboard
 
 ---
 
-## Phase 4: Polish & Launch (Week 4)
+### 1.4 Business Setup
 
-### 4.1 Onboarding & UX (Days 19-20)
+**Reference:** Product Story 1.3
 
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Build onboarding wizard | P0 | 3h | [ ] |
-| Add empty states for all pages | P0 | 2h | [ ] |
-| Add loading states/skeletons | P0 | 1.5h | [ ] |
-| Improve error handling and messages | P0 | 1.5h | [ ] |
-| Add success toasts/notifications | P1 | 1h | [ ] |
-| Build in-app notification center | P1 | 2h | [ ] |
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-1.4.1 | GET /api/businesses/me endpoint | E-1.3.4 | 30m | [ ] |
+| E-1.4.2 | PATCH /api/businesses/me endpoint | E-1.4.1 | 1h | [ ] |
+| E-1.4.3 | Business setup wizard UI (3 steps) | E-1.4.2 | 2h | [ ] |
+| E-1.4.4 | Settings page UI | E-1.4.2 | 1.5h | [ ] |
 
-**Days 19-20 Total:** 11 hours
-
-### 4.2 Subscription & Billing (Day 21)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Setup Stripe subscription products | P0 | 1h | [ ] |
-| Implement subscription checkout | P0 | 2h | [ ] |
-| Build subscription management page | P0 | 2h | [ ] |
-| Implement trial expiry handling | P0 | 1.5h | [ ] |
-| Add billing history view | P1 | 1h | [ ] |
-
-**Day 21 Total:** 7.5 hours
-
-### 4.3 Testing & Bug Fixes (Days 22-23)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Write critical path integration tests | P0 | 3h | [ ] |
-| Fix bugs from testing | P0 | 4h | [ ] |
-| Performance audit (Lighthouse) | P1 | 1h | [ ] |
-| Performance optimizations | P1 | 2h | [ ] |
-| Security review (auth, data access) | P0 | 2h | [ ] |
-| Cross-browser testing | P0 | 1.5h | [ ] |
-
-**Days 22-23 Total:** 13.5 hours
-
-### 4.4 Deployment (Day 24)
-
-| Task | Priority | Hours | Status |
-|------|----------|-------|--------|
-| Setup Railway/Render project | P0 | 1h | [ ] |
-| Configure environment variables | P0 | 0.5h | [ ] |
-| Setup custom domain | P0 | 1h | [ ] |
-| Configure SSL certificates | P0 | 0.5h | [ ] |
-| Deploy and test production | P0 | 1.5h | [ ] |
-| Setup error monitoring (Sentry) | P1 | 1h | [ ] |
-| Setup uptime monitoring | P1 | 0.5h | [ ] |
-
-**Day 24 Total:** 6 hours
+**Acceptance Criteria:**
+- [ ] New user sees setup wizard after first login
+- [ ] Wizard captures: business name, address, phone
+- [ ] Settings page allows editing business info
 
 ---
 
-## Task Summary by Priority
+### 1.5 Base Layout
 
-### P0 (Must Have) - 95 hours
-- Project setup and auth
-- Customer and job management
-- Mobile worker app
-- Basic invoicing with Stripe
-- SMS messaging
-- Subscription billing
-- Deployment
+**Reference:** Product Story 1.4
 
-### P1 (Should Have) - 25 hours
-- Password reset flow
-- Drag-drop scheduling
-- Photo capture
-- Push notifications
-- Performance optimizations
-- Notification center
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-1.5.1 | App layout with sidebar | E-1.1.1 | 2h | [ ] |
+| E-1.5.2 | Header with user menu | E-1.3.10 | 1h | [ ] |
+| E-1.5.3 | Mobile responsive nav | E-1.5.1 | 1h | [ ] |
+| E-1.5.4 | Dashboard page shell | E-1.5.1 | 1h | [ ] |
 
-### P2 (Nice to Have) - Not in MVP
-- Recurring jobs
-- Route optimization
-- Advanced reporting
-- API integrations
+**UI Mock:**
+```
++--------------------------------------------------+
+| HomeCrew                       [User V] [Logout] |
++----------+---------------------------------------+
+| Dashboard|  Welcome back, Mike!                  |
+| Jobs     |  +--------+ +--------+ +--------+     |
+| Customers|  | 6 Jobs | | $1,010 | | 2 Open |     |
+| Invoices |  | Today  | | Today  | | Invoices|    |
+| Messages |  +--------+ +--------+ +--------+     |
+| Team     |                                       |
+| Settings |  Today's Schedule                     |
+|          |  [Job cards...]                       |
++----------+---------------------------------------+
+```
+
+**Acceptance Criteria:**
+- [ ] Sidebar shows navigation items
+- [ ] User menu shows name and logout
+- [ ] Dashboard loads after login
+- [ ] Mobile hamburger menu works
 
 ---
 
-## Sprint Planning
+**Phase 1 Total:** 34 hours
 
-### Sprint 1 (Days 1-5): Foundation
-**Goal:** Auth working, app shell complete
+---
 
-**Deliverables:**
-- [ ] User can sign up and log in
-- [ ] Main navigation and layout working
-- [ ] Business setup wizard complete
-- [ ] Basic settings page
+## Phase 2: Core Features (Weeks 2-3)
 
-### Sprint 2 (Days 6-11): Core Features
-**Goal:** Customers and jobs manageable
+### 2.1 Customer Management
 
-**Deliverables:**
-- [ ] Customer CRUD working
-- [ ] Job scheduling with calendar
-- [ ] Worker management
-- [ ] Jobs assignable to workers
+**Reference:** Product Epic E2
 
-### Sprint 3 (Days 12-18): Mobile & Money
-**Goal:** Workers can use mobile app, payments working
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-2.1.1 | GET /api/customers (list with search) | E-1.3.4 | 2h | [ ] |
+| E-2.1.2 | POST /api/customers (create) | E-1.3.4 | 1h | [ ] |
+| E-2.1.3 | GET /api/customers/:id | E-2.1.1 | 30m | [ ] |
+| E-2.1.4 | PUT /api/customers/:id | E-2.1.3 | 30m | [ ] |
+| E-2.1.5 | DELETE /api/customers/:id | E-2.1.3 | 30m | [ ] |
+| E-2.1.6 | Customer list page with data table | E-2.1.1 | 2.5h | [ ] |
+| E-2.1.7 | Customer search component | E-2.1.1 | 1h | [ ] |
+| E-2.1.8 | Add customer modal | E-2.1.2 | 1.5h | [ ] |
+| E-2.1.9 | Edit customer modal | E-2.1.4 | 1h | [ ] |
+| E-2.1.10 | Customer profile page | E-2.1.3 | 2h | [ ] |
+| E-2.1.11 | Delete confirmation dialog | E-2.1.5 | 30m | [ ] |
+| E-2.1.12 | Empty state + loading states | E-2.1.6 | 30m | [ ] |
 
-**Deliverables:**
-- [ ] Mobile PWA for workers
-- [ ] Invoice creation and sending
-- [ ] Stripe payments
-- [ ] Two-way SMS
+**API Contract:**
+```
+GET /api/customers?page=1&limit=20&search=john
+  Response: { data: Customer[], meta: { total, page, limit, totalPages } }
 
-### Sprint 4 (Days 19-24): Polish & Launch
-**Goal:** Production-ready
+POST /api/customers
+  Request:  { name, email?, phone?, address?, notes? }
+  Response: { data: Customer }
+  Errors:   400 VALIDATION_ERROR
 
-**Deliverables:**
-- [ ] Onboarding flow complete
-- [ ] Subscription billing working
-- [ ] All critical bugs fixed
-- [ ] Deployed to production
+GET /api/customers/:id
+  Response: { data: Customer }
+  Errors:   404 NOT_FOUND
+
+PUT /api/customers/:id
+  Request:  { name?, email?, phone?, address?, notes? }
+  Response: { data: Customer }
+
+DELETE /api/customers/:id
+  Response: { success: true }
+```
+
+**Acceptance Criteria:**
+- [ ] List shows paginated customers with search
+- [ ] Create form validates required fields, shows success toast
+- [ ] Edit pre-fills form with existing data
+- [ ] Delete shows confirmation modal first
+- [ ] Profile page shows customer info, job history, invoice history
+
+**Analytics Events (from PRD MVP Funnel):**
+- `customer_created` - First customer added
+
+---
+
+### 2.2 Job Scheduling
+
+**Reference:** Product Epic E3
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-2.2.1 | GET /api/jobs (list with filters) | E-1.3.4 | 2h | [ ] |
+| E-2.2.2 | GET /api/jobs/calendar (by date range) | E-2.2.1 | 1h | [ ] |
+| E-2.2.3 | POST /api/jobs (create) | E-1.3.4 | 1.5h | [ ] |
+| E-2.2.4 | GET /api/jobs/:id | E-2.2.1 | 30m | [ ] |
+| E-2.2.5 | PUT /api/jobs/:id | E-2.2.4 | 1h | [ ] |
+| E-2.2.6 | DELETE /api/jobs/:id | E-2.2.4 | 30m | [ ] |
+| E-2.2.7 | POST /api/jobs/:id/start | E-2.2.4 | 30m | [ ] |
+| E-2.2.8 | POST /api/jobs/:id/complete | E-2.2.4 | 30m | [ ] |
+| E-2.2.9 | Calendar component (day/week view) | E-2.2.2 | 4h | [ ] |
+| E-2.2.10 | Jobs rendered on calendar | E-2.2.9 | 2h | [ ] |
+| E-2.2.11 | Create job modal | E-2.2.3 | 2.5h | [ ] |
+| E-2.2.12 | CustomerPicker component | E-2.1.7 | 1h | [ ] |
+| E-2.2.13 | WorkerPicker component | E-2.2.3 | 1h | [ ] |
+| E-2.2.14 | Edit job modal | E-2.2.5 | 1.5h | [ ] |
+| E-2.2.15 | Job detail page | E-2.2.4 | 2h | [ ] |
+| E-2.2.16 | Filter by worker dropdown | E-2.2.9 | 1h | [ ] |
+
+**API Contract:**
+```
+GET /api/jobs?page=1&limit=20&status=scheduled&workerId=xxx&startDate=2026-01-28&endDate=2026-02-04
+  Response: { data: Job[], meta: { ... } }
+
+GET /api/jobs/calendar?startDate=2026-01-28&endDate=2026-02-04
+  Response: { data: { [date]: Job[] } }
+
+POST /api/jobs
+  Request:  { customerId, workerId?, title, description?, scheduledDate, scheduledTime, durationMinutes, price?, notes? }
+  Response: { data: Job }
+
+PUT /api/jobs/:id
+  Request:  { customerId?, workerId?, ... }
+  Response: { data: Job }
+
+POST /api/jobs/:id/start
+  Response: { data: Job } // status = 'in_progress', startedAt set
+
+POST /api/jobs/:id/complete
+  Response: { data: Job } // status = 'completed', completedAt set
+```
+
+**Acceptance Criteria:**
+- [ ] Calendar shows jobs for current week
+- [ ] Click date to create job on that date
+- [ ] Click job to view/edit
+- [ ] Worker filter shows only that worker's jobs
+- [ ] Jobs can be assigned to workers
+
+**Analytics Events:**
+- `job_created` - First job created
+- `job_completed` - First job completed
+
+---
+
+### 2.3 Worker Management
+
+**Reference:** Product Epic E3, Story 3.3
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-2.3.1 | GET /api/workers (team list) | E-1.3.4 | 1h | [ ] |
+| E-2.3.2 | POST /api/workers/invite | E-2.3.1 | 2h | [ ] |
+| E-2.3.3 | DELETE /api/workers/:id | E-2.3.1 | 30m | [ ] |
+| E-2.3.4 | Worker accept invite flow | E-2.3.2 | 2h | [ ] |
+| E-2.3.5 | Team management page | E-2.3.1 | 2h | [ ] |
+| E-2.3.6 | Invite worker modal | E-2.3.2 | 1.5h | [ ] |
+| E-2.3.7 | Worker invite email template | E-2.3.2 | 1h | [ ] |
+
+**API Contract:**
+```
+GET /api/workers
+  Response: { data: User[] } // role='worker' for this business
+
+POST /api/workers/invite
+  Request:  { email, name }
+  Response: { data: { inviteToken, expiresAt } }
+
+DELETE /api/workers/:id
+  Response: { success: true }
+```
+
+**Acceptance Criteria:**
+- [ ] Owner can invite worker by email
+- [ ] Worker receives email with invite link
+- [ ] Worker sets password and joins team
+- [ ] Team page shows all workers
+
+**Analytics Events:**
+- `worker_invited` - First worker invited
+
+---
+
+### 2.4 Mobile Worker App (PWA)
+
+**Reference:** Product Epic E4
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-2.4.1 | Worker layout (mobile optimized) | E-1.5.1 | 2h | [ ] |
+| E-2.4.2 | GET /api/jobs/today (worker's jobs) | E-2.2.1 | 1h | [ ] |
+| E-2.4.3 | Today's jobs page (worker view) | E-2.4.2 | 3h | [ ] |
+| E-2.4.4 | Job detail page (worker view) | E-2.4.3 | 2h | [ ] |
+| E-2.4.5 | Navigate button (Google/Apple Maps) | E-2.4.4 | 30m | [ ] |
+| E-2.4.6 | Start job button | E-2.2.7 | 1h | [ ] |
+| E-2.4.7 | Complete job button | E-2.2.8 | 1h | [ ] |
+| E-2.4.8 | Worker role middleware | E-1.3.4 | 30m | [ ] |
+
+**Acceptance Criteria:**
+- [ ] Worker logs in and sees today's jobs
+- [ ] Jobs ordered by scheduled time
+- [ ] Navigate button opens map app with address
+- [ ] Start/Complete updates job status
+- [ ] Only workers can access /worker/* routes
+
+**Analytics Events:**
+- `job_started` (worker)
+- `job_completed` (worker)
+
+---
+
+**Phase 2 Total:** 50 hours
+
+---
+
+## Phase 3: Polish & Launch (Week 4)
+
+### 3.1 Invoicing
+
+**Reference:** Product Epic E5
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-3.1.1 | GET /api/invoices (list) | E-1.3.4 | 1.5h | [ ] |
+| E-3.1.2 | POST /api/invoices (create) | E-1.3.4 | 1.5h | [ ] |
+| E-3.1.3 | POST /api/invoices/from-job/:jobId | E-3.1.2 | 1h | [ ] |
+| E-3.1.4 | GET /api/invoices/:id | E-3.1.1 | 30m | [ ] |
+| E-3.1.5 | POST /api/invoices/:id/send | E-3.1.4 | 2h | [ ] |
+| E-3.1.6 | POST /api/invoices/:id/mark-paid | E-3.1.4 | 30m | [ ] |
+| E-3.1.7 | Stripe integration service | E-3.1.2 | 2h | [ ] |
+| E-3.1.8 | Create payment link | E-3.1.7 | 1h | [ ] |
+| E-3.1.9 | POST /api/webhooks/stripe | E-3.1.7 | 2h | [ ] |
+| E-3.1.10 | Invoice list page | E-3.1.1 | 2h | [ ] |
+| E-3.1.11 | Invoice detail page | E-3.1.4 | 2h | [ ] |
+| E-3.1.12 | Send invoice modal (email/SMS) | E-3.1.5 | 1.5h | [ ] |
+| E-3.1.13 | Invoice email template | E-3.1.5 | 1h | [ ] |
+| E-3.1.14 | "Create Invoice" from job button | E-3.1.3 | 30m | [ ] |
+
+**API Contract:**
+```
+GET /api/invoices?page=1&limit=20&status=sent
+  Response: { data: Invoice[], meta: { ... } }
+
+POST /api/invoices
+  Request:  { customerId, jobId?, amount, dueDate? }
+  Response: { data: Invoice }
+
+POST /api/invoices/from-job/:jobId
+  Response: { data: Invoice } // Creates from job.price
+
+POST /api/invoices/:id/send
+  Request:  { method: 'email' | 'sms' }
+  Response: { data: Invoice } // status = 'sent'
+
+POST /api/invoices/:id/mark-paid
+  Response: { data: Invoice } // status = 'paid'
+```
+
+**Acceptance Criteria:**
+- [ ] Invoice created from completed job
+- [ ] Send via email with payment link
+- [ ] Customer clicks link, pays via Stripe
+- [ ] Webhook marks invoice paid
+
+**Analytics Events:**
+- `invoice_sent` - First invoice sent
+- `payment_received` - First payment received
+
+---
+
+### 3.2 Two-Way SMS
+
+**Reference:** Product Epic E6
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-3.2.1 | Twilio service (send, receive) | E-1.1.1 | 2h | [ ] |
+| E-3.2.2 | POST /api/messages/send | E-3.2.1 | 1h | [ ] |
+| E-3.2.3 | POST /api/webhooks/twilio | E-3.2.1 | 1.5h | [ ] |
+| E-3.2.4 | GET /api/messages/conversations | E-3.2.1 | 1h | [ ] |
+| E-3.2.5 | GET /api/messages/conversations/:customerId | E-3.2.4 | 30m | [ ] |
+| E-3.2.6 | Conversation list page | E-3.2.4 | 2h | [ ] |
+| E-3.2.7 | Conversation thread UI | E-3.2.5 | 2h | [ ] |
+| E-3.2.8 | Send message input | E-3.2.2 | 1h | [ ] |
+
+**Acceptance Criteria:**
+- [ ] Owner can send SMS to customer
+- [ ] Customer reply appears in conversation
+- [ ] Unread indicator on conversations
+
+---
+
+### 3.3 Analytics & Onboarding
+
+**Reference:** PRD MVP Funnel
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-3.3.1 | PostHog plugin setup | E-1.1.1 | 1h | [ ] |
+| E-3.3.2 | Analytics composable | E-3.3.1 | 30m | [ ] |
+| E-3.3.3 | Track all funnel events | E-3.3.2 | 2h | [ ] |
+| E-3.3.4 | Onboarding wizard (post-signup) | E-1.4.3 | 2h | [ ] |
+| E-3.3.5 | Progress checklist component | E-3.3.4 | 1h | [ ] |
+
+**Funnel Events to Track:**
+```
+signup_started
+signup_completed
+onboarding_completed
+first_customer_created
+first_worker_invited
+first_job_created
+first_job_completed
+first_invoice_sent
+first_payment_received
+day_7_active
+converted_to_paid
+```
+
+---
+
+### 3.4 Error Handling & Polish
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-3.4.1 | Global error handler | E-1.1.1 | 1h | [ ] |
+| E-3.4.2 | 404/500 error pages | E-3.4.1 | 1h | [ ] |
+| E-3.4.3 | Toast notification system | E-1.1.1 | 1h | [ ] |
+| E-3.4.4 | Loading states (skeletons) | E-1.1.1 | 1.5h | [ ] |
+| E-3.4.5 | Empty states for all pages | E-1.1.1 | 1h | [ ] |
+
+---
+
+### 3.5 Production Deploy
+
+| Task ID | Task | Depends On | Est | Status |
+|---------|------|------------|-----|--------|
+| E-3.5.1 | Production environment setup | E-1.1.3 | 1h | [ ] |
+| E-3.5.2 | Domain/SSL configuration | E-3.5.1 | 1h | [ ] |
+| E-3.5.3 | Environment variables (prod) | E-3.5.1 | 30m | [ ] |
+| E-3.5.4 | Deploy frontend to Vercel | E-3.5.2 | 1h | [ ] |
+| E-3.5.5 | Deploy backend to Railway | E-3.5.2 | 1h | [ ] |
+| E-3.5.6 | Full user journey test | E-3.5.5 | 2h | [ ] |
+| E-3.5.7 | Set up error monitoring (Sentry) | E-3.5.5 | 1h | [ ] |
+
+**Acceptance Criteria:**
+- [ ] Production URL accessible via HTTPS
+- [ ] Full flow works: signup -> login -> create customer -> create job -> complete job -> send invoice -> receive payment
+- [ ] Analytics events firing in PostHog dashboard
+
+---
+
+**Phase 3 Total:** 28 hours
+
+---
+
+## Critical Path
+
+```
+Setup -> Schema -> Auth API -> Middleware -> Customer API -> Job API -> Calendar UI -> Invoice API -> Deploy
+```
+
+**Parallel Opportunities:**
+- While backend builds Customer API, frontend can build customer list with mock data
+- While backend builds Job API, frontend can build calendar component
+- SMS messaging can be built in parallel with Invoicing
+
+---
+
+## Technical Debt Backlog
+
+| ID | Item | Priority | Notes |
+|----|------|----------|-------|
+| TD-001 | Add unit tests for auth flow | Medium | After MVP launch |
+| TD-002 | Add E2E tests (Playwright) | Medium | After MVP launch |
+| TD-003 | Set up CI/CD pipeline | Low | When deploy frequency increases |
+| TD-004 | Database backups | High | After first paying customer |
+| TD-005 | Recurring jobs feature | Medium | Phase 2 feature |
+| TD-006 | Push notifications | Medium | Phase 2 feature |
 
 ---
 
 ## Definition of Done
 
 A task is "done" when:
-- [ ] Code is written and works
-- [ ] UI matches design/wireframes
-- [ ] Error states are handled
-- [ ] Loading states are shown
+- [ ] Code compiles without errors
+- [ ] Feature works as described
+- [ ] Error states handled gracefully
+- [ ] Loading states shown
 - [ ] Mobile responsive (if UI)
-- [ ] No console errors
-- [ ] Tested manually end-to-end
+- [ ] Manually tested end-to-end
 
 ---
 
-## Risk Mitigation
-
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Calendar component complexity | Medium | High | Use existing library (FullCalendar) |
-| Stripe integration issues | Low | High | Use Stripe Checkout (hosted) |
-| Twilio SMS reliability | Low | Medium | Queue messages, retry logic |
-| PWA on iOS issues | Medium | Medium | Document limitations, test early |
-| Scope creep | High | High | Strict P0/P1 adherence |
-
----
-
-## Daily Standup Template
-
-```
-**What I completed yesterday:**
-- [ Task 1 ]
-- [ Task 2 ]
-
-**What I'm working on today:**
-- [ Task 1 ]
-- [ Task 2 ]
-
-**Blockers:**
-- [ Any blockers ]
-
-**Hours logged:** X
-**Cumulative hours:** Y / 120
-```
-
----
-
-*Next artifact: 04-code-templates.md*
+*Last updated: January 29, 2026*

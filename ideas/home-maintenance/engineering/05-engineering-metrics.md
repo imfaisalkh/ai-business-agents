@@ -1,345 +1,264 @@
-# Engineering Metrics
+# Engineering Metrics Dashboard
 
-*Generated on January 28, 2026*
+> **Purpose:** Track ship velocity and technical health. Update weekly every Friday.
 
 ---
 
 ## North Star Metric
 
-**Ship Velocity: Features Shipped per Week**
+**Ship Velocity:** Features shipped per week
 
-Definition: Number of user-facing features or significant improvements deployed to production per week.
+| Week | Features | Target | Status |
+|------|----------|--------|--------|
+| Week 1 | - | 3-5 | - |
+| Week 2 | - | 3-5 | - |
+| Week 3 | - | 3-5 | - |
+| Week 4 | - | 3-5 | - |
 
-**Why this metric?**
-- Directly measures value delivered to users
-- Focuses on outcomes, not activity
-- Encourages small, frequent releases
+**Definition:** Number of completed features deployed to production (or staging before production exists)
+
+**Why this metric:** For bootstrapped products, speed to market > perfection. Ship velocity directly measures execution.
+
+---
+
+## Weekly Dashboard
+
+### Ship Velocity
+| Week | Tasks Done | Features Shipped | Bug Escape Rate | Notes |
+|------|------------|------------------|-----------------|-------|
+| W1 | 0/34h | - | - | Foundation |
+| W2 | 0/25h | - | - | Core Features |
+| W3 | 0/25h | - | - | Core Features |
+| W4 | 0/28h | - | - | Polish & Launch |
+
+### Phase Progress
+| Phase | Hours | Done | Remaining | % Complete |
+|-------|-------|------|-----------|------------|
+| 1: Foundation | 34h | 0h | 34h | 0% |
+| 2: Core Features | 50h | 0h | 50h | 0% |
+| 3: Polish & Launch | 28h | 0h | 28h | 0% |
+| **Total** | **112h** | **0h** | **112h** | **0%** |
+
+---
+
+## Performance Benchmarks
+
+### Frontend (Target: Core Web Vitals "Good")
+
+| Page | LCP | FID | CLS | Status |
+|------|-----|-----|-----|--------|
+| Landing | - | - | - | Not measured |
+| Login | - | - | - | Not measured |
+| Dashboard | - | - | - | Not measured |
+| Job Calendar | - | - | - | Not measured |
+| Customer List | - | - | - | Not measured |
+| Invoice List | - | - | - | Not measured |
+| Worker Today | - | - | - | Not measured |
 
 **Targets:**
-| Phase | Target | Notes |
-|-------|--------|-------|
-| Build (Weeks 1-4) | 5-7 features/week | Heavy development |
-| Post-Launch (Month 2-3) | 2-3 features/week | Bug fixes + improvements |
-| Steady State (Month 4+) | 1-2 features/week | Maintenance + new features |
+- LCP (Largest Contentful Paint): <2.5s
+- FID (First Input Delay): <100ms
+- CLS (Cumulative Layout Shift): <0.1
+
+**How to measure:** Run Lighthouse audit in Chrome DevTools or PageSpeed Insights
+
+### Backend (Target: P95 <500ms)
+
+| Endpoint | P50 | P95 | Status |
+|----------|-----|-----|--------|
+| GET /api/auth/me | - | - | Not measured |
+| GET /api/customers | - | - | Not measured |
+| GET /api/jobs/calendar | - | - | Not measured |
+| GET /api/invoices | - | - | Not measured |
+| POST /api/jobs | - | - | Not measured |
+
+**How to measure:** Add timing middleware or use Railway metrics
 
 ---
 
-## Development Velocity Metrics
+## Technical Debt Backlog
 
-### Sprint Metrics
+| ID | Item | Impact | Effort | Priority |
+|----|------|--------|--------|----------|
+| TD-001 | Add auth flow tests | High | Medium | High |
+| TD-002 | Add E2E tests (Playwright) | Medium | Medium | Medium |
+| TD-003 | Set up CI/CD pipeline | Medium | Small | Medium |
+| TD-004 | Database backup strategy | High | Small | High |
+| TD-005 | Implement recurring jobs | Medium | Large | Phase 2 |
+| TD-006 | Add push notifications | Low | Medium | Phase 2 |
+| TD-007 | Performance optimization audit | Low | Medium | After launch |
+| TD-008 | Error monitoring (Sentry) | Medium | Small | Launch |
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Tasks completed/week** | Tasks moved to "done" | 15-20 |
-| **Story points/week** | Estimated effort delivered | Track trend |
-| **Cycle time** | Time from start to done | < 2 days |
-| **Lead time** | Time from backlog to done | < 1 week |
-
-### Code Metrics
-
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Commits/day** | Number of commits | 5-10 |
-| **PR merge time** | Time to merge after PR opened | < 4 hours (self-merge) |
-| **Code review turnaround** | Time to review (if applicable) | < 24 hours |
-
-### Time Tracking
-
-| Category | Target Allocation |
-|----------|-------------------|
-| Feature development | 60% |
-| Bug fixes | 15% |
-| Refactoring/Tech debt | 10% |
-| Learning/Research | 10% |
-| Meetings/Planning | 5% |
+### Debt Rules
+- **High impact + Small effort:** Do immediately
+- **High impact + Large effort:** Schedule for next sprint
+- **Low impact:** Track but don't prioritize
 
 ---
 
-## Quality Metrics
+## Uptime & Reliability
 
-### Bug Metrics
+### Target: 99.5% uptime (allows ~3.6 hours downtime/month)
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Bugs created/week** | New bugs reported | < 5 |
-| **Bug fix rate** | Bugs fixed / Bugs created | > 100% |
-| **Critical bug age** | Time to fix P0 bugs | < 24 hours |
-| **Bug escape rate** | Bugs found in production | < 2/week |
+| Month | Uptime | Incidents | Notes |
+|-------|--------|-----------|-------|
+| Launch Month | - | - | - |
+| Month 2 | - | - | - |
+| Month 3 | - | - | - |
 
-### Test Coverage (When Added)
+### Error Tracking
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Unit test coverage** | % of code covered | > 60% |
-| **Integration test coverage** | Critical paths tested | 100% |
-| **E2E test coverage** | User flows tested | Top 5 flows |
+| Week | 4xx Errors | 5xx Errors | Unhandled Errors | Notes |
+|------|------------|------------|------------------|-------|
+| W1 | - | - | - | - |
+| W2 | - | - | - | - |
+| W3 | - | - | - | - |
+| W4 | - | - | - | - |
 
-### Code Health
-
-| Metric | Tool | Target |
-|--------|------|--------|
-| **TypeScript errors** | tsc | 0 |
-| **ESLint errors** | eslint | 0 |
-| **Duplicate code** | Manual review | < 5% |
-| **Dead code** | Manual review | 0 |
+**Target:** <1% of requests result in errors
 
 ---
 
-## Performance Metrics
+## Incident Log
 
-### Frontend Performance
+| Date | Severity | Description | Resolution | Prevention |
+|------|----------|-------------|------------|------------|
+| - | - | - | - | - |
 
-| Metric | Tool | Target | Alert |
-|--------|------|--------|-------|
-| **Lighthouse Performance** | Lighthouse | > 80 | < 60 |
-| **First Contentful Paint** | Lighthouse | < 1.5s | > 3s |
-| **Largest Contentful Paint** | Lighthouse | < 2.5s | > 4s |
-| **Time to Interactive** | Lighthouse | < 3s | > 5s |
-| **Bundle size (JS)** | Build output | < 300KB | > 500KB |
-
-### Backend Performance
-
-| Metric | Tool | Target | Alert |
-|--------|------|--------|-------|
-| **API response time (P50)** | Logs | < 100ms | > 300ms |
-| **API response time (P95)** | Logs | < 300ms | > 1s |
-| **Database query time (P50)** | Logs | < 20ms | > 100ms |
-| **Database query time (P95)** | Logs | < 100ms | > 500ms |
-
-### Mobile (PWA) Performance
-
-| Metric | Tool | Target | Alert |
-|--------|------|--------|-------|
-| **3G load time** | Lighthouse | < 5s | > 10s |
-| **Offline capability** | Manual test | Works | Broken |
-| **Install prompt** | Manual test | Shows | Missing |
+**Severity Levels:**
+- **P0 (Critical):** Service down, data loss, security breach
+- **P1 (High):** Major feature broken
+- **P2 (Medium):** Minor feature broken, workaround exists
+- **P3 (Low):** Cosmetic issue, no user impact
 
 ---
 
-## Reliability Metrics
+## What NOT to Track (Vanity Metrics)
 
-### Uptime & Availability
-
-| Metric | Definition | Target | Alert |
-|--------|------------|--------|-------|
-| **Uptime** | % time service available | 99.5% | < 99% |
-| **Downtime/month** | Minutes offline | < 22 min | > 60 min |
-| **Error rate** | % of requests returning 5xx | < 0.1% | > 1% |
-| **Failed deployments** | Deploys that rolled back | 0 | > 0 |
-
-### Incident Metrics
-
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **MTTR** | Mean time to recovery | < 30 min |
-| **MTBF** | Mean time between failures | > 7 days |
-| **Incidents/month** | User-impacting incidents | < 2 |
+- Lines of code written (more is not better)
+- Number of commits (activity is not progress)
+- 100% test coverage (diminishing returns)
+- Code complexity scores (unless problematic)
+- GitHub stars (means nothing for B2B)
 
 ---
 
-## Infrastructure Metrics
+## Weekly Engineering Review
 
-### Resource Usage
+**Complete every Friday before end of day**
 
-| Metric | Tool | Target | Alert |
-|--------|------|--------|-------|
-| **CPU usage** | Railway/Render | < 60% avg | > 80% |
-| **Memory usage** | Railway/Render | < 70% | > 85% |
-| **Database size** | Railway/Render | Track growth | Approaching limit |
-| **Storage usage** | Railway/Render | < 50% | > 80% |
+### Week of: ___________
 
-### Cost Metrics
+**1. What shipped this week?**
+- [ ] Feature/fix 1
+- [ ] Feature/fix 2
+- [ ] Feature/fix 3
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Infrastructure cost/month** | Total hosting costs | < $50 initially |
-| **Cost per customer** | Total cost / Customers | < $2/customer |
-| **Cost trend** | Month-over-month change | Stable or decreasing |
+**2. What blocked progress?**
+- Blocker 1: _____ | Resolution: _____
+- Blocker 2: _____ | Resolution: _____
 
----
+**3. Technical debt status**
+- New debt introduced? [ ] Yes [ ] No
+- Debt paid down? [ ] Yes [ ] No
+- Critical debt to address next week? _____
 
-## External Service Metrics
+**4. Performance check**
+- Any performance degradation? [ ] Yes [ ] No
+- Action items: _____
 
-### Stripe
+**5. Next week's priorities (top 3)**
+1. _____
+2. _____
+3. _____
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Payment success rate** | Successful payments / Attempts | > 95% |
-| **Webhook delivery rate** | Webhooks received / Sent | 100% |
-| **Refund rate** | Refunds / Payments | < 2% |
-
-### Twilio (SMS)
-
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **SMS delivery rate** | Delivered / Sent | > 97% |
-| **SMS cost/customer/month** | Total SMS cost / Customers | < $2 |
-| **Failed message rate** | Failed / Sent | < 3% |
-
-### Resend (Email)
-
-| Metric | Definition | Target |
-|--------|------------|--------|
-| **Email delivery rate** | Delivered / Sent | > 98% |
-| **Bounce rate** | Bounces / Sent | < 2% |
-| **Spam complaint rate** | Complaints / Delivered | < 0.1% |
+**6. Hours logged vs planned**
+- Planned: _____ hours
+- Actual: _____ hours
+- Variance: _____ (explain if >20%)
 
 ---
 
-## Tracking & Monitoring Setup
+## Monthly Engineering Review
 
-### Phase 1: Manual (Week 1-4)
+### Month: ___________
 
-Track in a simple spreadsheet:
+**Velocity Trend**
+| Week | Features | Bugs Escaped | Notes |
+|------|----------|--------------|-------|
+| W1 | - | - | - |
+| W2 | - | - | - |
+| W3 | - | - | - |
+| W4 | - | - | - |
+| **Total** | **-** | **-** | - |
 
-| Date | Tasks Done | Bugs Fixed | Bugs Created | Deploy Count | Downtime |
-|------|------------|------------|--------------|--------------|----------|
+**Infrastructure Review**
+- [ ] Dependencies up to date?
+- [ ] Security patches applied?
+- [ ] Database backups verified?
+- [ ] Monitoring alerting correctly?
+- [ ] SSL certificates valid?
 
-### Phase 2: Basic Monitoring (Post-Launch)
+**Architecture Review**
+- [ ] Any scaling concerns emerging?
+- [ ] Any refactoring needed?
+- [ ] Any tech debt becoming critical?
 
-**Tools:**
-- **UptimeRobot** (Free) - Uptime monitoring, alerts
-- **Sentry** (Free tier) - Error tracking
-- **Railway/Render dashboards** - Resource usage
-
-### Phase 3: Advanced (Month 3+)
-
-**Add when justified:**
-- **LogTail/Better Stack** - Log aggregation
-- **Grafana Cloud** (Free tier) - Dashboards
-- **PostHog** (Free tier) - Product analytics
-
----
-
-## Weekly Engineering Report Template
-
-```markdown
-## Engineering Weekly Report - Week of [Date]
-
-### Summary
-- Tasks completed: X / Y planned
-- Features shipped: X
-- Bugs fixed: X
-- Bugs created: X
-- Deploys: X
-- Incidents: X
-
-### Shipped This Week
-1. [Feature/Fix 1] - [Brief description]
-2. [Feature/Fix 2] - [Brief description]
-3. [Feature/Fix 3] - [Brief description]
-
-### Performance
-- API P50: Xms (target: <100ms)
-- Lighthouse Score: X (target: >80)
-- Error rate: X% (target: <0.1%)
-
-### Infrastructure
-- CPU: X% avg
-- Memory: X%
-- Cost MTD: $X
-
-### Blockers
-- [Blocker 1]
-- [Blocker 2]
-
-### Next Week Focus
-1. [Priority 1]
-2. [Priority 2]
-3. [Priority 3]
-
-### Tech Debt Notes
-- [Item needing attention]
-```
+**Cost Review**
+| Service | Monthly Cost | Notes |
+|---------|--------------|-------|
+| Vercel (Frontend) | $0 | Hobby plan |
+| Railway (Backend) | ~$5-20 | Usage-based |
+| Stripe | 2.9% + $0.30/txn | Per payment |
+| Twilio | ~$0.0079/SMS | Per message |
+| Resend | $0 | Free tier |
+| PostHog | $0 | Free tier |
+| **Total** | ~$25/mo | Before revenue |
 
 ---
 
-## Alert Thresholds
+## Pre-Launch Checklist
 
-### Critical (Wake Up)
+### Technical Readiness
+- [ ] All Phase 1-3 tasks complete
+- [ ] Auth flow tested end-to-end
+- [ ] Payment flow tested with Stripe test mode
+- [ ] SMS sending/receiving tested
+- [ ] Mobile PWA tested on real devices
+- [ ] All form validations working
+- [ ] Error pages (404, 500) in place
+- [ ] Loading states on all pages
 
-| Condition | Action |
-|-----------|--------|
-| Service down > 5 min | Investigate immediately |
-| Error rate > 5% | Investigate immediately |
-| Database connection failed | Investigate immediately |
-| Payment webhook failing | Investigate within 1 hour |
+### Security Checklist
+- [ ] Passwords hashed with bcrypt
+- [ ] JWT secrets in environment variables
+- [ ] CORS configured correctly
+- [ ] Rate limiting on auth endpoints
+- [ ] No secrets in git repository
+- [ ] HTTPS enforced
+- [ ] SQL injection prevented (using Drizzle ORM)
 
-### Warning (Next Business Day)
-
-| Condition | Action |
-|-----------|--------|
-| Error rate > 1% | Investigate cause |
-| API P95 > 1s | Profile slow endpoints |
-| CPU > 70% sustained | Consider scaling |
-| Lighthouse < 70 | Performance audit |
-
-### Info (Weekly Review)
-
-| Condition | Action |
-|-----------|--------|
-| Bug count increasing | Review quality practices |
-| Cycle time increasing | Review process |
-| Bundle size increasing | Consider optimization |
-
----
-
-## Definition of Done (Engineering)
-
-A task is "done" when:
-
-- [ ] Code works as intended
-- [ ] No TypeScript/lint errors
-- [ ] Error states handled
-- [ ] Loading states present
-- [ ] Mobile responsive (if UI)
-- [ ] Tested manually
-- [ ] Deployed to production
-- [ ] Monitored for errors post-deploy
+### Deployment Checklist
+- [ ] Production environment variables set
+- [ ] Domain configured with SSL
+- [ ] Database backup configured
+- [ ] Error monitoring (Sentry) configured
+- [ ] Uptime monitoring configured
+- [ ] PostHog events firing correctly
 
 ---
 
-## Key Engineering Principles
+## Key Contact Points
 
-1. **Ship small, ship often.** Daily deploys beat weekly releases.
-
-2. **Fix bugs before features.** Broken product = no trust.
-
-3. **Measure what matters.** Track ship velocity, not lines of code.
-
-4. **Automate the boring stuff.** Deploy scripts, not manual processes.
-
-5. **Build for the 90%.** Perfect is the enemy of shipped.
-
----
-
-## Metrics Dashboard (What to Build)
-
-### Simple Terminal Dashboard
-
-```bash
-#!/bin/bash
-# Simple daily check script
-
-echo "=== Engineering Health Check ==="
-echo ""
-echo "API Status: $(curl -s https://api.yourapp.com/health | jq -r .status)"
-echo "Last Deploy: $(git log -1 --format='%ci')"
-echo "Open Bugs: $(wc -l < bugs.txt)"
-echo "Pending Tasks: $(wc -l < tasks.txt)"
-echo ""
-echo "Lighthouse Score: Run 'npx lighthouse https://app.yourapp.com --output=json | jq .categories.performance.score'"
-```
-
-### Notion/Sheet Tracker
-
-| Week | Features | Bugs Fixed | Bugs Created | Deploys | Uptime | Notes |
-|------|----------|------------|--------------|---------|--------|-------|
-| W1 | 5 | 2 | 3 | 7 | 100% | Setup week |
-| W2 | 7 | 4 | 2 | 10 | 100% | Core features |
-| W3 | 4 | 3 | 1 | 8 | 99.9% | 5 min outage |
-| W4 | 3 | 2 | 0 | 5 | 100% | Launch prep |
+| Service | Dashboard | Support |
+|---------|-----------|---------|
+| Vercel | vercel.com/dashboard | support@vercel.com |
+| Railway | railway.app/dashboard | support@railway.app |
+| Stripe | dashboard.stripe.com | stripe.com/support |
+| Twilio | console.twilio.com | twilio.com/help |
+| Resend | resend.com/dashboard | support@resend.com |
+| PostHog | app.posthog.com | support@posthog.com |
 
 ---
 
-*End of Engineering artifacts*
+*Last updated: January 29, 2026*
