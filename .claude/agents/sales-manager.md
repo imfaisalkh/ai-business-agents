@@ -57,9 +57,11 @@ Ask: "Which idea are you working on?"
 - If only one idea exists, use that automatically
 - If context mentions an idea name, use that
 
-### Step 2: Check Dependencies
+### Step 2: Check Dependencies & Extract Project Name
 Read these required files:
 1. `ideas/[idea-name]/business-context.md` - Must exist
+   - **Extract the Project Name** from the "Project Identity" section
+   - Use this project name throughout all artifacts (replace `[Project Name]` placeholders)
 2. `ideas/[idea-name]/marketing/01-icp-market-analysis.md` - Needed for ICP context
 3. `ideas/[idea-name]/marketing/02-positioning-messaging.md` - Needed for messaging
 
@@ -104,6 +106,10 @@ Summarize what was created and suggest:
 
 ```markdown
 # Sales Process Design
+
+> **Purpose:** Defines the end-to-end sales process for [Project Name]. Clear stages, exit criteria, and time limits.
+>
+> **Fits in:** Foundation for all sales activities. Discovery (02), Qualification (03), and Follow-Up (05) plug into these stages.
 
 ## Sales Philosophy
 **Approach:** [Consultative / Transactional / Challenger]
@@ -246,6 +252,10 @@ Every Monday:
 ```markdown
 # Discovery Call Framework
 
+> **Purpose:** Structured 25-minute call script to qualify prospects and understand their needs. Use for every first call.
+>
+> **Fits in:** Executes Stage 2 of Sales Process (01). Feeds into Qualification Checklist (03).
+
 ## Call Objectives
 1. Understand their current situation and pain
 2. Qualify: Do they have Budget, Authority, Need, Timeline?
@@ -363,6 +373,10 @@ After each call, score the prospect:
 ```markdown
 # Qualification Checklist
 
+> **Purpose:** Score prospects after discovery calls. Disqualify fast—bad-fit customers cost more than no customers.
+>
+> **Fits in:** Used after Discovery Call (02). Determines if prospect moves to Demo or Closed-Lost in Process (01).
+
 ## Quick Qualification (BANT+)
 
 ### Budget
@@ -476,6 +490,10 @@ Stop the sales process immediately if:
 
 ```markdown
 # Objection Handling Playbook
+
+> **Purpose:** Ready responses for common objections using the ARC framework. Practice these before calls.
+>
+> **Fits in:** Used during Discovery (02) and Demo stages. Complements Positioning Messaging from Marketing.
 
 ## The ARC Framework
 
@@ -666,6 +684,10 @@ Weekly: Review most common objections and refine responses.
 
 ```markdown
 # Follow-Up System
+
+> **Purpose:** Email sequences and templates for every sales stage. No "just checking in" emails—always add value.
+>
+> **Fits in:** Keeps deals moving through Sales Process (01). Customize scripts from Scripts Library (07).
 
 ## Follow-Up Philosophy
 - **Always add value** - Never send "just checking in"
@@ -877,6 +899,10 @@ For prospects who are:
 ```markdown
 # Sales Metrics Dashboard
 
+> **Purpose:** Track only what matters: close rate, deal size, and pipeline health. Avoid vanity metrics.
+>
+> **Fits in:** Measures sales effectiveness. Finance Manager uses close rate for revenue projections.
+
 ## North Star Metric
 **Close Rate:** [Current]% → [Target]% by [Date]
 
@@ -1031,6 +1057,10 @@ For prospects who are:
 
 ```markdown
 # Sales Scripts Library
+
+> **Purpose:** Copy-paste ready scripts for every sales scenario. Personalize the placeholders, don't reinvent.
+>
+> **Fits in:** Tactical execution of Positioning (Marketing 02) and Objection Handling (04). Update based on what works.
 
 ## Cold Outreach Scripts
 

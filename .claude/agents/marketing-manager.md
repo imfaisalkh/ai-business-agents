@@ -55,7 +55,7 @@ Ask: "Which idea are you working on?"
 - If context mentions an idea name, use that
 
 ### Step 2: Read Business Context
-Read `ideas/[idea-name]/business-context.md` completely.
+Read `ideas/[idea-name]/business-context.md` completely. Extract **Project Name** for use in all artifacts.
 If it doesn't exist or is incomplete, guide the user to fill it out first.
 
 ### Step 3: Determine Scope
@@ -83,6 +83,10 @@ Summarize what was created and suggest:
 
 ```markdown
 # ICP & Market Analysis
+
+> **Purpose:** Defines exactly who [Project Name] is for. All marketing and sales efforts target this profile.
+>
+> **Fits in:** Foundation for all other marketing artifacts. Product Manager and Sales Manager also reference this.
 
 ## Ideal Customer Profile
 
@@ -140,6 +144,10 @@ Summarize what was created and suggest:
 ```markdown
 # Positioning & Messaging Framework
 
+> **Purpose:** Defines how [Project Name] talks about itself. All copy, messaging, and objection handling follows this.
+>
+> **Fits in:** Built from ICP (01). Used by LinkedIn Outreach (04), Landing Page (05), and Sales scripts.
+
 ## Positioning Statement
 For [ICP] who [situation/problem], [Product] is a [category] that [key benefit]. Unlike [alternative], we [key differentiator].
 
@@ -184,6 +192,10 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 
 ```markdown
 # Go-to-Market Strategy
+
+> **Purpose:** The action plan for getting [Project Name] in front of customers. Focuses on 2 channels max.
+>
+> **Fits in:** Executes on ICP (01) and Positioning (02). Drives LinkedIn Outreach (04) and content calendar.
 
 ## GTM Phase: [Discovery / Validation / Growth]
 
@@ -251,6 +263,10 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 ```markdown
 # LinkedIn Outreach System
 
+> **Purpose:** Ready-to-use templates for LinkedIn prospecting. Copy-paste and personalize.
+>
+> **Fits in:** Implements GTM Strategy (03) primary channel. Works with Positioning (02) messaging.
+
 ## Target Profile
 - **Search query:** [Boolean search or Sales Nav query]
 - **Filters:**
@@ -314,6 +330,10 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 ```markdown
 # Landing Page Strategy
 
+> **Purpose:** Copy and structure for your landing page. Designed for conversion, not vanity traffic.
+>
+> **Fits in:** Public expression of Positioning (02). Captures leads for Sales pipeline.
+
 ## Page Structure
 
 ### Above the Fold
@@ -374,6 +394,10 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 
 ```markdown
 # Lead Validation Tactics
+
+> **Purpose:** Tests whether your ICP and messaging are right before scaling. Fail fast, learn fast.
+>
+> **Fits in:** Validates ICP (01) and Positioning (02) assumptions. Feeds learnings back to update all artifacts.
 
 ## Validation Goals
 - **Hypothesis to test:** [What you're trying to prove/disprove]
@@ -449,6 +473,10 @@ For [ICP] who [situation/problem], [Product] is a [category] that [key benefit].
 
 ```markdown
 # Marketing Metrics Dashboard
+
+> **Purpose:** Track only what matters: qualified leads per week. Avoid vanity metrics.
+>
+> **Fits in:** Measures success of GTM (03), LinkedIn (04), and Landing Page (05). Finance Manager uses this for CAC calculations.
 
 ## North Star Metric
 **Qualified Leads per Week:** [Current] → [Target] by [Date]

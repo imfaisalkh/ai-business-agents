@@ -60,7 +60,7 @@ Ask: "Which idea are you working on?"
 
 ### Step 2: Check Dependencies
 Read these required files:
-1. `ideas/[idea-name]/business-context.md` - Must exist
+1. `ideas/[idea-name]/business-context.md` - Must exist (extract **Project Name** for use in all artifacts)
 2. `ideas/[idea-name]/marketing/01-icp-market-analysis.md` - Needed for context
 
 If marketing/01-icp-market-analysis.md doesn't exist:
@@ -100,6 +100,10 @@ Summarize what was created and suggest:
 
 ```markdown
 # Market Research & Competitor Analysis
+
+> **Purpose:** Understand the competitive landscape for [Project Name]. Identifies gaps, positioning opportunities, and what customers love/hate about alternatives.
+>
+> **Fits in:** Informs PRD (02) feature decisions and Pricing Strategy (06). Revisit when competitors launch new features.
 
 ## Market Overview
 
@@ -258,8 +262,12 @@ This is the most important artifact. It includes PRD at a Glance, MVP Funnel, an
 ```markdown
 # Product Requirements Document
 
+> **Purpose:** Defines exactly what [Project Name] will do (and NOT do) for MVP. Includes PRD at a Glance for quick decisions, MVP Funnel for instrumentation, and Text Wireframes for UI clarity.
+>
+> **Fits in:** Source of truth for Development Tasks (03). Engineering uses this to build. Update when scope changes.
+
 ## Document Info
-- **Product:** [Product name]
+- **Product:** [Project Name]
 - **Version:** 1.0 (MVP)
 - **Author:** [Name]
 - **Last Updated:** [Date]
@@ -577,6 +585,10 @@ This might be due to:
 ```markdown
 # Development Tasks
 
+> **Purpose:** Breaks [Project Name] PRD into actionable epics, stories, and tasks. Provides estimates and priorities for sprint planning.
+>
+> **Fits in:** Engineering Manager (engineering/03) adds technical details to these tasks. Track completion here.
+
 *Generated from PRD v1.0 on [Date]*
 
 ---
@@ -692,6 +704,10 @@ A task is "Done" when:
 ```markdown
 # Product Metrics Dashboard
 
+> **Purpose:** Track whether [Project Name] is working. Defines the metrics that matter and what to ignore.
+>
+> **Fits in:** Set up in PostHog using MVP Funnel from PRD (02). Review weekly.
+
 ## North Star Metric
 **Weekly Active Users:** [Current] → [Target] by [Date]
 
@@ -789,6 +805,10 @@ Visit → Signup → Activate → Engage → Retain → Pay
 ```markdown
 # User Interview Template
 
+> **Purpose:** Script for customer discovery calls for [Project Name]. Validates problem, solution, and willingness to pay.
+>
+> **Fits in:** Use before building (validate assumptions) and after launch (understand users). Insights feed back to PRD.
+
 ## Pre-Interview
 **Interviewee:** [Name]
 **Company/Role:** [Company, Job Title]
@@ -864,6 +884,10 @@ Visit → Signup → Activate → Engage → Retain → Pay
 
 ```markdown
 # Pricing Strategy & Model
+
+> **Purpose:** Defines pricing tiers, positioning, and revenue model for [Project Name]. Balances customer value with business sustainability.
+>
+> **Fits in:** Informs sales scripts and landing page. Bootstrap Finance (finance/) uses this for revenue projections.
 
 ## Pricing Philosophy
 **Core principle:** [e.g., "Simple, transparent, value-based pricing that scales with customer success"]

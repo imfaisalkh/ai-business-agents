@@ -4,6 +4,16 @@
 
 ---
 
+## Project Identity
+
+**Project Name:**
+<!-- The name used throughout all artifacts (e.g., "FieldPulse", "InvoiceFlow", "BookingBuddy") -->
+
+TeamPulse
+
+---
+
+
 ## The Problem
 
 **What specific problem are you solving?**

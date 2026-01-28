@@ -56,9 +56,11 @@ Ask: "Which idea are you working on?"
 - If only one idea exists, use that automatically
 - If context mentions an idea name, use that
 
-### Step 2: Check Dependencies
+### Step 2: Check Dependencies & Extract Project Name
 Read these required files:
 1. `ideas/[idea-name]/business-context.md` - Must exist
+   - **Extract the Project Name** from the "Project Identity" section
+   - Use this project name throughout all artifacts (replace `[Project Name]` placeholders)
 2. `ideas/[idea-name]/product/06-pricing-strategy.md` - Needed for revenue modeling
 3. `ideas/[idea-name]/marketing/07-marketing-metrics.md` - Needed for CAC calculations
 
@@ -94,6 +96,10 @@ Summarize what was created and suggest:
 
 ```markdown
 # Revenue Model & Projections
+
+> **Purpose:** 24-month revenue projections with scenario analysis. Shows path to profitability.
+>
+> **Fits in:** Uses Pricing Strategy (Product 06) assumptions. Feeds into Unit Economics (02) and Runway (03).
 
 ## Model Assumptions
 *Based on pricing from `product/06-pricing-strategy.md`*
@@ -194,6 +200,10 @@ Summarize what was created and suggest:
 
 ```markdown
 # Unit Economics Dashboard
+
+> **Purpose:** CAC, LTV, and payback period analysis. Fix unit economics before scaling.
+>
+> **Fits in:** Uses Marketing Metrics (07) for CAC. Must be healthy (LTV/CAC >3:1) before increasing spend.
 
 ## Core Unit Economics
 
@@ -317,6 +327,10 @@ Revenue:           $[X]
 
 ```markdown
 # Burn Rate & Runway Tracker
+
+> **Purpose:** Know exactly how long you can survive. Every founder must know their runway.
+>
+> **Fits in:** Monthly update required. Drives urgency for Revenue Model (01) targets.
 
 ## Current Financial Position
 
@@ -475,6 +489,10 @@ To reach default alive by Month [X]:
 
 ```markdown
 # Financial Metrics & KPIs
+
+> **Purpose:** Consolidated financial dashboard. Weekly and monthly review templates included.
+>
+> **Fits in:** Aggregates all financial health indicators. Use for weekly review and investor updates.
 
 ## North Star Financial Metric
 **Monthly Recurring Revenue (MRR):** $[X] → $[Y] (target by [Date])
@@ -642,6 +660,10 @@ Ask: [Specific help needed]
 
 ```markdown
 # Fundraising Readiness Checklist
+
+> **Purpose:** Decide if/when to raise. Data room prep and investor pitch metrics. Most bootstrappers skip this.
+>
+> **Fits in:** Use only if pursuing funding. Requires healthy Unit Economics (02) and Revenue Model (01).
 
 ## Pre-Fundraise Health Check
 

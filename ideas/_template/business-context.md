@@ -4,6 +4,20 @@
 
 ---
 
+## Project Identity
+
+**Project Name:**
+<!-- The name used throughout all artifacts (e.g., "FieldPulse", "InvoiceFlow", "BookingBuddy") -->
+
+
+
+**Tagline (optional):**
+<!-- One-line description for marketing (e.g., "Simple scheduling for service businesses") -->
+
+
+
+---
+
 ## The Problem
 
 **What specific problem are you solving?**

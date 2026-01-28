@@ -126,7 +126,7 @@ Ask: "Which idea are you working on?"
 
 ### Step 2: Check Dependencies
 Read these required files:
-1. `ideas/[idea-name]/business-context.md` - Must exist
+1. `ideas/[idea-name]/business-context.md` - Must exist (extract **Project Name** for use in all artifacts)
 2. `ideas/[idea-name]/product/02-prd.md` - Needed for feature requirements
 3. `ideas/[idea-name]/product/03-tasks.md` - Needed for task breakdown
 
@@ -170,11 +170,14 @@ Summarize what was created and suggest:
 ```markdown
 # Technical Requirements Document
 
+> **Purpose:** Defines the technical architecture, stack choices, and standards for [Project Name]. This is the reference for all technical decisions - consult before making architecture changes.
+>
+> **Fits in:** Foundation document that Setup Guide (02) implements and Implementation Tasks (03) follow.
+
 ## Document Info
-- **Product:** [Product name]
+- **Product:** [Project Name]
 - **Version:** 1.0 (MVP)
 - **Last Updated:** [Date]
-- **Status:** Draft
 
 ---
 
@@ -226,63 +229,6 @@ This architecture separates concerns while keeping everything in a single reposi
 \`\`\`
 
 ---
-
-## Tech Stack Specification
-
-### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Nuxt | 4.x | Vue meta-framework (client-only SPA mode) |
-| Vue | 3.x | Reactive UI framework |
-| TypeScript | 5.x | Type safety |
-| Tailwind CSS | 3.x | Utility-first styling |
-| shadcn-vue | latest | UI component library (via MCP) |
-| Pinia | 2.x | State management |
-| VueUse | latest | Composition utilities |
-
-### Mobile (Capacitor)
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| @capacitor/core | 6.x | Native runtime bridge |
-| @capacitor/cli | 6.x | iOS/Android build tooling |
-| @capacitor/camera | latest | Native camera access |
-| @capacitor/geolocation | latest | GPS location services |
-| @capacitor/push-notifications | latest | Native push (APNs/FCM) |
-| @capacitor/filesystem | latest | Native file storage |
-| @capacitor/haptics | latest | Vibration feedback |
-| @capacitor/app | latest | App lifecycle events |
-
-### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Node.js | 20.x LTS | Runtime |
-| Fastify | 4.x | Web framework (high performance) |
-| @fastify/jwt | latest | JWT authentication |
-| @fastify/cors | latest | CORS handling |
-| @fastify/cookie | latest | Cookie management |
-| Zod | 3.x | Schema validation |
-| Drizzle ORM | latest | Type-safe database queries |
-| better-sqlite3 | latest | SQLite driver |
-
-### Analytics & Monitoring
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| posthog-js | latest | Product analytics, event tracking |
-| PostHog | cloud/self-host | Analytics dashboard, funnels, retention |
-
-**Why PostHog:**
-- **Free tier:** 1M events/month free (generous for MVP)
-- **All-in-one:** Analytics, session replay, feature flags, A/B tests
-- **Privacy-friendly:** Can self-host, GDPR compliant
-- **Developer-focused:** Good API, autocapture, easy debugging
-
-### Development Tools
-| Tool | Purpose |
-|------|---------|
-| pnpm | Package manager (workspace support) |
-| tsx | TypeScript execution for backend |
-| drizzle-kit | Database migrations |
-| shadcn-vue MCP | Component generation via Claude |
 
 ---
 
@@ -431,98 +377,17 @@ export type NewEntity = typeof [entities].$inferInsert;
 
 ---
 
-## API Contract
+## API Standards
 
-### Base URL
-- **Development:** `http://localhost:3001/api`
-- **Production:** `https://api.[domain].com/api`
+**Base URLs:**
+- Development: `http://localhost:3001/api`
+- Production: `https://api.[domain].com/api`
 
-### Authentication Endpoints
+**Response Format:** All endpoints return `{ data: T }` or `{ error: { code, message } }`
 
-\`\`\`
-POST /api/auth/register
-  Request:  { email: string, password: string, name?: string }
-  Response: { data: { user: User, accessToken: string } }
-  Cookies:  Sets refreshToken (httpOnly)
+**HTTP Status Codes:** 200 OK, 201 Created, 400 Validation, 401 Unauthorized, 403 Forbidden, 404 Not Found, 500 Server Error
 
-POST /api/auth/login
-  Request:  { email: string, password: string }
-  Response: { data: { user: User, accessToken: string } }
-  Cookies:  Sets refreshToken (httpOnly)
-
-POST /api/auth/logout
-  Headers:  Authorization: Bearer <token>
-  Response: { success: true }
-  Cookies:  Clears refreshToken
-
-POST /api/auth/refresh
-  Cookies:  Reads refreshToken
-  Response: { data: { accessToken: string } }
-
-GET /api/auth/me
-  Headers:  Authorization: Bearer <token>
-  Response: { data: { user: User } }
-\`\`\`
-
-### Entity CRUD Endpoints
-
-\`\`\`
-GET /api/[entities]
-  Headers:  Authorization: Bearer <token>
-  Query:    ?page=1&limit=20&sort=createdAt&order=desc
-  Response: { data: Entity[], meta: { total, page, limit, totalPages } }
-
-POST /api/[entities]
-  Headers:  Authorization: Bearer <token>
-  Request:  { name: string, description?: string, ... }
-  Response: { data: Entity }
-
-GET /api/[entities]/:id
-  Headers:  Authorization: Bearer <token>
-  Response: { data: Entity }
-
-PUT /api/[entities]/:id
-  Headers:  Authorization: Bearer <token>
-  Request:  { name?: string, description?: string, ... }
-  Response: { data: Entity }
-
-DELETE /api/[entities]/:id
-  Headers:  Authorization: Bearer <token>
-  Response: { success: true }
-\`\`\`
-
-### Response Formats
-
-\`\`\`typescript
-// Success response
-interface SuccessResponse<T> {
-  data: T;
-  meta?: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
-
-// Error response
-interface ErrorResponse {
-  error: {
-    code: string;        // e.g., 'VALIDATION_ERROR', 'UNAUTHORIZED'
-    message: string;     // Human-readable message
-    details?: unknown;   // Validation errors, etc.
-  };
-}
-
-// HTTP Status Codes
-// 200 - Success
-// 201 - Created
-// 400 - Bad Request (validation error)
-// 401 - Unauthorized (missing/invalid token)
-// 403 - Forbidden (no permission)
-// 404 - Not Found
-// 500 - Internal Server Error
-\`\`\`
+*Detailed API contracts are defined per-feature in Implementation Tasks (artifact 03).*
 
 ---
 
@@ -594,35 +459,6 @@ NUXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 
 ---
 
-## shadcn-vue MCP Integration
-
-### Setup
-The project uses shadcn-vue MCP (Model Context Protocol) for component generation:
-
-1. **MCP Server Configuration** (.claude/mcp.json):
-\`\`\`json
-{
-  "mcpServers": {
-    "shadcn-vue": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/shadcn-vue-mcp"]
-    }
-  }
-}
-\`\`\`
-
-2. **Component Generation:**
-   - Use Claude to generate shadcn-vue components via MCP
-   - Components are placed in `apps/web/components/ui/`
-   - MCP provides access to latest component APIs and best practices
-
-3. **Available Components:**
-   - All standard shadcn-vue components
-   - Blocks for common UI patterns
-   - Automatic Tailwind class generation
-
----
-
 ## Deployment Architecture
 
 ### Frontend (Nuxt 4 SPA)
@@ -647,50 +483,29 @@ The project uses shadcn-vue MCP (Model Context Protocol) for component generatio
 
 ## Performance Targets
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| Frontend Bundle | <150KB | Gzipped initial JS |
-| Page Load (LCP) | <2.5s | Core Web Vital |
-| Time to Interactive | <3.5s | Core Web Vital |
-| API Response (P95) | <200ms | For CRUD operations |
-| API Response (P99) | <500ms | For complex queries |
-| Database Query | <50ms | For indexed queries |
-| Cold Start | <2s | Backend startup time |
+| Metric | Target |
+|--------|--------|
+| Frontend Bundle | <150KB gzipped |
+| Page Load (LCP) | <2.5s |
+| API Response (P95) | <500ms |
 
 ---
 
-## Migration Paths
+## Future Migration Notes
 
-### SQLite → PostgreSQL
-**When to migrate:**
-- >100 concurrent write operations per second
-- Need full-text search (consider: keep SQLite + add Meilisearch)
-- Multi-region deployment
-- Need advanced queries (recursive CTEs, window functions)
+**SQLite → PostgreSQL:** Consider when >100 concurrent writes/sec, need multi-region, or advanced queries. Migration: update Drizzle config, regenerate migrations, deploy to Neon/Supabase.
 
-**Migration steps:**
-1. Update Drizzle config for PostgreSQL
-2. Regenerate migrations
-3. Update connection string
-4. Test all queries
-5. Deploy backend to managed PostgreSQL (Neon, Supabase)
-
-### Monolith → Microservices
-**When to consider:**
-- Team grows beyond 5 developers
-- Need independent scaling of services
-- Different services need different tech stacks
-
-**Not recommended for:**
-- MVP phase
-- Solo founder
-- <$100K ARR
+**Monolith → Microservices:** Not recommended until team >5 devs or >$100K ARR.
 \`\`\`
 
 ### 2. Project Setup Guide (`engineering/02-setup-guide.md`)
 
 ```markdown
 # Project Setup Guide
+
+> **Purpose:** Step-by-step commands to bootstrap [Project Name] from zero to running locally. Follow once at project start.
+>
+> **Fits in:** Implements the architecture defined in Technical Requirements (01). After setup, use Implementation Tasks (03) for feature work.
 
 ## Prerequisites
 
@@ -1470,7 +1285,9 @@ const config: CapacitorConfig = {
 ```markdown
 # Implementation Tasks
 
-*Technical implementation plan based on `product/03-tasks.md`*
+> **Purpose:** Phased breakdown of all development work for [Project Name] with dependencies, acceptance criteria, and API contracts. This is your daily work tracker.
+>
+> **Fits in:** Translates product tasks (product/03-tasks.md) into engineering work. Use Code Templates (04) when implementing.
 
 ---
 
@@ -1520,20 +1337,7 @@ Each task includes:
 - [ ] `pnpm db:studio` shows all tables with correct columns
 - [ ] Foreign keys enforce referential integrity (test with invalid insert)
 
-**Schema to implement:**
-\`\`\`typescript
-// Based on PRD entities - customize this
-export const users = sqliteTable('users', {
-  id: text('id').primaryKey(),
-  email: text('email').notNull().unique(),
-  passwordHash: text('password_hash').notNull(),
-  name: text('name'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
-});
-
-// Add product-specific entities from PRD
-\`\`\`
+*Schema pattern defined in Technical Requirements (artifact 01).*
 
 ---
 
@@ -1864,6 +1668,10 @@ E-1.1.1 Setup → E-1.2.1 Schema → E-1.2.5 Migrations → E-1.3.1 Auth API
 
 ```markdown
 # Code Templates
+
+> **Purpose:** Production-ready, copy-paste code patterns for [Project Name]. Covers auth, CRUD, API calls, and common utilities.
+>
+> **Fits in:** Reference when implementing tasks from Implementation Tasks (03). Customize entity names and fields for your domain.
 
 Copy-paste ready code for Fastify backend + Nuxt 4 frontend patterns.
 
@@ -2809,174 +2617,51 @@ export function formatRelative(date: Date | string) {
 ```markdown
 # Engineering Metrics Dashboard
 
-## North Star Metric
-**Ship Velocity:** Features shipped per week
+> **Purpose:** Track shipping velocity and technical health for [Project Name]. Update weekly to stay accountable.
+>
+> **Fits in:** Operational tracking. Review during development to ensure you're shipping, not over-engineering.
 
-**Definition:** Number of meaningful features/improvements deployed to production per week
-**Why this metric:** It directly measures execution speed without sacrificing quality
+## North Star Metric: Ship Velocity
 
----
-
-## Primary Metrics (Track Weekly)
-
-### 1. Ship Velocity
-- **Definition:** Completed features deployed per week
-- **Current:** [X] features/week
-- **Target:** 2-3 features/week (for solo dev)
-- **Tracking:** Count merged PRs or completed tasks
-
-### 2. Bug Escape Rate
-- **Definition:** Bugs found in production / total features shipped
-- **Current:** [X]%
-- **Target:** <10%
-- **Why it matters:** High escape rate = shipping too fast, low quality
+**Definition:** Features shipped per week
+**Target:** 2-3 features/week (solo dev)
+**Tracking:** Count completed tasks or merged PRs
 
 ---
 
-## Health Metrics (Monitor Weekly)
+## Health Metrics
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Build time | [X]s | <60s | 🟢/🟡/🔴 |
-| Deploy frequency | [X]/week | Daily | |
-| Time to recover | [X] min | <30 min | |
-| Test coverage | [X]% | >60% critical paths | |
-
----
-
-## Performance Benchmarks
-
-### Page Load (Core Web Vitals)
-| Page | LCP | FID | CLS | Status |
-|------|-----|-----|-----|--------|
-| Landing | [X]s | [X]ms | [X] | 🟢/🟡/🔴 |
-| Dashboard | [X]s | [X]ms | [X] | |
-| [Core feature] | [X]s | [X]ms | [X] | |
-
-**Targets:**
-- LCP (Largest Contentful Paint): <2.5s
-- FID (First Input Delay): <100ms
-- CLS (Cumulative Layout Shift): <0.1
-
-### API Performance (P95)
-| Endpoint | Response Time | Status |
-|----------|---------------|--------|
-| GET /api/[entity] | [X]ms | 🟢/🟡/🔴 |
-| POST /api/[entity] | [X]ms | |
-| Auth endpoints | [X]ms | |
-
-**Target:** <500ms P95 for all endpoints
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| Ship Velocity | 2-3/week | Completed features deployed |
+| Bug Escape Rate | <10% | Bugs in prod / features shipped |
+| Build Time | <60s | CI pipeline duration |
+| Deploy Frequency | Daily | Production deploys per week |
+| API P95 | <500ms | PostHog or backend logs |
+| LCP (Page Load) | <2.5s | Lighthouse or PostHog |
 
 ---
 
-## Technical Debt Tracker
+## Technical Debt
 
-| ID | Description | Impact | Effort | Priority |
-|----|-------------|--------|--------|----------|
-| TD-001 | [Debt item] | High/Med/Low | S/M/L | 🔴/🟡/🟢 |
-| TD-002 | [Debt item] | High/Med/Low | S/M/L | |
-| TD-003 | [Debt item] | High/Med/Low | S/M/L | |
+Track debt only when it blocks shipping. Simple format:
 
-**Rules:**
-- Address High impact + Small effort debt immediately
-- Schedule Medium priority in backlog
-- Track but don't prioritize Low priority
+| Issue | Impact | Fix When |
+|-------|--------|----------|
+| [Debt item] | High/Med/Low | [Trigger condition] |
+
+**Rule:** Fix High impact + Low effort immediately. Ignore Low impact.
 
 ---
 
-## Uptime & Reliability
+## What NOT to Track
 
-### Service Health
-- **Uptime target:** 99.5% (allows ~3.6 hours downtime/month)
-- **Current uptime:** [X]%
-- **Last incident:** [Date] - [Brief description]
+- ❌ Lines of code
+- ❌ Number of commits
+- ❌ 100% test coverage
+- ❌ Code complexity scores
 
-### Error Rates
-- **4xx errors (client):** [X]/day
-- **5xx errors (server):** [X]/day
-- **Target:** <1% of requests
-
----
-
-## Code Quality Indicators
-
-### NOT Tracking (Vanity Metrics)
-- ❌ Lines of code (more ≠ better)
-- ❌ Number of commits (activity ≠ progress)
-- ❌ 100% test coverage (diminishing returns)
-- ❌ Code complexity scores (unless problematic)
-
-### DO Track
-- ✅ Features shipped (actual output)
-- ✅ Bugs in production (quality signal)
-- ✅ Time to fix bugs (responsiveness)
-- ✅ Deploy frequency (agility)
-
----
-
-## Weekly Engineering Review
-
-*Answer these every Friday:*
-
-**1. What shipped this week?**
-- [Feature/fix 1]
-- [Feature/fix 2]
-- [Feature/fix 3]
-
-**2. What blocked progress?**
-- [Blocker 1] - Resolution: [How solved or plan]
-- [Blocker 2] - Resolution: [How solved or plan]
-
-**3. Technical debt status**
-- Any new debt introduced?
-- Any debt paid down?
-- Critical debt to address next week?
-
-**4. Performance check**
-- Any degradation noticed?
-- Any optimization opportunities?
-
-**5. Next week's priorities**
-1. [Priority 1]
-2. [Priority 2]
-3. [Priority 3]
-
----
-
-## Monthly Engineering Review
-
-### Velocity Trend
-| Week | Features Shipped | Bugs Escaped | Notes |
-|------|------------------|--------------|-------|
-| W1 | [X] | [X] | |
-| W2 | [X] | [X] | |
-| W3 | [X] | [X] | |
-| W4 | [X] | [X] | |
-| **Avg** | **[X]** | **[X]** | |
-
-### Infrastructure Review
-- [ ] Dependencies up to date?
-- [ ] Security patches applied?
-- [ ] Backups working?
-- [ ] Monitoring alerting correctly?
-
-### Architecture Review
-- [ ] Any scaling concerns emerging?
-- [ ] Any refactoring needed?
-- [ ] Any tech debt becoming critical?
-
----
-
-## Incident Log
-
-| Date | Severity | Description | Resolution | Prevention |
-|------|----------|-------------|------------|------------|
-| [Date] | High/Med/Low | [What happened] | [How fixed] | [How to prevent] |
-
-**Severity Definitions:**
-- **High:** Service down, data loss, security breach
-- **Medium:** Feature broken, degraded performance
-- **Low:** Minor bug, cosmetic issue
+Focus on outcomes (shipped features, bugs fixed) not activity metrics.
 ```
 
 ## Guidelines for Generation

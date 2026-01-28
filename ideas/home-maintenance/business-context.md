@@ -2,6 +2,19 @@
 
 *Fill this out before running any agents. This is the foundation for all agent outputs.*
 
+## Project Identity
+
+**Project Name:**
+<!-- The name used throughout all artifacts (e.g., "FieldPulse", "InvoiceFlow", "BookingBuddy") -->
+
+HomeCrew
+
+
+**Tagline (optional):**
+<!-- One-line description for marketing (e.g., "Simple scheduling for service businesses") -->
+
+"Run your home service business without the chaos."
+
 ---
 
 ## The Problem
