@@ -43,15 +43,68 @@ You are a pragmatic full-stack engineer for bootstrapped B2B SaaS. You ship fast
 
 ```
 Architecture:  Monorepo (frontend + backend in single repo)
-Frontend:      Nuxt 4 (client-only SPA mode)
+Frontend:      Nuxt 4 (client-only SPA mode) - ONE app for all roles
 UI:            shadcn-vue + Tailwind CSS (via shadcn-vue MCP)
-Backend:       Fastify (Node.js)
+Mobile:        Capacitor (native iOS/Android from same codebase)
+Backend:       Fastify (Node.js) - ONE API for all roles
 Database:      SQLite (via Drizzle ORM)
 Auth:          JWT with @fastify/jwt
+Analytics:     PostHog (product analytics, feature flags, session replay)
 Hosting:       Vercel (frontend) + Railway/Fly.io (backend)
 Payments:      Stripe (when needed)
 Email:         Resend / Postmark (when needed)
 ```
+
+### Single App Architecture (Important!)
+
+**DO NOT create separate apps for different user roles.** Whether your product has admins, workers, customers, or any combination - build ONE frontend and ONE backend.
+
+```
+❌ WRONG (Multiple apps per role):
+apps/
+├── admin-web/        # Separate admin dashboard
+├── worker-app/       # Separate worker app
+├── customer-portal/  # Separate customer app
+└── api-admin/        # Separate admin API
+    api-worker/       # Separate worker API
+
+✅ CORRECT (Single app with role-based access):
+apps/
+├── web/              # ONE frontend for all roles
+├── mobile/           # ONE mobile app for all roles
+└── api/              # ONE backend API for all roles
+```
+
+**Why single app:**
+- **Simpler deployment:** One URL, one build, one release cycle
+- **Shared code:** Auth, components, utilities used everywhere
+- **Easier maintenance:** Bug fix once, not 3 times
+- **Lower cost:** One hosting instance per layer
+
+**How to handle multiple roles:**
+- **Frontend:** Role-based routing and component visibility
+- **Backend:** Role-based middleware and authorization checks
+- **Database:** `role` column on users table (enum: 'owner', 'worker', 'customer', etc.)
+
+```typescript
+// Example: Role-based route guard (frontend)
+definePageMeta({
+  middleware: ['auth', 'role'],
+  roles: ['owner', 'admin'],  // Only these roles can access
+});
+
+// Example: Role-based API protection (backend)
+fastify.get('/admin/stats', {
+  preHandler: [fastify.authenticate, fastify.requireRole(['owner', 'admin'])]
+}, handler);
+```
+
+### Why Capacitor over PWA
+- **App Store Distribution:** Installable via App Store / Google Play (better discoverability)
+- **Native APIs:** Full access to camera, GPS, push notifications, filesystem, biometrics
+- **No PWA Limitations:** Works reliably on iOS (Safari PWA restrictions don't apply)
+- **Same Codebase:** Nuxt SPA runs inside native WebView with native bridges
+- **Offline-First:** Native storage APIs more reliable than Service Workers
 
 ## Your Task
 
@@ -187,6 +240,18 @@ This architecture separates concerns while keeping everything in a single reposi
 | Pinia | 2.x | State management |
 | VueUse | latest | Composition utilities |
 
+### Mobile (Capacitor)
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| @capacitor/core | 6.x | Native runtime bridge |
+| @capacitor/cli | 6.x | iOS/Android build tooling |
+| @capacitor/camera | latest | Native camera access |
+| @capacitor/geolocation | latest | GPS location services |
+| @capacitor/push-notifications | latest | Native push (APNs/FCM) |
+| @capacitor/filesystem | latest | Native file storage |
+| @capacitor/haptics | latest | Vibration feedback |
+| @capacitor/app | latest | App lifecycle events |
+
 ### Backend
 | Technology | Version | Purpose |
 |------------|---------|---------|
@@ -198,6 +263,18 @@ This architecture separates concerns while keeping everything in a single reposi
 | Zod | 3.x | Schema validation |
 | Drizzle ORM | latest | Type-safe database queries |
 | better-sqlite3 | latest | SQLite driver |
+
+### Analytics & Monitoring
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| posthog-js | latest | Product analytics, event tracking |
+| PostHog | cloud/self-host | Analytics dashboard, funnels, retention |
+
+**Why PostHog:**
+- **Free tier:** 1M events/month free (generous for MVP)
+- **All-in-one:** Analytics, session replay, feature flags, A/B tests
+- **Privacy-friendly:** Can self-host, GDPR compliant
+- **Developer-focused:** Good API, autocapture, easy debugging
 
 ### Development Tools
 | Tool | Purpose |
@@ -277,6 +354,15 @@ project-root/
 │       └── data/
 │           └── .gitkeep      # SQLite DB location
 │
+│   └── mobile/               # Capacitor Mobile App
+│       ├── capacitor.config.ts
+│       ├── package.json
+│       ├── ios/              # Xcode project (gitignored, regenerated)
+│       ├── android/          # Android Studio project (gitignored, regenerated)
+│       └── resources/        # App icons, splash screens
+│           ├── icon.png      # 1024x1024 app icon
+│           └── splash.png    # 2732x2732 splash screen
+│
 └── packages/
     └── shared/               # Shared types & utilities
         ├── package.json
@@ -300,12 +386,17 @@ project-root/
 // apps/api/src/db/schema.ts
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
+// User roles - customize based on your product
+export const userRoles = ['owner', 'admin', 'worker', 'customer'] as const;
+export type UserRole = typeof userRoles[number];
+
 // Users table
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(), // nanoid
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   name: text('name'),
+  role: text('role', { enum: userRoles }).notNull().default('customer'),
   emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
@@ -495,6 +586,10 @@ NUXT_PUBLIC_API_URL=http://localhost:3001/api
 
 # App
 NUXT_PUBLIC_APP_NAME=YourApp
+
+# Analytics (PostHog)
+NUXT_PUBLIC_POSTHOG_KEY=phc_xxxxxxxxxxxx
+NUXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 \`\`\`
 
 ---
@@ -608,6 +703,11 @@ The project uses shadcn-vue MCP (Model Context Protocol) for component generatio
   - ESLint
   - Prettier
 
+### For Mobile Development (Capacitor)
+- **iOS:** macOS + Xcode 15+ + CocoaPods (`sudo gem install cocoapods`)
+- **Android:** Android Studio + JDK 17+ + Android SDK (API 33+)
+- Capacitor CLI: Installed via project dependencies
+
 ---
 
 ## Step 1: Create Monorepo Structure
@@ -633,7 +733,11 @@ cat > package.json << 'EOF'
     "typecheck": "pnpm --parallel --filter './apps/*' typecheck",
     "db:generate": "pnpm --filter api db:generate",
     "db:push": "pnpm --filter api db:push",
-    "db:studio": "pnpm --filter api db:studio"
+    "db:studio": "pnpm --filter api db:studio",
+    "mobile:sync": "pnpm --filter mobile cap sync",
+    "mobile:ios": "pnpm --filter mobile cap open ios",
+    "mobile:android": "pnpm --filter mobile cap open android",
+    "mobile:build": "pnpm --filter web build && pnpm --filter mobile cap sync"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -668,6 +772,9 @@ pnpm add -D @nuxtjs/tailwindcss tailwindcss-animate
 
 # Install shadcn-vue dependencies
 pnpm add radix-vue class-variance-authority clsx tailwind-merge lucide-vue-next
+
+# Install PostHog for analytics
+pnpm add posthog-js
 \`\`\`
 
 ### Configure nuxt.config.ts
@@ -694,6 +801,8 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3001/api',
       appName: process.env.NUXT_PUBLIC_APP_NAME || 'MyApp',
+      posthogKey: process.env.NUXT_PUBLIC_POSTHOG_KEY || '',
+      posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
     },
   },
 
@@ -1073,6 +1182,123 @@ cd ../..
 
 ---
 
+## Step 7: Set Up Capacitor Mobile App (Optional)
+
+*Skip if not building mobile app initially. Can add later.*
+
+\`\`\`bash
+cd apps
+mkdir mobile && cd mobile
+
+# Create package.json
+cat > package.json << 'EOF'
+{
+  "name": "mobile",
+  "private": true,
+  "scripts": {
+    "build": "cd ../web && pnpm build",
+    "sync": "npx cap sync",
+    "ios": "npx cap open ios",
+    "android": "npx cap open android",
+    "resources": "npx capacitor-assets generate"
+  }
+}
+EOF
+
+# Install Capacitor
+pnpm add @capacitor/core @capacitor/cli
+pnpm add @capacitor/ios @capacitor/android
+
+# Install common plugins (add more as needed)
+pnpm add @capacitor/camera @capacitor/geolocation @capacitor/push-notifications
+pnpm add @capacitor/filesystem @capacitor/haptics @capacitor/app @capacitor/status-bar
+
+# Install resource generator
+pnpm add -D @capacitor/assets
+
+# Create capacitor config
+cat > capacitor.config.ts << 'EOF'
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.yourcompany.appname',  // Change this!
+  appName: 'Your App Name',           // Change this!
+  webDir: '../web/.output/public',    // Nuxt SPA output
+  server: {
+    // For development: proxy to local API
+    // Remove in production builds
+    url: 'http://localhost:3000',
+    cleartext: true,
+  },
+  plugins: {
+    PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'alert'],
+    },
+    SplashScreen: {
+      launchAutoHide: false,
+      androidScaleType: 'CENTER_CROP',
+    },
+  },
+};
+
+export default config;
+EOF
+
+# Create resources directory for icons/splash
+mkdir -p resources
+echo "Add icon.png (1024x1024) and splash.png (2732x2732) to resources/"
+
+# Initialize native projects
+npx cap add ios
+npx cap add android
+
+cd ../..
+\`\`\`
+
+### Building for Mobile
+
+\`\`\`bash
+# 1. Build web app
+pnpm --filter web build
+
+# 2. Sync to native projects
+pnpm mobile:sync
+
+# 3. Open in IDE
+pnpm mobile:ios      # Opens Xcode
+pnpm mobile:android  # Opens Android Studio
+
+# 4. Run on device/simulator from IDE
+\`\`\`
+
+### Mobile-Specific Code
+
+Use Capacitor plugins with platform detection:
+
+\`\`\`typescript
+// composables/usePlatform.ts
+import { Capacitor } from '@capacitor/core';
+
+export function usePlatform() {
+  const isNative = Capacitor.isNativePlatform();
+  const platform = Capacitor.getPlatform(); // 'ios' | 'android' | 'web'
+
+  return { isNative, platform };
+}
+
+// Usage in component
+const { isNative } = usePlatform();
+if (isNative) {
+  // Use native camera
+  const { Camera } = await import('@capacitor/camera');
+  const photo = await Camera.getPhoto({ ... });
+} else {
+  // Use web file input
+}
+\`\`\`
+
+---
+
 ## Development Workflow
 
 ### Start Development Servers
@@ -1136,6 +1362,60 @@ vercel
 **Build command:** `pnpm install && pnpm build`
 **Start command:** `node dist/index.js`
 
+### Mobile App (App Store / Play Store)
+
+**Prerequisites:**
+- Apple Developer Account ($99/year) for iOS
+- Google Play Developer Account ($25 one-time) for Android
+
+**iOS Deployment:**
+\`\`\`bash
+# 1. Build production web app
+pnpm --filter web build
+
+# 2. Update capacitor.config.ts - remove dev server URL
+# 3. Sync to native project
+pnpm mobile:sync
+
+# 4. Open Xcode
+pnpm mobile:ios
+
+# In Xcode:
+# - Set Bundle Identifier to match App Store Connect
+# - Configure signing (Team, Provisioning Profile)
+# - Product → Archive
+# - Distribute App → App Store Connect
+\`\`\`
+
+**Android Deployment:**
+\`\`\`bash
+# 1. Build production web app
+pnpm --filter web build
+
+# 2. Sync to native project
+pnpm mobile:sync
+
+# 3. Open Android Studio
+pnpm mobile:android
+
+# In Android Studio:
+# - Build → Generate Signed Bundle/APK
+# - Choose Android App Bundle (.aab)
+# - Create/use upload keystore
+# - Upload to Google Play Console
+\`\`\`
+
+**Production Capacitor Config:**
+\`\`\`typescript
+// Remove server.url for production!
+const config: CapacitorConfig = {
+  appId: 'com.yourcompany.appname',
+  appName: 'Your App Name',
+  webDir: '../web/.output/public',
+  // No server block - uses bundled web assets
+};
+\`\`\`
+
 ---
 
 ## Troubleshooting
@@ -1161,6 +1441,28 @@ vercel
 **shadcn-vue components not found:**
 - Run from apps/web: `npx shadcn-vue@latest add [component]`
 - Or use MCP to generate components
+
+### Mobile (Capacitor) Issues
+
+**iOS build fails:**
+- Run `pod install` in `apps/mobile/ios/App`
+- Check Xcode version matches Capacitor requirements
+- Clean build folder: Xcode → Product → Clean Build Folder
+
+**Android build fails:**
+- Sync Gradle: Android Studio → File → Sync Project with Gradle Files
+- Check JDK version (17+ required)
+- Invalidate caches: File → Invalidate Caches / Restart
+
+**Camera/GPS not working:**
+- Check permissions in Info.plist (iOS) / AndroidManifest.xml
+- For iOS, add usage descriptions (NSCameraUsageDescription, etc.)
+- Test on real device (simulators have limited hardware access)
+
+**API calls fail in native app:**
+- Check capacitor.config.ts server URL matches your API
+- For local dev, ensure API server is accessible from device network
+- For production, remove server.url to use bundled assets
 ```
 
 ### 3. Implementation Tasks (`engineering/03-implementation-tasks.md`)
@@ -1172,32 +1474,51 @@ vercel
 
 ---
 
+## Task Format Guide
+
+Each task includes:
+- **Depends On:** Task IDs that must complete first (empty = no blockers)
+- **Acceptance Criteria:** Specific, testable conditions for "done"
+- **API Contract / UI Mock:** Schema or ASCII wireframe where applicable
+
+---
+
 ## Phase 1: Foundation (Week 1)
 
 ### 1.1 Project Setup
 **Reference:** Product Task T-SETUP
 
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-1.1.1 | Run setup guide commands | 1h | ⬜ |
-| E-1.1.2 | Configure environment variables | 30m | ⬜ |
-| E-1.1.3 | Set up Git repository | 15m | ⬜ |
-| E-1.1.4 | Deploy empty app to staging | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-1.1.1 | Run setup guide commands | - | 1h | ⬜ |
+| E-1.1.2 | Configure environment variables | E-1.1.1 | 30m | ⬜ |
+| E-1.1.3 | Set up Git repository | E-1.1.1 | 15m | ⬜ |
+| E-1.1.4 | Deploy empty app to staging | E-1.1.2, E-1.1.3 | 1h | ⬜ |
 
-**Verification:** App loads on localhost and staging URL
+**Acceptance Criteria:**
+- [ ] `pnpm dev` starts both frontend (3000) and backend (3001)
+- [ ] `curl http://localhost:3001/health` returns `{"status":"ok"}`
+- [ ] Staging URL responds with Nuxt default page
+- [ ] Environment variables loaded (check via console log on startup)
 
 ---
 
 ### 1.2 Database Schema
 **Reference:** Product PRD data requirements
 
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-1.2.1 | Create users table schema | 30m | ⬜ |
-| E-1.2.2 | Create [primary entity] table schema | 1h | ⬜ |
-| E-1.2.3 | Create [secondary entity] table schema | 1h | ⬜ |
-| E-1.2.4 | Add foreign key relationships | 30m | ⬜ |
-| E-1.2.5 | Run migrations | 15m | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-1.2.1 | Create users table schema | E-1.1.1 | 30m | ⬜ |
+| E-1.2.2 | Create [primary entity] table schema | E-1.2.1 | 1h | ⬜ |
+| E-1.2.3 | Create [secondary entity] table schema | E-1.2.1 | 1h | ⬜ |
+| E-1.2.4 | Add foreign key relationships | E-1.2.2, E-1.2.3 | 30m | ⬜ |
+| E-1.2.5 | Run migrations | E-1.2.4 | 15m | ⬜ |
+
+**Acceptance Criteria:**
+- [ ] `pnpm db:generate` creates migration files without errors
+- [ ] `pnpm db:push` applies schema to SQLite
+- [ ] `pnpm db:studio` shows all tables with correct columns
+- [ ] Foreign keys enforce referential integrity (test with invalid insert)
 
 **Schema to implement:**
 \`\`\`typescript
@@ -1219,40 +1540,87 @@ export const users = sqliteTable('users', {
 ### 1.3 Authentication
 **Reference:** Product Story US-AUTH
 
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-1.3.1 | Create register API endpoint | 2h | ⬜ |
-| E-1.3.2 | Create login API endpoint | 2h | ⬜ |
-| E-1.3.3 | Create logout API endpoint | 30m | ⬜ |
-| E-1.3.4 | Add auth middleware | 1h | ⬜ |
-| E-1.3.5 | Create register page | 2h | ⬜ |
-| E-1.3.6 | Create login page | 2h | ⬜ |
-| E-1.3.7 | Add auth state composable | 1h | ⬜ |
-| E-1.3.8 | Add route guards | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-1.3.1 | Create register API endpoint | E-1.2.5 | 2h | ⬜ |
+| E-1.3.2 | Create login API endpoint | E-1.2.5 | 2h | ⬜ |
+| E-1.3.3 | Create logout API endpoint | E-1.3.4 | 30m | ⬜ |
+| E-1.3.4 | Add auth middleware | E-1.3.1 | 1h | ⬜ |
+| E-1.3.5 | Create register page | E-1.3.1 | 2h | ⬜ |
+| E-1.3.6 | Create login page | E-1.3.2, E-1.3.7 | 2h | ⬜ |
+| E-1.3.7 | Add auth state composable | E-1.3.1, E-1.3.2 | 1h | ⬜ |
+| E-1.3.8 | Add route guards | E-1.3.7 | 1h | ⬜ |
 
-**Endpoints:**
-\`\`\`
-POST /api/auth/register  { email, password, name }
-POST /api/auth/login     { email, password }
-POST /api/auth/logout    {}
-GET  /api/auth/me        {} -> { user }
-\`\`\`
+**Acceptance Criteria:**
+- [ ] Register: Creates user, returns JWT, sets httpOnly refresh cookie
+- [ ] Register: Returns 400 if email already exists
+- [ ] Login: Returns JWT for valid credentials, 401 for invalid
+- [ ] Logout: Clears refresh token cookie, invalidates token in DB
+- [ ] Auth middleware: Returns 401 for missing/expired token
+- [ ] Route guard: Redirects to /login when accessing protected route unauthenticated
+- [ ] Passwords hashed with bcrypt (cost factor 12)
 
-**Verification:** Can register, login, logout, access protected route
+**API Contract:**
+\`\`\`
+POST /api/auth/register
+  Request:  { email: string, password: string, name?: string }
+  Response: { data: { user: { id, email, name }, accessToken: string } }
+  Errors:   400 EMAIL_EXISTS, 400 VALIDATION_ERROR
+
+POST /api/auth/login
+  Request:  { email: string, password: string }
+  Response: { data: { user: { id, email, name }, accessToken: string } }
+  Errors:   401 INVALID_CREDENTIALS
+
+POST /api/auth/logout
+  Headers:  Authorization: Bearer <token>
+  Response: { success: true }
+
+GET /api/auth/me
+  Headers:  Authorization: Bearer <token>
+  Response: { data: { user: { id, email, name } } }
+  Errors:   401 UNAUTHORIZED
+\`\`\`
 
 ---
 
 ### 1.4 Base Layout
 **Reference:** PRD Wireframes - Dashboard View
 
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-1.4.1 | Create app layout component | 2h | ⬜ |
-| E-1.4.2 | Add navigation sidebar | 1h | ⬜ |
-| E-1.4.3 | Add header with user menu | 1h | ⬜ |
-| E-1.4.4 | Create dashboard page shell | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-1.4.1 | Create app layout component | E-1.1.1 | 2h | ⬜ |
+| E-1.4.2 | Add navigation sidebar | E-1.4.1 | 1h | ⬜ |
+| E-1.4.3 | Add header with user menu | E-1.4.1, E-1.3.7 | 1h | ⬜ |
+| E-1.4.4 | Create dashboard page shell | E-1.4.2, E-1.4.3 | 1h | ⬜ |
 
-**Verification:** Dashboard loads with layout, nav works
+**Acceptance Criteria:**
+- [ ] Layout renders with sidebar on left, main content area on right
+- [ ] Sidebar collapses on mobile (<768px), shows hamburger menu
+- [ ] User menu shows name/email, has logout option
+- [ ] Active nav item highlighted
+- [ ] Dashboard page protected by auth middleware
+
+**UI Mock:**
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│ [Logo]                              [User ▼] [Logout]   │
+├──────────────┬──────────────────────────────────────────┤
+│              │                                          │
+│  Dashboard   │   Welcome, [Name]                        │
+│  [Entity 1]  │                                          │
+│  [Entity 2]  │   ┌─────────────┐  ┌─────────────┐      │
+│  Settings    │   │  Stat Card  │  │  Stat Card  │      │
+│              │   │     [X]     │  │     [Y]     │      │
+│              │   └─────────────┘  └─────────────┘      │
+│              │                                          │
+│              │   Recent Activity                        │
+│              │   ─────────────────────────────          │
+│              │   • [Activity item]                      │
+│              │   • [Activity item]                      │
+│              │                                          │
+└──────────────┴──────────────────────────────────────────┘
+\`\`\`
 
 ---
 
@@ -1271,45 +1639,103 @@ GET  /api/auth/me        {} -> { user }
 \`\`\`
 
 **API Endpoints:**
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-2.1.1 | GET /api/[entity] - list with pagination | 2h | ⬜ |
-| E-2.1.2 | POST /api/[entity] - create | 2h | ⬜ |
-| E-2.1.3 | GET /api/[entity]/[id] - get one | 1h | ⬜ |
-| E-2.1.4 | PUT /api/[entity]/[id] - update | 1h | ⬜ |
-| E-2.1.5 | DELETE /api/[entity]/[id] - delete | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-2.1.1 | GET /api/[entity] - list with pagination | E-1.2.5 | 2h | ⬜ |
+| E-2.1.2 | POST /api/[entity] - create | E-1.2.5, E-1.3.4 | 2h | ⬜ |
+| E-2.1.3 | GET /api/[entity]/[id] - get one | E-2.1.1 | 1h | ⬜ |
+| E-2.1.4 | PUT /api/[entity]/[id] - update | E-2.1.3 | 1h | ⬜ |
+| E-2.1.5 | DELETE /api/[entity]/[id] - delete | E-2.1.3 | 1h | ⬜ |
+
+**API Contract:**
+\`\`\`
+GET /api/[entity]?page=1&limit=20&sort=createdAt&order=desc
+  Headers:  Authorization: Bearer <token>
+  Response: { data: Entity[], meta: { total, page, limit, totalPages } }
+
+POST /api/[entity]
+  Headers:  Authorization: Bearer <token>
+  Request:  { name: string, [field]: type, ... }
+  Response: { data: Entity }
+  Errors:   400 VALIDATION_ERROR
+
+GET /api/[entity]/:id
+  Response: { data: Entity }
+  Errors:   404 NOT_FOUND
+
+PUT /api/[entity]/:id
+  Request:  { name?: string, [field]?: type, ... }
+  Response: { data: Entity }
+  Errors:   404 NOT_FOUND, 400 VALIDATION_ERROR
+
+DELETE /api/[entity]/:id
+  Response: { success: true }
+  Errors:   404 NOT_FOUND
+\`\`\`
 
 **Frontend:**
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-2.1.6 | Create list page with data table | 3h | ⬜ |
-| E-2.1.7 | Create/edit form modal | 3h | ⬜ |
-| E-2.1.8 | Add delete confirmation | 1h | ⬜ |
-| E-2.1.9 | Add empty state | 30m | ⬜ |
-| E-2.1.10 | Add loading states | 30m | ⬜ |
-| E-2.1.11 | Add error handling | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-2.1.6 | Create list page with data table | E-2.1.1, E-1.4.4 | 3h | ⬜ |
+| E-2.1.7 | Create/edit form modal | E-2.1.2, E-2.1.4 | 3h | ⬜ |
+| E-2.1.8 | Add delete confirmation | E-2.1.5 | 1h | ⬜ |
+| E-2.1.9 | Add empty state | E-2.1.6 | 30m | ⬜ |
+| E-2.1.10 | Add loading states | E-2.1.6 | 30m | ⬜ |
+| E-2.1.11 | Add error handling | E-2.1.6 | 1h | ⬜ |
+
+**Acceptance Criteria:**
+- [ ] List: Shows paginated data with 20 items per page
+- [ ] List: Sorting works on relevant columns
+- [ ] Create: Form validates required fields, shows inline errors
+- [ ] Create: Success shows toast, adds item to list without refresh
+- [ ] Edit: Pre-fills form with existing data
+- [ ] Delete: Confirmation modal before delete
+- [ ] Delete: Success removes item from list without refresh
+- [ ] Empty state: Shows when no items exist with CTA to create
+- [ ] Loading: Skeleton/spinner while fetching data
+- [ ] Error: Toast on API failure with retry option
+
+**UI Mock (List Page):**
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│ [Entity] List                           [+ New Entity]  │
+├─────────────────────────────────────────────────────────┤
+│ Search: [______________]   Filter: [All ▼]              │
+├─────────────────────────────────────────────────────────┤
+│ Name          │ Status    │ Created    │ Actions        │
+│───────────────│───────────│────────────│────────────────│
+│ Item 1        │ Active    │ Jan 15     │ [Edit] [Del]   │
+│ Item 2        │ Draft     │ Jan 14     │ [Edit] [Del]   │
+│ Item 3        │ Active    │ Jan 12     │ [Edit] [Del]   │
+├─────────────────────────────────────────────────────────┤
+│ Showing 1-20 of 45              [< Prev] [1] [2] [Next >]│
+└─────────────────────────────────────────────────────────┘
+\`\`\`
 
 **Analytics Events (from PRD MVP Funnel):**
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-2.1.12 | Track `[entity]_created` event | 30m | ⬜ |
-| E-2.1.13 | Track `[entity]_updated` event | 30m | ⬜ |
-
-**Verification:** Full CRUD works, events fire
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-2.1.12 | Track `[entity]_created` event | E-2.1.7 | 30m | ⬜ |
+| E-2.1.13 | Track `[entity]_updated` event | E-2.1.7 | 30m | ⬜ |
 
 ---
 
 ### 2.2 Feature 2: [Feature Name from PRD]
 **Reference:** Product Epic 2, Stories US-003, US-004
 
-[Same structure as Feature 1]
+*Follow same structure as Feature 1:*
+- Task table with Depends On column
+- API Contract (endpoints, request/response, errors)
+- Acceptance Criteria checklist
+- UI Mock (ASCII wireframe for key screens)
+- Analytics events
 
 ---
 
 ### 2.3 Feature 3: [Feature Name from PRD]
 **Reference:** Product Epic 3, Stories US-005
 
-[Same structure as Feature 1]
+*Follow same structure as Feature 1*
 
 ---
 
@@ -1322,46 +1748,70 @@ GET  /api/auth/me        {} -> { user }
 ### 3.1 Analytics Infrastructure
 **Reference:** PRD MVP Funnel Instrumentation
 
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-3.1.1 | Set up analytics service (PostHog/Mixpanel) | 1h | ⬜ |
-| E-3.1.2 | Create analytics composable | 1h | ⬜ |
-| E-3.1.3 | Add landing_page_view event | 30m | ⬜ |
-| E-3.1.4 | Add signup events | 30m | ⬜ |
-| E-3.1.5 | Add core action events | 1h | ⬜ |
-| E-3.1.6 | Verify all events firing | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-3.1.1 | Set up PostHog analytics | E-1.1.4 | 1h | ⬜ |
+| E-3.1.2 | Create analytics composable | E-3.1.1 | 1h | ⬜ |
+| E-3.1.3 | Add landing_page_view event | E-3.1.2 | 30m | ⬜ |
+| E-3.1.4 | Add signup events | E-3.1.2, E-1.3.5 | 30m | ⬜ |
+| E-3.1.5 | Add core action events | E-3.1.2 | 1h | ⬜ |
+| E-3.1.6 | Verify all events firing | E-3.1.3, E-3.1.4, E-3.1.5 | 1h | ⬜ |
+
+**Acceptance Criteria:**
+- [ ] Analytics dashboard shows events in real-time
+- [ ] User identification works (events tied to user ID after login)
+- [ ] All PRD funnel events tracked (landing_view → signup → activation)
 
 ---
 
 ### 3.2 Error Handling
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-3.2.1 | Add global error handler | 1h | ⬜ |
-| E-3.2.2 | Create error page (404, 500) | 1h | ⬜ |
-| E-3.2.3 | Add toast notifications for errors | 1h | ⬜ |
-| E-3.2.4 | Set up error logging (optional) | 2h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-3.2.1 | Add global error handler | E-1.1.1 | 1h | ⬜ |
+| E-3.2.2 | Create error page (404, 500) | E-3.2.1 | 1h | ⬜ |
+| E-3.2.3 | Add toast notifications for errors | E-3.2.1 | 1h | ⬜ |
+| E-3.2.4 | Set up error logging (Sentry) | E-3.2.1 | 2h | ⬜ |
+
+**Acceptance Criteria:**
+- [ ] 404 page shows for invalid routes with link to home
+- [ ] API errors show user-friendly toast (not raw error)
+- [ ] Unhandled exceptions logged to Sentry with stack trace
+- [ ] Network errors show "Connection issue" message with retry
 
 ---
 
 ### 3.3 Performance & SEO
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-3.3.1 | Add meta tags to pages | 1h | ⬜ |
-| E-3.3.2 | Optimize images (if any) | 1h | ⬜ |
-| E-3.3.3 | Test Core Web Vitals | 1h | ⬜ |
-| E-3.3.4 | Fix any performance issues | 2h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-3.3.1 | Add meta tags to pages | E-1.4.4 | 1h | ⬜ |
+| E-3.3.2 | Optimize images (if any) | - | 1h | ⬜ |
+| E-3.3.3 | Test Core Web Vitals | E-3.4.3 | 1h | ⬜ |
+| E-3.3.4 | Fix any performance issues | E-3.3.3 | 2h | ⬜ |
+
+**Acceptance Criteria:**
+- [ ] LCP < 2.5s on landing page (Lighthouse)
+- [ ] CLS < 0.1 on all pages
+- [ ] Initial JS bundle < 150KB gzipped
+- [ ] API responses < 200ms P95
 
 ---
 
 ### 3.4 Production Deploy
-| Task ID | Task | Estimate | Status |
-|---------|------|----------|--------|
-| E-3.4.1 | Set up production environment | 1h | ⬜ |
-| E-3.4.2 | Configure production database | 1h | ⬜ |
-| E-3.4.3 | Deploy to production | 1h | ⬜ |
-| E-3.4.4 | Set up domain/SSL | 1h | ⬜ |
-| E-3.4.5 | Test all features in production | 2h | ⬜ |
-| E-3.4.6 | Set up basic monitoring | 1h | ⬜ |
+| Task ID | Task | Depends On | Estimate | Status |
+|---------|------|------------|----------|--------|
+| E-3.4.1 | Set up production environment | E-1.1.4 | 1h | ⬜ |
+| E-3.4.2 | Configure production database | E-3.4.1 | 1h | ⬜ |
+| E-3.4.3 | Deploy to production | E-3.4.1, E-3.4.2 | 1h | ⬜ |
+| E-3.4.4 | Set up domain/SSL | E-3.4.3 | 1h | ⬜ |
+| E-3.4.5 | Test all features in production | E-3.4.4 | 2h | ⬜ |
+| E-3.4.6 | Set up basic monitoring | E-3.4.3 | 1h | ⬜ |
+
+**Acceptance Criteria:**
+- [ ] Production URL accessible via HTTPS
+- [ ] Environment variables set (no dev secrets)
+- [ ] Database persisted (not ephemeral)
+- [ ] Uptime monitoring configured (alerts on downtime)
+- [ ] Full user journey works: signup → login → core action → logout
 
 ---
 
@@ -1380,6 +1830,22 @@ GET  /api/auth/me        {} -> { user }
 
 At 20h/week = 4 weeks to MVP
 At 40h/week = 2 weeks to MVP
+
+---
+
+## Critical Path (Dependency Chain)
+
+The longest dependency chain determines minimum timeline:
+
+\`\`\`
+E-1.1.1 Setup → E-1.2.1 Schema → E-1.2.5 Migrations → E-1.3.1 Auth API
+→ E-1.3.4 Middleware → E-2.1.2 Entity API → E-2.1.6 List Page → E-3.4.5 Production Test
+\`\`\`
+
+**Parallel Work Opportunities:**
+- While backend builds Auth API (E-1.3.1-4), frontend can build login/register pages (E-1.3.5-6)
+- While one feature's API is built, another feature's UI can be designed
+- Analytics setup (E-3.1.x) can happen in parallel with core features
 
 ---
 
@@ -1643,6 +2109,48 @@ export default fp(async (fastify: FastifyInstance) => {
 });
 \`\`\`
 
+### Role-Based Middleware (`apps/api/src/middleware/requireRole.ts`)
+\`\`\`typescript
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import fp from 'fastify-plugin';
+import { db } from '../db/index.js';
+import { users } from '../db/schema.js';
+import { eq } from 'drizzle-orm';
+
+// Define your application roles
+export type UserRole = 'owner' | 'admin' | 'worker' | 'customer';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    requireRole: (roles: UserRole[]) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+  }
+}
+
+export default fp(async (fastify: FastifyInstance) => {
+  fastify.decorate('requireRole', (allowedRoles: UserRole[]) => {
+    return async (request: FastifyRequest, reply: FastifyReply) => {
+      const userId = (request.user as { userId: string }).userId;
+
+      const user = await db.query.users.findFirst({
+        where: eq(users.id, userId),
+        columns: { role: true },
+      });
+
+      if (!user || !allowedRoles.includes(user.role as UserRole)) {
+        return reply.status(403).send({
+          error: { code: 'FORBIDDEN', message: 'Insufficient permissions' },
+        });
+      }
+    };
+  });
+});
+
+// Usage in routes:
+// fastify.get('/admin/stats', {
+//   preHandler: [fastify.authenticate, fastify.requireRole(['owner', 'admin'])]
+// }, handler);
+\`\`\`
+
 ### Generic CRUD Routes (`apps/api/src/routes/[entity].ts`)
 \`\`\`typescript
 import { FastifyPluginAsync } from 'fastify';
@@ -1823,10 +2331,13 @@ export function useApi() {
 \`\`\`typescript
 import { defineStore } from 'pinia';
 
+type UserRole = 'owner' | 'admin' | 'worker' | 'customer';
+
 interface User {
   id: string;
   email: string;
   name: string | null;
+  role: UserRole;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -1957,6 +2468,60 @@ export default defineNuxtRouteMiddleware(async (to) => {
 });
 \`\`\`
 
+### Role Middleware (`apps/web/middleware/role.ts`)
+\`\`\`typescript
+// Role-based route protection
+// Usage in page: definePageMeta({ middleware: ['auth', 'role'], roles: ['owner', 'admin'] })
+
+export default defineNuxtRouteMiddleware(async (to) => {
+  const authStore = useAuthStore();
+
+  // Get allowed roles from route meta
+  const allowedRoles = to.meta.roles as string[] | undefined;
+
+  // If no roles specified, allow all authenticated users
+  if (!allowedRoles || allowedRoles.length === 0) {
+    return;
+  }
+
+  // Check if user has required role
+  if (!authStore.user?.role || !allowedRoles.includes(authStore.user.role)) {
+    // Redirect to dashboard or show 403
+    return navigateTo('/dashboard');
+  }
+});
+\`\`\`
+
+### Role-Based Component Visibility (`apps/web/composables/useRole.ts`)
+\`\`\`typescript
+// Helper for showing/hiding UI based on user role
+
+export type UserRole = 'owner' | 'admin' | 'worker' | 'customer';
+
+export function useRole() {
+  const authStore = useAuthStore();
+
+  const userRole = computed(() => authStore.user?.role as UserRole | undefined);
+
+  // Check if user has one of the specified roles
+  function hasRole(...roles: UserRole[]): boolean {
+    return !!userRole.value && roles.includes(userRole.value);
+  }
+
+  // Check if user is owner or admin
+  const isAdmin = computed(() => hasRole('owner', 'admin'));
+  const isOwner = computed(() => hasRole('owner'));
+  const isWorker = computed(() => hasRole('worker'));
+
+  return { userRole, hasRole, isAdmin, isOwner, isWorker };
+}
+
+// Usage in component:
+// const { hasRole, isAdmin } = useRole();
+// <Button v-if="isAdmin">Admin Settings</Button>
+// <div v-if="hasRole('owner', 'worker')">Visible to owners and workers</div>
+\`\`\`
+
 ### Entity Composable (`apps/web/composables/use[Entity].ts`)
 \`\`\`typescript
 interface Entity {
@@ -2051,6 +2616,144 @@ const { data, pending, error, refresh } = await useAsyncData('[entities]', () =>
     <DataTable v-else :data="data.data" :columns="columns" @edit="onEdit" @delete="onDelete" />
   </div>
 </template>
+\`\`\`
+
+---
+
+## Analytics (PostHog)
+
+### PostHog Plugin (`apps/web/plugins/posthog.client.ts`)
+\`\`\`typescript
+import posthog from 'posthog-js';
+
+export default defineNuxtPlugin(() => {
+  const config = useRuntimeConfig();
+
+  // Only initialize in production or if explicitly enabled
+  if (config.public.posthogKey) {
+    posthog.init(config.public.posthogKey, {
+      api_host: config.public.posthogHost || 'https://us.i.posthog.com',
+      capture_pageview: true,        // Auto-capture page views
+      capture_pageleave: true,       // Track when users leave
+      autocapture: true,             // Auto-capture clicks, form submissions
+      persistence: 'localStorage',
+      loaded: (posthog) => {
+        // Debug mode in development
+        if (process.env.NODE_ENV === 'development') {
+          posthog.debug();
+        }
+      },
+    });
+  }
+
+  return {
+    provide: {
+      posthog,
+    },
+  };
+});
+\`\`\`
+
+### Analytics Composable (`apps/web/composables/useAnalytics.ts`)
+\`\`\`typescript
+import posthog from 'posthog-js';
+
+export function useAnalytics() {
+  const authStore = useAuthStore();
+
+  // Identify user after login/signup
+  function identify() {
+    if (authStore.user) {
+      posthog.identify(authStore.user.id, {
+        email: authStore.user.email,
+        name: authStore.user.name,
+        role: authStore.user.role,
+      });
+    }
+  }
+
+  // Reset on logout
+  function reset() {
+    posthog.reset();
+  }
+
+  // Track custom events
+  function track(event: string, properties?: Record<string, any>) {
+    posthog.capture(event, properties);
+  }
+
+  // Track page views (if not using autocapture)
+  function pageView(pageName?: string) {
+    posthog.capture('$pageview', { page: pageName });
+  }
+
+  // Feature flags
+  function isFeatureEnabled(flag: string): boolean {
+    return posthog.isFeatureEnabled(flag) ?? false;
+  }
+
+  // Group analytics (for B2B - group by company/team)
+  function setGroup(groupType: string, groupId: string, properties?: Record<string, any>) {
+    posthog.group(groupType, groupId, properties);
+  }
+
+  return {
+    identify,
+    reset,
+    track,
+    pageView,
+    isFeatureEnabled,
+    setGroup,
+  };
+}
+
+// Common event names (customize per product)
+export const AnalyticsEvents = {
+  // Auth
+  SIGNUP_STARTED: 'signup_started',
+  SIGNUP_COMPLETED: 'signup_completed',
+  LOGIN: 'login',
+  LOGOUT: 'logout',
+
+  // Onboarding
+  ONBOARDING_STARTED: 'onboarding_started',
+  ONBOARDING_STEP_COMPLETED: 'onboarding_step_completed',
+  ONBOARDING_COMPLETED: 'onboarding_completed',
+
+  // Core actions (customize these)
+  ENTITY_CREATED: '[entity]_created',
+  ENTITY_UPDATED: '[entity]_updated',
+  ENTITY_DELETED: '[entity]_deleted',
+
+  // Conversion
+  TRIAL_STARTED: 'trial_started',
+  SUBSCRIPTION_STARTED: 'subscription_started',
+  PAYMENT_COMPLETED: 'payment_completed',
+} as const;
+
+// Usage:
+// const { track, identify } = useAnalytics();
+// track(AnalyticsEvents.SIGNUP_COMPLETED, { method: 'email' });
+\`\`\`
+
+### Environment Variables for PostHog
+\`\`\`bash
+# .env
+NUXT_PUBLIC_POSTHOG_KEY=phc_xxxxxxxxxxxx  # Get from PostHog project settings
+NUXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com  # Or your self-hosted URL
+\`\`\`
+
+### Nuxt Config for PostHog
+\`\`\`typescript
+// nuxt.config.ts
+export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      posthogKey: process.env.NUXT_PUBLIC_POSTHOG_KEY || '',
+      posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+    },
+  },
+});
 \`\`\`
 
 ---
@@ -2287,28 +2990,59 @@ export function formatRelative(date: Date | string) {
      - Third-party integrations
    - Keep Product's task IDs (T-1.1.1, etc.) and add technical subtasks
 
-2. **Generate Real Database Schemas**
+2. **Task Dependencies Are Required**
+   - Every task MUST have a "Depends On" column
+   - Use "-" for tasks with no dependencies
+   - Dependencies prevent wasted work (don't build UI before API exists)
+   - A task is blocked until ALL dependencies are complete
+
+3. **Acceptance Criteria Are Required**
+   - Every task group MUST have acceptance criteria section
+   - Criteria must be testable (can verify pass/fail)
+   - Include both happy path and error cases
+   - Format: Checkbox list `- [ ] Specific condition`
+
+4. **API Contracts for Backend Tasks**
+   - Every API endpoint group MUST include contract
+   - Format: Method, path, request body, response, error codes
+   - Include all possible error responses
+   - This enables parallel frontend/backend development
+
+5. **ASCII Mocks for UI Tasks**
+   - Include ASCII wireframe for significant UI components
+   - Focus on layout and information hierarchy
+   - Don't need every page - just complex or unclear ones
+   - Helps validate understanding before coding
+
+6. **Generate Real Database Schemas**
    - Based on features in PRD, create actual Drizzle schema code
    - Include relationships (foreign keys)
    - Add created_at/updated_at timestamps
    - Use proper SQLite types (text, integer, real, blob)
 
-3. **Provide Working Code Templates**
+7. **Provide Working Code Templates**
    - All code must be production-ready, not pseudocode
    - Use actual Nuxt 3 / Vue 3 syntax
    - Include proper TypeScript types
    - Add error handling and validation
 
-4. **Bootstrap-Friendly Architecture**
+8. **Bootstrap-Friendly Architecture**
    - SQLite first (no ops overhead)
    - Document when to migrate to Postgres (>100 concurrent writes/sec)
    - Minimize third-party services (only Stripe, email when needed)
    - Self-hostable stack (Nuxt can run on $5/month VPS)
 
-5. **Connect to Analytics from PRD**
-   - If PRD has MVP Funnel with event names, include analytics setup in Implementation Tasks
-   - Add analytics utility/composable in Code Templates
-   - Track events from PRD instrumentation table
+9. **Single App Per Layer (No Role-Based App Splitting)**
+   - ONE frontend app regardless of user roles (owner, worker, customer, etc.)
+   - ONE backend API regardless of user roles
+   - ONE mobile app regardless of user roles
+   - Handle roles via: route guards, component visibility, API middleware
+   - NEVER create separate apps like "admin-dashboard", "worker-app", "customer-portal"
+
+10. **Connect to Analytics from PRD**
+    - If PRD has MVP Funnel with event names, include analytics setup in Implementation Tasks
+    - Add analytics utility/composable in Code Templates
+    - Track events from PRD instrumentation table
 
 ## After Generation
 
