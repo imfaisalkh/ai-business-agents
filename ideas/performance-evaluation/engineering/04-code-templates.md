@@ -1,972 +1,969 @@
 # Code Templates
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Copy-paste code patterns for common TeamPulse implementations. Saves time and ensures consistency.
+>
+> **Fits in:** Use during Implementation Tasks (03). Reference Architecture (01) for context.
 
----
+## API Route Pattern
 
-## Database Schema (Drizzle)
-
-### Full Schema
-
-```typescript
-// apps/api/src/db/schema.ts
-
-import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core'
-import { relations } from 'drizzle-orm'
-import { createId } from '@paralleldrive/cuid2'
-
-// Users
-export const users = sqliteTable('users', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  email: text('email').notNull().unique(),
-  name: text('name').notNull(),
-  passwordHash: text('password_hash').notNull(),
-  emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Teams
-export const teams = sqliteTable('teams', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  name: text('name').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Team Members
-export const teamMembers = sqliteTable('team_members', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  teamId: text('team_id').notNull().references(() => teams.id, { onDelete: 'cascade' }),
-  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  role: text('role', { enum: ['admin', 'manager', 'employee'] }).notNull().default('employee'),
-  managerId: text('manager_id').references(() => users.id),
-  title: text('title'),
-  department: text('department'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Templates
-export const templates = sqliteTable('templates', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  teamId: text('team_id').references(() => teams.id), // null = system template
-  name: text('name').notNull(),
-  description: text('description'),
-  roleType: text('role_type'), // 'engineering', 'product', 'sales', 'manager'
-  level: text('level'), // 'junior', 'mid', 'senior'
-  isSystem: integer('is_system', { mode: 'boolean' }).default(false),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Template Sections
-export const templateSections = sqliteTable('template_sections', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  templateId: text('template_id').notNull().references(() => templates.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  description: text('description'),
-  order: integer('order').notNull(),
-})
-
-// Template Questions
-export const templateQuestions = sqliteTable('template_questions', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  sectionId: text('section_id').notNull().references(() => templateSections.id, { onDelete: 'cascade' }),
-  text: text('text').notNull(),
-  type: text('type', { enum: ['rating', 'text', 'multiselect'] }).notNull(),
-  required: integer('required', { mode: 'boolean' }).default(true),
-  order: integer('order').notNull(),
-  ratingLabels: text('rating_labels'), // JSON string: ["Needs Work", "Meets", "Exceeds"]
-})
-
-// Review Cycles
-export const reviewCycles = sqliteTable('review_cycles', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  teamId: text('team_id').notNull().references(() => teams.id, { onDelete: 'cascade' }),
-  templateId: text('template_id').notNull().references(() => templates.id),
-  name: text('name').notNull(),
-  status: text('status', { enum: ['draft', 'active', 'completed', 'cancelled'] }).notNull().default('draft'),
-  periodStart: integer('period_start', { mode: 'timestamp' }),
-  periodEnd: integer('period_end', { mode: 'timestamp' }),
-  selfReviewDue: integer('self_review_due', { mode: 'timestamp' }),
-  peerFeedbackDue: integer('peer_feedback_due', { mode: 'timestamp' }),
-  managerReviewDue: integer('manager_review_due', { mode: 'timestamp' }),
-  includeSelfReview: integer('include_self_review', { mode: 'boolean' }).default(true),
-  includePeerFeedback: integer('include_peer_feedback', { mode: 'boolean' }).default(true),
-  peerCount: integer('peer_count').default(3),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Reviews
-export const reviews = sqliteTable('reviews', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  cycleId: text('cycle_id').notNull().references(() => reviewCycles.id, { onDelete: 'cascade' }),
-  employeeId: text('employee_id').notNull().references(() => users.id),
-  managerId: text('manager_id').notNull().references(() => users.id),
-  selfReviewStatus: text('self_review_status', { enum: ['pending', 'in_progress', 'completed'] }).default('pending'),
-  managerReviewStatus: text('manager_review_status', { enum: ['pending', 'in_progress', 'completed'] }).default('pending'),
-  isShared: integer('is_shared', { mode: 'boolean' }).default(false),
-  sharedAt: integer('shared_at', { mode: 'timestamp' }),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Review Responses
-export const reviewResponses = sqliteTable('review_responses', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  reviewId: text('review_id').notNull().references(() => reviews.id, { onDelete: 'cascade' }),
-  questionId: text('question_id').notNull().references(() => templateQuestions.id),
-  responseType: text('response_type', { enum: ['self', 'manager'] }).notNull(),
-  ratingValue: integer('rating_value'),
-  textValue: text('text_value'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Peer Feedback Requests
-export const peerFeedbackRequests = sqliteTable('peer_feedback_requests', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  reviewId: text('review_id').notNull().references(() => reviews.id, { onDelete: 'cascade' }),
-  peerId: text('peer_id').notNull().references(() => users.id),
-  status: text('status', { enum: ['pending', 'completed', 'declined'] }).default('pending'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Peer Feedback (anonymized)
-export const peerFeedback = sqliteTable('peer_feedback', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  reviewId: text('review_id').notNull().references(() => reviews.id, { onDelete: 'cascade' }),
-  // Note: NO peerId here - feedback is anonymized
-  collaborationRating: integer('collaboration_rating'),
-  communicationRating: integer('communication_rating'),
-  strengths: text('strengths'),
-  areasForGrowth: text('areas_for_growth'),
-  additionalComments: text('additional_comments'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-})
-
-// Relations
-export const usersRelations = relations(users, ({ many }) => ({
-  teamMemberships: many(teamMembers),
-  reviews: many(reviews, { relationName: 'employeeReviews' }),
-  managedReviews: many(reviews, { relationName: 'managerReviews' }),
-}))
-
-export const teamsRelations = relations(teams, ({ many }) => ({
-  members: many(teamMembers),
-  cycles: many(reviewCycles),
-}))
-
-export const reviewCyclesRelations = relations(reviewCycles, ({ one, many }) => ({
-  team: one(teams, { fields: [reviewCycles.teamId], references: [teams.id] }),
-  template: one(templates, { fields: [reviewCycles.templateId], references: [templates.id] }),
-  reviews: many(reviews),
-}))
-
-export const reviewsRelations = relations(reviews, ({ one, many }) => ({
-  cycle: one(reviewCycles, { fields: [reviews.cycleId], references: [reviewCycles.id] }),
-  employee: one(users, { fields: [reviews.employeeId], references: [users.id], relationName: 'employeeReviews' }),
-  manager: one(users, { fields: [reviews.managerId], references: [users.id], relationName: 'managerReviews' }),
-  responses: many(reviewResponses),
-  peerFeedback: many(peerFeedback),
-}))
-```
-
----
-
-## API Routes (Fastify)
-
-### Auth Routes
+### Basic CRUD Route
 
 ```typescript
-// apps/api/src/routes/auth.ts
+// src/app/api/[resource]/route.ts
+import { auth } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
-import { FastifyInstance } from 'fastify'
-import { z } from 'zod'
-import { db } from '../db'
-import { users } from '../db/schema'
-import { eq } from 'drizzle-orm'
-import { hashPassword, verifyPassword } from '../utils/auth'
-import { createSession, destroySession } from '../utils/session'
-
-const signupSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  name: z.string().min(2),
-  teamName: z.string().min(2),
-})
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-})
-
-export async function authRoutes(app: FastifyInstance) {
-  // Signup
-  app.post('/api/auth/signup', async (request, reply) => {
-    const body = signupSchema.parse(request.body)
-
-    // Check if user exists
-    const existing = await db.query.users.findFirst({
-      where: eq(users.email, body.email),
-    })
-    if (existing) {
-      return reply.status(400).send({ error: 'Email already registered' })
-    }
-
-    // Create user
-    const passwordHash = await hashPassword(body.password)
-    const [user] = await db.insert(users).values({
-      email: body.email,
-      name: body.name,
-      passwordHash,
-    }).returning()
-
-    // Create team
-    const [team] = await db.insert(teams).values({
-      name: body.teamName,
-    }).returning()
-
-    // Add user as admin
-    await db.insert(teamMembers).values({
-      teamId: team.id,
-      userId: user.id,
-      role: 'admin',
-    })
-
-    // Create session
-    const sessionId = await createSession(user.id)
-    reply.setCookie('sessionId', sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    })
-
-    return { user: { id: user.id, email: user.email, name: user.name } }
-  })
-
-  // Login
-  app.post('/api/auth/login', async (request, reply) => {
-    const body = loginSchema.parse(request.body)
-
-    const user = await db.query.users.findFirst({
-      where: eq(users.email, body.email),
-    })
-    if (!user) {
-      return reply.status(401).send({ error: 'Invalid credentials' })
-    }
-
-    const valid = await verifyPassword(body.password, user.passwordHash)
-    if (!valid) {
-      return reply.status(401).send({ error: 'Invalid credentials' })
-    }
-
-    const sessionId = await createSession(user.id)
-    reply.setCookie('sessionId', sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
-    })
-
-    return { user: { id: user.id, email: user.email, name: user.name } }
-  })
-
-  // Logout
-  app.post('/api/auth/logout', async (request, reply) => {
-    const sessionId = request.cookies.sessionId
-    if (sessionId) {
-      await destroySession(sessionId)
-    }
-    reply.clearCookie('sessionId')
-    return { success: true }
-  })
-
-  // Get current user
-  app.get('/api/auth/me', async (request, reply) => {
-    if (!request.user) {
-      return reply.status(401).send({ error: 'Not authenticated' })
-    }
-    return { user: request.user }
-  })
-}
-```
-
-### Review Cycle Routes
-
-```typescript
-// apps/api/src/routes/cycles.ts
-
-import { FastifyInstance } from 'fastify'
-import { z } from 'zod'
-import { db } from '../db'
-import { reviewCycles, reviews, teamMembers } from '../db/schema'
-import { eq, and } from 'drizzle-orm'
-import { requireAuth, requireTeamAccess } from '../middleware/auth'
-import { sendReviewRequestEmail } from '../services/email'
-
-const createCycleSchema = z.object({
+const createSchema = z.object({
   name: z.string().min(1),
-  templateId: z.string(),
-  periodStart: z.string().datetime(),
-  periodEnd: z.string().datetime(),
-  selfReviewDue: z.string().datetime(),
-  peerFeedbackDue: z.string().datetime().optional(),
-  managerReviewDue: z.string().datetime(),
-  includeSelfReview: z.boolean().default(true),
-  includePeerFeedback: z.boolean().default(true),
-  peerCount: z.number().min(1).max(10).default(3),
-  participantIds: z.array(z.string()),
-})
+  description: z.string().optional(),
+});
 
-export async function cycleRoutes(app: FastifyInstance) {
-  // List cycles for team
-  app.get('/api/teams/:teamId/cycles', {
-    preHandler: [requireAuth, requireTeamAccess],
-  }, async (request) => {
-    const { teamId } = request.params as { teamId: string }
-
-    const cycles = await db.query.reviewCycles.findMany({
-      where: eq(reviewCycles.teamId, teamId),
-      orderBy: (cycles, { desc }) => [desc(cycles.createdAt)],
-      with: {
-        template: true,
-        reviews: {
-          columns: {
-            id: true,
-            selfReviewStatus: true,
-            managerReviewStatus: true,
-          },
-        },
-      },
-    })
-
-    return { cycles }
-  })
-
-  // Create cycle
-  app.post('/api/teams/:teamId/cycles', {
-    preHandler: [requireAuth, requireTeamAccess],
-  }, async (request, reply) => {
-    const { teamId } = request.params as { teamId: string }
-    const body = createCycleSchema.parse(request.body)
-
-    // Create cycle
-    const [cycle] = await db.insert(reviewCycles).values({
-      teamId,
-      templateId: body.templateId,
-      name: body.name,
-      status: 'draft',
-      periodStart: new Date(body.periodStart),
-      periodEnd: new Date(body.periodEnd),
-      selfReviewDue: new Date(body.selfReviewDue),
-      peerFeedbackDue: body.peerFeedbackDue ? new Date(body.peerFeedbackDue) : null,
-      managerReviewDue: new Date(body.managerReviewDue),
-      includeSelfReview: body.includeSelfReview,
-      includePeerFeedback: body.includePeerFeedback,
-      peerCount: body.peerCount,
-    }).returning()
-
-    // Create reviews for each participant
-    for (const participantId of body.participantIds) {
-      const member = await db.query.teamMembers.findFirst({
-        where: and(
-          eq(teamMembers.userId, participantId),
-          eq(teamMembers.teamId, teamId)
-        ),
-      })
-
-      if (member) {
-        await db.insert(reviews).values({
-          cycleId: cycle.id,
-          employeeId: participantId,
-          managerId: member.managerId || request.user.id,
-        })
-      }
-    }
-
-    return { cycle }
-  })
-
-  // Launch cycle
-  app.post('/api/cycles/:cycleId/launch', {
-    preHandler: [requireAuth],
-  }, async (request, reply) => {
-    const { cycleId } = request.params as { cycleId: string }
-
-    const cycle = await db.query.reviewCycles.findFirst({
-      where: eq(reviewCycles.id, cycleId),
-      with: {
-        reviews: {
-          with: {
-            employee: true,
-          },
-        },
-      },
-    })
-
-    if (!cycle) {
-      return reply.status(404).send({ error: 'Cycle not found' })
-    }
-
-    // Update status
-    await db.update(reviewCycles)
-      .set({ status: 'active' })
-      .where(eq(reviewCycles.id, cycleId))
-
-    // Send emails to all participants
-    for (const review of cycle.reviews) {
-      await sendReviewRequestEmail(review.employee.email, {
-        cycleName: cycle.name,
-        dueDate: cycle.selfReviewDue,
-        reviewLink: `${process.env.FRONTEND_URL}/reviews/${review.id}/self`,
-      })
-    }
-
-    return { success: true }
-  })
-
-  // Get cycle details
-  app.get('/api/cycles/:cycleId', {
-    preHandler: [requireAuth],
-  }, async (request, reply) => {
-    const { cycleId } = request.params as { cycleId: string }
-
-    const cycle = await db.query.reviewCycles.findFirst({
-      where: eq(reviewCycles.id, cycleId),
-      with: {
-        template: {
-          with: {
-            sections: {
-              with: {
-                questions: true,
-              },
-            },
-          },
-        },
-        reviews: {
-          with: {
-            employee: {
-              columns: { id: true, name: true, email: true },
-            },
-            manager: {
-              columns: { id: true, name: true },
-            },
-          },
-        },
-      },
-    })
-
-    if (!cycle) {
-      return reply.status(404).send({ error: 'Cycle not found' })
-    }
-
-    return { cycle }
-  })
-}
-```
-
----
-
-## Vue Components (shadcn-vue)
-
-### Rating Input Component
-
-```vue
-<!-- apps/web/components/ui/RatingInput.vue -->
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-interface Props {
-  modelValue: number | null
-  max?: number
-  labels?: string[]
-  disabled?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  max: 5,
-  labels: () => ['Needs Work', 'Below', 'Meets', 'Above', 'Exceeds'],
-  disabled: false,
-})
-
-const emit = defineEmits<{
-  'update:modelValue': [value: number]
-}>()
-
-const selectedLabel = computed(() => {
-  if (props.modelValue === null) return ''
-  return props.labels[props.modelValue - 1] || ''
-})
-</script>
-
-<template>
-  <div class="space-y-2">
-    <div class="flex gap-2">
-      <button
-        v-for="value in max"
-        :key="value"
-        type="button"
-        :disabled="disabled"
-        :class="[
-          'w-10 h-10 rounded-full border-2 font-medium transition-all',
-          modelValue === value
-            ? 'border-primary bg-primary text-primary-foreground'
-            : 'border-muted hover:border-primary/50',
-          disabled && 'opacity-50 cursor-not-allowed'
-        ]"
-        @click="emit('update:modelValue', value)"
-      >
-        {{ value }}
-      </button>
-    </div>
-    <p v-if="selectedLabel" class="text-sm text-muted-foreground">
-      {{ selectedLabel }}
-    </p>
-  </div>
-</template>
-```
-
-### Gap Analysis Component
-
-```vue
-<!-- apps/web/components/reviews/GapAnalysis.vue -->
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-interface Props {
-  question: {
-    id: string
-    text: string
-  }
-  selfRating: number | null
-  managerRating: number | null
-  selfComment?: string
-  managerComment?: string
-}
-
-const props = defineProps<Props>()
-
-const gap = computed(() => {
-  if (props.selfRating === null || props.managerRating === null) return null
-  return props.selfRating - props.managerRating
-})
-
-const gapClass = computed(() => {
-  if (gap.value === null) return ''
-  if (Math.abs(gap.value) >= 2) return 'text-red-600 bg-red-50'
-  if (Math.abs(gap.value) === 1) return 'text-yellow-600 bg-yellow-50'
-  return 'text-green-600 bg-green-50'
-})
-
-const gapLabel = computed(() => {
-  if (gap.value === null) return ''
-  if (gap.value === 0) return 'Aligned'
-  if (gap.value > 0) return `Self rates +${gap.value} higher`
-  return `Manager rates +${Math.abs(gap.value)} higher`
-})
-</script>
-
-<template>
-  <div class="border rounded-lg p-4 space-y-4">
-    <h4 class="font-medium">{{ question.text }}</h4>
-
-    <div class="grid grid-cols-2 gap-4">
-      <!-- Self Rating -->
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">Self Rating</p>
-        <div class="flex items-center gap-2">
-          <div class="w-full bg-muted rounded-full h-2">
-            <div
-              class="bg-blue-500 h-2 rounded-full"
-              :style="{ width: `${(selfRating || 0) * 20}%` }"
-            />
-          </div>
-          <span class="font-medium w-8">{{ selfRating || '-' }}/5</span>
-        </div>
-        <p v-if="selfComment" class="text-sm italic">
-          "{{ selfComment }}"
-        </p>
-      </div>
-
-      <!-- Manager Rating -->
-      <div class="space-y-2">
-        <p class="text-sm text-muted-foreground">Manager Rating</p>
-        <div class="flex items-center gap-2">
-          <div class="w-full bg-muted rounded-full h-2">
-            <div
-              class="bg-green-500 h-2 rounded-full"
-              :style="{ width: `${(managerRating || 0) * 20}%` }"
-            />
-          </div>
-          <span class="font-medium w-8">{{ managerRating || '-' }}/5</span>
-        </div>
-        <p v-if="managerComment" class="text-sm italic">
-          "{{ managerComment }}"
-        </p>
-      </div>
-    </div>
-
-    <!-- Gap Indicator -->
-    <div
-      v-if="gap !== null"
-      :class="['px-3 py-2 rounded-md text-sm font-medium', gapClass]"
-    >
-      <span v-if="Math.abs(gap) >= 2">Warning: </span>
-      {{ gapLabel }}
-    </div>
-  </div>
-</template>
-```
-
-### Review Form Page
-
-```vue
-<!-- apps/web/pages/reviews/[id]/self.vue -->
-
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import RatingInput from '@/components/ui/RatingInput.vue'
-
-const route = useRoute()
-const router = useRouter()
-const reviewId = route.params.id as string
-
-const review = ref(null)
-const responses = ref<Record<string, { rating: number | null; text: string }>>({})
-const currentSection = ref(0)
-const isSaving = ref(false)
-const isSubmitting = ref(false)
-
-const sections = computed(() => review.value?.cycle?.template?.sections || [])
-const currentQuestions = computed(() => sections.value[currentSection.value]?.questions || [])
-const progress = computed(() => {
-  const total = sections.value.reduce((acc, s) => acc + s.questions.length, 0)
-  const answered = Object.values(responses.value).filter(r => r.rating !== null).length
-  return Math.round((answered / total) * 100)
-})
-
-onMounted(async () => {
-  const res = await $fetch(`/api/reviews/${reviewId}`)
-  review.value = res.review
-
-  // Initialize responses
-  for (const section of sections.value) {
-    for (const question of section.questions) {
-      const existing = res.review.responses.find(
-        r => r.questionId === question.id && r.responseType === 'self'
-      )
-      responses.value[question.id] = {
-        rating: existing?.ratingValue || null,
-        text: existing?.textValue || '',
-      }
-    }
-  }
-})
-
-async function saveDraft() {
-  isSaving.value = true
+// GET - List all
+export async function GET() {
   try {
-    await $fetch(`/api/reviews/${reviewId}/responses`, {
-      method: 'PUT',
-      body: { responses: responses.value, type: 'self' },
-    })
-  } finally {
-    isSaving.value = false
+    const { userId, orgId } = auth();
+    if (!userId || !orgId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const items = await prisma.resource.findMany({
+      where: { companyId: orgId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(items);
+  } catch (error) {
+    console.error("[RESOURCE_GET]", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 
-async function submit() {
-  isSubmitting.value = true
+// POST - Create new
+export async function POST(request: Request) {
   try {
-    await saveDraft()
-    await $fetch(`/api/reviews/${reviewId}/submit-self`, { method: 'POST' })
-    router.push('/dashboard')
-  } finally {
-    isSubmitting.value = false
+    const { userId, orgId } = auth();
+    if (!userId || !orgId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const validatedData = createSchema.parse(body);
+
+    const item = await prisma.resource.create({
+      data: {
+        ...validatedData,
+        companyId: orgId,
+      },
+    });
+
+    return NextResponse.json(item, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors }, { status: 400 });
+    }
+    console.error("[RESOURCE_POST]", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
-
-// Auto-save every 30 seconds
-let saveInterval: NodeJS.Timeout
-onMounted(() => {
-  saveInterval = setInterval(saveDraft, 30000)
-})
-onUnmounted(() => {
-  clearInterval(saveInterval)
-})
-</script>
-
-<template>
-  <div class="max-w-3xl mx-auto py-8 px-4">
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-2xl font-bold">Self Review</h1>
-      <p class="text-muted-foreground">
-        {{ review?.cycle?.name }} - Due {{ new Date(review?.cycle?.selfReviewDue).toLocaleDateString() }}
-      </p>
-    </div>
-
-    <!-- Progress -->
-    <div class="mb-8">
-      <div class="flex justify-between text-sm mb-2">
-        <span>Progress</span>
-        <span>{{ progress }}%</span>
-      </div>
-      <div class="w-full bg-muted rounded-full h-2">
-        <div
-          class="bg-primary h-2 rounded-full transition-all"
-          :style="{ width: `${progress}%` }"
-        />
-      </div>
-    </div>
-
-    <!-- Section Tabs -->
-    <div class="flex gap-2 mb-6 overflow-x-auto">
-      <button
-        v-for="(section, index) in sections"
-        :key="section.id"
-        :class="[
-          'px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap',
-          currentSection === index
-            ? 'bg-primary text-primary-foreground'
-            : 'bg-muted hover:bg-muted/80'
-        ]"
-        @click="currentSection = index"
-      >
-        {{ section.name }}
-      </button>
-    </div>
-
-    <!-- Questions -->
-    <div class="space-y-8">
-      <div
-        v-for="question in currentQuestions"
-        :key="question.id"
-        class="border rounded-lg p-6"
-      >
-        <label class="block font-medium mb-4">
-          {{ question.text }}
-          <span v-if="question.required" class="text-red-500">*</span>
-        </label>
-
-        <RatingInput
-          v-if="question.type === 'rating'"
-          v-model="responses[question.id].rating"
-          :labels="JSON.parse(question.ratingLabels || '[]')"
-        />
-
-        <Textarea
-          v-model="responses[question.id].text"
-          placeholder="Add comments (optional)"
-          class="mt-4"
-          rows="3"
-        />
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="flex justify-between mt-8 pt-6 border-t">
-      <Button
-        variant="outline"
-        :disabled="currentSection === 0"
-        @click="currentSection--"
-      >
-        Previous
-      </Button>
-
-      <div class="flex gap-2">
-        <Button variant="outline" :disabled="isSaving" @click="saveDraft">
-          {{ isSaving ? 'Saving...' : 'Save Draft' }}
-        </Button>
-
-        <Button
-          v-if="currentSection < sections.length - 1"
-          @click="currentSection++"
-        >
-          Next Section
-        </Button>
-
-        <Button
-          v-else
-          :disabled="isSubmitting"
-          @click="submit"
-        >
-          {{ isSubmitting ? 'Submitting...' : 'Submit Review' }}
-        </Button>
-      </div>
-    </div>
-  </div>
-</template>
 ```
 
----
-
-## Email Templates
-
-### Review Request Email
+### Single Item Route
 
 ```typescript
-// apps/api/src/services/email.ts
+// src/app/api/[resource]/[id]/route.ts
+import { auth } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
-
-interface ReviewRequestData {
-  cycleName: string
-  dueDate: Date
-  reviewLink: string
-}
-
-export async function sendReviewRequestEmail(
-  to: string,
-  data: ReviewRequestData
+// GET - Single item
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
-  await resend.emails.send({
-    from: process.env.FROM_EMAIL!,
-    to,
-    subject: `Action Required: Complete your ${data.cycleName} self-review`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body { font-family: system-ui, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .button { display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; }
-            .footer { margin-top: 40px; color: #666; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>Time for your self-review</h1>
+  try {
+    const { userId, orgId } = auth();
+    if (!userId || !orgId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-            <p>Your manager has initiated the <strong>${data.cycleName}</strong> review cycle.</p>
+    const item = await prisma.resource.findFirst({
+      where: {
+        id: params.id,
+        companyId: orgId, // Tenant isolation
+      },
+    });
 
-            <p>Please complete your self-review by <strong>${data.dueDate.toLocaleDateString()}</strong>.</p>
+    if (!item) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
 
-            <p>Your self-review helps your manager understand your perspective on your performance. Take your time to reflect on your accomplishments and areas for growth.</p>
-
-            <p style="margin: 30px 0;">
-              <a href="${data.reviewLink}" class="button">Start Self-Review</a>
-            </p>
-
-            <div class="footer">
-              <p>If you have questions, please reach out to your manager.</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `,
-  })
+    return NextResponse.json(item);
+  } catch (error) {
+    console.error("[RESOURCE_GET_ONE]", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
 
-export async function sendReminderEmail(to: string, data: ReviewRequestData) {
-  await resend.emails.send({
-    from: process.env.FROM_EMAIL!,
-    to,
-    subject: `Reminder: Your self-review is due in 3 days`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <body style="font-family: system-ui, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1>Friendly reminder</h1>
+// PATCH - Update
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { userId, orgId } = auth();
+    if (!userId || !orgId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-          <p>Your <strong>${data.cycleName}</strong> self-review is due in 3 days (${data.dueDate.toLocaleDateString()}).</p>
+    // Verify ownership
+    const existing = await prisma.resource.findFirst({
+      where: { id: params.id, companyId: orgId },
+    });
 
-          <p>
-            <a href="${data.reviewLink}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Complete Self-Review</a>
-          </p>
-        </body>
-      </html>
-    `,
-  })
+    if (!existing) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    const body = await request.json();
+    const item = await prisma.resource.update({
+      where: { id: params.id },
+      data: body,
+    });
+
+    return NextResponse.json(item);
+  } catch (error) {
+    console.error("[RESOURCE_PATCH]", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { userId, orgId } = auth();
+    if (!userId || !orgId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify ownership
+    const existing = await prisma.resource.findFirst({
+      where: { id: params.id, companyId: orgId },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    await prisma.resource.delete({
+      where: { id: params.id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("[RESOURCE_DELETE]", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
 ```
 
 ---
 
-## Utility Functions
+## Page Patterns
 
-### Gap Calculation
+### List Page with Data Fetching
 
 ```typescript
-// apps/api/src/utils/gap-analysis.ts
+// src/app/(dashboard)/resources/page.tsx
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { ResourceTable } from "@/components/resource-table";
+import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
-interface GapResult {
-  questionId: string
-  selfRating: number | null
-  managerRating: number | null
-  gap: number | null
-  severity: 'aligned' | 'minor' | 'significant'
+export default async function ResourcesPage() {
+  const { userId, orgId } = auth();
+  if (!userId || !orgId) redirect("/sign-in");
+
+  const resources = await prisma.resource.findMany({
+    where: { companyId: orgId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Resources</h1>
+          <p className="text-muted-foreground">
+            Manage your resources here.
+          </p>
+        </div>
+        <Link href="/resources/new">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            New Resource
+          </Button>
+        </Link>
+      </div>
+
+      {resources.length === 0 ? (
+        <EmptyState
+          title="No resources yet"
+          description="Get started by creating your first resource."
+          action={
+            <Link href="/resources/new">
+              <Button>Create Resource</Button>
+            </Link>
+          }
+        />
+      ) : (
+        <ResourceTable resources={resources} />
+      )}
+    </div>
+  );
+}
+```
+
+### Detail Page
+
+```typescript
+// src/app/(dashboard)/resources/[id]/page.tsx
+import { auth } from "@clerk/nextjs";
+import { redirect, notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+
+interface PageProps {
+  params: { id: string };
+}
+
+export default async function ResourceDetailPage({ params }: PageProps) {
+  const { userId, orgId } = auth();
+  if (!userId || !orgId) redirect("/sign-in");
+
+  const resource = await prisma.resource.findFirst({
+    where: {
+      id: params.id,
+      companyId: orgId,
+    },
+  });
+
+  if (!resource) notFound();
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">{resource.name}</h1>
+      {/* Resource details */}
+    </div>
+  );
+}
+```
+
+### Loading State
+
+```typescript
+// src/app/(dashboard)/resources/loading.tsx
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function Loading() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <div className="space-y-4">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-16 w-full" />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Component Patterns
+
+### Data Table
+
+```typescript
+// src/components/resource-table.tsx
+"use client";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, Pencil, Trash } from "lucide-react";
+import Link from "next/link";
+
+interface Resource {
+  id: string;
+  name: string;
+  createdAt: Date;
+}
+
+interface ResourceTableProps {
+  resources: Resource[];
+}
+
+export function ResourceTable({ resources }: ResourceTableProps) {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Created</TableHead>
+          <TableHead className="w-12"></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {resources.map((resource) => (
+          <TableRow key={resource.id}>
+            <TableCell className="font-medium">{resource.name}</TableCell>
+            <TableCell>
+              {new Date(resource.createdAt).toLocaleDateString()}
+            </TableCell>
+            <TableCell>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link href={`/resources/${resource.id}`}>
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Edit
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-destructive">
+                    <Trash className="h-4 w-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+```
+
+### Empty State
+
+```typescript
+// src/components/empty-state.tsx
+import { ReactNode } from "react";
+
+interface EmptyStateProps {
+  icon?: ReactNode;
+  title: string;
+  description: string;
+  action?: ReactNode;
+}
+
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+}: EmptyStateProps) {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      {icon && <div className="mb-4 text-muted-foreground">{icon}</div>}
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="text-muted-foreground mt-1 max-w-sm">{description}</p>
+      {action && <div className="mt-6">{action}</div>}
+    </div>
+  );
+}
+```
+
+### Form with Validation
+
+```typescript
+// src/components/resource-form.tsx
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+interface ResourceFormProps {
+  initialData?: FormData;
+  resourceId?: string;
+}
+
+export function ResourceForm({ initialData, resourceId }: ResourceFormProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialData || {
+      name: "",
+      description: "",
+    },
+  });
+
+  async function onSubmit(data: FormData) {
+    setIsLoading(true);
+    try {
+      const url = resourceId
+        ? `/api/resources/${resourceId}`
+        : "/api/resources";
+      const method = resourceId ? "PATCH" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Failed to save");
+
+      toast.success(resourceId ? "Updated!" : "Created!");
+      router.push("/resources");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Enter description" {...field} />
+              </FormControl>
+              <FormDescription>Optional description.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex gap-4">
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Saving..." : resourceId ? "Update" : "Create"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+```
+
+---
+
+## Rating Input Component
+
+```typescript
+// src/components/rating-input.tsx
+"use client";
+
+import { cn } from "@/lib/utils";
+
+interface RatingInputProps {
+  value: number | null;
+  onChange: (value: number) => void;
+  disabled?: boolean;
+}
+
+const ratingLabels = [
+  { value: 1, label: "Needs Improvement" },
+  { value: 2, label: "Below Expectations" },
+  { value: 3, label: "Meets Expectations" },
+  { value: 4, label: "Exceeds Expectations" },
+  { value: 5, label: "Outstanding" },
+];
+
+export function RatingInput({ value, onChange, disabled }: RatingInputProps) {
+  return (
+    <div className="flex gap-2">
+      {ratingLabels.map((rating) => (
+        <button
+          key={rating.value}
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange(rating.value)}
+          className={cn(
+            "flex flex-col items-center p-2 rounded-md border transition-colors",
+            "hover:border-primary hover:bg-primary/5",
+            value === rating.value && "border-primary bg-primary/10",
+            disabled && "opacity-50 cursor-not-allowed"
+          )}
+        >
+          <span className="text-lg font-bold">{rating.value}</span>
+          <span className="text-xs text-muted-foreground text-center">
+            {rating.label}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+---
+
+## Auto-Save Hook
+
+```typescript
+// src/hooks/use-auto-save.ts
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDebounce } from "./use-debounce";
+
+interface UseAutoSaveOptions<T> {
+  data: T;
+  onSave: (data: T) => Promise<void>;
+  debounceMs?: number;
+}
+
+export function useAutoSave<T>({
+  data,
+  onSave,
+  debounceMs = 2000,
+}: UseAutoSaveOptions<T>) {
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const debouncedData = useDebounce(data, debounceMs);
+  const previousData = useRef<T>(data);
+
+  const save = useCallback(async () => {
+    setIsSaving(true);
+    try {
+      await onSave(debouncedData);
+      setLastSaved(new Date());
+    } catch (error) {
+      console.error("Auto-save failed:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [debouncedData, onSave]);
+
+  useEffect(() => {
+    // Don't save on initial mount
+    if (JSON.stringify(debouncedData) === JSON.stringify(previousData.current)) {
+      return;
+    }
+    previousData.current = debouncedData;
+    save();
+  }, [debouncedData, save]);
+
+  return { isSaving, lastSaved };
+}
+```
+
+```typescript
+// src/hooks/use-debounce.ts
+"use client";
+
+import { useEffect, useState } from "react";
+
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+```
+
+---
+
+## Analytics Events
+
+```typescript
+// src/lib/analytics.ts
+import posthog from "posthog-js";
+
+// Initialize PostHog (call in layout)
+export function initAnalytics() {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    });
+  }
+}
+
+// Track events
+export function track(
+  eventName: string,
+  properties?: Record<string, any>
+) {
+  if (typeof window !== "undefined") {
+    posthog.capture(eventName, properties);
+  }
+}
+
+// Identify user
+export function identify(userId: string, traits?: Record<string, any>) {
+  if (typeof window !== "undefined") {
+    posthog.identify(userId, traits);
+  }
+}
+
+// Common events
+export const Events = {
+  // Signup funnel
+  SIGNUP_STARTED: "signup_started",
+  SIGNUP_COMPLETED: "signup_completed",
+
+  // Activation
+  TEAM_MEMBERS_ADDED: "team_members_added",
+  FIRST_CYCLE_CREATED: "first_cycle_created",
+  FIRST_REVIEW_WRITTEN: "first_review_written",
+
+  // Engagement
+  SELF_REVIEW_COMPLETED: "self_review_completed",
+  GAP_ANALYSIS_VIEWED: "gap_analysis_viewed",
+  GAP_ANALYSIS_PDF_EXPORTED: "gap_analysis_pdf_exported",
+  REVIEW_SHARED: "review_shared_to_employee",
+
+  // Conversion
+  TRIAL_STARTED: "trial_started",
+  PAYMENT_COMPLETED: "payment_completed",
+} as const;
+```
+
+Usage:
+
+```typescript
+import { track, Events } from "@/lib/analytics";
+
+// In a component
+track(Events.FIRST_CYCLE_CREATED, {
+  participantCount: participants.length,
+  templateName: template.name,
+});
+```
+
+---
+
+## Gap Analysis Calculation
+
+```typescript
+// src/lib/gap-analysis.ts
+import { Rating, SelfRating } from "@prisma/client";
+
+export interface GapAnalysisItem {
+  competencyId: string;
+  competencyName: string;
+  managerRating: number;
+  selfRating: number;
+  gap: number;
+  absoluteGap: number;
+  isSignificant: boolean;
+  managerFeedback: string | null;
+  selfFeedback: string | null;
+}
+
+export interface GapAnalysisResult {
+  items: GapAnalysisItem[];
+  overallManagerRating: number;
+  overallSelfRating: number;
+  overallGap: number;
+  alignedCount: number;
+  gapCount: number;
+  significantGapCount: number;
 }
 
 export function calculateGapAnalysis(
-  selfResponses: Array<{ questionId: string; ratingValue: number | null }>,
-  managerResponses: Array<{ questionId: string; ratingValue: number | null }>
-): GapResult[] {
-  const results: GapResult[] = []
+  managerRatings: Rating[],
+  selfRatings: SelfRating[]
+): GapAnalysisResult {
+  const selfRatingMap = new Map(
+    selfRatings.map((r) => [r.competencyId, r])
+  );
 
-  const selfMap = new Map(selfResponses.map(r => [r.questionId, r.ratingValue]))
-  const managerMap = new Map(managerResponses.map(r => [r.questionId, r.ratingValue]))
+  const items: GapAnalysisItem[] = managerRatings.map((mr) => {
+    const sr = selfRatingMap.get(mr.competencyId);
+    const selfScore = sr?.score ?? 0;
+    const gap = mr.score - selfScore;
+    const absoluteGap = Math.abs(gap);
 
-  const allQuestionIds = new Set([...selfMap.keys(), ...managerMap.keys()])
-
-  for (const questionId of allQuestionIds) {
-    const selfRating = selfMap.get(questionId) || null
-    const managerRating = managerMap.get(questionId) || null
-
-    let gap: number | null = null
-    let severity: 'aligned' | 'minor' | 'significant' = 'aligned'
-
-    if (selfRating !== null && managerRating !== null) {
-      gap = selfRating - managerRating
-      if (Math.abs(gap) === 0) {
-        severity = 'aligned'
-      } else if (Math.abs(gap) === 1) {
-        severity = 'minor'
-      } else {
-        severity = 'significant'
-      }
-    }
-
-    results.push({
-      questionId,
-      selfRating,
-      managerRating,
+    return {
+      competencyId: mr.competencyId,
+      competencyName: mr.competencyName,
+      managerRating: mr.score,
+      selfRating: selfScore,
       gap,
-      severity,
-    })
-  }
+      absoluteGap,
+      isSignificant: absoluteGap >= 2,
+      managerFeedback: mr.feedback,
+      selfFeedback: sr?.feedback ?? null,
+    };
+  });
 
-  return results
-}
+  // Sort by absolute gap (largest first)
+  items.sort((a, b) => b.absoluteGap - a.absoluteGap);
 
-export function calculateOverallGap(results: GapResult[]) {
-  const validResults = results.filter(r => r.gap !== null)
-  if (validResults.length === 0) return null
-
-  const totalGap = validResults.reduce((sum, r) => sum + (r.gap || 0), 0)
-  const avgSelfRating = validResults.reduce((sum, r) => sum + (r.selfRating || 0), 0) / validResults.length
-  const avgManagerRating = validResults.reduce((sum, r) => sum + (r.managerRating || 0), 0) / validResults.length
+  const overallManagerRating =
+    items.reduce((sum, i) => sum + i.managerRating, 0) / items.length;
+  const overallSelfRating =
+    items.reduce((sum, i) => sum + i.selfRating, 0) / items.length;
 
   return {
-    averageGap: totalGap / validResults.length,
-    avgSelfRating: Math.round(avgSelfRating * 10) / 10,
-    avgManagerRating: Math.round(avgManagerRating * 10) / 10,
-    alignedCount: validResults.filter(r => r.severity === 'aligned').length,
-    minorGapCount: validResults.filter(r => r.severity === 'minor').length,
-    significantGapCount: validResults.filter(r => r.severity === 'significant').length,
-  }
+    items,
+    overallManagerRating: Math.round(overallManagerRating * 10) / 10,
+    overallSelfRating: Math.round(overallSelfRating * 10) / 10,
+    overallGap:
+      Math.round((overallManagerRating - overallSelfRating) * 10) / 10,
+    alignedCount: items.filter((i) => i.absoluteGap <= 0.5).length,
+    gapCount: items.filter((i) => i.absoluteGap > 0.5).length,
+    significantGapCount: items.filter((i) => i.isSignificant).length,
+  };
 }
 ```
 
 ---
 
-*Next artifact: 05-engineering-metrics.md*
+## Email Template
+
+```typescript
+// src/emails/review-reminder.tsx
+import {
+  Body,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Link,
+  Preview,
+  Text,
+} from "@react-email/components";
+
+interface ReviewReminderProps {
+  employeeName: string;
+  cycleName: string;
+  dueDate: string;
+  reviewUrl: string;
+}
+
+export function ReviewReminderEmail({
+  employeeName,
+  cycleName,
+  dueDate,
+  reviewUrl,
+}: ReviewReminderProps) {
+  return (
+    <Html>
+      <Head />
+      <Preview>Reminder: Your review for {cycleName} is due {dueDate}</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Heading style={h1}>Review Reminder</Heading>
+          <Text style={text}>
+            Hi {employeeName},
+          </Text>
+          <Text style={text}>
+            This is a friendly reminder that your review for <strong>{cycleName}</strong> is due on <strong>{dueDate}</strong>.
+          </Text>
+          <Link href={reviewUrl} style={button}>
+            Complete Your Review
+          </Link>
+          <Text style={text}>
+            If you've already completed your review, you can ignore this email.
+          </Text>
+          <Text style={footer}>
+            - The TeamPulse Team
+          </Text>
+        </Container>
+      </Body>
+    </Html>
+  );
+}
+
+const main = {
+  backgroundColor: "#f6f9fc",
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+};
+
+const container = {
+  backgroundColor: "#ffffff",
+  margin: "40px auto",
+  padding: "40px",
+  borderRadius: "4px",
+  maxWidth: "600px",
+};
+
+const h1 = {
+  color: "#1a1a1a",
+  fontSize: "24px",
+  fontWeight: "600",
+  margin: "0 0 20px",
+};
+
+const text = {
+  color: "#4a4a4a",
+  fontSize: "16px",
+  lineHeight: "24px",
+  margin: "0 0 16px",
+};
+
+const button = {
+  backgroundColor: "#000000",
+  borderRadius: "4px",
+  color: "#ffffff",
+  display: "inline-block",
+  fontSize: "16px",
+  fontWeight: "600",
+  padding: "12px 24px",
+  textDecoration: "none",
+  margin: "16px 0",
+};
+
+const footer = {
+  color: "#8898aa",
+  fontSize: "14px",
+  margin: "32px 0 0",
+};
+```
+
+---
+
+## Sending Email
+
+```typescript
+// src/lib/email.ts
+import { Resend } from "resend";
+import { ReviewReminderEmail } from "@/emails/review-reminder";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function sendReviewReminder({
+  to,
+  employeeName,
+  cycleName,
+  dueDate,
+  reviewUrl,
+}: {
+  to: string;
+  employeeName: string;
+  cycleName: string;
+  dueDate: string;
+  reviewUrl: string;
+}) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "TeamPulse <reviews@teampulse.app>",
+      to,
+      subject: `Reminder: Your review for ${cycleName} is due ${dueDate}`,
+      react: ReviewReminderEmail({
+        employeeName,
+        cycleName,
+        dueDate,
+        reviewUrl,
+      }),
+    });
+
+    if (error) {
+      console.error("Email send error:", error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Email send error:", error);
+    return { success: false, error };
+  }
+}
+```

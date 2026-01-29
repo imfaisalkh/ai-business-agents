@@ -1,387 +1,363 @@
 # Fundraising Readiness Checklist
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Assess whether TeamPulse should raise funding, and prepare if yes. Bootstrap-first mindset.
+>
+> **Fits in:** Use after validating unit economics. Reference for conversations with investors.
+
+## Fundraising Philosophy
+
+**Default mode:** Bootstrap
+**Raise only if:** Clear use of funds that accelerates proven model
+
+### Questions to Ask Before Raising
+
+1. Can you reach profitability without external capital?
+2. Is the market opportunity time-sensitive?
+3. Do you have unit economics that work?
+4. Will raising actually accelerate growth (not just extend runway)?
+5. Are you okay with giving up control/equity?
 
 ---
 
-## Fundraising Strategy
+## Bootstrap vs Raise Decision
 
-### Bootstrap-First Approach
+### Bootstrap If...
 
-| Phase | Strategy | Timeline |
-|-------|----------|----------|
-| **Phase 1** | Bootstrap to $5K MRR | Months 1-6 |
-| **Phase 2** | Decide: Continue bootstrap or raise | Month 6-7 |
-| **Phase 3** | If raising: Pre-seed/seed | Month 8-12 |
+- [x] Can reach profitability in <12 months
+- [x] Unit economics already work (LTV:CAC >3:1)
+- [x] Market isn't winner-take-all
+- [x] You want to maintain full control
+- [x] Revenue can fund growth
+- [x] You enjoy the bootstrapped journey
 
-### When to Raise (Decision Framework)
+### Raise If...
 
-**Stay Bootstrapped If:**
-- Growing >20% MoM sustainably
-- Unit economics remain strong (LTV:CAC >5:1)
-- Runway is comfortable (>12 months)
-- No urgent need for capital-intensive growth
-
-**Consider Raising If:**
-- Clear opportunity to accelerate with capital
-- Competitive pressure requires faster growth
-- Enterprise customers need features requiring investment
-- Founder needs salary to sustain
+- [ ] Market is time-sensitive (competitors with funding)
+- [ ] Clear path to 10x growth with capital
+- [ ] Unit economics proven but CAC requires upfront investment
+- [ ] Need to hire team faster than revenue allows
+- [ ] Specific large opportunity (enterprise contract, expansion)
 
 ---
 
-## Current Fundraising Readiness
+## Current Readiness Assessment
 
-### Readiness Scorecard
+### Traction Checklist
 
-| Category | Item | Status | Score |
-|----------|------|--------|-------|
-| **Traction** | | | |
-| | Revenue/MRR | $3.5K target | 0/5 |
-| | Customer count | 30+ target | 0/5 |
-| | Growth rate | 20%+ MoM | 0/5 |
-| | Retention | 95%+ | 0/5 |
-| **Product** | | | |
-| | MVP launched | In progress | 0/5 |
-| | Product-market fit signals | Pending | 0/5 |
-| | Core metrics tracking | Setup needed | 0/5 |
-| **Team** | | | |
-| | Founder track record | Self-assess | ?/5 |
-| | Technical capability | Have it | 4/5 |
-| | Domain expertise | Have it | 4/5 |
-| **Market** | | | |
-| | TAM/SAM/SOM defined | Done | 5/5 |
-| | Competitive analysis | Done | 5/5 |
-| | ICP validated | In progress | 0/5 |
-| **Financials** | | | |
-| | Unit economics known | Projected | 3/5 |
-| | Burn rate managed | Low burn | 5/5 |
-| | Projections modeled | Done | 5/5 |
+| Metric | Threshold | Current | Ready? |
+|--------|-----------|---------|--------|
+| MRR | >$5K | $0 | No |
+| Customers | >20 | 0 | No |
+| MoM Growth | >15% | - | No |
+| Churn | <5% | - | No |
+| LTV:CAC | >3:1 | - | No |
 
-**Current Score: ~30/75 (40%)**
+**Traction readiness:** Not ready (pre-launch)
 
-**Target for Seed Ready: 60/75 (80%)**
+### Product Checklist
 
----
+| Item | Status | Ready? |
+|------|--------|--------|
+| Core product working | Building | No |
+| Customers actively using | Not yet | No |
+| Retention data (3+ months) | Not yet | No |
+| Clear differentiation | Yes (gap analysis) | Yes |
+| Scalable tech | Yes (planned) | Yes |
 
-## Milestones for Fundraising
+**Product readiness:** Partially ready
 
-### Pre-Seed Readiness (~$250K-500K)
+### Team Checklist
 
-| Milestone | Target | Required |
-|-----------|--------|----------|
-| MRR | $3,000+ | Yes |
-| Customers | 25+ | Yes |
-| MoM Growth | 15%+ | Yes |
-| Churn | <8% | Yes |
-| Retention cohorts | 3+ months data | Yes |
-| Burn rate | <$1K/month | Yes |
+| Item | Status | Ready? |
+|------|--------|--------|
+| Full-time founder(s) | Verify | ? |
+| Technical capability | Yes | Yes |
+| Domain expertise | Yes | Yes |
+| Sales capability | Learning | Partial |
+| Clear roles | N/A (solo/small) | Yes |
 
-### Seed Readiness (~$500K-2M)
+**Team readiness:** Mostly ready
 
-| Milestone | Target | Required |
-|-----------|--------|----------|
-| MRR | $10,000+ | Yes |
-| Customers | 75+ | Yes |
-| MoM Growth | 15-20% | Yes |
-| NRR | >100% | Yes |
-| LTV:CAC | >5:1 | Yes |
-| Clear PMF signals | NPS >40 | Yes |
-| Team | 2-3 people | Helpful |
+### Market Checklist
 
-### Series A Readiness (~$3M-10M)
+| Item | Status | Ready? |
+|------|--------|--------|
+| Market size known | ~$5B | Yes |
+| ICP defined | Yes | Yes |
+| Competition understood | Yes | Yes |
+| Timing rationale | Yes | Yes |
+| Distribution plan | Yes | Yes |
 
-| Milestone | Target | Required |
-|-----------|--------|----------|
-| ARR | $1M+ | Yes |
-| Customers | 200+ | Yes |
-| MoM Growth | 10-15% | Yes |
-| NRR | >110% | Yes |
-| Repeatable sales motion | Yes | Yes |
-| Team | 5-10 people | Yes |
+**Market readiness:** Ready
 
 ---
 
-## Investor Materials Checklist
+## Fundraising Stages
+
+### Pre-Seed ($100K-500K)
+
+**When to raise:** Idea + initial traction
+**What investors want:**
+- Founder-market fit
+- Large market opportunity
+- Early signs of traction (waitlist, beta users)
+- Clear differentiation
+
+**TeamPulse fit:** Could raise pre-seed after proving demand (beta users, initial revenue)
+
+### Seed ($500K-2M)
+
+**When to raise:** Product-market fit indicators
+**What investors want:**
+- $10K+ MRR (or clear path)
+- 20+ paying customers
+- Unit economics that work
+- Repeatable acquisition channel
+
+**TeamPulse fit:** Target after $10K MRR milestone
+
+### Not Applicable (For Now)
+
+- Series A ($5-15M) - Need $1M+ ARR
+- Later stages - Focus on getting to Seed first
+
+---
+
+## Key Metrics for Investors
+
+### What They'll Ask For
+
+| Metric | What They Want | Our Target |
+|--------|----------------|------------|
+| MRR/ARR | $10K+ MRR for seed | $3-5K MRR first |
+| Growth rate | 15-25% MoM | 20%+ MoM |
+| Churn | <5% monthly | <5% |
+| LTV:CAC | >3:1 | >10:1 |
+| Gross margin | >70% | >85% |
+| Runway | 12-18 months post-raise | 6+ months |
+
+### What Makes TeamPulse Attractive
+
+1. **Large market** (~$5B+ performance management)
+2. **Clear differentiation** (gap analysis, SMB pricing)
+3. **Strong unit economics** (high margin, low CAC)
+4. **Bootstrappable** (can reach profitability without raise)
+5. **Experienced in problem space** (domain expertise)
+
+---
+
+## Investor Materials Needed
 
 ### Essential Documents
 
-| Document | Status | Notes |
-|----------|--------|-------|
-| **Pitch Deck** (10-15 slides) | Not started | |
-| - Problem/opportunity | | |
-| - Solution | | |
-| - Product demo/screenshots | | |
-| - Traction metrics | | |
-| - Business model | | |
-| - Market size | | |
-| - Competition | | |
-| - Team | | |
-| - Financial projections | | |
-| - Ask and use of funds | | |
-| **Executive Summary** (1-pager) | Not started | |
-| **Financial Model** (3-5 year) | Partially done | |
-| **Cap Table** | Not applicable | |
-| **Product Demo** | In progress | |
+| Document | Status | Priority |
+|----------|--------|----------|
+| One-pager | Not created | P1 |
+| Pitch deck (10-12 slides) | Not created | P1 |
+| Financial model | Partial (this doc) | P2 |
+| Cap table | Not applicable yet | P3 |
+| Data room | Not needed yet | P3 |
 
-### Data Room Contents (for due diligence)
+### One-Pager Template
 
-| Category | Documents |
-|----------|-----------|
-| **Corporate** | Articles of incorporation, bylaws |
-| **Financial** | P&L, balance sheet, projections |
-| **Product** | Screenshots, demo video, roadmap |
-| **Customers** | Logo list, case studies, testimonials |
-| **Metrics** | MRR/ARR history, cohort data, unit economics |
-| **Legal** | Terms of service, privacy policy, contracts |
+```markdown
+# TeamPulse
 
----
+**One-liner:** 360-degree performance reviews for small teams at half the price of enterprise tools.
 
-## Pitch Deck Outline
+## The Problem
+Small team managers (10-50 employees) are stuck between expensive enterprise tools ($11+ PEPM) and basic spreadsheets. They need self-review, peer feedback, and gap analysis - but can't afford Lattice.
 
-### Slide 1: Title
-- Company name, tagline
-- "Performance reviews that don't suck - at half the cost"
+## The Solution
+TeamPulse delivers enterprise review features at SMB pricing ($6-8 PEPM):
+- Employee self-review with gap analysis
+- Anonymous peer feedback (360)
+- Goal tracking connected to reviews
+- 15-minute setup, not 2-week implementation
 
-### Slide 2: Problem
-- Enterprise tools are $11-16/employee (too expensive for SMBs)
-- Spreadsheets lack structure (no visibility, no 360 feedback)
-- The gap: SMBs need structure but can't afford enterprise
+## Traction
+- [X] customers paying [Y] MRR
+- [X]% MoM growth
+- [X]% trial-to-paid conversion
 
-### Slide 3: Solution
-- 360-degree reviews (self + peer + manager)
-- Gap analysis showing self vs manager perception
-- $6-8/employee (40-50% cheaper than Lattice)
+## Market
+- $5B+ performance management market
+- 1.5M companies with 10-100 employees in US
+- Growing 13% annually
 
-### Slide 4: Product
-- Dashboard screenshot
-- Gap analysis view
-- Key feature highlights
+## Business Model
+- SaaS subscription ($6-8 per employee/month)
+- 85%+ gross margin
+- [X]:1 LTV:CAC
 
-### Slide 5: Traction
-- MRR chart
-- Customer count
-- Key logos
-- Retention metrics
+## Team
+[Founder name] - [relevant experience]
 
-### Slide 6: Business Model
-- PEPM pricing ($6-8)
-- Target ARPA ($115)
-- Unit economics (LTV:CAC, payback)
+## Ask
+$[X] to reach $[Y] ARR
+Use of funds: [primary use]
 
-### Slide 7: Market
-- TAM: $14.9B (all performance management)
-- SAM: $720M (SMB segment)
-- SOM: $864K (3-year target)
+## Contact
+[email] | [website]
+```
 
-### Slide 8: Competition
-- 2x2 matrix (price vs features)
-- Our position: enterprise features, SMB pricing
+### Pitch Deck Outline
 
-### Slide 9: Go-to-Market
-- LinkedIn outbound (primary)
-- Content/SEO (secondary)
-- Product Hunt (launch boost)
-
-### Slide 10: Team
-- Founder background
-- Domain expertise
-- Technical capability
-
-### Slide 11: Financials
-- Revenue projections (12-24 months)
-- Path to profitability
-- Key assumptions
-
-### Slide 12: Ask
-- Amount raising
-- Use of funds
-- Milestones to hit
+| Slide | Content |
+|-------|---------|
+| 1 | Title + one-liner |
+| 2 | Problem (with pain points) |
+| 3 | Solution (product overview) |
+| 4 | Demo/Product (screenshots) |
+| 5 | Market size |
+| 6 | Business model |
+| 7 | Traction |
+| 8 | Competition |
+| 9 | Team |
+| 10 | Financials (projections) |
+| 11 | Ask + use of funds |
+| 12 | Contact |
 
 ---
 
-## Fundraising Timeline
+## Potential Investor Types
 
-### If Deciding to Raise (Month 6-7)
+### For TeamPulse (Pre-Seed/Seed)
 
-| Week | Activity |
-|------|----------|
-| Week 1-2 | Finalize deck and materials |
-| Week 3-4 | Research and list target investors |
-| Week 5-8 | Outreach and first meetings |
-| Week 9-12 | Follow-up meetings and diligence |
-| Week 13-16 | Negotiate and close |
+| Type | Examples | Check Size | Fit |
+|------|----------|------------|-----|
+| **Angel investors** | HR/SaaS operators | $10-50K | Good |
+| **Angel syndicates** | AngelList, STV | $50-200K | Good |
+| **Micro VCs** | Calm Fund, Earnest | $100-500K | Good |
+| **HR-focused VCs** | N/A | Varies | Research |
+| **Accelerators** | YC, Techstars | $125K-500K | Maybe |
 
-**Total: 3-4 months from decision to close**
+### Bootstrap-Friendly Options
 
-### Investor Target List Categories
+| Option | Description | Fit |
+|--------|-------------|-----|
+| **TinySeed** | Bootstrap-focused accelerator | Excellent |
+| **Calm Company Fund** | Patient capital for profitable | Excellent |
+| **Indie.vc** | Revenue-based, founder-friendly | Good |
+| **Revenue-based financing** | Clearco, Pipe | After $10K MRR |
 
-| Tier | Type | Examples |
-|------|------|----------|
-| **Tier 1** | SMB SaaS focused | Craft Ventures, OpenView |
-| **Tier 2** | HR/Future of Work | Sapphire, Unusual |
-| **Tier 3** | Generalist Seed | First Round, Y Combinator |
-| **Tier 4** | Angels | SaaS founders, HR leaders |
+---
+
+## Fundraising Timeline (If Needed)
+
+### Preparation (4-6 weeks)
+
+- [ ] Finalize metrics and traction story
+- [ ] Create pitch deck
+- [ ] Build one-pager
+- [ ] Prepare financial model
+- [ ] List target investors (50+)
+- [ ] Get warm intros lined up
+
+### Active Fundraising (6-10 weeks)
+
+- [ ] Week 1-2: Initial meetings, gather feedback
+- [ ] Week 3-4: Iterate pitch, expand meetings
+- [ ] Week 5-6: Push for term sheets
+- [ ] Week 7-8: Negotiate, close
+- [ ] Week 9-10: Docs, wire
+
+### Post-Close
+
+- [ ] Announce (optional)
+- [ ] Update cap table
+- [ ] Set up reporting cadence
+- [ ] Execute on use of funds
 
 ---
 
 ## Alternative Funding Options
 
-### Revenue-Based Financing
+### Before Raising Equity
 
-| Provider | Terms | Pros | Cons |
-|----------|-------|------|------|
-| Pipe | 1-12x MRR | No dilution | Revenue dependent |
-| Clearco | 6-12% fee | Fast | Limited amounts |
-| Capchase | Advance ARR | Flexible | Requires contracts |
+| Option | Description | When to Use |
+|--------|-------------|-------------|
+| **Revenue** | Customer payments | Always first |
+| **Prepaid annual** | Annual contracts upfront | Good for cash flow |
+| **Consulting** | Services while building product | Bridge income |
+| **Grants** | Non-dilutive funding | If applicable |
+| **Revenue financing** | Based on MRR | After $10K MRR |
 
-**When to consider:** $10K+ MRR, predictable revenue
+### Revenue Financing Options
 
-### Grants and Programs
-
-| Program | Amount | Requirements |
-|---------|--------|--------------|
-| AWS Activate | $100K credits | Startup stage |
-| Stripe Atlas | Perks | Use Stripe |
-| Microsoft for Startups | $150K credits | Apply |
-| Local SBA grants | Varies | Location-dependent |
-
-### Angel Investment
-
-| Source | Typical Amount | Pros |
-|--------|---------------|------|
-| Friends & Family | $10-50K | Fast, flexible |
-| Angel networks | $25-100K | Intros and advice |
-| Strategic angels | $25-100K | Industry expertise |
+| Provider | Requirement | Terms |
+|----------|-------------|-------|
+| Pipe | $5K+ MRR | Advance on ARR |
+| Clearco | $10K+ revenue | Revenue share |
+| Capchase | $10K+ MRR | Advance on ARR |
 
 ---
 
-## Financial Projections for Investors
+## Red Flags for Investors
 
-### 3-Year Projection
+### What Turns Them Off
 
-| Metric | Year 1 | Year 2 | Year 3 |
-|--------|--------|--------|--------|
-| **Revenue** | | | |
-| ARR | $130K | $480K | $1.2M |
-| MRR (end) | $10.8K | $40K | $100K |
-| Customers | 90 | 280 | 650 |
-| **Growth** | | | |
-| YoY Growth | - | 269% | 150% |
-| MoM Growth | 25% | 15% | 10% |
-| **Economics** | | | |
-| Gross Margin | 81% | 83% | 85% |
-| CAC | $140 | $200 | $250 |
-| LTV | $1,955 | $2,500 | $3,200 |
-| LTV:CAC | 14:1 | 12:1 | 13:1 |
-| **Team** | | | |
-| Headcount | 1 | 3 | 8 |
-| Burn Rate | $345 | $15K | $45K |
+- [ ] No clear differentiation
+- [ ] Small market (<$1B)
+- [ ] Poor unit economics
+- [ ] No traction (especially at seed)
+- [ ] Team can't execute
+- [ ] Unclear use of funds
+- [ ] Unrealistic projections
 
-### Use of Funds (Example $500K Seed)
+### TeamPulse Risks to Address
 
-| Category | Amount | % | Purpose |
-|----------|--------|---|---------|
-| Engineering | $200K | 40% | 2 engineers for 18 months |
-| Sales & Marketing | $150K | 30% | Sales hire + marketing spend |
-| Operations | $100K | 20% | Founder salary, tools |
-| Reserve | $50K | 10% | Buffer |
+| Risk | Mitigation |
+|------|------------|
+| Crowded market | Clear positioning (SMB + gap analysis) |
+| Enterprise downmarket | Speed to market, customer relationships |
+| Single founder | Can do a lot with low burn |
+| No revenue yet | Expected at this stage |
 
 ---
 
-## Key Metrics Investors Want
+## Recommendation for TeamPulse
 
-### Traction Metrics
+### Current Recommendation: Bootstrap
 
-| Metric | Minimum | Strong |
-|--------|---------|--------|
-| MRR | $3K | $10K+ |
-| MoM Growth | 10% | 20%+ |
-| Customers | 20 | 50+ |
-| Retention | 90% | 95%+ |
+**Reasons:**
+1. Low burn rate possible (~$200-400/month)
+2. Can reach profitability with 25-30 customers
+3. Unit economics should be strong (high margin, low CAC)
+4. Market isn't winner-take-all
+5. Raising too early dilutes unnecessarily
 
-### Efficiency Metrics
+### When to Reconsider Raising
 
-| Metric | Minimum | Strong |
-|--------|---------|--------|
-| LTV:CAC | 3:1 | 5:1+ |
-| Payback | <18 months | <12 months |
-| Gross Margin | 70% | 80%+ |
-| NRR | 100% | 110%+ |
+| Trigger | Action |
+|---------|--------|
+| $10K MRR with 25% MoM growth | Consider pre-seed |
+| Competitor raises significant round | Evaluate acceleration |
+| Enterprise opportunity requiring sales team | Consider seed |
+| Proven unit economics, want to go faster | Consider seed |
 
-### Qualitative Factors
+### 6-Month Focus
 
-| Factor | What They Look For |
-|--------|-------------------|
-| Team | Domain expertise, execution ability |
-| Market | Large TAM, clear wedge |
-| Product | Differentiation, stickiness |
-| Traction | Growth rate, retention |
-| Vision | Path to $100M+ business |
+**Months 1-3:** Build, launch, get first customers
+**Months 4-6:** Prove unit economics, grow to $3-5K MRR
+**Month 6+:** Evaluate: Bootstrap to profitability OR raise to accelerate
 
 ---
 
-## Decision: Bootstrap vs Raise
+## Fundraising Resources
 
-### Bootstrap Scorecard
+### Reading
+- "The Mom Test" by Rob Fitzpatrick
+- "Venture Deals" by Brad Feld
+- Paul Graham essays on fundraising
+- SaaStr content on metrics
 
-| Factor | Score (1-5) | Weight | Weighted |
-|--------|-------------|--------|----------|
-| Unit economics strong | 5 | 25% | 1.25 |
-| Can grow without capital | 4 | 20% | 0.80 |
-| Founder can sustain | 3 | 20% | 0.60 |
-| No competitive pressure | 4 | 15% | 0.60 |
-| Want full ownership | 4 | 10% | 0.40 |
-| Risk tolerance | 3 | 10% | 0.30 |
-| **Total** | | | **3.95/5** |
+### Communities
+- Indie Hackers
+- MicroConf
+- SaaS Twitter
 
-**Score >3.5: Lean toward bootstrapping**
-**Score <3.0: Consider raising**
-
-### Current Recommendation
-
-Based on the business model:
-1. **Unit economics are excellent** (LTV:CAC >10:1)
-2. **Low burn rate** (<$400/month)
-3. **Clear path to profitability** (Month 2-3)
-4. **No urgent need for capital**
-
-**Recommendation: Continue bootstrapping through Month 6, then reassess based on growth rate and competitive dynamics.**
-
----
-
-## Fundraising Readiness Summary
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│ FUNDRAISING READINESS - Current Assessment                         │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  CURRENT STATUS: Pre-Revenue / Building                            │
-│  READINESS SCORE: 40/100                                           │
-│  RECOMMENDATION: Bootstrap to $5K MRR, then reassess               │
-│                                                                    │
-│  MILESTONES TO SEED READY                                          │
-│  ────────────────────────                                          │
-│  [ ] Launch MVP                                                    │
-│  [ ] 25+ paying customers                                          │
-│  [ ] $3K+ MRR                                                      │
-│  [ ] 3 months retention data                                       │
-│  [ ] 15%+ MoM growth                                               │
-│  [ ] NPS >40                                                       │
-│                                                                    │
-│  ESTIMATED TIME TO SEED READY: 6-9 months                          │
-│                                                                    │
-│  ALTERNATIVE PATH                                                  │
-│  ────────────────                                                  │
-│  Continue bootstrapping to $10K+ MRR (12-18 months)                │
-│  - Maintain 100% ownership                                         │
-│  - Build on excellent unit economics                               │
-│  - Raise from position of strength if needed                       │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-*Bootstrap Finance artifacts complete. All 30 artifacts generated.*
+### Templates
+- Sequoia pitch deck template
+- YC pitch deck examples
+- Financial model templates (Christoph Janz)

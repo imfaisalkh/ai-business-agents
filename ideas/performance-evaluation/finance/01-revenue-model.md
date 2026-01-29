@@ -1,302 +1,260 @@
 # Revenue Model & Projections
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Financial model for TeamPulse. Projects revenue based on pricing strategy and growth assumptions.
+>
+> **Fits in:** Uses pricing from product/06-pricing-strategy.md. Feeds into Unit Economics (02) and Burn/Runway (03).
 
----
+## Revenue Model Summary
 
-## Revenue Model Overview
-
-### Business Model: B2B SaaS Subscription
-
-| Element | Details |
-|---------|---------|
-| **Model Type** | Per-employee-per-month (PEPM) subscription |
-| **Billing** | Monthly or annual (prepaid) |
-| **Pricing** | $6-8 PEPM (annual/monthly) |
-| **Target ARPA** | $100-150/month |
-| **Contract** | Month-to-month (no lock-in) |
-
-### Revenue Formula
-
-```
-Monthly Revenue = Active Customers x Average Employees x PEPM Price
-
-Example:
-30 customers x 20 avg employees x $7 PEPM = $4,200 MRR
-```
+**Business model:** B2B SaaS subscription
+**Pricing model:** Per-employee-per-month (PEPM)
+**Price point:** $6-8 PEPM (annual), $10 PEPM (monthly)
+**Target ACV:** $1,200-1,800 (10-15 employee teams)
+**Revenue goal (6 months):** $3-5K MRR
 
 ---
 
 ## Pricing Tiers
 
-### Launch Pricing Strategy
+| Billing | Price | Discount | Typical Customer |
+|---------|-------|----------|------------------|
+| Annual | $6-8 PEPM | 20-40% off | Most customers |
+| Monthly | $10 PEPM | None | Testing customers |
 
-| Tier | Price (Annual) | Price (Monthly) | Availability |
-|------|----------------|-----------------|--------------|
-| Founding Member | $5 PEPM | $6 PEPM | First 20 customers |
-| Early Adopter | $6 PEPM | $7 PEPM | Customers 21-50 |
-| Standard | $7 PEPM | $8 PEPM | General availability |
+### Revenue Per Customer
 
-### Price Points by Team Size
+| Team Size | Annual Price | Monthly MRR | Annual Revenue |
+|-----------|--------------|-------------|----------------|
+| 10 employees | $6 PEPM | $60 | $720 |
+| 15 employees | $6 PEPM | $90 | $1,080 |
+| 20 employees | $6 PEPM | $120 | $1,440 |
+| 25 employees | $6 PEPM | $150 | $1,800 |
+| 30 employees | $6 PEPM | $180 | $2,160 |
+| 50 employees | $6 PEPM | $300 | $3,600 |
 
-| Team Size | Monthly (at $7) | Annual (at $6) | Discount |
-|-----------|-----------------|----------------|----------|
-| 15 employees | $105 | $1,080 | 14% |
-| 20 employees | $140 | $1,440 | 14% |
-| 25 employees | $175 | $1,800 | 14% |
-| 30 employees | $210 | $2,160 | 14% |
-| 40 employees | $280 | $2,880 | 14% |
-| 50 employees | $350 | $3,600 | 14% |
-
----
-
-## Revenue Projections
-
-### 6-Month Projection (Conservative)
-
-| Month | New Customers | Total Customers | Avg ARPA | MRR | Cumulative Revenue |
-|-------|---------------|-----------------|----------|-----|-------------------|
-| 1 | 3 | 3 | $90 | $270 | $270 |
-| 2 | 4 | 7 | $95 | $665 | $935 |
-| 3 | 5 | 12 | $100 | $1,200 | $2,135 |
-| 4 | 6 | 17 | $105 | $1,785 | $3,920 |
-| 5 | 7 | 23 | $110 | $2,530 | $6,450 |
-| 6 | 8 | 30 | $115 | $3,450 | $9,900 |
-
-**6-Month Target: $3,450 MRR ($41,400 ARR run rate)**
-
-### 12-Month Projection (Growth Scenario)
-
-| Month | New Customers | Churned | Net Customers | MRR | YoY Growth |
-|-------|---------------|---------|---------------|-----|------------|
-| 1 | 3 | 0 | 3 | $270 | - |
-| 3 | 5 | 0 | 12 | $1,200 | - |
-| 6 | 8 | 1 | 30 | $3,450 | - |
-| 9 | 10 | 2 | 55 | $6,325 | - |
-| 12 | 12 | 3 | 90 | $10,800 | - |
-
-**12-Month Target: $10,800 MRR ($129,600 ARR)**
-
-### Revenue Mix Assumptions
-
-| Revenue Type | % of Revenue | Notes |
-|--------------|--------------|-------|
-| New MRR | 70% | New customer acquisition |
-| Expansion MRR | 15% | Team growth at existing customers |
-| Contraction MRR | -5% | Downgrades |
-| Churned MRR | -10% | Lost customers |
-| **Net New MRR** | **70%** | Monthly growth rate |
+**Average expected:** 15-20 employees = **$90-120 MRR per customer**
 
 ---
 
-## Revenue Scenarios
+## Growth Assumptions
 
-### Conservative (Likely)
+### Customer Acquisition
 
-| Metric | Month 6 | Month 12 |
-|--------|---------|----------|
-| Customers | 25 | 70 |
-| ARPA | $110 | $120 |
-| MRR | $2,750 | $8,400 |
-| ARR | $33,000 | $100,800 |
+| Phase | Timeline | New Customers/Month | Method |
+|-------|----------|---------------------|--------|
+| Beta | Month 1-2 | 5-10 (free) | LinkedIn outreach |
+| Early | Month 3-4 | 3-5 (paid) | LinkedIn + content |
+| Growth | Month 5-6 | 5-8 (paid) | Scaling what works |
 
-**Assumptions:**
-- 4-5 new customers/month
-- 5% monthly churn
-- Slow expansion revenue
+### Conversion Rates (Assumptions)
 
-### Target (Planned)
+| Stage | Conversion | Notes |
+|-------|------------|-------|
+| Trial signup | 10% of qualified leads | From discovery calls |
+| Trial to paid | 25-35% | Industry benchmark: 15-25% |
+| Annual vs monthly | 70% annual | With discount incentive |
 
-| Metric | Month 6 | Month 12 |
-|--------|---------|----------|
-| Customers | 35 | 100 |
-| ARPA | $115 | $130 |
-| MRR | $4,025 | $13,000 |
-| ARR | $48,300 | $156,000 |
+### Churn Assumptions
 
-**Assumptions:**
-- 6-8 new customers/month
-- 3% monthly churn
-- 10% expansion revenue
+| Metric | Assumption | Rationale |
+|--------|------------|-----------|
+| Monthly logo churn | 3-5% | SMB typical, reviews are sticky |
+| Net revenue retention | 100-110% | Expansion from team growth |
+| Gross churn | 5-8% | Some SMBs will close/churn |
 
-### Aggressive (Stretch)
+---
 
-| Metric | Month 6 | Month 12 |
-|--------|---------|----------|
-| Customers | 50 | 150 |
-| ARPA | $120 | $140 |
-| MRR | $6,000 | $21,000 |
-| ARR | $72,000 | $252,000 |
+## 6-Month Revenue Projection
 
-**Assumptions:**
-- 10+ new customers/month
-- 2% monthly churn
-- 15% expansion revenue
-- Strong word-of-mouth
+### Conservative Scenario
+
+| Month | New Customers | Total Customers | Avg MRR/Customer | MRR | Notes |
+|-------|---------------|-----------------|------------------|-----|-------|
+| 1 | 0 (beta) | 0 | $0 | $0 | Building + beta |
+| 2 | 0 (beta) | 5 (free beta) | $0 | $0 | Free beta users |
+| 3 | 3 | 3 | $100 | $300 | First paid |
+| 4 | 4 | 7 | $100 | $700 | Momentum |
+| 5 | 5 | 12 | $100 | $1,200 | Scaling outreach |
+| 6 | 6 | 18 | $100 | $1,800 | Approaching target |
+
+**Conservative 6-month MRR:** $1,800 (~$22K ARR)
+
+### Target Scenario
+
+| Month | New Customers | Total Customers | Avg MRR/Customer | MRR | Notes |
+|-------|---------------|-----------------|------------------|-----|-------|
+| 1 | 0 (beta) | 0 | $0 | $0 | Building + beta |
+| 2 | 0 (beta) | 10 (free beta) | $0 | $0 | Free beta users |
+| 3 | 5 | 5 | $120 | $600 | 50% beta convert |
+| 4 | 6 | 11 | $120 | $1,320 | Growing |
+| 5 | 8 | 19 | $120 | $2,280 | Scaling |
+| 6 | 10 | 29 | $120 | $3,480 | Target zone |
+
+**Target 6-month MRR:** $3,500 (~$42K ARR)
+
+### Optimistic Scenario
+
+| Month | New Customers | Total Customers | Avg MRR/Customer | MRR | Notes |
+|-------|---------------|-----------------|------------------|-----|-------|
+| 1 | 0 (beta) | 0 | $0 | $0 | Building + beta |
+| 2 | 0 (beta) | 15 (free beta) | $0 | $0 | Strong beta interest |
+| 3 | 8 | 8 | $140 | $1,120 | 50%+ beta convert |
+| 4 | 10 | 18 | $140 | $2,520 | Word of mouth |
+| 5 | 12 | 30 | $140 | $4,200 | Strong growth |
+| 6 | 15 | 45 | $140 | $6,300 | Exceeding target |
+
+**Optimistic 6-month MRR:** $6,300 (~$76K ARR)
 
 ---
 
 ## Revenue Drivers
 
-### Growth Levers
+### Primary Drivers
 
-| Lever | Current | Target | Impact |
-|-------|---------|--------|--------|
-| Close rate | 20% | 30% | +50% more customers |
-| Average deal size | $100 | $130 | +30% revenue per customer |
-| Churn rate | 5% | 3% | +40% LTV |
-| Expansion rate | 5% | 15% | +10% NRR |
-
-### Key Metrics to Drive Revenue
-
-| Metric | Target | Why It Matters |
+| Driver | Impact | How to Improve |
 |--------|--------|----------------|
-| Trial-to-paid | 25%+ | Direct revenue impact |
-| Average team size | 25+ | Higher ARPA |
-| Annual vs monthly | 40% annual | Cash flow, retention |
-| Logo retention | 90%+ | Sustainable growth |
+| New customer acquisition | High | More outreach, better conversion |
+| Average team size | Medium | Target larger teams (20-50) |
+| Annual vs monthly mix | Medium | Stronger annual incentives |
+| Trial conversion | High | Better onboarding, demo quality |
+
+### Secondary Drivers
+
+| Driver | Impact | How to Improve |
+|--------|--------|----------------|
+| Expansion (team growth) | Medium | Customer success, usage tracking |
+| Pricing increase | Low | Market validation, value adds |
+| Churn reduction | Medium | Better onboarding, support |
 
 ---
 
-## Expansion Revenue Model
+## Revenue Scenarios by Customer Count
 
-### Natural Expansion Triggers
+### To Hit $3K MRR
 
-| Trigger | Frequency | Revenue Impact |
-|---------|-----------|----------------|
-| Team growth | Ongoing | $7/new employee |
-| New departments | Quarterly | +10-50 employees |
-| Annual price increase | Yearly | +5-10% |
+| If Avg MRR | Customers Needed |
+|------------|------------------|
+| $75 (10 employees) | 40 customers |
+| $100 (15 employees) | 30 customers |
+| $120 (20 employees) | 25 customers |
+| $150 (25 employees) | 20 customers |
 
-### Expansion Projection
+**Most likely path:** 25-30 customers at $100-120 ARPA
 
-| Month | Starting Employees | Growth Rate | Added Employees | Added MRR |
-|-------|-------------------|-------------|-----------------|-----------|
-| 3 | 500 | 2% | 10 | $70 |
-| 6 | 750 | 2% | 15 | $105 |
-| 9 | 1,100 | 2% | 22 | $154 |
-| 12 | 1,800 | 2% | 36 | $252 |
+### To Hit $5K MRR
 
-**Cumulative Expansion MRR (Month 12): ~$500/month**
+| If Avg MRR | Customers Needed |
+|------------|------------------|
+| $75 (10 employees) | 67 customers |
+| $100 (15 employees) | 50 customers |
+| $120 (20 employees) | 42 customers |
+| $150 (25 employees) | 34 customers |
 
----
-
-## Churn Impact Analysis
-
-### Churn Scenarios
-
-| Monthly Churn | Customers Lost (of 50) | Revenue Lost | Annual Impact |
-|---------------|------------------------|--------------|---------------|
-| 2% | 1 | $115 | $1,380 |
-| 3% | 1.5 | $173 | $2,070 |
-| 5% | 2.5 | $288 | $3,450 |
-| 10% | 5 | $575 | $6,900 |
-
-### Churn Prevention Value
-
-```
-Reducing churn from 5% to 3%:
-- Save 2.5 customers/month
-- Save $288/month in MRR
-- Save $3,450/year
-- Equivalent to acquiring 2-3 new customers
-```
+**Most likely path:** 40-50 customers at $100-125 ARPA
 
 ---
 
-## Cash Flow Projection
+## Revenue Mix
 
-### Monthly Cash Flow (First 6 Months)
+### By Billing Period (Target)
 
-| Month | Revenue | Expenses | Net Cash Flow | Cumulative |
-|-------|---------|----------|---------------|------------|
-| 1 | $270 | $500 | -$230 | -$230 |
-| 2 | $665 | $500 | $165 | -$65 |
-| 3 | $1,200 | $600 | $600 | $535 |
-| 4 | $1,785 | $600 | $1,185 | $1,720 |
-| 5 | $2,530 | $700 | $1,830 | $3,550 |
-| 6 | $3,450 | $700 | $2,750 | $6,300 |
+| Billing | % of Customers | % of Revenue | Rationale |
+|---------|----------------|--------------|-----------|
+| Annual | 70% | 60% | Lower price, but guaranteed |
+| Monthly | 30% | 40% | Higher price, more flexible |
 
-### Annual Prepay Impact
+### By Customer Size (Target)
 
-| Scenario | Monthly Mix | Annual Mix | Cash Flow Impact |
-|----------|-------------|------------|------------------|
-| All monthly | 100% | 0% | Standard |
-| 60/40 | 60% | 40% | +4 months cash runway |
-| 40/60 | 40% | 60% | +6 months cash runway |
-
-**Target: 40% of customers on annual plans by Month 6**
+| Team Size | % of Customers | % of Revenue | Rationale |
+|-----------|----------------|--------------|-----------|
+| 10-15 | 40% | 30% | Easier to close, lower ACV |
+| 15-25 | 40% | 45% | Sweet spot |
+| 25-50 | 20% | 25% | Harder to close, higher ACV |
 
 ---
 
-## Break-Even Analysis
+## Seasonality
 
-### Monthly Fixed Costs (Estimated)
+### Review Cycle Timing
 
-| Cost | Amount |
-|------|--------|
-| Hosting (Railway) | $20 |
-| Email (Resend) | $0-20 |
-| Tools/subscriptions | $100 |
-| LinkedIn Navigator | $100 |
-| Domain/misc | $30 |
-| **Total** | **$250-300** |
+| Quarter | Buying Activity | Notes |
+|---------|-----------------|-------|
+| Q1 (Jan-Mar) | High | Q4 reviews trigger buying |
+| Q2 (Apr-Jun) | Medium | Mid-year reviews |
+| Q3 (Jul-Sep) | Low | Summer slowdown |
+| Q4 (Oct-Dec) | High | Annual review prep |
 
-### Break-Even Calculation
+**Implication:** Plan launches and campaigns around Q1 and Q4
+
+---
+
+## Key Risks to Revenue
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Slower than expected sales | High | High | Multiple outreach channels |
+| Higher churn than expected | Medium | High | Onboarding investment |
+| Competitor price war | Low | Medium | Differentiation on features |
+| Longer sales cycles | Medium | Medium | Better qualification |
+
+---
+
+## Revenue Milestones
+
+| Milestone | Target Date | Revenue Level | Customers |
+|-----------|-------------|---------------|-----------|
+| First paid customer | Month 3 | $100 MRR | 1 |
+| 10 customers | Month 4 | $1,000 MRR | 10 |
+| Ramen profitable | Month 5-6 | $2,000 MRR | 20 |
+| Target ($3K) | Month 6 | $3,000 MRR | 25-30 |
+| Stretch ($5K) | Month 7-8 | $5,000 MRR | 40-50 |
+
+---
+
+## Monthly Revenue Tracking
+
+### Template
+
+| Month | New MRR | Churn MRR | Expansion MRR | Net New MRR | Total MRR |
+|-------|---------|-----------|---------------|-------------|-----------|
+| M1 | | | | | |
+| M2 | | | | | |
+| M3 | | | | | |
+| M4 | | | | | |
+| M5 | | | | | |
+| M6 | | | | | |
+
+### Key Calculations
 
 ```
-Break-even MRR = Fixed Costs / Gross Margin
-Break-even MRR = $300 / 0.85 = $353
-
-At $115 ARPA:
-Break-even customers = $353 / $115 = 4 customers
+Net New MRR = New MRR - Churn MRR + Expansion MRR
+Total MRR = Previous Total MRR + Net New MRR
+ARR = MRR × 12
 ```
-
-**Break-even: 4 customers at $115 ARPA**
 
 ---
 
 ## Revenue Quality Metrics
 
-### Targets
+### To Track Monthly
 
-| Metric | Target | Why |
-|--------|--------|-----|
-| MRR Growth Rate | 15-20% | Healthy SaaS growth |
-| Net Revenue Retention | 105%+ | Growth without new sales |
-| Gross Revenue Retention | 95%+ | Low churn |
-| ARPA Growth | 5%+ QoQ | Value expansion |
-
-### Revenue Mix Health
-
-| Mix | Healthy | Warning | Critical |
-|-----|---------|---------|----------|
-| New MRR % | 60-80% | >80% | >90% (no retention) |
-| Expansion % | 10-20% | <10% | <5% |
-| Churn % | <5% | 5-10% | >10% |
+| Metric | Target | Why It Matters |
+|--------|--------|----------------|
+| Net Revenue Retention | >100% | Growth from existing customers |
+| Gross Revenue Retention | >92% | Revenue kept (pre-expansion) |
+| Quick Ratio | >4 | (New + Expansion) / (Churn + Contraction) |
+| Revenue per Employee | >$500/mo | If you hire |
 
 ---
 
-## Sensitivity Analysis
+## 12-Month Revenue Outlook
 
-### Revenue Sensitivity to Key Variables
+*Extended projection assuming continued growth*
 
-| Variable | -20% | Base | +20% | MRR Impact |
-|----------|------|------|------|------------|
-| Customer count | 24 | 30 | 36 | +/- $690 |
-| ARPA | $92 | $115 | $138 | +/- $690 |
-| Churn | 6% | 5% | 4% | +/- $115 |
+| Quarter | End MRR | ARR | Customers | Notes |
+|---------|---------|-----|-----------|-------|
+| Q2 2026 (Month 6) | $3,000-5,000 | $36K-60K | 25-40 | Initial goal |
+| Q3 2026 (Month 9) | $6,000-10,000 | $72K-120K | 50-80 | Growing |
+| Q4 2026 (Month 12) | $10,000-15,000 | $120K-180K | 85-125 | Scale |
 
-### Scenario Impact on Month 6 MRR
-
-| Scenario | Description | Month 6 MRR |
-|----------|-------------|-------------|
-| Base | As planned | $3,450 |
-| High churn | 8% monthly churn | $2,760 |
-| Slow sales | 50% fewer customers | $1,725 |
-| Lower ARPA | $85 average | $2,550 |
-| Best case | All targets hit | $4,500 |
-
----
-
-*Next artifact: 02-unit-economics.md*
+**12-month target:** $10-15K MRR (~$120-180K ARR)

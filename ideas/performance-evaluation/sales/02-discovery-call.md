@@ -1,392 +1,336 @@
 # Discovery Call Framework
 
-*Generated for: Performance Evaluation Tool*
-
----
+> **Purpose:** Structure for discovery calls that qualify prospects and uncover pain. Goal: understand their world, not pitch your product.
+>
+> **Fits in:** Use after booking call from LinkedIn outreach. Score with Qualification Checklist (03). Leads to Demo or Disqualify.
 
 ## Call Overview
 
-### Purpose
-
-1. **Qualify** the prospect (ICP fit, budget, timeline)
-2. **Understand** their current process and pain points
-3. **Demonstrate** fit (not a full demo - save for trial)
-4. **Move to trial** with clear next steps
-
-### Duration: 20-25 minutes
-
-| Section | Time | Goal |
-|---------|------|------|
-| Opening | 2 min | Build rapport, set agenda |
-| Discovery | 10 min | Understand situation and pain |
-| Qualification | 5 min | Confirm fit |
-| Solution Preview | 3 min | Show relevance |
-| Close | 3 min | Next steps |
+**Duration:** 20-30 minutes
+**Goal:** Understand their pain and determine fit
+**Ratio:** Listen 70% / Talk 30%
+**Outcome:** Qualify and book demo, OR gracefully disqualify
 
 ---
 
 ## Pre-Call Preparation (5 min)
 
 ### Research Checklist
+- [ ] LinkedIn: Review their profile, role tenure, recent posts
+- [ ] Company: Size (LinkedIn, Crunchbase), industry, recent news
+- [ ] Previous touches: What have they said/done already?
+- [ ] Competitors: Are they using any review tools?
 
-- [ ] Company website (size, industry, stage)
-- [ ] LinkedIn profile (role, tenure, connections)
-- [ ] Recent company news (funding, growth, launches)
-- [ ] Previous conversation context (from outreach)
-- [ ] Check if they've signed up for trial already
-
-### Notes Template
-
-```
-Call: [Name] @ [Company]
-Date: [Date]
-Prep:
-- Company size (estimate):
-- Industry:
-- Their role:
-- How we connected:
-- Key questions to ask:
-```
+### Prepare Questions Based on Research
+- Company-specific question: "_____"
+- Role-specific question: "_____"
+- Hypothesis about their pain: "_____"
 
 ---
 
-## Call Script
+## Call Structure
 
 ### Opening (2 min)
 
+**Goal:** Set expectations, build rapport
+
+> "Hey [Name], thanks for taking the time. Before we dive in, I want to make sure this is valuable for you. I have about [20-30] minutes - does that work on your end?"
+
+> "My goal today is to understand how you're handling performance reviews and see if there's a fit with what we're building. I'll ask a bunch of questions, and at the end, if it makes sense, I can show you what TeamPulse does. Sound good?"
+
 **Build rapport:**
-> "Hey [Name], thanks for taking the time. Before we dive in, I saw [relevant detail from research - recent hire, company news, LinkedIn post]. How's that going?"
-
-[Small talk - 30 seconds max]
-
-**Set agenda:**
-> "I want to make sure this is valuable for you. Here's what I'm thinking:
->
-> First, I'd love to learn about how you handle performance reviews today and what's working or not working.
->
-> Then, I can share a bit about what we're building and see if it might be a fit.
->
-> Sound good? Anything you specifically want to cover?"
+- "How long have you been at [Company]?"
+- "I saw [recent post/company news] - how's that going?"
 
 ---
 
-### Discovery (10 min)
+### Discovery Questions (15-20 min)
 
-**Situation questions:**
+**Goal:** Understand their world, pain, and decision process
 
-1. > "Tell me about your team. How many people do you manage directly?"
+#### Section 1: Current State (5 min)
 
-   *Listen for: team size, org structure*
+**Q1: Process Overview**
+> "Walk me through how your team currently handles performance reviews."
 
-2. > "How do you handle performance reviews today? Walk me through your process."
+*Listen for:*
+- [ ] Tools mentioned (Google Docs, spreadsheet, software)
+- [ ] Frequency (annual, quarterly, ad-hoc, none)
+- [ ] Who's involved (just manager, HR, employees)
+- [ ] Process structure (formal vs. informal)
 
-   *Listen for: tools used, frequency, who's involved*
+**Follow-up probes:**
+- "What tool do you use to write reviews?"
+- "How do employees see their feedback?"
+- "Who else is involved in the process?"
 
-3. > "Do your employees do self-reviews? How about peer feedback?"
+**Q2: Team Context**
+> "How many people are on your team? How many direct reports do you have?"
 
-   *Listen for: gaps in their current process*
-
-**Pain questions:**
-
-4. > "What's the most frustrating part of your current process?"
-
-   *Let them talk. Probe: "Why is that frustrating?"*
-
-5. > "How much time do you spend on reviews each cycle?"
-
-   *Listen for: time investment, inefficiency*
-
-6. > "When you finish reviews, where does that documentation go? Can employees see it?"
-
-   *Listen for: visibility issues, documentation problems*
-
-**Impact questions:**
-
-7. > "What happens when reviews don't go well, or aren't done consistently?"
-
-   *Listen for: consequences they've experienced*
-
-8. > "Have you ever had a situation where you wished you had better documentation of performance issues?"
-
-   *Listen for: legal/HR concerns*
-
-**Aspiration questions:**
-
-9. > "If you could wave a magic wand, what would the ideal review process look like?"
-
-   *Listen for: their vision, priorities*
-
-10. > "What would it mean for your team if reviews were easier and more structured?"
-
-    *Listen for: outcomes they care about*
+*Listen for:*
+- [ ] Team size (10-50 is sweet spot)
+- [ ] Growth trajectory
+- [ ] Manager span of control
 
 ---
 
-### Qualification (5 min)
+#### Section 2: Pain Exploration (5-7 min)
 
-**Budget:**
-> "Have you looked at any tools for this before? What was your reaction to pricing?"
+**Q3: Pain Point**
+> "What's the biggest headache with how reviews work today?"
 
-*If they mention specific tools:*
-> "What did you think of [tool]? What stopped you from using it?"
+*Listen for:*
+- [ ] Specific frustrations (time, consistency, visibility)
+- [ ] Emotional language ("nightmare," "dread," "chaos")
+- [ ] Impact on team/outcomes
 
-*Direct budget question (if needed):*
-> "Budget-wise, performance tools typically run $6-15 per employee per month. Does that range work for your team?"
+**Q4: Time Cost**
+> "How much time does review season take you? Per person, and total?"
 
-**Authority:**
-> "If you found something that worked, what would the decision process look like? Anyone else who'd need to weigh in?"
+*Listen for:*
+- [ ] Hours per review (30 min is typical pain, 60+ is acute)
+- [ ] Total cycle time (weeks of disruption)
+- [ ] Frequency multiplier (quarterly = 4x pain)
 
-**Need:**
-> "On a scale of 1-10, how much of a priority is fixing this right now?"
+**Q5: Consequences**
+> "What happens when reviews don't go well, or don't happen at all?"
 
-*If low:* "What would need to happen for it to become a priority?"
+*Listen for:*
+- [ ] Retention issues
+- [ ] Legal/compliance concerns
+- [ ] Employee satisfaction impact
+- [ ] Manager credibility
 
-**Timeline:**
-> "When's your next review cycle? Would you want something in place by then?"
+**Q6: Failed Solutions**
+> "What have you tried to solve this? Other tools, templates, approaches?"
 
----
-
-### Solution Preview (3 min)
-
-**Bridge from their pain:**
-> "Based on what you've shared, it sounds like [their main pain point] is the biggest issue.
->
-> That's exactly why we built this. Here's the quick version..."
-
-**Position the solution:**
-> "We help small teams run 360-degree reviews - self-review, peer feedback, manager evaluation - all in one place.
->
-> The piece I think you'd find most useful is [specific feature based on their pain]:
->
-> - If time is the issue: "We automate the reminders and collection, so you're not chasing people"
-> - If visibility is the issue: "Employees see their own reviews and can compare their self-rating to yours"
-> - If peer feedback is desired: "We handle anonymous peer feedback collection and aggregate it for you"
->
-> And we're about half the price of tools like Lattice - around $7 per employee."
-
-**Don't do a full demo here.** Save it for the trial.
+*Listen for:*
+- [ ] Past purchases (why abandoned?)
+- [ ] Price points considered
+- [ ] Feature gaps that frustrated them
 
 ---
 
-### Close (3 min)
+#### Section 3: Decision Process (3-5 min)
 
-**Trial invite:**
-> "The best way to see if this works is to try it with your team.
->
-> Would you be open to a free trial? No credit card needed, and I can help you get set up."
+**Q7: Decision Maker**
+> "If you found a tool that solved this, who would need to be involved in the decision?"
 
-**Handle responses:**
+*Listen for:*
+- [ ] "Just me" (fast cycle)
+- [ ] "Me and my manager/HR" (1 stakeholder)
+- [ ] "Committee/procurement" (longer cycle, may disqualify)
 
-*If yes:*
-> "Great! I'll send you the signup link right after this call. Once you're in, add a few team members and create a test review cycle - that's when it clicks.
->
-> Want me to set up a 15-minute call in a few days to check in on how it's going?"
+**Q8: Budget**
+> "Do you have budget allocated for HR or people tools?"
 
-*If hesitant:*
-> "What's giving you pause?"
+*Listen for:*
+- [ ] "Yes, we have $X" (strong signal)
+- [ ] "We'd find budget" (good signal)
+- [ ] "I'd need to ask" (weaker signal)
+- [ ] "No budget" (red flag)
 
-[Address concern, then re-ask]
+**Q9: Timeline**
+> "When's your next review cycle? What would need to happen to have something in place by then?"
 
-*If not now:*
-> "Totally understand. When's your next review cycle? Let me reach out a month before so you have time to evaluate."
-
-**Confirm next steps:**
-> "So to recap, I'll send you [X], and we'll [next step]. Sound good?"
-
----
-
-## Discovery Questions - Deep Dive
-
-### Current Process
-
-| Question | What You're Learning |
-|----------|---------------------|
-| "Walk me through your last review cycle" | Full process, pain points |
-| "What tools do you use?" | Current solution sophistication |
-| "How long does each review take?" | Time investment |
-| "Do employees see their reviews?" | Visibility gap |
-| "How do you get peer input?" | 360 process maturity |
-
-### Pain & Impact
-
-| Question | What You're Learning |
-|----------|---------------------|
-| "What's most frustrating about this?" | Primary pain point |
-| "What happens if reviews don't get done?" | Stakes/consequences |
-| "Have you had issues finding old reviews?" | Documentation pain |
-| "How do employees feel about the process?" | Cultural impact |
-| "What's a review-related disaster you've had?" | Emotional hooks |
-
-### Buying Signals
-
-| Question | What You're Learning |
-|----------|---------------------|
-| "What made you take this call?" | Motivation/trigger |
-| "What have you tried before?" | Solution awareness |
-| "What would success look like?" | Decision criteria |
-| "Who else would need to see this?" | Decision process |
-| "What's your timeline?" | Urgency |
+*Listen for:*
+- [ ] Specific date (urgency)
+- [ ] "No rush" (lower priority)
+- [ ] Implementation constraints
 
 ---
 
-## Qualification Scorecard
+#### Section 4: Feature Interest (2-3 min)
 
-### During the call, mentally score:
+**Q10: Self-Review Value**
+> "How valuable would it be if employees rated themselves before you wrote their review?"
 
-| Criteria | Score (0-3) | Notes |
-|----------|-------------|-------|
-| **Team Size** (15-50 = 3, 10-14/51-100 = 2, else = 1) | | |
-| **Current Solution** (Spreadsheets = 3, Basic tool = 2, None = 1, Enterprise tool = 0) | | |
-| **Pain Level** (Expressed pain = 3, Mentioned issues = 2, No pain = 0) | | |
-| **Budget** (Confirmed = 3, Seems reasonable = 2, Unsure = 1, No = 0) | | |
-| **Authority** (Decision maker = 3, Influencer = 2, User = 1) | | |
-| **Timeline** (30 days = 3, 60 days = 2, 90 days = 1, No timeline = 0) | | |
+*Listen for:*
+- [ ] "That would be huge" (core value resonates)
+- [ ] "We already do that" (validate current state)
+- [ ] "Not sure" (may need education)
 
-**Total Score:**
-- 15-18: Hot lead - prioritize
-- 10-14: Warm lead - standard process
-- 6-9: Nurture - check back later
-- 0-5: Disqualify - not ICP
+**Q11: Gap Analysis Hook**
+> "What if you could see exactly where your ratings differ from how employees rated themselves - like a side-by-side comparison showing the gaps?"
 
----
-
-## Call Notes Template
-
-```
-## Discovery Call: [Name] @ [Company]
-
-**Date:** [Date]
-**Duration:** [X] min
-**Lead Source:** LinkedIn / Inbound / Referral
-
-### Background
-- Team size:
-- Role:
-- Industry:
-- Current solution:
-
-### Key Pain Points
-1.
-2.
-3.
-
-### Quotes (Verbatim)
-- "[Pain quote]"
-- "[Buying signal quote]"
-
-### Qualification
-- Budget: Y/N (notes)
-- Authority: Decision maker / Influencer / User
-- Need: High / Medium / Low
-- Timeline: [Date or "no timeline"]
-
-### Score: [X/18]
-
-### Solution Fit
-- Features they need:
-- Features they don't need:
-- Pricing reaction:
-
-### Next Steps
-- [ ]
-
-### Follow-up Date: [Date]
-```
+*Listen for:*
+- [ ] "That would change my 1:1s" (WOW resonates)
+- [ ] "I hadn't thought of that" (interest)
+- [ ] Questions about how it works (engaged)
 
 ---
 
-## Common Scenarios
+### Qualification Check (1 min, internal)
 
-### Scenario: They're "Just Looking"
+While they're talking, score mentally:
 
-> "Totally understand - you're in research mode. What specifically are you trying to figure out?"
+| Criteria | Yes | Partial | No |
+|----------|-----|---------|-----|
+| Has the pain | +2 | +1 | 0 |
+| Right team size (10-50) | +2 | +1 | 0 |
+| Has budget/authority | +2 | +1 | 0 |
+| Timeline exists | +2 | +1 | 0 |
+| Engaged in call | +2 | +1 | 0 |
 
-[Let them answer, then:]
+**Score 7+:** Proceed to demo pitch
+**Score 4-6:** Needs nurturing or follow-up
+**Score <4:** Gracefully disqualify
 
-> "Rather than me talking at you, would it be helpful to just try the product? You can poke around, no commitment, and I'm happy to answer questions as they come up."
+---
 
-### Scenario: They Love Spreadsheets
+### Transition to Close (3-5 min)
 
-> "Spreadsheets are great for a lot of things. What made you take this call - is there something that's not working?"
+**If Qualified (Score 7+):**
 
-[If they insist spreadsheets are fine:]
+> "Based on what you've shared, I think TeamPulse could really help here. You mentioned [their main pain], and that's exactly what we built for.
 
-> "Sounds like you've got a good system. If that ever changes, keep us in mind. When's a good time to check back?"
+> The gap analysis feature I mentioned - where you see your ratings versus theirs side-by-side - that's something most people haven't seen before and it changes how review conversations go.
 
-### Scenario: They've Tried Everything
+> Would you be interested in a 15-20 minute demo where I can show you how it works with a team like yours?"
 
-> "It sounds like you've done your research. What was missing from the tools you've tried?"
+**If Interested:**
+> "Great! I have availability [offer 2-3 times]. What works for you?"
 
-[Their answer reveals what to emphasize]
+**If Hesitant:**
+> "Totally understand. What would be helpful to see or know before scheduling that?"
 
-### Scenario: Price Comes Up Early
+---
 
-> "Great question. We're about $7 per employee per month - so for a team of 25, that's around $175/month.
->
-> But before we get too into pricing, I want to make sure we're actually a fit. Tell me more about [redirect to discovery]..."
+**If Needs Nurturing (Score 4-6):**
 
-### Scenario: They Want a Demo Right Away
+> "I appreciate you sharing all of this. It sounds like reviews are on your radar but maybe not the top priority right now.
 
-> "I can definitely show you the product. But I've found demos are more useful when I understand your specific situation first.
->
-> Mind if I ask a few questions to make sure I show you the right things?"
+> Would it be helpful if I sent you our performance review template? It's free, and even if you stick with spreadsheets, it might make your next cycle a bit easier.
+
+> And let's plan to reconnect in [30/60/90 days] before your next review cycle?"
+
+---
+
+**If Disqualifying (Score <4):**
+
+> "Thanks for the conversation. Based on what you've shared, it sounds like [reason - too small, no pain, different needs] - so TeamPulse might not be the best fit right now.
+
+> I can still send you some free resources that might help. And if things change - team grows, reviews become more painful - I'm here."
+
+---
+
+### Wrap Up (1-2 min)
+
+> "Before we go, is there anything else I should know about your review process that I didn't ask about?"
+
+> "Also, do you know other managers dealing with similar challenges? I'd love an introduction if you think it'd be helpful for them."
 
 ---
 
 ## Post-Call Actions
 
-### Immediately After (5 min)
+### Immediately After Call (5 min)
 
-1. **Complete call notes** while fresh
-2. **Score the lead** (hot/warm/cold)
-3. **Send follow-up email** (see templates below)
-4. **Update CRM** with notes and next steps
-5. **Schedule follow-up** in calendar
+1. **Score the call** using qualification checklist
+2. **Update CRM** with:
+   - Call notes (key quotes, pain points)
+   - Stage update
+   - Next step and date
+   - Deal size estimate
+3. **Send follow-up email** (within 1 hour)
 
-### Follow-Up Email Templates
+### Follow-Up Email Template
 
-**Template A: Hot Lead - Trial Invite**
+**Subject:** Next steps for [Company] + TeamPulse
 
-Subject: [Company] + [Our Product] - Trial Access
-
-> Hey [Name],
+> Hi [Name],
 >
-> Great chatting with you about your review process. Based on what you shared about [specific pain], I think you'll really like [specific feature].
+> Great chatting today! Quick summary of what we discussed:
 >
-> Here's your trial link: [Link]
+> **Your challenges:**
+> - [Pain point 1 they mentioned]
+> - [Pain point 2 they mentioned]
 >
-> Quick start tip: Add 3-4 team members and create a test review cycle. That's when it clicks.
+> **How TeamPulse helps:**
+> - [How we address pain 1]
+> - [How we address pain 2]
 >
-> I've got us down for a check-in on [date] - sound good?
+> **Next steps:**
+> - Demo scheduled for [date/time]
+> - [Or: I'll send over the template we discussed]
 >
-> [Signature]
-
-**Template B: Warm Lead - Nurture**
-
-Subject: Re: Performance reviews
-
-> Hey [Name],
+> In the meantime, here's a quick overview of the gap analysis feature I mentioned: [link or description]
 >
-> Thanks for the conversation today. I understand [timing reason] isn't the right time.
+> Looking forward to showing you more!
 >
-> In the meantime, here's a free template I mentioned: [Link]
->
-> I'll circle back [timeframe] to see if anything's changed. Good luck with [relevant thing they mentioned].
->
-> [Signature]
-
-**Template C: Cold Lead - Exit**
-
-Subject: Quick follow-up
-
-> Hey [Name],
->
-> Thanks for taking the time today. Sounds like you've got a good handle on things with [current solution].
->
-> If that ever changes, I'm here. Best of luck with [something relevant].
->
-> [Signature]
+> [Your name]
 
 ---
 
-*Next artifact: 03-qualification-checklist.md*
+## Common Scenarios
+
+### Scenario: They're Happy with Spreadsheets
+
+**What to say:**
+> "Spreadsheets totally work, especially at smaller scale. What I hear from teams around your size is that it starts breaking down when you want employees to see their reviews, or when you're trying to compare across quarters. Have you run into any of that?"
+
+**Goal:** Plant seed of future pain, offer template, add to nurture
+
+---
+
+### Scenario: They Use a Competitor
+
+**What to say:**
+> "Nice, [Competitor] is a solid tool. What do you like about it? And is there anything you wish was different?"
+
+**Listen for switching triggers:**
+- Too expensive
+- Too complicated
+- Missing features (especially self-review gap analysis)
+- Poor support
+
+**If happy:** "Sounds like you're in good shape. If that ever changes, let me know. Happy to send some comparison info in case it's useful down the road."
+
+---
+
+### Scenario: They Want to Skip Discovery
+
+**What to say:**
+> "Totally get it - you're busy and want to cut to the chase. Can I ask just 2-3 quick questions so I can make the demo actually relevant? I promise it'll make our time together much more valuable."
+
+**If they insist on demo:**
+> "Sure, let's do it. I'll ask questions as we go so I can show you what matters most."
+
+---
+
+### Scenario: Multiple Decision Makers
+
+**What to say:**
+> "Got it - so [Person A] and [Person B] would also need to be involved. Would it make sense to include them on the demo call? Or would you prefer to see it first and then bring them in?"
+
+**Goal:** Either get them on demo, or arm your champion with info to sell internally
+
+---
+
+### Scenario: No Budget
+
+**What to say:**
+> "Makes sense - budgets are tight everywhere. Quick question: if TeamPulse saved you 5 hours per review cycle - let's say 50 hours a year for your team - would that justify finding $1,500? Or is the budget constraint more structural?"
+
+**Goal:** Understand if it's truly no budget or if value > cost could unlock budget
+
+---
+
+## Discovery Call Scorecard
+
+Rate each dimension 1-3 after the call:
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| **Pain Severity** (1=mild, 3=acute) | /3 | |
+| **Team Size Fit** (1=<10 or >100, 3=15-50) | /3 | |
+| **Budget/Authority** (1=none, 3=has budget) | /3 | |
+| **Timeline** (1=none, 3=<30 days) | /3 | |
+| **Engagement** (1=distracted, 3=very interested) | /3 | |
+| **Total** | /15 | |
+
+**Interpretation:**
+- 12-15: Hot prospect - prioritize demo
+- 8-11: Warm prospect - proceed with demo
+- 5-7: Cool prospect - nurture, check back in 60 days
+- 1-4: Not a fit - gracefully exit

@@ -1,336 +1,327 @@
 # Marketing Metrics Dashboard
 
-*Generated for: Performance Evaluation Tool*
-
----
+> **Purpose:** Track only what matters: qualified leads per week. Avoid vanity metrics.
+>
+> **Fits in:** Measures success of GTM (03), LinkedIn (04), and Landing Page (05). Finance Manager uses this for CAC calculations.
 
 ## North Star Metric
 
-### Primary: Qualified Leads per Week
+**Qualified Leads per Week:** 0 (current) --> 5-10 (target by Month 3)
 
-**Definition:** Prospects who:
-1. Match ICP (15-50 employees, manager role)
-2. Express interest in solving performance review problem
-3. Have budget authority or path to it
-4. Have a review cycle in next 60 days
+**Definition:** A qualified lead is someone who:
+- Matches ICP (engineering manager or HR lead, 10-50 employee company)
+- Has confirmed performance reviews are a pain point
+- Has budget authority or knows who does
+- Has agreed to a demo call or trial signup
 
-**Target by Phase:**
-| Phase | Week | Target | Actual |
-|-------|------|--------|--------|
-| Validation | 1-4 | 3-5/week | - |
-| Early Revenue | 5-12 | 5-8/week | - |
-| Growth | 13+ | 10+/week | - |
+## Primary Metrics (Track Weekly)
 
----
+### 1. Qualified Leads per Week
 
-## Funnel Metrics
+**Definition:** Prospects who meet all 4 qualification criteria above
 
-### Full Funnel
+| Week | Target | Actual | Notes |
+|------|--------|--------|-------|
+| 1 | 2 | | |
+| 2 | 3 | | |
+| 3 | 4 | | |
+| 4 | 5 | | |
+| 5-8 | 5-8 | | |
+| 9-12 | 8-10 | | |
 
-```
-LinkedIn Impressions (content + profile views)
-        │
-        ▼ (~5% CTR)
-Connection Requests Sent: 100/week
-        │
-        ▼ (30% accept)
-Connections Accepted: 30/week
-        │
-        ▼ (50% reply)
-Conversations Started: 15/week
-        │
-        ▼ (33% interested)
-Qualified Leads: 5/week    ← NORTH STAR
-        │
-        ▼ (60% book)
-Discovery Calls: 3/week
-        │
-        ▼ (50% trial)
-Trial Signups: 1.5/week
-        │
-        ▼ (30% convert)
-Paying Customers: 0.5/week
-```
+**Source Breakdown (Track Weekly):**
 
-### Conversion Benchmarks
+| Source | Week 1 | Week 2 | Week 3 | Week 4 | Total |
+|--------|--------|--------|--------|--------|-------|
+| LinkedIn outreach | | | | | |
+| Inbound (landing page) | | | | | |
+| Content/SEO | | | | | |
+| Referrals | | | | | |
+| **Total** | | | | | |
 
-| Stage | Target | Red Flag |
-|-------|--------|----------|
-| Connection → Accept | 30% | <20% |
-| Accept → Reply | 50% | <30% |
-| Reply → Qualified | 33% | <20% |
-| Qualified → Call | 60% | <40% |
-| Call → Trial | 50% | <30% |
-| Trial → Paid | 30% | <15% |
+### 2. Cost per Qualified Lead
 
----
+**Definition:** Total marketing spend / Qualified leads
 
-## Channel Metrics
+**Current:** Calculating (need first month data)
 
-### LinkedIn Outbound
+**Target:** <$50 per qualified lead
 
-| Metric | Weekly Target | How to Measure |
-|--------|---------------|----------------|
-| Connection requests sent | 100-150 | Manual count or Sales Navigator |
-| Connection acceptance rate | 30%+ | Accepts / Requests |
-| DM reply rate | 15%+ | Replies / DMs sent |
-| Calls booked from LinkedIn | 3+ | Calendar bookings sourced |
+**By Channel:**
 
-**Dashboard:**
+| Channel | Monthly Spend | Qualified Leads | Cost per Lead |
+|---------|---------------|-----------------|---------------|
+| LinkedIn (tools + time) | $80 + 6hrs | | |
+| Content/SEO | 3hrs | | |
+| Landing page | $10 | | |
+| **Total** | ~$100 + 9hrs | | |
 
-| Week | Requests | Accepts | Accept % | Replies | Reply % | Calls | Customers |
-|------|----------|---------|----------|---------|---------|-------|-----------|
-| 1 | 100 | 30 | 30% | 12 | 40% | 2 | 0 |
-| 2 | 100 | 32 | 32% | 15 | 47% | 3 | 0 |
-| 3 | 100 | 28 | 28% | 14 | 50% | 3 | 1 |
-| 4 | 100 | 35 | 35% | 18 | 51% | 4 | 1 |
+*Note: Time valued at $50/hour for cost calculations*
 
-### Content / SEO
+**Target Benchmarks:**
+- LinkedIn outreach: <$30 per qualified lead (high volume, low cost)
+- Content/SEO: <$20 per qualified lead (long-term, compounds)
+- Referrals: $0 per qualified lead (best channel to scale)
 
-| Metric | Monthly Target | How to Measure |
-|--------|----------------|----------------|
-| Articles published | 4 | Count |
-| Organic traffic | 500+ (Month 3) | Plausible/GA4 |
-| Email signups from content | 20+ | Form submissions |
-| Keywords ranking top 20 | 10+ | Ahrefs/SERPWatcher |
+### 3. Conversion Rate (Lead --> Call)
 
-**Dashboard:**
+**Definition:** % of qualified leads who book a discovery call
 
-| Month | Articles | Traffic | Signups | Keywords Ranking |
-|-------|----------|---------|---------|------------------|
-| 1 | 4 | 50 | 2 | 2 |
-| 2 | 4 | 150 | 5 | 5 |
-| 3 | 4 | 400 | 15 | 10 |
-| 4 | 4 | 800 | 30 | 18 |
+**Current:** Tracking
 
-### Product Hunt (One-Time)
+**Target:** >50%
 
-| Metric | Target |
-|--------|--------|
-| Upvotes | 200+ |
-| Comments | 30+ |
-| Final rank | Top 5 |
-| Signups from PH | 100+ |
-| Traffic on launch day | 1,000+ |
+| Stage | Count | Conversion Rate |
+|-------|-------|-----------------|
+| Qualified leads | | 100% |
+| Call scheduled | | Target: 60% |
+| Call completed | | Target: 80% of scheduled |
+| **Net:** Lead to completed call | | Target: 50% |
 
----
+### 4. Message-to-Reply Rate (Outbound)
 
-## Lead Quality Metrics
+**Definition:** % of LinkedIn messages that get any reply
 
-### Lead Scoring
+**Current:** Tracking
 
-| Criteria | Points |
-|----------|--------|
-| Team size 15-50 | +3 |
-| Team size 51-100 | +2 |
-| Team size 10-14 | +1 |
-| Team size <10 | 0 |
-| Currently using spreadsheets | +2 |
-| Looked at performance tools | +2 |
-| Review cycle in next 30 days | +3 |
-| Has budget authority | +3 |
-| Responded within 24 hours | +1 |
+**Target:** >20%
 
-**Qualified Lead:** 7+ points
+**By Message Type:**
 
-### Lead Source Quality
+| Message Type | Sent | Replies | Reply Rate |
+|--------------|------|---------|------------|
+| Connection requests | | | Target: 30% accept |
+| First follow-up (Day 1) | | | Target: 25% |
+| Second follow-up (Day 3) | | | Target: 15% |
+| Third follow-up (Day 7) | | | Target: 10% |
+| Breakup message (Day 14) | | | Target: 5% |
 
-| Source | Avg Score | Conv to Paid | Keep/Cut |
-|--------|-----------|--------------|----------|
-| LinkedIn outbound | 8.2 | 4% | Keep |
-| SEO / Content | 6.5 | 2% | Keep |
-| Product Hunt | 5.1 | 1% | One-time |
-| Referrals | 9.5 | 8% | Scale |
+## Funnel Metrics (Full Picture)
 
----
-
-## CAC & Efficiency Metrics
-
-### Customer Acquisition Cost (CAC)
-
-**Formula:** Total Marketing Spend / New Customers
-
-| Month | Spend | Customers | CAC |
-|-------|-------|-----------|-----|
-| 1 | $250 | 2 | $125 |
-| 2 | $250 | 3 | $83 |
-| 3 | $250 | 5 | $50 |
-| 4 | $300 | 8 | $38 |
-
-**Target CAC:** <$150 (with 12-month payback at $120 ARPA)
-
-### CAC by Channel
-
-| Channel | Spend | Customers | CAC |
-|---------|-------|-----------|-----|
-| LinkedIn (Navigator) | $100 | 2 | $50 |
-| Content (tools) | $75 | 1 | $75 |
-| Product Hunt | $0 | 5 | $0 |
-| Referrals | $0 | 2 | $0 |
-
-### Time Investment CAC
-
-If founder time is valued at $100/hour:
-
-| Activity | Hours/Week | Monthly Hours | Cost | Customers | CAC |
-|----------|------------|---------------|------|-----------|-----|
-| LinkedIn outreach | 5 | 20 | $2,000 | 3 | $667 |
-| Content creation | 4 | 16 | $1,600 | 1 | $1,600 |
-| Discovery calls | 3 | 12 | $1,200 | 2 | $600 |
-
-**Insight:** LinkedIn outreach + calls is most efficient use of founder time
-
----
-
-## Cohort Analysis
-
-### Weekly Cohort Performance
-
-| Cohort (Week) | Leads | Trials | Paid (30d) | Paid (60d) | Conv % |
-|---------------|-------|--------|------------|------------|--------|
-| Week 1 | 15 | 5 | 1 | 2 | 13% |
-| Week 2 | 18 | 6 | 2 | 3 | 17% |
-| Week 3 | 20 | 8 | 3 | 4 | 20% |
-| Week 4 | 22 | 9 | 4 | - | TBD |
-
-### Source Cohort Performance
-
-| Source | Leads | 30d Conv | 60d Conv |
-|--------|-------|----------|----------|
-| LinkedIn | 40 | 8% | 12% |
-| Content | 20 | 5% | 8% |
-| Product Hunt | 50 | 2% | 4% |
-| Referral | 10 | 20% | 30% |
-
----
-
-## Marketing OKRs
-
-### Month 1-2 OKRs
-
-**Objective:** Validate ICP and messaging through outbound
-
-| Key Result | Target | Actual |
-|------------|--------|--------|
-| Discovery calls completed | 20 | - |
-| Qualified leads identified | 15 | - |
-| Beta customers signed | 5 | - |
-| Connection acceptance rate | 30%+ | - |
-
-### Month 3-4 OKRs
-
-**Objective:** Generate first paying customers at target CAC
-
-| Key Result | Target | Actual |
-|------------|--------|--------|
-| Paying customers | 15 | - |
-| CAC | <$100 | - |
-| Trial-to-paid conversion | 25%+ | - |
-| Organic traffic | 300/month | - |
-
-### Month 5-6 OKRs
-
-**Objective:** Scale to $3-5K MRR with diversified channels
-
-| Key Result | Target | Actual |
-|------------|--------|--------|
-| Paying customers | 30-50 | - |
-| MRR | $3,000-5,000 | - |
-| Organic traffic | 800/month | - |
-| Referral customers | 5+ | - |
-
----
-
-## Weekly Marketing Review
-
-### Dashboard Snapshot (Template)
+### Marketing Funnel
 
 ```
-Week of: [Date]
-
-=== NORTH STAR ===
-Qualified Leads: [X] / 5 target
-
-=== LINKEDIN ===
-Connections sent: [X] / 100 target
-Acceptance rate: [X]% / 30% target
-Conversations: [X]
-Calls booked: [X]
-
-=== CONTENT ===
-Articles published: [X]
-Organic visits: [X]
-Signups from content: [X]
-
-=== FUNNEL ===
-Qualified leads: [X]
-Discovery calls: [X]
-Trials started: [X]
-Customers won: [X]
-
-=== SPEND ===
-Total spend: $[X] / $250 budget
-CAC this week: $[X]
-
-=== INSIGHTS ===
-What worked: [Note]
-What didn't: [Note]
-Next week focus: [Note]
+LinkedIn Impressions (reach)
+    |
+    v
+Profile Views / Content Views
+    |
+    v [Target: 5%]
+Connection Requests Sent (by us)
+    |
+    v [Target: 30%]
+Connections Accepted
+    |
+    v [Target: 40%]
+Conversations Started (replied to message)
+    |
+    v [Target: 30%]
+Discovery Call Booked
+    |
+    v [Target: 75%]
+Discovery Call Completed
+    |
+    v [HANDOFF TO SALES]
 ```
 
-### Weekly Review Questions
+### Monthly Targets (Based on Funnel)
 
-1. Did we hit our qualified leads target?
-2. What was our best-performing LinkedIn message this week?
-3. Which content drove the most signups?
-4. What's our current CAC? Is it sustainable?
-5. What one thing should we double down on next week?
+To get **10 qualified leads per month:**
+- Need ~13 discovery calls booked (75% show rate)
+- Need ~45 conversations (30% book rate)
+- Need ~115 connections accepted (40% reply rate)
+- Need ~380 connection requests sent (30% accept rate)
 
----
+**Weekly activity required:** ~100 connection requests
 
-## Tools & Tracking
+## Leading Indicators (Monitor, Don't Obsess)
 
-### Recommended Stack
+| Metric | Current | Benchmark | Notes |
+|--------|---------|-----------|-------|
+| Website visitors/week | | 100+ | Measure after landing page launch |
+| LinkedIn connection accept rate | | 30%+ | Quality of targeting |
+| LinkedIn message reply rate | | 20%+ | Message-market fit |
+| Landing page conversion rate | | 5%+ | Copy effectiveness |
+| Email open rate | | 40%+ | Subject line quality |
+| Email click rate | | 10%+ | Content relevance |
+| Content engagement (likes+comments) | | 20+ per post | Audience building |
 
-| Function | Tool | Cost |
-|----------|------|------|
-| LinkedIn automation | Manual + Navigator | $100/month |
-| Website analytics | Plausible | $9/month |
-| Email tracking | Loops or Mailchimp | $0-25/month |
-| CRM | HubSpot Free or Notion | $0 |
-| Keyword tracking | Ahrefs Lite or Ubersuggest | $0-30/month |
-| Spreadsheet tracking | Google Sheets | $0 |
+## DO NOT TRACK (Vanity Metrics)
 
-### Tracking Spreadsheet Tabs
+- **Total LinkedIn followers** - Unless you're building an audience business, followers without engagement mean nothing
+- **Total impressions** - Reach without action is worthless; 1M impressions with 0 conversions = 0 value
+- **Likes without comments** - Likes are polite, comments show real engagement
+- **Website traffic without conversions** - 10,000 visitors who bounce > 100 visitors who convert? No.
+- **Email list size** - 5,000 subscribers who don't open < 500 engaged subscribers
+- **"Brand awareness"** - Unmeasurable, unfalsifiable, waste of time at this stage
 
-1. **Weekly Dashboard** - High-level metrics snapshot
-2. **LinkedIn Tracker** - Connection-by-connection tracking
-3. **Lead Pipeline** - All leads with scores and status
-4. **Content Calendar** - Published content + performance
-5. **Cohort Analysis** - Weekly cohort conversion tracking
-6. **CAC Calculator** - Spend and acquisition tracking
+## Channel Health Scorecard
 
----
+### LinkedIn Outreach Health
 
-## Red Flags & Alerts
+| Metric | Red | Yellow | Green | Current |
+|--------|-----|--------|-------|---------|
+| Accept rate | <20% | 20-30% | >30% | |
+| Reply rate | <10% | 10-20% | >20% | |
+| Call booking rate | <15% | 15-25% | >25% | |
+| Time to first reply | >7 days | 3-7 days | <3 days | |
 
-### When to Pivot Messaging
+**If Red:** Change targeting or messaging
+**If Yellow:** Iterate message variations
+**If Green:** Scale volume
 
-| Signal | Threshold | Action |
-|--------|-----------|--------|
-| Connection accept <20% | 2 weeks | Test new headlines |
-| Reply rate <10% | 2 weeks | Test new sequences |
-| Call no-show >40% | 2 weeks | Improve qualification |
-| Trial signup <20% from calls | 4 weeks | Rework demo/pitch |
+### Landing Page Health
 
-### When to Pivot Channel
+| Metric | Red | Yellow | Green | Current |
+|--------|-----|--------|-------|---------|
+| Bounce rate | >70% | 50-70% | <50% | |
+| Time on page | <30s | 30-90s | >90s | |
+| CTA click rate | <3% | 3-8% | >8% | |
+| Conversion rate | <2% | 2-5% | >5% | |
 
-| Signal | Threshold | Action |
-|--------|-----------|--------|
-| CAC >$200 | 4 weeks | Cut channel spend |
-| 0 customers from channel | 6 weeks | Abandon channel |
-| Declining performance | 4 weeks | Diagnose and fix |
+**If Red:** Rewrite above-the-fold
+**If Yellow:** A/B test headlines and CTAs
+**If Green:** Drive more traffic
 
----
+### Content/SEO Health (Month 3+)
 
-*Marketing artifacts complete. Next: Product Manager artifacts.*
+| Metric | Red | Yellow | Green | Current |
+|--------|-----|--------|-------|---------|
+| Organic visitors/month | <100 | 100-500 | >500 | |
+| Keyword rankings (page 1) | 0 | 1-3 | >3 | |
+| Template downloads/month | <10 | 10-30 | >30 | |
+| Backlinks acquired/month | 0 | 1-3 | >3 | |
+
+## Weekly Review Template
+
+*Complete every Friday in 15 minutes*
+
+### This Week's Numbers
+
+| Metric | Target | Actual | Trend |
+|--------|--------|--------|-------|
+| Connection requests sent | 50 | | ↑↓→ |
+| Accepts | 15 | | ↑↓→ |
+| Conversations started | 6 | | ↑↓→ |
+| Calls booked | 2 | | ↑↓→ |
+| Qualified leads | 2 | | ↑↓→ |
+| Website visitors | 50 | | ↑↓→ |
+| Trial signups | 1 | | ↑↓→ |
+
+### What Drove the Most Qualified Leads This Week?
+
+**Tactic/Channel:** _________________________________
+
+**Why it worked:** _________________________________
+
+### What Had Zero Impact?
+
+**Tactic/Channel:** _________________________________
+
+**Why:** _________________________________
+
+**Action:** [ ] Keep trying [ ] Tweak approach [ ] Kill it
+
+### What to Double Down on Next Week?
+
+**Tactic:** _________________________________
+
+**Goal:** ___ qualified leads from this tactic
+
+### What to Stop Doing?
+
+**Tactic:** _________________________________
+
+**Reason:** _________________________________
+
+### Biggest Learning This Week?
+
+_________________________________
+
+### One Experiment to Run Next Week
+
+**Hypothesis:** _________________________________
+
+**Test:** _________________________________
+
+**Success criteria:** _________________________________
+
+## Monthly Health Check
+
+*Complete on the last day of each month*
+
+### Are We Hitting Targets?
+
+- [ ] Qualified leads: ___ / ___ target (___%)
+- [ ] Cost per lead: $___ / $50 target
+- [ ] Conversion rates in healthy range
+- [ ] At least one channel showing green metrics
+
+### Trend Analysis
+
+| Metric | Month 1 | Month 2 | Month 3 | Trend |
+|--------|---------|---------|---------|-------|
+| Qualified leads | | | | |
+| Cost per lead | | | | |
+| Best channel | | | | |
+| Conversion rate | | | | |
+
+### Channel Decisions
+
+**LinkedIn Outreach:**
+- [ ] Scale (green metrics, increase volume)
+- [ ] Maintain (yellow metrics, keep iterating)
+- [ ] Reduce (red metrics, needs major change)
+
+**Content/SEO:**
+- [ ] Scale (starting to see organic traction)
+- [ ] Maintain (too early to judge)
+- [ ] Pause (no results, focus elsewhere)
+
+**Paid Ads (if testing):**
+- [ ] Scale (positive ROAS)
+- [ ] Maintain (break-even, needs optimization)
+- [ ] Kill (negative ROAS, can't make it work)
+
+### What to Change Next Month?
+
+1. _________________________________
+2. _________________________________
+3. _________________________________
+
+## CAC Calculations (For Finance)
+
+### Current CAC Estimate
+
+**Fully-loaded CAC formula:**
+```
+CAC = (Marketing spend + Time investment) / New customers
+```
+
+**Example calculation:**
+- Marketing tools: $100/month
+- Time: 10 hours/week x $50/hour x 4 weeks = $2,000
+- Total: $2,100/month
+- If 3 customers acquired: $2,100 / 3 = $700 CAC
+
+**Target CAC:** <$200 (for 12-month payback at $150 ARPA)
+
+### Blended vs. Channel CAC
+
+| Channel | Spend | Time | Customers | CAC |
+|---------|-------|------|-----------|-----|
+| LinkedIn | $80 | $800 | | |
+| Content | $0 | $200 | | |
+| Referrals | $0 | $100 | | |
+| **Blended** | | | | |
+
+*Track channel CAC to know where to invest more*
+
+## Reporting Cadence
+
+| Report | Frequency | Who Reviews | Time Required |
+|--------|-----------|-------------|---------------|
+| Quick metrics check | Daily (2 min) | Founder | 2 min |
+| Weekly review | Friday | Founder | 15 min |
+| Monthly health check | Last day of month | Founder + advisors | 30 min |
+| Quarterly strategy review | End of quarter | Founder + team | 2 hours |

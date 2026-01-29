@@ -1,12 +1,12 @@
-# Launch Summary: Performance Evaluation Tool
+# Launch Summary: TeamPulse
 
-*Generated on January 28, 2026 by CEO Orchestrator*
+*Generated on January 30, 2026 by CEO Orchestrator*
 
 ---
 
 ## The Idea in One Sentence
 
-Help small team managers conduct comprehensive 360-degree performance reviews with self-review, peer feedback, and gap analysis in 15 minutes instead of 5 hours - at 50% less than Lattice.
+**TeamPulse delivers enterprise-grade 360-degree performance reviews - employee self-review, peer feedback, and gap analysis - to small teams (10-50 employees) at half the price of Lattice, with 15-minute setup.**
 
 ---
 
@@ -14,76 +14,98 @@ Help small team managers conduct comprehensive 360-degree performance reviews wi
 
 ### Marketing Strategy (7 artifacts)
 
-| # | Artifact | Key Output |
-|---|----------|------------|
-| 01 | ICP & Market Analysis | Primary ICP: Engineering managers at 15-50 person startups |
-| 02 | Positioning & Messaging | "Performance reviews that don't cost $11/employee" |
-| 03 | GTM Strategy | LinkedIn outbound (40%) + SEO content (40%) |
-| 04 | LinkedIn Outreach System | 25 connections/day, 3-5% call booking rate |
-| 05 | Landing Page Strategy | Hero: "Enterprise reviews. Startup pricing." |
-| 06 | Lead Validation Tactics | 4-stage validation: Problem, Solution, Commitment, Revenue |
-| 07 | Marketing Metrics | North star: 5 qualified leads/week |
+| # | Artifact | Key Insight |
+|---|----------|-------------|
+| 01 | ICP & Market Analysis | Engineering managers at 10-50 person tech companies, first-time managers |
+| 02 | Positioning & Messaging | "Lattice features. Spreadsheet pricing. 15-minute setup." |
+| 03 | GTM Strategy | LinkedIn outbound primary (50 connections/week), Content/SEO secondary |
+| 04 | LinkedIn Outreach System | Complete sequences with 4 follow-up templates |
+| 05 | Landing Page Strategy | Full copy with gap analysis as hero feature |
+| 06 | Lead Validation Tactics | 3 experiments with pass/fail criteria |
+| 07 | Marketing Metrics | North star: 5-10 qualified leads/week by Month 3 |
 
-**Key insight:** The gap between $5 basic tools and $11+ enterprise tools is massive - managers will pay $6-8 for self-review + peer feedback features.
+**Key insight:** The $5-11 pricing gap between basic tools (Small Improvements) and enterprise (Lattice) is our opportunity. Gap analysis is the "wow" feature that justifies premium over basic.
+
+---
 
 ### Product Strategy (6 artifacts)
 
-| # | Artifact | Key Output |
-|---|----------|------------|
-| 01 | Market Research | Positioned between Small Improvements ($5-8) and Lattice ($11-16) |
-| 02 | PRD | MVP: Self-review with gap analysis, peer feedback, templates, cycle management |
-| 03 | Development Tasks | 142 hours over 8 weeks (4 phases) |
-| 04 | Pricing Strategy | $6-8 PEPM, $115 target ARPA, 25% trial-to-paid |
-| 05 | Product Metrics | North star: Review cycles completed/month |
-| 06 | Interview Template | Discovery + Solution + Post-launch frameworks |
+| # | Artifact | Key Insight |
+|---|----------|-------------|
+| 01 | Market Research | Small Improvements lacks gap analysis; Lattice is overkill for SMBs |
+| 02 | PRD | SLC product with gap analysis as differentiator, 13 user stories |
+| 03 | Development Tasks | 31 stories, 220 hours, 9 epics across 6 phases |
+| 04 | Product Metrics | SLC metrics: Simple (15-min setup), Lovable (NPS>40), Complete (80% completion) |
+| 05 | Interview Template | 30-minute script with qualification scoring |
+| 06 | Pricing Strategy | $6-8 PEPM, single tier, 14-day free trial |
 
-**MVP scope:** 4 features - Self-review with gap analysis, peer feedback system, review templates, cycle management
+**MVP scope (5 core features):**
+1. Manager reviews with ratings + feedback
+2. Employee self-review on same criteria
+3. Gap analysis dashboard (WOW feature)
+4. Anonymous peer feedback (360)
+5. Goal setting connected to reviews
 
-**Build timeline:** 8 weeks at 20 hours/week
+**Build timeline:** 10-12 weeks (220 hours)
+
+---
 
 ### Sales System (7 artifacts)
 
-| # | Artifact | Key Output |
-|---|----------|------------|
-| 01 | Sales Process Design | Founder-led, self-serve assisted |
-| 02 | Discovery Call Framework | 20-25 min calls, BANT+ qualification |
-| 03 | Qualification Checklist | Score 15-18 = Hot lead, prioritize |
-| 04 | Objection Handling Playbook | Price, competition, timing, feature objections covered |
-| 05 | Follow-Up System | Trial sequences: Day 0, 2, 5, 7, 10, 13 |
-| 06 | Sales Metrics | North star: 25% close rate |
-| 07 | Scripts Library | Connection requests, discovery calls, conversion calls |
+| # | Artifact | Key Insight |
+|---|----------|-------------|
+| 01 | Sales Process | 6-stage pipeline: Lead -> Discovery -> Demo -> Trial -> Close -> Won |
+| 02 | Discovery Call Framework | 30-min script, BANT+ qualification, scoring 1-15 |
+| 03 | Qualification Checklist | Score 12+ = HOT, 8-11 = WARM, <8 = Nurture |
+| 04 | Objection Handling | 15+ objections with LAER responses |
+| 05 | Follow-Up System | 4 sequences: Post-demo, Trial engaged, Trial inactive, Long-term nurture |
+| 06 | Sales Metrics | Close rate target: 25-35%, sales cycle: 21 days |
+| 07 | Scripts Library | Demo scripts, cold outreach, closing templates |
 
-**Close rate target:** 25%+ of qualified leads
+**Close rate target:** 25-35% trial-to-paid
+**Average sales cycle:** 21 days
 
-**Average sales cycle:** 21-30 days
+---
 
 ### Engineering Plan (5 artifacts)
 
-| # | Artifact | Key Output |
-|---|----------|------------|
-| 01 | Architecture Decision Record | Nuxt 4 SPA + Fastify + Drizzle + SQLite/PostgreSQL |
-| 02 | Project Setup Guide | Monorepo with pnpm workspaces, Railway deployment |
-| 03 | Implementation Tasks | Phase 1-4: Foundation, Core Reviews, 360 Features, Polish |
-| 04 | Code Templates | Database schema, API routes, Vue components, email templates |
-| 05 | Engineering Metrics | North star: 2-3 features shipped/week |
+| # | Artifact | Key Insight |
+|---|----------|-------------|
+| 01 | Architecture | Next.js 15 + Prisma + PostgreSQL + Clerk + shadcn/ui |
+| 02 | Setup Guide | Complete bootstrap in 30 minutes |
+| 03 | Implementation Tasks | 6 phases, 232 hours total |
+| 04 | Code Templates | Copy-paste patterns for APIs, forms, analytics |
+| 05 | Engineering Metrics | Ship velocity: 3-5 features/week target |
 
-**Tech stack:** Nuxt 4 + Vue 3 + shadcn-vue + Fastify + Drizzle ORM + SQLite/PostgreSQL
+**Tech stack:**
+- Frontend: Next.js 15 (App Router), React, Tailwind, shadcn/ui
+- Backend: Next.js API routes, Prisma ORM
+- Database: PostgreSQL (Supabase)
+- Auth: Clerk
+- Email: Resend
+- Analytics: PostHog
+- Payments: Stripe
+- Hosting: Vercel
 
-**Total estimated build time:** 160 hours (8 weeks at 20 hrs/week)
+**Build timeline:** 10-12 weeks for SLC product
+
+---
 
 ### Financial Plan (5 artifacts)
 
-| # | Artifact | Key Output |
-|---|----------|------------|
-| 01 | Revenue Model | $3,450 MRR target at Month 6 (30 customers x $115 ARPA) |
-| 02 | Unit Economics | LTV:CAC 14:1, Payback 1.4 months, Gross margin 81% |
-| 03 | Burn Rate & Runway | $345/month burn, break-even at 4 customers |
-| 04 | Financial Metrics | Target: Cash flow positive by Month 2-3 |
-| 05 | Fundraising Readiness | Recommendation: Bootstrap to $5K MRR, then reassess |
+| # | Artifact | Key Insight |
+|---|----------|-------------|
+| 01 | Revenue Model | Target: $3-5K MRR by Month 6 (25-40 customers) |
+| 02 | Unit Economics | LTV: $3,000+, CAC: <$200, LTV:CAC: 15:1+ |
+| 03 | Burn & Runway | ~$200-400/month burn, break-even by Month 3-4 |
+| 04 | Financial Metrics | Full KPI dashboard with MRR tracking |
+| 05 | Fundraising Readiness | Recommendation: Bootstrap to profitability |
 
-**Burn rate:** $345/month
-
-**Path to profitability:** Month 2-3 (after 4 customers)
+**Path to profitability:**
+- Monthly burn: $200-400
+- Break-even: 3-5 customers
+- Target MRR: $3,000-5,000 by Month 6
+- Recommendation: Bootstrap (can reach profitability without raising)
 
 ---
 
@@ -94,148 +116,237 @@ Help small team managers conduct comprehensive 360-degree performance reviews wi
 
 **Monday-Wednesday: Market Research**
 - [ ] Read `marketing/01-icp-market-analysis.md` completely
-- [ ] Identify 50 people matching your ICP (from channels in artifact)
-- [ ] Research top 3 competitors deeply (screenshot their onboarding)
+- [ ] Identify 50 people matching your ICP (engineering managers, 10-50 person companies)
+- [ ] Research top 3 competitors deeply (Lattice, 15Five, Small Improvements)
+- [ ] Screenshot their onboarding flows
 
 **Thursday-Friday: Customer Conversations**
 - [ ] Reach out to 20 ICPs using `marketing/04-linkedin-outreach.md` templates
-- [ ] Book 5 discovery calls using `product/06-interview-template.md`
-- [ ] Run calls, take notes, validate pain points
+- [ ] Book 5 discovery calls using `product/05-interview-template.md`
+- [ ] Run calls, take notes, validate: Is gap analysis valuable? Will they pay $6-8 PEPM?
 
 **Weekend: Refine Strategy**
 - [ ] Update `marketing/02-positioning-messaging.md` based on learnings
 - [ ] Adjust PRD features if assumptions were wrong
-- [ ] Decide: proceed with build or pivot?
+- [ ] Decision: Proceed with build or pivot?
+
+---
 
 ### Week 2: Build Foundation + Outreach Ramp
-**Goal:** Core flows working + continuous customer conversations
+**Goal:** Core technical foundation working + continuous customer conversations
 
-**Monday-Tuesday: Setup & Auth**
+**Monday-Tuesday: Project Setup**
 - [ ] Follow `engineering/02-setup-guide.md` to bootstrap project
-- [ ] Complete Phase 1 Foundation tasks (auth, database)
-- [ ] Deploy to staging environment
+- [ ] Complete Phase 1 Foundation: Next.js + Prisma + Clerk auth
+- [ ] Deploy to Vercel staging environment
 
-**Wednesday-Friday: Core Feature 1**
-- [ ] Implement Feature 1 from `engineering/03-implementation-tasks.md`
-- [ ] Use code templates from `engineering/04-code-templates.md`
-- [ ] Test manually, fix bugs, deploy
+**Wednesday-Friday: Core Database + Auth**
+- [ ] Complete database schema (all models)
+- [ ] Build authentication flow (sign-in, sign-up, onboarding)
+- [ ] Create app shell with sidebar navigation
+- [ ] Set up PostHog analytics
 
 **Parallel: Outreach Every Day**
 - [ ] Send 25 LinkedIn connection requests daily (from `marketing/04-outreach`)
-- [ ] Follow up with Week 1 connections
+- [ ] Follow up with Week 1 connections (value-first messages)
 - [ ] Book 5 more discovery calls for Week 3
+- [ ] Practice discovery call script with a friend
 
 **Weekend: Landing Page**
 - [ ] Build landing page following `marketing/05-landing-page.md`
 - [ ] Deploy and test on mobile
-- [ ] Set up analytics (events from `product/02-prd.md` MVP Funnel)
+- [ ] Set up waitlist capture (email signup)
 
-### Week 3: Feature Complete + First Sales
-**Goal:** MVP feature complete + close first 3 customers
+---
 
-**Monday-Wednesday: Remaining Features**
-- [ ] Implement self-review form and manager review
-- [ ] Add peer feedback collection
-- [ ] Build gap analysis view
-- [ ] Add instrumentation for all events in MVP Funnel
+### Week 3: Core Features + First Sales Conversations
+**Goal:** Review cycle creation and manager reviews working
+
+**Monday-Wednesday: Team + Review Cycles**
+- [ ] Build Team management (add/edit team members)
+- [ ] Build Review Cycle creation wizard (3 steps)
+- [ ] Create review cycle API routes
+
+**Thursday-Friday: Manager Reviews**
+- [ ] Build review form with rating inputs
+- [ ] Implement auto-save functionality
+- [ ] Create review API routes
+
+**Parallel: Sales Conversations**
+- [ ] Send 25 LinkedIn connections daily
+- [ ] Run 5-7 discovery calls
+- [ ] Qualify prospects using `sales/03-qualification-checklist.md`
+- [ ] Practice demo flow (even without full product)
+
+**Weekend: Self-Reviews**
+- [ ] Build employee self-review form
+- [ ] Add employee dashboard view
+
+---
+
+### Week 4: Gap Analysis + Beta Launch
+**Goal:** WOW feature complete + close first beta users
+
+**Monday-Wednesday: Gap Analysis (THE WOW FEATURE)**
+- [ ] Build gap calculation engine
+- [ ] Create gap analysis dashboard (side-by-side ratings)
+- [ ] Add color coding for gap severity
+- [ ] Add coaching tips for large gaps
+
+**Thursday-Friday: Peer Feedback + Polish**
+- [ ] Build basic peer feedback form
+- [ ] Add review sharing functionality
 - [ ] Polish: empty states, error handling, loading states
 
-**Thursday-Friday: Beta Launch**
+**Parallel: Beta Launch**
 - [ ] Invite 10 people from discovery calls to free beta
 - [ ] Walk them through onboarding (screen share if possible)
 - [ ] Watch them use it, take notes, fix major bugs
 
-**Parallel: Run Sales Process**
-- [ ] Qualify prospects using `sales/03-qualification-checklist.md`
-- [ ] Run discovery calls using `sales/02-discovery-call.md` framework
-- [ ] Handle objections using `sales/04-objection-handling.md`
-- [ ] Close first 3 paying customers (or pre-sales)
-
-**Weekend: Prep for Launch**
+**Weekend: Production Prep**
 - [ ] Fix critical bugs from beta feedback
-- [ ] Update landing page with beta testimonials
-- [ ] Prepare launch announcement post
+- [ ] Update landing page with beta signup CTA
+- [ ] Prepare for Week 5 paid launch
 
-### Week 4: Public Launch + Scale Outreach
-**Goal:** Public launch + ramp to 10 customers
+---
 
-**Monday: Launch Day**
-- [ ] Post on LinkedIn, Twitter, relevant communities
-- [ ] Email everyone who showed interest
-- [ ] Monitor signups and fix any issues immediately
+### Beyond Week 4: Launch & Scale
 
-**Tuesday-Friday: Sales Velocity**
-- [ ] 50 LinkedIn connections per day
-- [ ] 10-15 discovery calls this week
-- [ ] Follow up with everyone using `sales/05-followup-system.md`
-- [ ] Track metrics from `sales/06-sales-metrics.md`
+**Week 5-6: Complete Features**
+- [ ] Add goal setting
+- [ ] Create 6 pre-built templates
+- [ ] Build email reminders (Resend)
+- [ ] Add PDF export for gap analysis
 
-**Goal:** Close 7+ customers by end of Week 4 (total 10)
+**Week 7-8: Payments + First Customers**
+- [ ] Integrate Stripe payments
+- [ ] Convert beta users to paid ($6 early bird)
+- [ ] Close first 5-10 paying customers
 
-**Weekend: Review & Iterate**
-- [ ] Review all metrics (marketing, product, sales, engineering)
-- [ ] Identify #1 bottleneck (signup conversion? onboarding? feature requests?)
-- [ ] Plan Week 5-8 roadmap based on data
+**Week 9-12: Growth**
+- [ ] Scale LinkedIn outreach to 50/day
+- [ ] Launch content/SEO strategy
+- [ ] Target 25-30 customers ($3K MRR)
 
 ---
 
 ## Success Criteria
 
 **By End of Week 4, you should have:**
-- 10 paying customers (or commitments)
-- MVP deployed and stable
-- 20+ discovery calls completed
-- Clear understanding of ICP and positioning
-- Data on what works (channel, messaging, features)
+- [ ] 10+ discovery calls completed
+- [ ] MVP deployed with gap analysis working
+- [ ] 5-10 beta users testing the product
+- [ ] Landing page live with waitlist
+- [ ] Clear understanding of ICP and positioning
 
-**Decision point:**
-- If >10 customers: Scale what's working (channel, features, outreach)
-- If 5-10 customers: Iterate messaging and qualification (not the product yet)
-- If <5 customers: Pivot or kill (re-examine ICP, problem, or solution)
+**By End of Month 3, you should have:**
+- [ ] 5+ paying customers
+- [ ] $500+ MRR
+- [ ] 25%+ trial-to-paid conversion
+- [ ] Clear winning outreach message
+
+**By End of Month 6, you should have:**
+- [ ] 30-50 paying customers
+- [ ] $3-5K MRR
+- [ ] 80%+ review completion rate
+- [ ] Cash-flow positive (or very close)
+
+**Decision point after Month 6:**
+- If >$5K MRR: Scale what's working (more outreach, content, maybe hire)
+- If $3-5K MRR: Iterate on conversion and retention
+- If <$3K MRR: Pivot or kill (re-examine ICP, problem, or solution)
 
 ---
 
 ## All Generated Artifacts
 
-### Marketing (`marketing/`)
-1. `01-icp-market-analysis.md` - ICP: Engineering managers at 15-50 person startups
-2. `02-positioning-messaging.md` - One-liner: "Enterprise reviews. Startup pricing."
-3. `03-gtm-strategy.md` - Primary channel: LinkedIn outbound
-4. `04-linkedin-outreach.md` - Connection templates and follow-up sequences
-5. `05-landing-page.md` - Wireframe and copy for landing page
-6. `06-lead-validation.md` - 4-stage validation framework
-7. `07-marketing-metrics.md` - Funnel metrics and tracking
+### Marketing (`ideas/performance-evaluation/marketing/`)
+1. `01-icp-market-analysis.md` - ICP: Engineering managers at 10-50 person companies
+2. `02-positioning-messaging.md` - "Lattice features. Spreadsheet pricing."
+3. `03-gtm-strategy.md` - Primary: LinkedIn outreach (5-6 hrs/week)
+4. `04-linkedin-outreach.md` - Complete sequences and templates
+5. `05-landing-page.md` - Full page structure with copy
+6. `06-lead-validation.md` - 3 experiments with pass/fail criteria
+7. `07-marketing-metrics.md` - North star: Qualified leads/week
 
-### Product (`product/`)
-1. `01-market-research.md` - Competitor analysis and positioning
-2. `02-prd.md` - **START HERE** (PRD at a Glance, MVP Funnel, Text Wireframes)
-3. `03-tasks.md` - 142 hours of implementation tasks across 4 phases
-4. `04-pricing-strategy.md` - $6-8 PEPM pricing with launch tiers
-5. `05-product-metrics.md` - Activation, engagement, retention metrics
-6. `06-interview-template.md` - Discovery and solution interview scripts
+### Product (`ideas/performance-evaluation/product/`)
+1. `01-market-research.md` - Competitor analysis, feature matrix
+2. `02-prd.md` - **START HERE** - PRD at a Glance, wireframes, funnel
+3. `03-tasks.md` - 220 hours across 31 stories
+4. `04-product-metrics.md` - SLC metrics (Simple, Lovable, Complete)
+5. `05-interview-template.md` - 30-min script with scoring
+6. `06-pricing-strategy.md` - $6-8 PEPM, single tier
 
-### Sales (`sales/`)
-1. `01-sales-process.md` - Founder-led sales motion and stages
-2. `02-discovery-call.md` - **PRACTICE THIS** - 20-25 minute call framework
+### Sales (`ideas/performance-evaluation/sales/`)
+1. `01-sales-process.md` - 6-stage pipeline design
+2. `02-discovery-call.md` - **PRACTICE THIS** - Full script with probes
 3. `03-qualification-checklist.md` - BANT+ scoring system
-4. `04-objection-handling.md` - Price, competition, timing objections
-5. `05-followup-system.md` - Trial and opportunity email sequences
-6. `06-sales-metrics.md` - Funnel conversion targets
-7. `07-scripts-library.md` - All outreach and call scripts
+4. `04-objection-handling.md` - 15+ objection responses
+5. `05-followup-system.md` - 4 follow-up sequences
+6. `06-sales-metrics.md` - Close rate, pipeline tracking
+7. `07-scripts-library.md` - Demo, cold outreach, closing scripts
 
-### Engineering (`engineering/`)
-1. `01-architecture.md` - Tech stack decisions and data model
+### Engineering (`ideas/performance-evaluation/engineering/`)
+1. `01-architecture.md` - ADRs for tech stack decisions
 2. `02-setup-guide.md` - **RUN THESE COMMANDS FIRST**
-3. `03-implementation-tasks.md` - Phase 1-4 sprint plan
-4. `04-code-templates.md` - Database schema, API routes, Vue components
-5. `05-engineering-metrics.md` - Velocity and code quality tracking
+3. `03-implementation-tasks.md` - 6-phase implementation plan
+4. `04-code-templates.md` - Copy-paste patterns
+5. `05-engineering-metrics.md` - Ship velocity tracking
 
-### Finance (`finance/`)
-1. `01-revenue-model.md` - $3,450 MRR at Month 6 projection
-2. `02-unit-economics.md` - LTV:CAC 14:1, 1.4 month payback
-3. `03-burn-runway.md` - $345/month burn, break-even at 4 customers
-4. `04-finance-metrics.md` - Full financial dashboard
-5. `05-fundraising-readiness.md` - Bootstrap recommended through Month 6
+### Finance (`ideas/performance-evaluation/finance/`)
+1. `01-revenue-model.md` - $3-5K MRR by Month 6
+2. `02-unit-economics.md` - LTV:CAC 15:1+
+3. `03-burn-runway.md` - ~$200-400/month burn
+4. `04-financial-metrics.md` - Full KPI dashboard
+5. `05-fundraising-readiness.md` - Recommendation: Bootstrap
+
+---
+
+## Pro Tips
+
+1. **Don't build in isolation:** Have 1 customer call every day for first 30 days. Calls > code early on.
+
+2. **Ship ugly but working:** Week 4 launch with rough edges beats perfect Week 12 launch. You can polish later.
+
+3. **Gap analysis is your wedge:** Every demo, every call, every piece of content should mention gap analysis. It's what makes you different.
+
+4. **Qualify ruthlessly:** 1 good-fit customer (15+ employees, budget, urgent timeline) > 10 "interesting but not now" leads.
+
+5. **Track one metric per function:**
+   - Marketing: Qualified leads/week
+   - Product: Review completion rate
+   - Sales: Close rate %
+   - Engineering: Features shipped/week
+   - Finance: MRR
+
+6. **Kill fast:** If <5 customers by Week 8, don't push to Week 16. Pivot or kill.
+
+---
+
+## What to Do When Stuck
+
+| Problem | Likely Cause | Solution |
+|---------|--------------|----------|
+| No one responds to outreach | ICP or messaging wrong | Re-run marketing artifacts, test new angles |
+| People interested but don't buy | Qualification is weak | Focus on `sales/02-discovery-call` and `sales/03-qualification` |
+| Customers sign up but don't use | Onboarding or core feature broken | User interviews, update PRD |
+| Too slow to build | Scope too big | Cut to 3 core features max |
+| Competitors seem better | Positioning unclear | Double down on gap analysis differentiation |
+
+---
+
+## Next Steps RIGHT NOW
+
+1. **Read `product/02-prd.md`** - Understand the PRD at a Glance section (15 min)
+
+2. **Read `sales/02-discovery-call.md`** - Practice the call script with a friend (30 min)
+
+3. **Run `engineering/02-setup-guide.md`** - Bootstrap the project (1-2 hours)
+
+4. **Send first 20 LinkedIn connections** using `marketing/04-outreach.md` templates (30 min)
+
+**Total time investment today:** 2.5-3 hours
+**What you'll have:** Project bootstrapped + first outreach sent + sales process internalized
 
 ---
 
@@ -244,52 +355,19 @@ Help small team managers conduct comprehensive 360-degree performance reviews wi
 | Metric | Target |
 |--------|--------|
 | Price | $6-8 per employee/month |
-| Target ARPA | $115/month |
-| Trial-to-paid | 25%+ |
-| Close rate | 25%+ |
-| Build time | 8 weeks (160 hours) |
-| Break-even | 4 customers |
-| 6-month MRR | $3,450 (30 customers) |
-| LTV:CAC | 14:1 |
-| Payback | 1.4 months |
+| ICP team size | 10-50 employees (sweet spot: 15-30) |
+| Target customers | 30-50 by Month 6 |
+| Target MRR | $3-5K by Month 6 |
+| Build time | 10-12 weeks |
+| Monthly burn | $200-400 |
+| LTV:CAC ratio | 15:1+ |
+| Trial-to-paid | 25-35% |
+| Sales cycle | 21 days |
 
 ---
 
-## Pro Tips
+Good luck! You now have a complete business strategy across Marketing, Product, Sales, Engineering, and Finance - 30 artifacts total. The only thing left is execution.
 
-1. **Don't build in isolation:** Have 1 customer call every day for first 30 days
-2. **Ship ugly but working:** Week 3 launch with rough edges beats perfect Week 8 launch
-3. **Qualify ruthlessly:** 1 good-fit customer > 10 bad-fit leads
-4. **Track one metric per function:**
-   - Marketing: Qualified leads/week
-   - Product: Weekly active users
-   - Sales: Close rate %
-   - Engineering: Features shipped/week
-   - Finance: Net cash flow
-5. **Kill fast:** If <5 customers by Week 4, don't push to Week 8. Pivot or kill.
+**Your competitive advantage:** Gap analysis that transforms review meetings from monologues into coaching conversations. Every interaction with a prospect should reinforce this.
 
----
-
-## What to Do When Stuck
-
-- **No one responds to outreach:** Your ICP or messaging is wrong - Re-read `marketing/01-icp-market-analysis.md` and `marketing/02-positioning-messaging.md`
-- **People interested but don't buy:** Qualification is weak - Practice `sales/02-discovery-call.md` and `sales/03-qualification-checklist.md`
-- **Customers sign up but don't use:** Onboarding or core feature is wrong - Update PRD, rebuild
-- **Too slow to build:** Cut scope - Update PRD at a Glance to 3 features max
-- **Competitors seem better:** Find your differentiation wedge - Review `product/01-market-research.md` Strategic Opportunities
-
----
-
-## Next Steps RIGHT NOW
-
-1. **Read `product/02-prd.md`** - Understand what you're building (30 min)
-2. **Read `sales/02-discovery-call.md`** - Practice the call script with a friend (15 min)
-3. **Run `engineering/02-setup-guide.md`** - Bootstrap the project (1 hour)
-4. **Send first 20 LinkedIn connections** using `marketing/04-outreach.md` templates (30 min)
-
-**Total time investment today:** 2-3 hours
-**What you'll have:** Project bootstrapped + first outreach sent + sales process internalized
-
----
-
-Good luck! You now have everything you need to launch. The only thing left is execution.
+**Remember:** First 10 customers in 4 weeks, not perfect product in 6 months. Ship, learn, iterate.

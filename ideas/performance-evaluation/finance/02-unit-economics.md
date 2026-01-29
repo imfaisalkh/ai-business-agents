@@ -1,20 +1,18 @@
 # Unit Economics Dashboard
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Track customer-level profitability for TeamPulse. Ensures sustainable growth.
+>
+> **Fits in:** Uses data from Revenue Model (01). Informs decisions on CAC spending and pricing.
 
----
+## Unit Economics Summary
 
-## Core Unit Economics
-
-### The Key Metrics
-
-| Metric | Formula | Target | Status |
+| Metric | Current | Target | Status |
 |--------|---------|--------|--------|
-| **LTV** | ARPA x Gross Margin x Customer Lifetime | $1,380+ | - |
-| **CAC** | Total Acquisition Cost / New Customers | <$200 | - |
-| **LTV:CAC** | LTV / CAC | >5:1 | - |
-| **Payback Period** | CAC / (ARPA x Gross Margin) | <6 months | - |
-| **Gross Margin** | (Revenue - COGS) / Revenue | >80% | - |
+| LTV | - | $3,600 | Tracking |
+| CAC | - | <$200 | Tracking |
+| LTV:CAC Ratio | - | >15:1 | Tracking |
+| Payback Period | - | <2 months | Tracking |
+| Gross Margin | - | >85% | Tracking |
 
 ---
 
@@ -22,33 +20,34 @@
 
 ### LTV Calculation
 
+**Formula:**
 ```
-LTV = ARPA x Gross Margin x Customer Lifetime
-
-Where:
-- ARPA = $115/month
-- Gross Margin = 85%
-- Customer Lifetime = 1 / Churn Rate = 1 / 0.05 = 20 months
-
-LTV = $115 x 0.85 x 20 = $1,955
+LTV = ARPA × Gross Margin × (1 / Churn Rate)
 ```
 
-### LTV by Segment
+**Or simplified:**
+```
+LTV = ARPA × Avg Customer Lifetime × Gross Margin
+```
 
-| Segment | ARPA | Churn | Lifetime | LTV |
-|---------|------|-------|----------|-----|
-| Small (15-20) | $95 | 6% | 17 months | $1,371 |
-| Medium (21-35) | $125 | 4% | 25 months | $2,656 |
-| Large (36-50) | $175 | 3% | 33 months | $4,909 |
-| **Blended** | **$115** | **5%** | **20 months** | **$1,955** |
+### LTV Scenarios
 
-### LTV Improvement Levers
+| Scenario | ARPA | Lifetime | Gross Margin | LTV |
+|----------|------|----------|--------------|-----|
+| Conservative | $100/mo | 24 months | 85% | $2,040 |
+| Target | $120/mo | 30 months | 85% | $3,060 |
+| Optimistic | $150/mo | 36 months | 85% | $4,590 |
 
-| Lever | Current | Target | LTV Impact |
-|-------|---------|--------|------------|
-| Reduce churn 5% to 3% | 20 mo | 33 mo | +65% ($1,273) |
-| Increase ARPA $115 to $135 | $115 | $135 | +17% ($340) |
-| Improve margin 85% to 90% | 85% | 90% | +6% ($115) |
+**Current assumption:** $3,000-3,600 LTV
+
+### LTV Components
+
+| Component | Value | Notes |
+|-----------|-------|-------|
+| Average MRR | $100-120 | 15-20 employee teams |
+| Gross margin | 85% | SaaS typical, low COGS |
+| Avg customer lifetime | 30 months | 2.5 years, SMB typical |
+| Monthly churn | 3-4% | Target range |
 
 ---
 
@@ -56,261 +55,269 @@ LTV = $115 x 0.85 x 20 = $1,955
 
 ### CAC Calculation
 
-**Founder-Led Sales Model:**
-
-| Cost Component | Monthly | Notes |
-|----------------|---------|-------|
-| LinkedIn Navigator | $100 | Prospecting tool |
-| Content tools | $75 | Writing, SEO |
-| Email tools | $25 | Outreach |
-| **Total Spend** | **$200** | |
-| Founder time (10 hrs @ $50/hr) | $500 | Opportunity cost |
-| **Total CAC Investment** | **$700** | |
-
-**With 5 customers/month:**
+**Formula:**
 ```
-CAC = $700 / 5 = $140 per customer
+CAC = Total Sales & Marketing Spend / New Customers Acquired
 ```
 
-### CAC by Channel
+### CAC Breakdown (Monthly)
 
-| Channel | Monthly Spend | Customers | CAC |
-|---------|--------------|-----------|-----|
-| LinkedIn Outbound | $100 + $300 time | 3 | $133 |
-| SEO/Content | $75 + $100 time | 1 | $175 |
-| Referrals | $0 | 1 | $0 |
-| **Blended** | **$700** | **5** | **$140** |
+| Category | Cost | Notes |
+|----------|------|-------|
+| **Tools** | | |
+| LinkedIn Sales Navigator | $80 | Prospecting |
+| Calendly | $12 | Scheduling |
+| Landing page | $10 | Carrd/Framer |
+| Email (Resend) | $0-20 | Nurture sequences |
+| **Time Investment** | | |
+| Outreach (6 hrs/week) | $600 | At $25/hr equivalent |
+| Sales calls (4 hrs/week) | $400 | At $25/hr equivalent |
+| Content (2 hrs/week) | $200 | At $25/hr equivalent |
+| **Total Monthly** | **$1,300-1,500** | |
 
-### CAC Trends
+### CAC by Acquisition Method
 
-| Month | Spend | Customers | CAC | Trend |
-|-------|-------|-----------|-----|-------|
-| 1 | $700 | 3 | $233 | - |
-| 2 | $700 | 4 | $175 | Better |
-| 3 | $700 | 5 | $140 | Better |
-| 4 | $700 | 6 | $117 | Better |
-| 5 | $700 | 7 | $100 | Better |
-| 6 | $700 | 8 | $88 | Better |
+| Method | Monthly Spend | Customers | CAC |
+|--------|---------------|-----------|-----|
+| LinkedIn outreach | $1,000 | 3-4 | $250-330 |
+| Content/SEO | $200 | 1-2 | $100-200 |
+| Referrals | $0 | 1-2 | $0 |
+| **Blended** | **$1,200** | **5-8** | **$150-240** |
 
-**CAC improves as brand awareness and referrals increase**
+**Target CAC:** <$200 blended
 
 ---
 
 ## LTV:CAC Ratio
 
-### Current Ratio
+### Current Analysis
 
-```
-LTV:CAC = $1,955 / $140 = 13.9:1
-```
+| Scenario | LTV | CAC | Ratio | Status |
+|----------|-----|-----|-------|--------|
+| Conservative | $2,040 | $250 | 8:1 | Good |
+| Target | $3,060 | $200 | 15:1 | Excellent |
+| Optimistic | $4,590 | $150 | 31:1 | Outstanding |
 
 ### Benchmarks
 
-| Ratio | Status | Interpretation |
-|-------|--------|----------------|
-| <1:1 | Critical | Losing money on every customer |
-| 1-3:1 | Poor | Unsustainable, need improvement |
-| 3-5:1 | Good | Healthy SaaS business |
-| 5-10:1 | Excellent | Strong unit economics |
-| >10:1 | Outstanding | Could invest more in growth |
+| Ratio | Interpretation | Action |
+|-------|----------------|--------|
+| <1:1 | Losing money | Stop spending |
+| 1-3:1 | Unsustainable | Reduce CAC or increase LTV |
+| 3-5:1 | Healthy | Maintain |
+| 5-10:1 | Great | Consider spending more |
+| >10:1 | Excellent | Invest aggressively |
 
-**Our ratio of 13.9:1 is excellent - we could afford to invest more in acquisition**
-
-### LTV:CAC by Segment
-
-| Segment | LTV | CAC | Ratio | Action |
-|---------|-----|-----|-------|--------|
-| Small | $1,371 | $140 | 9.8:1 | Acceptable |
-| Medium | $2,656 | $140 | 19.0:1 | Focus here |
-| Large | $4,909 | $175* | 28.1:1 | Invest more |
-
-*Larger teams require more sales effort
+**TeamPulse target:** 10-20:1 (common for founder-led sales with low CAC)
 
 ---
 
 ## Payback Period
 
-### Payback Calculation
+### Calculation
 
+**Formula:**
 ```
-Payback Period = CAC / (ARPA x Gross Margin)
-Payback Period = $140 / ($115 x 0.85)
-Payback Period = $140 / $97.75
-Payback Period = 1.4 months
+Payback Period = CAC / (ARPA × Gross Margin)
 ```
 
-### Payback by Scenario
+### Payback Scenarios
 
-| Scenario | CAC | ARPA | Margin | Payback |
-|----------|-----|------|--------|---------|
-| Best case | $100 | $130 | 85% | 0.9 months |
-| Target | $140 | $115 | 85% | 1.4 months |
-| Conservative | $200 | $100 | 80% | 2.5 months |
-| Warning | $300 | $90 | 80% | 4.2 months |
+| Scenario | CAC | ARPA | Gross Margin | Payback |
+|----------|-----|------|--------------|---------|
+| Conservative | $250 | $100 | 85% | 2.9 months |
+| Target | $200 | $120 | 85% | 2.0 months |
+| Optimistic | $150 | $150 | 85% | 1.2 months |
 
-**1.4 months payback is excellent for B2B SaaS (typical is 12-18 months)**
+**Target:** <3 months payback
+
+### Why Payback Matters
+
+- **<3 months:** Can fund growth from cash flow
+- **3-12 months:** Need some capital but manageable
+- **>12 months:** Need significant funding
 
 ---
 
-## Gross Margin Analysis
+## Gross Margin
 
-### Gross Margin Calculation
+### Cost Structure (Per Customer/Month)
 
-| Revenue/Cost | Amount | % of Revenue |
-|--------------|--------|--------------|
-| Monthly Revenue (per customer) | $115 | 100% |
-| **COGS:** | | |
-| Hosting (Railway) | $2 | 1.7% |
-| Email (Resend) | $1 | 0.9% |
-| Payment processing (Stripe 2.9%) | $3.34 | 2.9% |
-| Support time (0.5 hrs @ $30) | $15 | 13.0% |
-| **Total COGS** | **$21.34** | **18.6%** |
-| **Gross Profit** | **$93.66** | **81.4%** |
+| Cost | Amount | % of Revenue |
+|------|--------|--------------|
+| **Revenue (ARPA)** | $120 | 100% |
+| **COGS** | | |
+| Infrastructure (Vercel, DB) | $2-3 | 2% |
+| Email sending | $0.50 | <1% |
+| Payment processing (Stripe) | $3.50 | 3% |
+| Support (prorated) | $5-10 | 5-8% |
+| **Total COGS** | $12-17 | 10-14% |
+| **Gross Profit** | $103-108 | **86-90%** |
 
-### Gross Margin Targets
-
-| Phase | Target | Current |
-|-------|--------|---------|
-| MVP | >70% | 81.4% |
-| Growth | >80% | On track |
-| Scale | >85% | Achievable with automation |
-
-### Gross Margin Improvement
-
-| Improvement | Impact |
-|-------------|--------|
-| Reduce support time (self-serve) | +5-8% |
-| Negotiate Stripe rates | +0.5% |
-| Scale hosting costs | +1-2% |
+**Target Gross Margin:** 85%+ (SaaS benchmark: 70-85%)
 
 ---
 
-## Unit Economics Summary Dashboard
+## Customer Profitability Analysis
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│ UNIT ECONOMICS DASHBOARD                                           │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  CUSTOMER VALUE                     ACQUISITION                    │
-│  ──────────────                     ───────────                    │
-│  ARPA:          $115/month          CAC:         $140              │
-│  Gross Margin:  81.4%               Payback:     1.4 months        │
-│  Avg Lifetime:  20 months           LTV:CAC:     13.9:1  ✓         │
-│  LTV:           $1,955                                             │
-│                                                                    │
-│  ECONOMICS PER CUSTOMER                                            │
-│  ─────────────────────────                                         │
-│  ┌─────────────────────────────────────────────────────────────┐  │
-│  │                                                             │  │
-│  │  Acquire ($140) ─> Payback (Month 2) ─> Profit (Months 3+) │  │
-│  │                                                             │  │
-│  │  Month 1:  -$22 (CAC - GP)                                  │  │
-│  │  Month 2:  +$72                                             │  │
-│  │  Month 12: +$1,030                                          │  │
-│  │  Lifetime: +$1,815 profit                                   │  │
-│  │                                                             │  │
-│  └─────────────────────────────────────────────────────────────┘  │
-│                                                                    │
-│  BENCHMARKS                         STATUS                         │
-│  ──────────                         ──────                         │
-│  LTV:CAC > 3:1                      13.9:1  ✓ Excellent            │
-│  Payback < 12 months                1.4 mo  ✓ Excellent            │
-│  Gross Margin > 70%                 81.4%   ✓ Excellent            │
-│  Churn < 5%                         5.0%    ✓ Good                 │
-│                                                                    │
-│  IMPROVEMENT PRIORITIES                                            │
-│  ──────────────────────                                            │
-│  1. Reduce churn to 3% → LTV +65%                                  │
-│  2. Increase ARPA to $130 → +13% revenue                           │
-│  3. Automate support → +5% gross margin                            │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-```
+### Profitability by Team Size
+
+| Team Size | MRR | COGS | Gross Profit | Margin |
+|-----------|-----|------|--------------|--------|
+| 10 employees | $60 | $8 | $52 | 87% |
+| 15 employees | $90 | $10 | $80 | 89% |
+| 20 employees | $120 | $12 | $108 | 90% |
+| 30 employees | $180 | $15 | $165 | 92% |
+| 50 employees | $300 | $20 | $280 | 93% |
+
+**Insight:** Larger teams have better unit economics (fixed costs spread)
+
+### Profitability by Billing Type
+
+| Billing | Avg MRR | CAC | LTV | LTV:CAC |
+|---------|---------|-----|-----|---------|
+| Annual | $90 | $180 | $2,300 | 13:1 |
+| Monthly | $100 | $220 | $2,000 | 9:1 |
+
+**Insight:** Push annual billing - lower CAC, better retention
 
 ---
 
-## Unit Economics Scenarios
+## Contribution Margin
 
-### Best Case
+### Definition
+Revenue remaining after variable costs (COGS + variable sales costs)
 
-| Metric | Value |
-|--------|-------|
-| ARPA | $135 |
-| CAC | $100 |
-| Churn | 3% |
-| LTV | $3,825 |
-| LTV:CAC | 38:1 |
-| Payback | 0.9 months |
+### Calculation
 
-### Target Case
+| Item | Amount | Notes |
+|------|--------|-------|
+| Revenue (ARPA) | $120 | |
+| Less: COGS | ($15) | |
+| Less: Variable sales cost | ($20) | Pro-rated CAC |
+| **Contribution Margin** | **$85** | **71%** |
 
-| Metric | Value |
-|--------|-------|
-| ARPA | $115 |
-| CAC | $140 |
-| Churn | 5% |
-| LTV | $1,955 |
-| LTV:CAC | 14:1 |
-| Payback | 1.4 months |
+### Break-Even Analysis
 
-### Worst Case
-
-| Metric | Value |
-|--------|-------|
-| ARPA | $90 |
-| CAC | $250 |
-| Churn | 10% |
-| LTV | $765 |
-| LTV:CAC | 3:1 |
-| Payback | 3.3 months |
+| Fixed Costs/Month | Contribution Margin | Customers to Break-Even |
+|-------------------|---------------------|-------------------------|
+| $500 | $85 | 6 customers |
+| $1,000 | $85 | 12 customers |
+| $2,000 | $85 | 24 customers |
+| $3,000 | $85 | 36 customers |
 
 ---
 
-## Cohort Economics
+## Cohort Analysis Framework
 
-### Tracking Template
+### Monthly Cohort Retention
 
-| Cohort | Customers | Start ARPA | M3 ARPA | M6 ARPA | M3 Retention | M6 Retention |
-|--------|-----------|------------|---------|---------|--------------|--------------|
-| M1 | 3 | $95 | - | - | - | - |
-| M2 | 4 | $100 | - | - | - | - |
-| M3 | 5 | $110 | - | - | - | - |
+| Cohort | M0 | M1 | M2 | M3 | M6 | M12 |
+|--------|----|----|----|----|----|----|
+| Jan 26 | 100% | | | | | |
+| Feb 26 | 100% | | | | | |
+| Mar 26 | 100% | | | | | |
+| Apr 26 | 100% | | | | | |
+| May 26 | 100% | | | | | |
+| Jun 26 | 100% | | | | | |
 
-### Cohort LTV Tracking
+### Target Retention Curve
 
-```
-LTV by cohort month:
+| Month | Retention Target |
+|-------|------------------|
+| M1 | 95% |
+| M3 | 85% |
+| M6 | 75% |
+| M12 | 60% |
 
-M1 Cohort: $95 → M2: $190 → M3: $285 → ...
-M2 Cohort: $100 → M2: $200 → M3: $300 → ...
-M3 Cohort: $110 → M2: $220 → M3: $330 → ...
+### Revenue Retention (Dollar Retention)
 
-Expected LTV at M12: $1,140 - $1,320
-Expected LTV at M20: $1,900 - $2,200
-```
+| Cohort | M0 Revenue | M3 Revenue | M6 Revenue | M12 Revenue |
+|--------|------------|------------|------------|-------------|
+| Jan 26 | $X | | | |
+| Feb 26 | $X | | | |
 
----
-
-## When to Worry
-
-### Red Flags
-
-| Metric | Warning | Critical | Action |
-|--------|---------|----------|--------|
-| LTV:CAC | <5:1 | <3:1 | Reduce CAC or improve retention |
-| Payback | >6 months | >12 months | Lower CAC or raise prices |
-| Gross Margin | <70% | <60% | Reduce COGS |
-| Churn | >7% | >10% | Focus on retention |
-| CAC | >$250 | >$400 | Improve sales efficiency |
-
-### Early Warning Signs
-
-- CAC increasing month over month
-- Churn rate creeping up
-- Support costs increasing per customer
-- Lower-ARPA customers converting more than high-ARPA
+**Target:** Net Revenue Retention >100% (expansion > churn)
 
 ---
 
-*Next artifact: 03-burn-runway.md*
+## Unit Economics Improvement Levers
+
+### To Improve LTV
+
+| Lever | Impact | Effort | Priority |
+|-------|--------|--------|----------|
+| Reduce churn | High | Medium | P0 |
+| Upsell larger teams | Medium | Low | P1 |
+| Price increase | Medium | Low | P2 |
+| Add features worth paying for | Medium | High | P2 |
+
+### To Reduce CAC
+
+| Lever | Impact | Effort | Priority |
+|-------|--------|--------|----------|
+| Improve conversion rates | High | Medium | P0 |
+| Referral program | Medium | Low | P1 |
+| Content/SEO | Medium | High | P2 |
+| Product-led growth | High | High | P2 |
+
+### To Improve Gross Margin
+
+| Lever | Impact | Effort | Priority |
+|-------|--------|--------|----------|
+| Optimize infrastructure | Low | Medium | P3 |
+| Self-service support | Medium | Medium | P2 |
+| Reduce Stripe fees (volume) | Low | Low | P3 |
+
+---
+
+## Unit Economics Targets by Stage
+
+### Month 1-3 (Validation)
+
+| Metric | Target | Acceptable |
+|--------|--------|------------|
+| LTV | $2,000+ | $1,500+ |
+| CAC | <$300 | <$500 |
+| LTV:CAC | 5:1+ | 3:1+ |
+| Payback | <4 months | <6 months |
+
+### Month 4-6 (Growth)
+
+| Metric | Target | Acceptable |
+|--------|--------|------------|
+| LTV | $3,000+ | $2,500+ |
+| CAC | <$200 | <$250 |
+| LTV:CAC | 12:1+ | 8:1+ |
+| Payback | <2 months | <3 months |
+
+### Month 7-12 (Scale)
+
+| Metric | Target | Acceptable |
+|--------|--------|------------|
+| LTV | $3,500+ | $3,000+ |
+| CAC | <$150 | <$200 |
+| LTV:CAC | 20:1+ | 15:1+ |
+| Payback | <1.5 months | <2 months |
+
+---
+
+## Weekly Unit Economics Review
+
+### Quick Metrics Check
+
+| Metric | This Week | Last Week | Trend |
+|--------|-----------|-----------|-------|
+| New customers | | | |
+| Churned customers | | | |
+| Total CAC spend | | | |
+| Blended CAC | | | |
+| Avg deal size | | | |
+
+### Monthly Deep Dive
+
+- [ ] Calculate blended CAC
+- [ ] Update cohort retention
+- [ ] Review channel CAC efficiency
+- [ ] Assess pricing impact
+- [ ] Update LTV estimates

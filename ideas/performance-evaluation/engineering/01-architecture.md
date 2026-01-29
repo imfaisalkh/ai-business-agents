@@ -1,460 +1,540 @@
 # Architecture Decision Record
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Documents technical architecture decisions for TeamPulse. Guides implementation and explains rationale.
+>
+> **Fits in:** Foundation for Setup Guide (02) and Implementation Tasks (03). Update when architecture changes.
 
----
+## System Overview
 
-## Architecture Overview
-
-### System Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                              FRONTEND                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                    Nuxt 4 (Client-only SPA)                      │   │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │   │
-│  │  │  Vue 3 +     │  │  shadcn-vue  │  │  Pinia       │          │   │
-│  │  │  Composition │  │  Components  │  │  State Mgmt  │          │   │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘          │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                │                                        │
-│                                │ HTTP/JSON                              │
-│                                ▼                                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                              BACKEND                                     │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                    Fastify API Server                            │   │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │   │
-│  │  │  Routes      │  │  Auth        │  │  Validation  │          │   │
-│  │  │  /api/*      │  │  JWT/Session │  │  Zod Schemas │          │   │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘          │   │
-│  │                                                                  │   │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │   │
-│  │  │  Drizzle ORM │  │  Email       │  │  Jobs        │          │   │
-│  │  │  SQLite/PG   │  │  Resend      │  │  BullMQ      │          │   │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘          │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                │                                        │
-│                                ▼                                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                            DATABASE                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │               SQLite (dev) / PostgreSQL (prod)                   │   │
-│  │                        Drizzle ORM                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Technology Stack
-
-| Layer | Technology | Why |
-|-------|------------|-----|
-| **Frontend** | Nuxt 4 (SPA mode) | Modern Vue framework, fast DX |
-| **UI Components** | shadcn-vue | Beautiful, accessible, customizable |
-| **State** | Pinia | Vue's official state management |
-| **Backend** | Fastify | Fast, lightweight, TypeScript-native |
-| **ORM** | Drizzle | Type-safe, performant, SQL-like |
-| **Database** | SQLite → PostgreSQL | Simple to start, scales when needed |
-| **Auth** | Better Auth | Simple, secure authentication |
-| **Email** | Resend | Developer-friendly, reliable |
-| **Jobs** | BullMQ (later) | Background job processing |
-| **Hosting** | Railway / Render | Simple deployment, good free tiers |
-
----
-
-## ADR 1: Frontend Framework
-
-### Decision: Nuxt 4 in SPA Mode
-
-**Context:**
-- Need to build a performant web app quickly
-- Team has Vue experience
-- SEO not critical for app (authenticated pages)
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| Nuxt 4 SSR | SEO, initial load | Complexity, server costs |
-| **Nuxt 4 SPA** | **Simple, fast DX** | **No SEO** |
-| Vue 3 + Vite | Lightweight | Missing routing, etc. |
-| React + Next | Popular | Team has Vue experience |
-
-**Decision:** Nuxt 4 in SPA mode
-
-**Rationale:**
-- All app pages are behind auth (no SEO needed)
-- SPA mode is simpler to deploy (static hosting)
-- Nuxt provides routing, composables, auto-imports
-- Can switch to SSR later if needed
-
----
-
-## ADR 2: Component Library
-
-### Decision: shadcn-vue
-
-**Context:**
-- Need professional-looking UI fast
-- Want customizable components (not locked to a library)
-- Accessibility matters
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| **shadcn-vue** | **Beautiful, customizable, accessible** | **Newer, smaller community** |
-| Vuetify | Mature, comprehensive | Heavy, opinionated styling |
-| PrimeVue | Feature-rich | Complex, learning curve |
-| Headless UI | Accessible, minimal | More work to style |
-
-**Decision:** shadcn-vue
-
-**Rationale:**
-- Copy-paste components we own and customize
-- Radix-based accessibility built-in
-- Modern, clean aesthetic matches our target users
-- Can modify without fighting the library
-
----
-
-## ADR 3: Backend Framework
-
-### Decision: Fastify
-
-**Context:**
-- Need fast, reliable API server
-- TypeScript support required
-- Team can manage own infrastructure
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| **Fastify** | **Fast, great TS support** | **Less ecosystem than Express** |
-| Express | Mature, huge ecosystem | Slow, poor TS support |
-| Hono | Ultra-fast, modern | Very new |
-| tRPC | Type-safe E2E | Locks you in, learning curve |
-
-**Decision:** Fastify
-
-**Rationale:**
-- Best-in-class performance
-- Native TypeScript support
-- Schema validation built-in
-- Rich plugin ecosystem
-- Easy to test
-
----
-
-## ADR 4: Database & ORM
-
-### Decision: Drizzle ORM + SQLite/PostgreSQL
-
-**Context:**
-- Need relational database for reviews, users, teams
-- Want type-safety with TypeScript
-- Start simple, scale later
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| **Drizzle + SQLite/PG** | **Type-safe, performant, SQL-like** | **Newer** |
-| Prisma | Popular, good DX | Slow queries, complex migrations |
-| Knex | Flexible | Not type-safe |
-| TypeORM | Mature | Buggy, complex |
-
-**Decision:** Drizzle ORM
-
-**Rationale:**
-- SQL-like syntax (what you write = what runs)
-- Excellent TypeScript inference
-- Fast migrations with drizzle-kit
-- Works great with both SQLite and PostgreSQL
-- No runtime overhead
-
-**Database Strategy:**
-- Development: SQLite (zero setup)
-- Production: PostgreSQL (Railway provides free tier)
-- Same Drizzle code works for both
-
----
-
-## ADR 5: Authentication
-
-### Decision: Better Auth
-
-**Context:**
-- Need secure authentication
-- Email/password required, Google SSO nice to have
-- Don't want to build auth from scratch
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| **Better Auth** | **Simple, self-hosted, full-featured** | **Newer** |
-| Lucia Auth | Lightweight | More manual setup |
-| NextAuth | Popular | React-focused |
-| Auth0/Clerk | Managed | Expensive at scale, vendor lock-in |
-
-**Decision:** Better Auth
-
-**Rationale:**
-- Full-featured (sessions, OAuth, email verification)
-- Self-hosted (no monthly costs, no vendor lock-in)
-- Works great with Fastify and Drizzle
-- Active development and good docs
-
----
-
-## ADR 6: Email Service
-
-### Decision: Resend
-
-**Context:**
-- Need to send transactional emails (invites, reminders)
-- Developer-friendly API preferred
-- Low volume initially (<1000/month)
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| **Resend** | **Beautiful API, great DX** | **Newer** |
-| SendGrid | Mature, reliable | Complex API |
-| Postmark | Great deliverability | More expensive |
-| AWS SES | Cheap | Complex setup |
-
-**Decision:** Resend
-
-**Rationale:**
-- Clean, modern API
-- React Email templates (works with Vue too)
-- Generous free tier (3,000 emails/month)
-- Great deliverability
-
----
-
-## ADR 7: Deployment
-
-### Decision: Railway (Monorepo)
-
-**Context:**
-- Need simple deployment
-- Budget-conscious (< $30/month target)
-- Want to focus on product, not infrastructure
-
-**Options Considered:**
-| Option | Pros | Cons |
-|--------|------|------|
-| **Railway** | **Simple, monorepo support, good free tier** | **Newer** |
-| Render | Similar to Railway | Slightly less DX |
-| Vercel | Great for frontend | Complex for backend |
-| Digital Ocean | Flexible | More manual setup |
-| Self-hosted | Full control | Time sink |
-
-**Decision:** Railway
-
-**Rationale:**
-- Deploy from GitHub with zero config
-- PostgreSQL included
-- Good free tier to start
-- Easy to scale when needed
-- Supports monorepo structure
-
----
-
-## Data Model
-
-### Entity Relationship Diagram
+**Product:** TeamPulse - 360-degree performance review platform for small teams
+**Architecture style:** Monolithic full-stack application (appropriate for SLC stage)
+**Deployment:** Edge-deployed serverless (Vercel)
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│    User     │────<│  TeamMember │>────│    Team     │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                   │                   │
-       │                   │                   │
-       ▼                   ▼                   ▼
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Review    │────<│ReviewCycle  │>────│  Template   │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                   │
-       │                   │
-       ▼                   ▼
-┌─────────────┐     ┌─────────────┐
-│  Response   │     │PeerFeedback │
-└─────────────┘     └─────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                         TeamPulse                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────┐ │
+│  │   Next.js 15    │    │   Prisma ORM    │    │  PostgreSQL │ │
+│  │   (App Router)  │───▶│                 │───▶│  (Supabase) │ │
+│  │   React + SSR   │    │   Type-safe DB  │    │             │ │
+│  └─────────────────┘    └─────────────────┘    └─────────────┘ │
+│           │                                                      │
+│           ▼                                                      │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────┐ │
+│  │    shadcn/ui    │    │     Clerk       │    │   Resend    │ │
+│  │   Components    │    │     Auth        │    │   Email     │ │
+│  └─────────────────┘    └─────────────────┘    └─────────────┘ │
+│                                                                  │
+│  ┌─────────────────┐    ┌─────────────────┐                    │
+│  │    PostHog      │    │     Stripe      │                    │
+│  │   Analytics     │    │   Payments      │                    │
+│  └─────────────────┘    └─────────────────┘                    │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+                    ┌─────────────────┐
+                    │     Vercel      │
+                    │   Deployment    │
+                    └─────────────────┘
 ```
-
-### Core Tables
-
-| Table | Purpose |
-|-------|---------|
-| `users` | User accounts |
-| `teams` | Organizations/companies |
-| `team_members` | Users belonging to teams |
-| `templates` | Review templates |
-| `template_questions` | Questions in templates |
-| `review_cycles` | Review periods |
-| `reviews` | Individual review instances |
-| `responses` | Answers to questions |
-| `peer_feedback_requests` | Peer review assignments |
-| `peer_feedback` | Submitted peer feedback |
-
-### Key Relationships
-
-- User belongs to many Teams (via TeamMember)
-- Team has many ReviewCycles
-- ReviewCycle uses one Template
-- Review belongs to ReviewCycle
-- Review has many Responses
-- PeerFeedback links to Review
 
 ---
 
-## API Structure
+## ADR-001: Full-Stack Framework
 
-### Route Organization
+### Decision
+Use **Next.js 15 with App Router** for the full-stack application.
+
+### Context
+Need a framework that supports:
+- Server-side rendering for SEO (landing pages)
+- API routes for backend logic
+- Modern React features
+- Fast development velocity
+- Easy deployment
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **Next.js 15 (App Router)** | Full-stack, great DX, Vercel deployment, RSC | Learning curve for App Router |
+| Remix | Great data loading, form handling | Smaller ecosystem, less familiar |
+| SvelteKit | Performance, simpler mental model | Smaller talent pool, less ecosystem |
+| Separate frontend/backend | Maximum flexibility | More complexity, more repos |
+
+### Decision Rationale
+Next.js 15 provides the best balance of:
+1. **Developer velocity** - Single codebase, file-based routing
+2. **Deployment simplicity** - Vercel makes deployment trivial
+3. **Type safety** - TypeScript throughout
+4. **Ecosystem** - Large community, many integrations
+5. **RSC support** - Server components reduce client bundle
+
+### Consequences
+- Must learn App Router patterns (different from Pages Router)
+- Tied to Vercel for optimal deployment (can self-host if needed)
+- Some experimental features may have rough edges
+
+---
+
+## ADR-002: Database & ORM
+
+### Decision
+Use **PostgreSQL via Supabase** with **Prisma ORM**.
+
+### Context
+Need a database that supports:
+- Multi-tenant data isolation
+- Complex queries (reviews, ratings, aggregations)
+- Reliable and scalable
+- Good developer experience
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **PostgreSQL + Prisma** | Type-safe, migrations, relational | Requires hosted service |
+| SQLite + Drizzle | Simpler, no external service | Not ideal for multi-tenant |
+| MongoDB | Flexible schema | Less suited for relational data |
+| Supabase (Postgres) | Managed, auth, realtime | Another vendor to manage |
+
+### Decision Rationale
+1. **PostgreSQL** - Relational data model (users, reviews, ratings) fits SQL well
+2. **Prisma** - Type-safe queries, great migration system, excellent DX
+3. **Supabase** - Managed Postgres with backups, scaling, and connection pooling
+4. **Multi-tenant ready** - Row-level security available if needed
+
+### Schema Design Principles
+- Every table has `companyId` for tenant isolation
+- Soft deletes with `deletedAt` for audit trail
+- Timestamps (`createdAt`, `updatedAt`) on all tables
+- UUID primary keys for security (no sequential guessing)
+
+### Consequences
+- Monthly cost for Supabase (~$25/month on Pro plan)
+- Connection pooling needed for serverless (Supabase provides PgBouncer)
+- Must carefully manage migrations in production
+
+---
+
+## ADR-003: Authentication
+
+### Decision
+Use **Clerk** for authentication.
+
+### Context
+Need authentication that supports:
+- Email magic links (passwordless)
+- Google OAuth
+- Organization/team management
+- Role-based access control
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **Clerk** | Full-featured, great DX, team management | Cost at scale |
+| NextAuth.js | Free, flexible | More setup, self-managed |
+| Auth0 | Enterprise features | Complex, expensive |
+| Supabase Auth | Bundled with DB | Less feature-rich |
+
+### Decision Rationale
+1. **Clerk** provides organization management built-in (multi-tenant)
+2. Excellent Next.js integration
+3. Handles email verification, MFA, session management
+4. Free tier covers early stage (up to 5,000 MAU)
+
+### Consequences
+- ~$25/month after 5,000 MAU
+- Vendor lock-in (auth is hard to migrate)
+- Some customization limitations
+
+---
+
+## ADR-004: UI Component Library
+
+### Decision
+Use **shadcn/ui** with **Tailwind CSS**.
+
+### Context
+Need UI components that are:
+- Fast to implement
+- Customizable
+- Accessible
+- Not a dependency (own the code)
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **shadcn/ui** | Own the code, customizable, Radix-based | Some assembly required |
+| Chakra UI | Full component library | Bundle size, less customizable |
+| Headless UI | Unstyled, accessible | Requires more styling work |
+| Material UI | Comprehensive | Heavy, opinionated design |
+
+### Decision Rationale
+1. **shadcn/ui** copies components into your codebase - you own them
+2. Built on Radix primitives - accessible by default
+3. Tailwind CSS integration - consistent styling
+4. Perfect for SaaS dashboards
+
+### Consequences
+- Must customize for branding (but that's the point)
+- Some components need to be built manually
+- Requires Tailwind knowledge
+
+---
+
+## ADR-005: Email Service
+
+### Decision
+Use **Resend** for transactional email.
+
+### Context
+Need email service for:
+- Review reminders
+- Self-review notifications
+- Peer feedback requests
+- Welcome emails
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **Resend** | Modern API, React Email, great DX | Newer service |
+| SendGrid | Established, full-featured | Complex, expensive |
+| Postmark | Reliable, simple | Less modern API |
+| AWS SES | Cheap at scale | More setup |
+
+### Decision Rationale
+1. **Resend** has the best developer experience
+2. React Email allows building emails in React
+3. Simple pricing ($0 for 3,000 emails/month)
+4. Modern API with great documentation
+
+### Consequences
+- Limited free tier (need to upgrade as we grow)
+- Newer company (less track record)
+
+---
+
+## ADR-006: Analytics
+
+### Decision
+Use **PostHog** for product analytics.
+
+### Context
+Need analytics for:
+- Funnel tracking (signup to paid)
+- Feature usage
+- Retention metrics
+- Session recording (optional)
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **PostHog** | Self-hostable, generous free tier, full-featured | Learning curve |
+| Mixpanel | Powerful analytics | Expensive at scale |
+| Amplitude | Industry standard | Complex, expensive |
+| Plausible | Simple, privacy-focused | Limited features |
+
+### Decision Rationale
+1. **PostHog** free tier: 1M events/month
+2. Open source, can self-host later
+3. Includes feature flags, session recording
+4. Good Next.js integration
+
+### Consequences
+- Must instrument events carefully
+- Dashboard can be overwhelming
+- Session recording adds overhead
+
+---
+
+## ADR-007: Payments
+
+### Decision
+Use **Stripe** for payments.
+
+### Context
+Need payment processing for:
+- Subscription billing (monthly/annual)
+- Per-seat pricing updates
+- Trial to paid conversion
+- Invoicing
+
+### Options Considered
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **Stripe** | Industry standard, great docs | 2.9% + $0.30 fees |
+| Paddle | MoR (handles taxes) | Less flexible |
+| Lemon Squeezy | Simple, MoR | Newer, less features |
+
+### Decision Rationale
+1. **Stripe** is the standard for SaaS
+2. Excellent subscription management
+3. Customer portal for self-service
+4. Handles seat-based pricing well
+
+### Consequences
+- Must handle tax compliance separately (or use Stripe Tax)
+- 2.9% + $0.30 per transaction
+- Webhook handling complexity
+
+---
+
+## Data Model Overview
+
+### Core Entities
 
 ```
-/api
-├── /auth
-│   ├── POST /signup
-│   ├── POST /login
-│   ├── POST /logout
-│   └── GET  /me
-│
-├── /teams
-│   ├── GET  /
-│   ├── POST /
-│   ├── GET  /:id
-│   └── PUT  /:id
-│
-├── /members
-│   ├── GET  /
-│   ├── POST /
-│   ├── POST /invite
-│   └── DELETE /:id
-│
-├── /templates
-│   ├── GET  /
-│   ├── GET  /:id
-│   ├── POST /
-│   └── PUT  /:id
-│
-├── /cycles
-│   ├── GET  /
-│   ├── POST /
-│   ├── GET  /:id
-│   ├── PUT  /:id
-│   └── POST /:id/launch
-│
-├── /reviews
-│   ├── GET  /
-│   ├── GET  /:id
-│   ├── PUT  /:id
-│   └── POST /:id/submit
-│
-└── /feedback
-    ├── GET  /pending
-    ├── GET  /:id
-    └── POST /:id/submit
+Company (tenant)
+├── User (employees)
+│   ├── Role (admin, manager, employee)
+│   └── ManagerRelation (who reports to whom)
+├── ReviewCycle
+│   ├── Participant (who's being reviewed)
+│   ├── Template (competencies)
+│   └── Deadlines
+├── Review
+│   ├── ManagerReview
+│   ├── SelfReview
+│   └── PeerFeedback[]
+└── Goal
+```
+
+### Prisma Schema (Key Models)
+
+```prisma
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  plan      String   @default("trial")
+  users     User[]
+  cycles    ReviewCycle[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  name       String
+  role       Role     @default(EMPLOYEE)
+  companyId  String
+  company    Company  @relation(fields: [companyId], references: [id])
+  managerId  String?
+  manager    User?    @relation("ManagerRelation", fields: [managerId], references: [id])
+  reports    User[]   @relation("ManagerRelation")
+  reviews    Review[]
+  selfReviews SelfReview[]
+  goals      Goal[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ReviewCycle {
+  id          String   @id @default(uuid())
+  name        String
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  templateId  String
+  template    Template @relation(fields: [templateId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  selfReviewDeadline DateTime
+  peerDeadline DateTime
+  managerDeadline DateTime
+  status      CycleStatus @default(ACTIVE)
+  participants Participant[]
+  reviews     Review[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  cycleId      String
+  cycle        ReviewCycle @relation(fields: [cycleId], references: [id])
+  revieweeId   String
+  reviewee     User     @relation(fields: [revieweeId], references: [id])
+  reviewerId   String
+  ratings      Rating[]
+  overallRating Float?
+  overallFeedback String?
+  status       ReviewStatus @default(DRAFT)
+  sharedAt     DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Rating {
+  id           String   @id @default(uuid())
+  reviewId     String
+  review       Review   @relation(fields: [reviewId], references: [id])
+  competencyId String
+  score        Int      // 1-5
+  feedback     String?
+}
+
+model SelfReview {
+  id           String   @id @default(uuid())
+  cycleId      String
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  ratings      SelfRating[]
+  highlights   String?
+  nextGoals    String?
+  status       ReviewStatus @default(DRAFT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum CycleStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum ReviewStatus {
+  DRAFT
+  SUBMITTED
+  SHARED
+}
 ```
 
 ---
 
 ## Security Considerations
 
+### Data Isolation
+- All queries filtered by `companyId`
+- Middleware validates user belongs to company
+- No cross-tenant data access possible
+
 ### Authentication
-
-- Sessions stored in database (not JWT)
-- CSRF protection enabled
-- Secure cookie settings (httpOnly, sameSite, secure)
-
-### Authorization
-
-- Role-based access (admin, manager, employee)
-- Team-scoped permissions
-- Managers can only see their direct reports
-- Peer feedback anonymized at database level
+- All routes protected by Clerk middleware
+- API routes verify session token
+- Role-based access on sensitive operations
 
 ### Data Protection
+- Database encrypted at rest (Supabase default)
+- HTTPS enforced (Vercel default)
+- Sensitive data (peer feedback) aggregated before display
 
-- Passwords hashed with Argon2
-- PII encrypted at rest
-- SQL injection prevented via Drizzle parameterization
-- Rate limiting on auth endpoints
+### Audit Trail
+- All entities have `createdAt`, `updatedAt`
+- Reviews track `sharedAt` for compliance
+- Soft deletes preserve history
 
 ---
 
 ## Performance Considerations
 
-### Frontend
-
-- Code splitting by route
-- Lazy loading for heavy components
-- Image optimization (if needed)
-- CDN for static assets
-
-### Backend
-
-- Database connection pooling
-- Query optimization (indexes on foreign keys)
+### Database
+- Indexes on `companyId`, `cycleId`, `userId`
+- Connection pooling via Supabase PgBouncer
 - Caching for templates (rarely change)
-- Background jobs for emails
 
-### Database Indexes
+### Frontend
+- Server Components for initial load
+- Client Components only for interactivity
+- Streaming for large lists
 
-```sql
--- Critical indexes
-CREATE INDEX idx_team_members_team ON team_members(team_id);
-CREATE INDEX idx_team_members_user ON team_members(user_id);
-CREATE INDEX idx_reviews_cycle ON reviews(cycle_id);
-CREATE INDEX idx_reviews_employee ON reviews(employee_id);
-CREATE INDEX idx_responses_review ON responses(review_id);
-CREATE INDEX idx_peer_feedback_review ON peer_feedback(review_id);
+### API
+- Edge functions for low latency
+- Rate limiting on API routes
+- Optimistic updates for form saves
+
+---
+
+## Deployment Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                        Vercel                            │
+├─────────────────────────────────────────────────────────┤
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐          │
+│  │  Preview  │  │  Staging  │  │Production │          │
+│  │   (PR)    │  │  (main)   │  │ (release) │          │
+│  └───────────┘  └───────────┘  └───────────┘          │
+│                                      │                  │
+│                                      ▼                  │
+│                              ┌───────────────┐         │
+│                              │  Vercel Edge  │         │
+│                              │   Functions   │         │
+│                              └───────────────┘         │
+└─────────────────────────────────────────────────────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              ▼                ▼                ▼
+      ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+      │  Supabase   │  │    Clerk    │  │   Stripe    │
+      │ (Database)  │  │   (Auth)    │  │ (Payments)  │
+      └─────────────┘  └─────────────┘  └─────────────┘
 ```
 
----
-
-## Scalability Path
-
-### Phase 1: MVP (Current)
-- Single Railway instance
-- SQLite or PostgreSQL
-- <100 concurrent users
-
-### Phase 2: Growth
-- PostgreSQL with connection pooling
-- Redis for sessions/caching
-- Background job queue (BullMQ)
-- 100-1000 concurrent users
-
-### Phase 3: Scale
-- Database read replicas
-- CDN for frontend
-- Horizontal API scaling
-- 1000+ concurrent users
+### Environments
+- **Preview:** Auto-deployed for each PR
+- **Staging:** Deploys from `main` branch
+- **Production:** Manual promotion from staging
 
 ---
 
-## Technical Debt Boundaries
+## Cost Projections
 
-### Acceptable for MVP
-- No mobile app (web only)
-- Basic error handling
-- Manual deployments (not CI/CD)
-- Minimal logging
+### Monthly Costs at Launch (0-100 users)
 
-### Must Fix Before Scale
-- Proper error tracking (Sentry)
-- CI/CD pipeline
-- Comprehensive logging
-- Database backups
-- Monitoring dashboards
+| Service | Tier | Cost |
+|---------|------|------|
+| Vercel | Pro | $20/month |
+| Supabase | Pro | $25/month |
+| Clerk | Free (up to 5K MAU) | $0 |
+| Resend | Free (3K emails) | $0 |
+| PostHog | Free (1M events) | $0 |
+| Stripe | Per transaction | ~$0 |
+| **Total** | | **~$45/month** |
 
-### Never Compromise
-- Security (auth, encryption)
-- Data integrity (transactions)
-- User privacy (peer feedback anonymization)
+### Monthly Costs at Growth (500-1000 users)
+
+| Service | Tier | Cost |
+|---------|------|------|
+| Vercel | Pro | $20/month |
+| Supabase | Pro | $25/month |
+| Clerk | Growth | $25/month |
+| Resend | Pro | $20/month |
+| PostHog | Free | $0 |
+| Stripe | Per transaction | ~$150/month |
+| **Total** | | **~$240/month** |
 
 ---
 
-*Next artifact: 02-setup-guide.md*
+## Future Considerations
+
+### If We Outgrow Vercel
+- Can migrate to Docker + AWS/GCP
+- Next.js supports standalone output
+
+### If We Need More Database Power
+- Supabase scales automatically
+- Can migrate to dedicated Postgres if needed
+
+### If We Need Realtime
+- Supabase has built-in realtime
+- Not needed for SLC but available
+
+### If We Need to Self-Host
+- All tools have self-hostable alternatives
+- PostHog, Supabase, etc. are open source

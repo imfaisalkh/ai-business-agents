@@ -1,420 +1,365 @@
 # Sales Metrics Dashboard
 
-*Generated for: Performance Evaluation Tool*
-
----
+> **Purpose:** Track sales performance and identify where to improve. Focus on metrics that drive revenue, not vanity numbers.
+>
+> **Fits in:** Review weekly to optimize sales process. Finance Manager uses these for revenue forecasting.
 
 ## North Star Metric
 
-### Primary: Close Rate (%)
+**Monthly Recurring Revenue (MRR):** $0 --> $3-5K (6-month target)
 
-**Definition:** Paying customers / Qualified leads
-
-**Why This Metric:**
-- Measures sales effectiveness independent of lead volume
-- Indicates if messaging and process are working
-- Directly impacts revenue per lead (efficiency)
-
-**Targets:**
-
-| Phase | Close Rate | Notes |
-|-------|------------|-------|
-| Validation | 15-20% | Still learning |
-| Early Revenue | 20-25% | Process developing |
-| Growth | 25-30% | Optimized process |
+**Definition:** Total monthly subscription revenue from paying customers
+**Why this metric:** It's the only number that matters for a bootstrapped SaaS
 
 ---
 
-## Funnel Metrics
+## Primary Sales Metrics
 
-### Full Funnel
+### 1. Close Rate
 
-```
-Leads (Responded to outreach or signed up)
-        │
-        ▼ (50%)
-Qualified (Discovery call completed)
-        │
-        ▼ (60%)
-Trial (Started free trial)
-        │
-        ▼ (50%)
-Engaged (Created review cycle)
-        │
-        ▼ (50%)
-Opportunity (Expressed buying intent)
-        │
-        ▼ (60%)
-Customer (Paid subscription)
-```
+**Definition:** % of qualified opportunities that convert to paying customers
 
-### Monthly Targets
+**Formula:** Closed Won / (Closed Won + Closed Lost) x 100
 
-| Stage | Volume | Conversion | Target |
-|-------|--------|------------|--------|
-| Leads | 100 | → Qualified | 50 (50%) |
-| Qualified | 50 | → Trial | 30 (60%) |
-| Trial | 30 | → Engaged | 15 (50%) |
-| Engaged | 15 | → Opportunity | 9 (60%) |
-| Opportunity | 9 | → Customer | **5 (55%)** |
+| Period | Opportunities | Won | Lost | Close Rate |
+|--------|---------------|-----|------|------------|
+| Week 1 | | | | |
+| Week 2 | | | | |
+| Week 3 | | | | |
+| Week 4 | | | | |
+| **Month Total** | | | | |
 
-### Stage Conversion Benchmarks
+**Target:** 25-35% (trial to paid)
+**Action if below target:** Review qualification process, demo quality, or follow-up
 
-| Conversion | Target | Red Flag | Action if Red Flag |
-|------------|--------|----------|-------------------|
-| Lead → Qualified | 50% | <35% | Improve lead quality |
-| Qualified → Trial | 60% | <45% | Fix discovery call |
-| Trial → Engaged | 50% | <35% | Improve onboarding |
-| Engaged → Opportunity | 60% | <45% | Better activation |
-| Opportunity → Customer | 55% | <40% | Fix objection handling |
+---
+
+### 2. Average Contract Value (ACV)
+
+**Definition:** Average annual revenue per closed deal
+
+**Formula:** Total ARR from closed deals / Number of deals
+
+| Period | Deals Closed | Total ARR | ACV |
+|--------|--------------|-----------|-----|
+| Month 1 | | | |
+| Month 2 | | | |
+| Month 3 | | | |
+
+**Target:** $1,200-1,800 (10-15 employees x $6-8 x 12 months)
+**Action if below target:** Focus on larger teams, better qualification
+
+---
+
+### 3. Sales Cycle Length
+
+**Definition:** Average days from first contact to closed deal
+
+**Formula:** Sum of (Close Date - First Contact Date) / Number of deals
+
+| Deal | First Contact | Close Date | Days |
+|------|---------------|------------|------|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
+| **Average** | | | |
+
+**Target:** 14-30 days
+**Action if above target:** Identify where deals stall, improve follow-up
+
+---
+
+### 4. Pipeline Value
+
+**Definition:** Total potential revenue from active opportunities
+
+**Formula:** Sum of (Deal Size x Probability) for all active deals
+
+| Stage | Deals | Total Value | Probability | Weighted Value |
+|-------|-------|-------------|-------------|----------------|
+| Discovery | | | 20% | |
+| Demo | | | 40% | |
+| Trial | | | 60% | |
+| Negotiation | | | 80% | |
+| **Total Pipeline** | | | | |
+
+**Target:** 3-4x monthly revenue goal (to account for close rate)
+**Example:** To close $5K MRR, need $15-20K in weighted pipeline
 
 ---
 
 ## Activity Metrics
 
-### Daily Targets
+### Weekly Activity Targets
 
-| Activity | Target | Why |
-|----------|--------|-----|
-| LinkedIn connections sent | 25 | Top of funnel |
-| Follow-up messages sent | 10 | Move pipeline |
-| Discovery calls | 1-2 | Qualify leads |
-| Trial check-ins | 5 | Activate trials |
-| Conversion calls | 1-2 | Close deals |
+| Activity | Target | Actual | Notes |
+|----------|--------|--------|-------|
+| LinkedIn connections sent | 50 | | |
+| LinkedIn replies received | 8-10 | | |
+| Discovery calls booked | 4-6 | | |
+| Discovery calls completed | 3-5 | | |
+| Demos completed | 2-3 | | |
+| Trials started | 2-3 | | |
+| Follow-ups sent | 20-30 | | |
+| Proposals sent | 1-2 | | |
+| Deals closed | 1 | | |
 
-### Weekly Targets
+### Activity-to-Outcome Ratios
 
-| Activity | Target | Tracking |
-|----------|--------|----------|
-| LinkedIn connections | 125 | Count |
-| Discovery calls completed | 5-8 | Calendar |
-| Trials started | 6-8 | Product data |
-| Conversion calls | 4-6 | Calendar |
-| Deals closed | 2-3 | CRM |
+| Ratio | Calculation | Current | Target |
+|-------|-------------|---------|--------|
+| Connections to Replies | Replies / Connections | | 15-20% |
+| Replies to Calls Booked | Calls / Replies | | 40-50% |
+| Calls to Qualified | Qualified / Calls | | 60-70% |
+| Demos to Trials | Trials / Demos | | 70-80% |
+| Trials to Closed | Closed / Trials | | 25-35% |
 
-### Activity → Outcome Ratios
-
-| Ratio | Target | Calculation |
-|-------|--------|-------------|
-| Connections → Calls | 4% | Calls / Connections |
-| Calls → Trials | 60% | Trials / Calls |
-| Trials → Customers | 15% | Customers / Trials |
+**Use these to identify bottleneck:** If one ratio is significantly below target, focus there.
 
 ---
 
-## Revenue Metrics
+## Funnel Metrics
 
-### Monthly Revenue Tracking
+### Stage Conversion Rates
 
-| Metric | Definition | Target M1-M3 | Target M4-M6 |
-|--------|------------|--------------|--------------|
-| New MRR | Revenue from new customers | $500 | $1,500 |
-| Churned MRR | Revenue lost to churn | <$100 | <$200 |
-| Expansion MRR | Revenue from upgrades | $0 | $100 |
-| Net New MRR | New - Churned + Expansion | $400 | $1,400 |
-| Total MRR | Cumulative | $1,500 | $5,000 |
+| From Stage | To Stage | Conversion Target | Actual | Gap |
+|------------|----------|-------------------|--------|-----|
+| Lead | Discovery Scheduled | 25% | | |
+| Discovery Scheduled | Discovery Completed | 80% | | |
+| Discovery Completed | Qualified | 60% | | |
+| Qualified | Demo Completed | 85% | | |
+| Demo Completed | Trial Started | 70% | | |
+| Trial Started | Closed Won | 30% | | |
 
-### Deal Metrics
+**Overall:** 100 Leads --> 25 Discovery --> 15 Qualified --> 13 Demo --> 9 Trial --> 3 Closed
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| Average Deal Size | MRR from new deal | $120 |
-| Average Sales Cycle | Days from lead to close | 21-30 days |
-| Win Rate | Deals won / Deals closed | 55% |
-| Average Discount | % off standard price | <10% |
+---
 
-### Revenue Formula
+### Funnel Visualization
 
 ```
-Monthly Revenue Target: $1,500 MRR
+Week of: ___________
 
-Deals needed: $1,500 / $120 ARPA = 12.5 → 13 customers
-
-Pipeline needed (at 55% win rate): 13 / 0.55 = 24 opportunities
-
-Trials needed (at 50% opp rate): 24 / 0.50 = 48 trials
-
-Qualified leads needed (at 60% trial rate): 48 / 0.60 = 80 qualified leads
-
-Total leads needed (at 50% qual rate): 80 / 0.50 = 160 leads
+Leads:        [--------------------] 100
+Discovery:    [----------]          25 (25%)
+Qualified:    [------]              15 (60%)
+Demo:         [-----]               13 (87%)
+Trial:        [---]                  9 (69%)
+Closed Won:   [-]                    3 (33%)
 ```
 
 ---
 
-## Pipeline Metrics
+## Trial Metrics (Critical for Product-Led)
 
-### Pipeline Stages
+### Trial-to-Paid Conversion
 
-| Stage | Count | Value | Avg Age |
-|-------|-------|-------|---------|
-| Qualified | 12 | $1,440 | 5 days |
-| Trial | 8 | $960 | 10 days |
-| Engaged | 5 | $600 | 15 days |
-| Opportunity | 4 | $480 | 20 days |
-| **Total** | **29** | **$3,480** | - |
+| Cohort | Trials Started | Converted | Conversion Rate |
+|--------|----------------|-----------|-----------------|
+| Week 1 | | | |
+| Week 2 | | | |
+| Week 3 | | | |
+| Week 4 | | | |
 
-### Pipeline Health Metrics
+**Target:** 25-35%
 
-| Metric | Definition | Target | Red Flag |
-|--------|------------|--------|----------|
-| Pipeline Coverage | Pipeline value / Monthly target | 3-4x | <2x |
-| Pipeline Velocity | Deals moving forward / Total | 70%+ | <50% |
-| Stalled Deals | No activity >7 days | <20% | >30% |
-| Average Age | Days in pipeline | <25 days | >35 days |
+### Trial Engagement Correlation
 
-### Pipeline Coverage Calculation
+| Engagement Level | Definition | Conversion Rate |
+|------------------|------------|-----------------|
+| High | Created cycle + sent reviews | Target: 50%+ |
+| Medium | Created cycle, no reviews | Target: 25% |
+| Low | Signed up, no cycle | Target: 5% |
 
-```
-Monthly Revenue Target: $1,500
-Current Pipeline Value: $3,480
-Coverage Ratio: $3,480 / $1,500 = 2.32x
-
-Status: Below target (need 3x coverage)
-Action: Increase top of funnel
-```
+**Action:** Focus trials with high engagement, re-engage low engagement
 
 ---
 
-## Sales Velocity
+## Time-Based Metrics
 
-### Formula
+### Response Time
 
-```
-Sales Velocity = (# of Opps × Deal Value × Win Rate) / Sales Cycle Length
+| Activity | Target | Actual Average |
+|----------|--------|----------------|
+| First response to new lead | <2 hours | |
+| Follow-up after discovery call | Same day | |
+| Follow-up after demo | Same day | |
+| Response to trial question | <4 hours | |
+| Proposal after verbal commit | <24 hours | |
 
-Example:
-(10 opps × $120 × 55%) / 25 days = $26.40/day = $792/month
-```
+### Pipeline Velocity
 
-### Velocity Levers
+**Formula:** (Opportunities x Win Rate x ACV) / Sales Cycle Days
 
-| Lever | Current | Target | Impact |
-|-------|---------|--------|--------|
-| Opportunities | 10/month | 15/month | +50% revenue |
-| Deal Value | $120 | $140 | +17% revenue |
-| Win Rate | 55% | 65% | +18% revenue |
-| Sales Cycle | 25 days | 20 days | +25% revenue |
+| Component | Value |
+|-----------|-------|
+| Active Opportunities | |
+| Win Rate | % |
+| Average ACV | $ |
+| Avg Sales Cycle | days |
+| **Velocity** | $/day |
 
-**Easiest lever:** Reduce sales cycle (faster follow-up, better qualification)
-
----
-
-## Win/Loss Analysis
-
-### Track Every Closed Deal
-
-**Win Reasons:**
-| Reason | Count | % of Wins |
-|--------|-------|-----------|
-| Price competitive | 8 | 40% |
-| Gap analysis feature | 5 | 25% |
-| Ease of use | 4 | 20% |
-| Peer feedback | 3 | 15% |
-
-**Loss Reasons:**
-| Reason | Count | % of Losses |
-|--------|-------|-------------|
-| No budget | 5 | 35% |
-| Using competitor | 3 | 21% |
-| No decision | 3 | 21% |
-| Missing feature | 2 | 14% |
-| Too complex | 1 | 7% |
-
-### Loss Analysis Actions
-
-| Reason | Action |
-|--------|--------|
-| No budget | Better early qualification |
-| Using competitor | Improve differentiation pitch |
-| No decision | Create urgency, get commitment |
-| Missing feature | Evaluate roadmap priority |
-| Too complex | Improve onboarding |
+**Target velocity:** $100-200/day to hit $3-5K MRR in 6 months
 
 ---
 
-## Sales OKRs
+## Deal Analysis
 
-### Month 1-2: Foundation
+### Win Analysis
 
-**Objective:** Validate sales process with first customers
+| Won Deal | Team Size | ACV | Sales Cycle | What Worked |
+|----------|-----------|-----|-------------|-------------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
 
-| Key Result | Target | Actual |
-|------------|--------|--------|
-| Discovery calls completed | 20 | |
-| Close rate | 15%+ | |
-| Paying customers | 5 | |
-| MRR | $500 | |
+**Patterns to find:**
+- Which team sizes convert best?
+- What pain points are most compelling?
+- What features closed the deal?
+- How did they find us?
 
-### Month 3-4: Scaling
+### Loss Analysis
 
-**Objective:** Repeatable sales process generating predictable revenue
+| Lost Deal | Reason | Stage Lost | Lessons |
+|-----------|--------|------------|---------|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
 
-| Key Result | Target | Actual |
-|------------|--------|--------|
-| Close rate | 20%+ | |
-| Average deal size | $110+ | |
-| Sales cycle | <28 days | |
-| Monthly customers | 5+ | |
-| MRR | $1,500 | |
-
-### Month 5-6: Optimization
-
-**Objective:** Optimized sales machine hitting $5K MRR
-
-| Key Result | Target | Actual |
-|------------|--------|--------|
-| Close rate | 25%+ | |
-| Average deal size | $120+ | |
-| Sales cycle | <25 days | |
-| Monthly customers | 8+ | |
-| MRR | $3,500-5,000 | |
+**Common loss reasons to track:**
+- [ ] Price too high
+- [ ] Went with competitor
+- [ ] Chose to do nothing
+- [ ] Wrong timing
+- [ ] Missing features
+- [ ] Lost contact/ghosted
+- [ ] Not a good fit (disqualified late)
 
 ---
 
-## Dashboard Template
+## Weekly Sales Review
 
-### Weekly Sales Dashboard
+*Complete every Friday - 15 minutes*
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│ WEEKLY SALES DASHBOARD - Week of [Date]                            │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  NORTH STAR                                                        │
-│  ──────────                                                        │
-│  Close Rate: 23%                                                   │
-│  Target: 25%  ▼ 2% from target                                     │
-│                                                                    │
-│  FUNNEL THIS WEEK                                                  │
-│  ─────────────────                                                 │
-│  Leads:        25   ████████████████████████████████  100%         │
-│  Qualified:    12   ████████████████░░░░░░░░░░░░░░░░   48%         │
-│  Trial:         8   ██████████░░░░░░░░░░░░░░░░░░░░░░   67%         │
-│  Engaged:       5   ██████░░░░░░░░░░░░░░░░░░░░░░░░░░   63%         │
-│  Opportunity:   3   ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░   60%         │
-│  Won:           2   ███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   67%         │
-│                                                                    │
-│  REVENUE                           PIPELINE                        │
-│  ───────                           ────────                        │
-│  New MRR: $240                     Total Value: $2,880             │
-│  Deals Won: 2                      Coverage: 2.4x (low)            │
-│  Avg Deal: $120                    Stalled: 3 deals                │
-│                                                                    │
-│  ACTIVITY                                                          │
-│  ────────                                                          │
-│  Connections: 120 / 125 target                                     │
-│  Discovery Calls: 6 / 5 target  ✓                                  │
-│  Follow-ups Sent: 42 / 50 target                                   │
-│                                                                    │
-│  ALERTS                                                            │
-│  ──────                                                            │
-│  ⚠️  Pipeline coverage below 3x - increase prospecting             │
-│  ⚠️  3 deals stalled >7 days - follow up today                     │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-```
+### This Week's Numbers
 
-### Monthly Sales Review
+| Metric | Target | Actual | Trend |
+|--------|--------|--------|-------|
+| New leads | 10-15 | | ↑↓→ |
+| Discovery calls | 3-5 | | ↑↓→ |
+| Demos completed | 2-3 | | ↑↓→ |
+| Trials started | 2-3 | | ↑↓→ |
+| Deals closed | 1 | | ↑↓→ |
+| MRR added | $200-500 | | ↑↓→ |
+| Pipeline value | | | ↑↓→ |
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│ MONTHLY SALES REVIEW - [Month]                                     │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  REVENUE                                                           │
-│  ───────                                                           │
-│  New MRR:        $980                                              │
-│  Churned MRR:    $120                                              │
-│  Net New MRR:    $860                                              │
-│  Total MRR:      $2,340                                            │
-│  vs Target:      $2,000  ✓ +17%                                    │
-│                                                                    │
-│  DEALS                                                             │
-│  ─────                                                             │
-│  Deals Won:      8                                                 │
-│  Deals Lost:     6                                                 │
-│  Win Rate:       57%  ✓                                            │
-│  Avg Deal:       $122                                              │
-│  Sales Cycle:    24 days  ✓                                        │
-│                                                                    │
-│  FUNNEL CONVERSIONS                                                │
-│  ──────────────────                                                │
-│  Lead → Qualified:    52%  (target 50%)  ✓                         │
-│  Qualified → Trial:   58%  (target 60%)  ▼                         │
-│  Trial → Engaged:     55%  (target 50%)  ✓                         │
-│  Engaged → Opp:       63%  (target 60%)  ✓                         │
-│  Opp → Customer:      57%  (target 55%)  ✓                         │
-│                                                                    │
-│  WIN/LOSS ANALYSIS                                                 │
-│  ─────────────────                                                 │
-│  Top Win Reason:  Price competitive (4 deals)                      │
-│  Top Loss Reason: No budget (3 deals)                              │
-│                                                                    │
-│  ACTION ITEMS FOR NEXT MONTH                                       │
-│  ────────────────────────────                                      │
-│  1. Improve Qualified → Trial (better discovery close)             │
-│  2. Reduce stalled deals (faster follow-up)                        │
-│  3. Increase pipeline coverage (more top of funnel)                │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-```
+### What Worked This Week?
+- Deal won because: _______________
+- Best call was with: _______________ because: _______________
+- Messaging that resonated: _______________
+
+### What Didn't Work?
+- Lost deal because: _______________
+- Struggled with: _______________
+- Objection I couldn't handle: _______________
+
+### Focus for Next Week
+1. _______________
+2. _______________
+3. _______________
 
 ---
 
-## Tracking Tools
+## Monthly Sales Review
 
-### CRM Requirements
+*Complete on the last day of each month - 30 minutes*
 
-| Feature | Purpose |
-|---------|---------|
-| Deal stages | Track pipeline |
-| Activity logging | Track touchpoints |
-| Task management | Follow-up reminders |
-| Reporting | Metrics dashboards |
-| Email integration | Log communication |
+### Monthly Summary
 
-### Recommended: HubSpot Free CRM
+| Metric | Target | Actual | vs Target |
+|--------|--------|--------|-----------|
+| New customers | 3-4 | | |
+| MRR added | $500-800 | | |
+| Total MRR | | | |
+| ACV | $1,440 | | |
+| Close rate | 25-35% | | |
+| Sales cycle | 21 days | | |
 
-- Free for small teams
-- Email tracking
-- Basic pipeline management
-- Meeting scheduling
-- Mobile app
+### Pipeline Health
 
-### Spreadsheet Backup
+| Stage | Start of Month | End of Month | Change |
+|-------|----------------|--------------|--------|
+| Discovery | | | |
+| Demo | | | |
+| Trial | | | |
+| Negotiation | | | |
+| **Total** | | | |
 
-If not using CRM, track in Google Sheets:
+### Win/Loss Summary
 
-| Tab | Contents |
-|-----|----------|
-| Pipeline | All deals with stage, value, dates |
-| Activities | Daily activity log |
-| Win/Loss | Closed deals with reasons |
-| Weekly Metrics | Dashboard numbers |
-| Leads | Lead source tracking |
+| Outcome | Count | Total Value | Avg Deal |
+|---------|-------|-------------|----------|
+| Won | | | |
+| Lost | | | |
+| Stalled | | | |
 
----
+### Top Loss Reasons This Month
+1. _______________ (X deals)
+2. _______________ (X deals)
+3. _______________ (X deals)
 
-## Red Flag Alerts
-
-### Immediate Action Required
-
-| Metric | Threshold | Alert |
-|--------|-----------|-------|
-| Overdue follow-ups | >5 | Clear today |
-| Stalled deals | >7 days | Contact now |
-| Trial with no activity | >3 days | Check in |
-| Close rate | <15% | Review process |
-
-### Weekly Review Flags
-
-| Metric | Threshold | Investigation |
-|--------|-----------|---------------|
-| Pipeline coverage | <2x | Increase prospecting |
-| Conversion drop | >10% week/week | Check messaging |
-| Average deal size | Declining | Review pricing/discount |
-| Sales cycle | Increasing | Identify bottleneck |
+### What to Do Differently Next Month
+1. _______________
+2. _______________
+3. _______________
 
 ---
 
-*Next artifact: 07-scripts-library.md*
+## Forecasting
+
+### Revenue Forecast
+
+**Method:** Weighted pipeline by stage probability
+
+| Stage | Deals | Value | Probability | Weighted |
+|-------|-------|-------|-------------|----------|
+| Trial | | | 50% | |
+| Negotiation | | | 80% | |
+| **30-day Forecast** | | | | |
+
+### Confidence Assessment
+
+| Forecast | 90% Confident | 75% Confident | 50% Confident |
+|----------|---------------|---------------|---------------|
+| Next Month MRR | $ | $ | $ |
+
+---
+
+## Reporting Templates
+
+### Daily Quick Check (2 min)
+
+- [ ] Any hot leads to respond to?
+- [ ] Any deals moving forward today?
+- [ ] Any follow-ups overdue?
+
+### Weekly Report (for co-founder/advisor)
+
+> **Week of [Date]**
+>
+> **Wins:** [deals closed, positive calls]
+> **Challenges:** [objections, losses]
+> **Pipeline:** $[weighted value]
+> **Focus next week:** [priority]
+
+### Monthly Report (for board/investors)
+
+> **Month: [Month Year]**
+>
+> **Revenue:** $[MRR] (+$[change])
+> **Customers:** [count] (+[new])
+> **Close rate:** [X]%
+> **Top win:** [notable deal]
+> **Top learning:** [insight]
+> **Next month target:** $[MRR target]

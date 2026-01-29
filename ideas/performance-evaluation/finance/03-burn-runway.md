@@ -1,323 +1,331 @@
 # Burn Rate & Runway Tracker
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Track cash burn and calculate runway for TeamPulse. Ensures you don't run out of money.
+>
+> **Fits in:** Uses costs from architecture decisions. Informs fundraising decisions (05).
+
+## Current Financial Position
+
+### Starting Capital
+
+| Source | Amount | Notes |
+|--------|--------|-------|
+| Personal savings | $[X] | |
+| Initial revenue | $0 | Pre-launch |
+| **Total Starting Cash** | **$[X]** | |
+
+### Monthly Runway Calculation
+
+```
+Runway (months) = Current Cash / Monthly Burn Rate
+```
 
 ---
 
-## Burn Rate Overview
+## Monthly Expenses Breakdown
 
-### Bootstrap Context
+### Fixed Costs (Occur Every Month)
 
-| Factor | Status |
-|--------|--------|
-| **Funding Type** | Bootstrapped (self-funded) |
-| **Founder Salary** | $0 (not taking salary initially) |
-| **Runway Goal** | Reach profitability before running out |
-| **Burn Target** | <$500/month until profitable |
-
----
-
-## Monthly Burn Breakdown
-
-### Fixed Costs
-
-| Category | Item | Monthly Cost | Notes |
-|----------|------|--------------|-------|
+| Category | Item | Cost | Notes |
+|----------|------|------|-------|
 | **Infrastructure** | | | |
-| | Railway hosting | $20 | Scales with usage |
-| | Domain & DNS | $3 | Annual/12 |
-| | SSL | $0 | Free via Railway |
+| | Vercel Pro | $20 | Hosting |
+| | Supabase Pro | $25 | Database |
+| | Domain + DNS | $2 | teampulse.app |
+| | **Subtotal** | **$47** | |
 | **Tools** | | | |
-| | LinkedIn Navigator | $100 | Critical for sales |
-| | Resend (email) | $0 | Free tier |
-| | Analytics (Plausible) | $9 | |
-| | Design (Canva Pro) | $15 | |
-| | Error tracking (Sentry) | $0 | Free tier |
-| **Operations** | | | |
-| | Bank account | $0 | Mercury free |
-| | Accounting software | $15 | Wave or similar |
-| | Legal entity | $8 | State fees/12 |
-| **Marketing** | | | |
-| | Content tools | $75 | Jasper, Surfer, etc. |
-| **Total Fixed** | | **$245** | |
+| | Clerk (free tier) | $0 | Auth (free <5K MAU) |
+| | Resend (free tier) | $0 | Email (free <3K/mo) |
+| | PostHog (free tier) | $0 | Analytics |
+| | Stripe | % of revenue | ~3% fees |
+| | **Subtotal** | **$0** | Until volume |
+| **Business** | | | |
+| | LinkedIn Premium | $60 | Or Sales Nav $80 |
+| | Calendly | $12 | Scheduling |
+| | Banking/accounting | $20 | Mercury, etc |
+| | **Subtotal** | **$92** | |
+| **Total Fixed** | | **$139** | |
 
-### Variable Costs
+### Variable Costs (Scale with Activity)
 
-| Category | Item | Cost Basis | Est. Monthly |
-|----------|------|------------|--------------|
-| Payment processing | Stripe | 2.9% + $0.30/txn | $50-100 |
-| Email overages | Resend | $0.001/email | $0-20 |
-| Support tools | Intercom/Crisp | Per seat | $0-30 |
-| **Total Variable** | | | **$50-150** |
+| Category | Item | Unit Cost | Est. Monthly | Notes |
+|----------|------|-----------|--------------|-------|
+| **Marketing** | | | | |
+| | Content tools | - | $0-50 | If using AI writing |
+| | Ads (if testing) | - | $0-100 | Optional |
+| **Sales** | | | | |
+| | Stripe fees | 2.9% + $0.30 | ~$50-150 | Per transaction |
+| | Call recording | - | $0-30 | If using |
+| **Support** | | | | |
+| | Help desk | - | $0 | Use email initially |
+| **Total Variable** | | | **$50-330** | |
 
 ### Total Monthly Burn
 
-| Scenario | Fixed | Variable | Total Burn |
-|----------|-------|----------|------------|
-| **Minimum** | $245 | $50 | $295 |
-| **Expected** | $245 | $100 | $345 |
-| **Maximum** | $245 | $150 | $395 |
+| Phase | Fixed | Variable | Total Burn |
+|-------|-------|----------|------------|
+| Pre-launch | $139 | $50 | **$189** |
+| Launch (Month 3-4) | $139 | $150 | **$289** |
+| Growth (Month 5-6) | $164* | $250 | **$414** |
+
+*Assumes Clerk upgrade at 5K MAU
 
 ---
 
-## Runway Calculation
+## Burn Rate Scenarios
 
-### Starting Position
+### Scenario 1: Lean Bootstrap
 
-| Item | Amount |
-|------|--------|
-| **Initial Cash** | $3,000 (assumed bootstrap fund) |
-| **Monthly Burn** | $345 |
-| **Revenue Month 1** | $270 |
-| **Net Burn Month 1** | $75 |
+**Monthly burn:** ~$200
+**6-month total:** $1,200
 
-### Runway Projection
+| Item | Cost |
+|------|------|
+| Infrastructure | $47 |
+| Tools (free tiers) | $0 |
+| LinkedIn Premium | $60 |
+| Calendly | $12 |
+| Banking | $20 |
+| Buffer | $61 |
+| **Total** | **$200** |
 
-| Month | Starting Cash | Revenue | Burn | Net | Ending Cash |
-|-------|--------------|---------|------|-----|-------------|
-| 1 | $3,000 | $270 | $345 | -$75 | $2,925 |
-| 2 | $2,925 | $665 | $345 | +$320 | $3,245 |
-| 3 | $3,245 | $1,200 | $400 | +$800 | $4,045 |
-| 4 | $4,045 | $1,785 | $400 | +$1,385 | $5,430 |
-| 5 | $5,430 | $2,530 | $450 | +$2,080 | $7,510 |
-| 6 | $7,510 | $3,450 | $450 | +$3,000 | $10,510 |
+**Cash needed to launch:** $2,000-3,000 (6-month runway)
 
-### Break-Even Point
+### Scenario 2: Moderate Investment
+
+**Monthly burn:** ~$400
+**6-month total:** $2,400
+
+| Item | Cost |
+|------|------|
+| Infrastructure | $47 |
+| Tools (some paid) | $50 |
+| LinkedIn Sales Nav | $80 |
+| Calendly | $12 |
+| Banking | $20 |
+| Marketing tools | $50 |
+| Stripe fees | $50 |
+| Buffer | $91 |
+| **Total** | **$400** |
+
+**Cash needed to launch:** $4,000-5,000 (6-month runway)
+
+### Scenario 3: Accelerated Growth
+
+**Monthly burn:** ~$800
+**6-month total:** $4,800
+
+| Item | Cost |
+|------|------|
+| Infrastructure | $70 |
+| Tools (all paid) | $100 |
+| LinkedIn Sales Nav | $80 |
+| Marketing/ads | $200 |
+| Contractor help | $200 |
+| Stripe fees | $100 |
+| Banking/legal | $50 |
+| **Total** | **$800** |
+
+**Cash needed to launch:** $8,000-10,000 (6-month runway)
+
+---
+
+## Runway Projections
+
+### Cash Flow Forecast (Target Scenario)
+
+| Month | Revenue | Expenses | Net | Cash Balance |
+|-------|---------|----------|-----|--------------|
+| 1 | $0 | $200 | -$200 | $4,800 |
+| 2 | $0 | $250 | -$250 | $4,550 |
+| 3 | $600 | $300 | +$300 | $4,850 |
+| 4 | $1,320 | $350 | +$970 | $5,820 |
+| 5 | $2,280 | $400 | +$1,880 | $7,700 |
+| 6 | $3,480 | $450 | +$3,030 | $10,730 |
+
+*Assumes $5,000 starting cash*
+
+**Key insight:** Cash-flow positive by Month 3 with target scenario
+
+### Break-Even Analysis
+
+**Fixed costs to cover:** ~$200-400/month
+**At 85% gross margin:** Need $235-470 MRR to break even
+**At $100 ARPA:** Need 3-5 customers to cover fixed costs
+
+**Break-even timeline:** Month 3-4
+
+---
+
+## Runway Calculator
+
+### Current Runway
 
 ```
-Break-even revenue = Fixed costs / Gross margin
-Break-even = $345 / 0.81 = $426 MRR
-
-At $115 ARPA: 4 customers to break even
+Current Cash:         $________
+Monthly Burn:         $________
+Monthly Revenue:      $________
+Net Burn:             $________ (Burn - Revenue)
+Runway:               ________ months
 ```
 
-**Expected break-even: Month 2 (with 4+ customers)**
+### Runway with Growth
+
+| Month | Burn | Revenue | Net Burn | Cumulative | Runway |
+|-------|------|---------|----------|------------|--------|
+| M1 | $300 | $0 | -$300 | -$300 | |
+| M2 | $300 | $0 | -$300 | -$600 | |
+| M3 | $350 | $600 | +$250 | -$350 | |
+| M4 | $350 | $1,200 | +$850 | +$500 | |
+| M5 | $400 | $2,000 | +$1,600 | +$2,100 | |
+| M6 | $450 | $3,000 | +$2,550 | +$4,650 | Profitable |
 
 ---
 
-## Runway Scenarios
+## Cash Preservation Tactics
 
-### Scenario 1: Conservative Growth
+### If Runway Gets Short
 
-| Assumption | Value |
-|------------|-------|
-| Monthly customer growth | 3-4 |
-| Churn | 5% |
-| ARPA | $100 |
-| Burn | $350 |
+| Tactic | Monthly Savings | Impact |
+|--------|-----------------|--------|
+| Downgrade Vercel to Hobby | $20 | Lower, but works for MVP |
+| Drop LinkedIn Premium | $60-80 | Use free + more effort |
+| Cut non-essential tools | $50-100 | Manage manually |
+| Pause paid marketing | $100-200 | Slower growth |
 
-| Month | Customers | MRR | Burn | Net | Cumulative |
-|-------|-----------|-----|------|-----|------------|
-| 3 | 10 | $1,000 | $350 | +$650 | $4,650 |
-| 6 | 22 | $2,200 | $400 | +$1,800 | $8,850 |
-| 9 | 35 | $3,500 | $450 | +$3,050 | $15,450 |
-| 12 | 50 | $5,000 | $500 | +$4,500 | $25,950 |
+### Minimum Viable Burn
 
-**Runway: Infinite (cash flow positive by Month 2)**
+| Item | Cost | Justification |
+|------|------|---------------|
+| Vercel Hobby | $0 | Free tier works for MVP |
+| Supabase Free | $0 | Limited but works |
+| LinkedIn Free | $0 | Manual prospecting |
+| Gmail | $0 | Personal email |
+| **Total** | **$0** | Pure sweat equity |
 
-### Scenario 2: Target Growth
-
-| Assumption | Value |
-|------------|-------|
-| Monthly customer growth | 5-8 |
-| Churn | 5% |
-| ARPA | $115 |
-| Burn | $400 |
-
-| Month | Customers | MRR | Burn | Net | Cumulative |
-|-------|-----------|-----|------|-----|------------|
-| 3 | 12 | $1,380 | $400 | +$980 | $5,980 |
-| 6 | 30 | $3,450 | $450 | +$3,000 | $14,480 |
-| 9 | 55 | $6,325 | $500 | +$5,825 | $30,305 |
-| 12 | 90 | $10,350 | $600 | +$9,750 | $58,055 |
-
-**Runway: Infinite (building cash reserves)**
-
-### Scenario 3: Slow Start
-
-| Assumption | Value |
-|------------|-------|
-| Monthly customer growth | 1-2 |
-| Churn | 8% |
-| ARPA | $90 |
-| Burn | $350 |
-
-| Month | Customers | MRR | Burn | Net | Cash |
-|-------|-----------|-----|------|-----|------|
-| 1 | 1 | $90 | $350 | -$260 | $2,740 |
-| 2 | 2 | $180 | $350 | -$170 | $2,570 |
-| 3 | 4 | $360 | $350 | +$10 | $2,580 |
-| 6 | 8 | $720 | $400 | +$320 | $3,550 |
-
-**Runway: 10+ months (slower but still viable)**
-
-### Scenario 4: Worst Case
-
-| Assumption | Value |
-|------------|-------|
-| Monthly customer growth | 0-1 |
-| Churn | 15% |
-| ARPA | $80 |
-| Burn | $350 |
-
-| Month | Customers | MRR | Burn | Net | Cash |
-|-------|-----------|-----|------|-----|------|
-| 1 | 1 | $80 | $350 | -$270 | $2,730 |
-| 2 | 1 | $80 | $350 | -$270 | $2,460 |
-| 3 | 2 | $160 | $350 | -$190 | $2,270 |
-| 6 | 3 | $240 | $350 | -$110 | $1,740 |
-
-**Runway: ~15 months - Need to pivot by Month 4 if this happens**
+**Minimum burn possible:** $0-50/month (just domain + minimal tools)
 
 ---
 
-## Cash Flow Monitoring
+## Revenue Impact on Runway
 
-### Weekly Cash Position
+### How Revenue Extends Runway
 
-| Week | Starting | Inflows | Outflows | Ending |
-|------|----------|---------|----------|--------|
-| 1 | $3,000 | $0 | $50 | $2,950 |
-| 2 | $2,950 | $90 | $50 | $2,990 |
-| 3 | $2,990 | $90 | $100 | $2,980 |
-| 4 | $2,980 | $90 | $145 | $2,925 |
+| MRR | Monthly Burn | Net Burn | Runway Multiplier |
+|-----|--------------|----------|-------------------|
+| $0 | $300 | -$300 | 1x |
+| $300 | $300 | $0 | Infinite (break-even) |
+| $600 | $350 | +$250 | Growing cash |
+| $1,000 | $400 | +$600 | Growing faster |
 
-### Monthly Cash Flow Summary
+### Revenue Milestones
+
+| Milestone | MRR | Effect |
+|-----------|-----|--------|
+| Cover infrastructure | $50 | Extends runway 15-20% |
+| Cover all fixed | $200 | Extends runway 60-70% |
+| Break-even | $350 | Infinite runway |
+| Profitable | $500+ | Building cash reserve |
+
+---
+
+## Monthly Financial Review
+
+### Template
+
+**Month: ________**
+
+| Category | Budgeted | Actual | Variance |
+|----------|----------|--------|----------|
+| Infrastructure | | | |
+| Tools | | | |
+| Marketing | | | |
+| Sales | | | |
+| Other | | | |
+| **Total Expenses** | | | |
+| **Revenue** | | | |
+| **Net Cash Flow** | | | |
+| **Ending Cash** | | | |
+| **Runway (months)** | | | |
+
+### Questions to Answer
+
+1. Did we stay within budget? If not, why?
+2. Is revenue growing as projected?
+3. Do we need to cut costs?
+4. When will we break even?
+5. Do we need to consider funding?
+
+---
+
+## Warning Thresholds
+
+### Runway Alerts
+
+| Runway | Status | Action |
+|--------|--------|--------|
+| >6 months | Green | Continue as planned |
+| 4-6 months | Yellow | Review costs, accelerate revenue |
+| 2-4 months | Orange | Cut non-essential, focus on revenue |
+| <2 months | Red | Emergency cost cuts, consider funding |
+
+### Cash Reserve Target
+
+**Minimum cash reserve:** 3 months of expenses
+**Target cash reserve:** 6 months of expenses
+
+---
+
+## Funding Decision Framework
+
+### When to Consider Funding
+
+- [ ] Proven unit economics (LTV:CAC >3:1)
+- [ ] Clear path to $10K+ MRR
+- [ ] Need capital to accelerate (not survive)
+- [ ] Market opportunity is time-sensitive
+
+### When NOT to Raise
+
+- [ ] Can reach profitability in <6 months
+- [ ] No clear use for additional capital
+- [ ] Haven't validated product-market fit
+- [ ] Would give up too much equity
+
+### Bootstrap vs Raise Decision Tree
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│ CASH FLOW - MONTH [X]                                              │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  STARTING CASH:                                      $3,000        │
-│                                                                    │
-│  INFLOWS                                                           │
-│  ────────                                                          │
-│  Subscription revenue                                $270          │
-│  Annual prepays                                      $0            │
-│  Other                                               $0            │
-│  ─────────────────────────────────────────────────────────         │
-│  Total Inflows                                       $270          │
-│                                                                    │
-│  OUTFLOWS                                                          │
-│  ────────                                                          │
-│  Infrastructure                                      $23           │
-│  Tools & software                                    $199          │
-│  Marketing                                           $75           │
-│  Variable costs                                      $48           │
-│  ─────────────────────────────────────────────────────────         │
-│  Total Outflows                                      $345          │
-│                                                                    │
-│  NET CASH FLOW:                                      -$75          │
-│  ENDING CASH:                                        $2,925        │
-│                                                                    │
-│  Runway at current burn: 8.5 months                                │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Burn Reduction Strategies
-
-### If Runway Gets Tight
-
-| Strategy | Monthly Savings | Impact |
-|----------|-----------------|--------|
-| Pause LinkedIn Navigator | $100 | Slower lead gen |
-| Reduce content tools | $50 | Slower SEO growth |
-| Downgrade analytics | $9 | Less visibility |
-| DIY accounting | $15 | More time spent |
-| **Total Possible** | **$174** | |
-
-**Minimum burn possible: ~$170/month**
-
-### Emergency Measures
-
-1. **Cut to essentials only:** Hosting + domain = $23/month
-2. **Pause all marketing spend:** Focus on existing pipeline
-3. **Accelerate annual prepays:** Offer steep discounts for cash
-4. **Invoice net-15:** Get paid faster
-
----
-
-## Revenue Triggers for Investment
-
-### When to Increase Spend
-
-| Milestone | Action | New Budget |
-|-----------|--------|------------|
-| $1,500 MRR | Add contractor help | +$500/month |
-| $3,000 MRR | Increase marketing | +$200/month |
-| $5,000 MRR | Consider part-time hire | +$2,000/month |
-| $10,000 MRR | Full-time salary possible | +$5,000/month |
-
-### Investment Priorities (in order)
-
-1. **First $500 available:** More marketing tools
-2. **Next $1,000:** Part-time support help
-3. **Next $2,000:** Part-time sales help
-4. **$5,000+:** First full-time hire
-
----
-
-## Runway Dashboard
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│ RUNWAY DASHBOARD - [Date]                                          │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  CURRENT POSITION                                                  │
-│  ────────────────                                                  │
-│  Cash on hand:            $2,925                                   │
-│  Monthly burn:            $345                                     │
-│  Monthly revenue:         $270                                     │
-│  Net burn:                $75                                      │
-│  Runway:                  39 months  ✓                             │
-│                                                                    │
-│  RUNWAY PROJECTION                                                 │
-│  ─────────────────                                                 │
-│  ████████████████████████████████████████ 39 months               │
-│  └─────────────────────────────────────────────────── Infinite    │
-│                  ▲                                                 │
-│           You are here                                             │
-│                                                                    │
-│  MILESTONES                                                        │
-│  ──────────                                                        │
-│  [x] Break-even (Month 2)                                          │
-│  [ ] $1,500 MRR (Month 3-4)                                        │
-│  [ ] $3,000 MRR (Month 5-6)                                        │
-│  [ ] $5,000 MRR (Month 8-10)                                       │
-│                                                                    │
-│  ALERTS                                                            │
-│  ──────                                                            │
-│  ✓ No alerts - runway healthy                                      │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
+Can you survive 6+ months on current cash?
+├── Yes → Bootstrap unless growth opportunity is huge
+└── No →
+    ├── Can you cut costs to extend runway? → Try that first
+    └── Is the business working (customers, revenue)?
+        ├── Yes → Raise if needed
+        └── No → Pivot or shutdown, don't raise
 ```
 
 ---
 
-## Runway Alerts
+## Emergency Budget
 
-### Warning Thresholds
+### If You Need to Survive on $100/month
 
-| Alert Level | Condition | Action |
-|-------------|-----------|--------|
-| **Green** | Runway >6 months | Continue as planned |
-| **Yellow** | Runway 3-6 months | Reduce discretionary spend |
-| **Orange** | Runway 2-3 months | Cut all non-essential costs |
-| **Red** | Runway <2 months | Emergency mode |
+| Item | Cost | Notes |
+|------|------|-------|
+| Domain | $1 | Keep the domain |
+| Vercel Hobby | $0 | Free tier |
+| Supabase Free | $0 | Free tier |
+| Everything else | $0 | Pure hustle |
+| Stripe fees | ~$10 | On minimal revenue |
+| Buffer | $89 | For emergencies |
+| **Total** | **$100** | |
 
-### Emergency Protocol
+**What you give up:**
+- LinkedIn prospecting tools (use free)
+- Premium features of any tool
+- Comfort and convenience
 
-If runway <2 months:
-1. Cut all non-essential expenses immediately
-2. Push hard for annual prepays
-3. Consider bridge funding (friends, family)
-4. Evaluate pivot or shutdown
-
----
-
-*Next artifact: 04-finance-metrics.md*
+**What you keep:**
+- Working product
+- Ability to acquire customers
+- Time to figure it out

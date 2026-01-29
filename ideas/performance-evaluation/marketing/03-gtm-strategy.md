@@ -1,282 +1,177 @@
-# Go-To-Market Strategy
+# Go-to-Market Strategy
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** The action plan for getting TeamPulse in front of customers. Focuses on 2 channels max.
+>
+> **Fits in:** Executes on ICP (01) and Positioning (02). Drives LinkedIn Outreach (04) and content calendar.
 
----
+## GTM Phase: Discovery/Validation
 
-## GTM Overview
+*Months 1-3: Validate ICP, messaging, and willingness to pay before scaling*
 
-### Launch Strategy: Founder-Led Sales + Content Flywheel
+## Channel Strategy (Pick 2 Max)
 
-**Phase 1 (Months 1-2): Validation**
-- Manual LinkedIn outreach to 100 target prospects
-- 20 discovery calls to validate ICP and messaging
-- 5 beta customers (free or heavily discounted)
+### Primary Channel: LinkedIn Outbound
 
-**Phase 2 (Months 3-4): Early Revenue**
-- Scale LinkedIn outreach to 50 connections/week
-- Launch landing page with SEO-optimized content
-- Convert 15 companies at $6-8 PEPM
-- Product Hunt soft launch
+**Why this channel:**
+- ICP (engineering managers, HR leaders) is highly active on LinkedIn
+- Can reach decision-makers directly (no gatekeepers)
+- Low cost ($50/month for Premium/Sales Nav)
+- Fast feedback loop - know within 1 week if messaging resonates
+- Warm outreach (connection + value) outperforms cold email for B2B SaaS
 
-**Phase 3 (Months 5-6): Scale**
-- Product Hunt featured launch
-- Content marketing hitting organic traffic
-- Referral program for existing customers
-- Target: 30-50 paying customers, $3-5K MRR
+**Weekly time investment:** 5-6 hours/week
+- 1 hour: Finding and qualifying prospects (Monday)
+- 2 hours: Sending personalized connection requests (Tuesday/Wednesday)
+- 1 hour: Following up with new connections (Thursday)
+- 1 hour: Engaging with ICP content (daily, 15 min)
+- 1 hour: Creating/posting content (Friday)
 
----
+**Key tactics:**
+1. **Targeted connection requests:** 25-50/week to engineering managers and HR leads at 10-50 person companies, personalized with company/role context
+2. **Value-first follow-ups:** Share useful content (review templates, manager guides) before any pitch
+3. **Content posting:** 3x/week posts about performance review tips, first-time manager challenges, template giveaways
+4. **Comment engagement:** 10-20 comments/week on ICP posts and influencer content (Lara Hogan, Julie Zhuo, etc.)
 
-## Channel Prioritization
+**Success metric:**
+- Week 1-2: 30%+ connection accept rate
+- Week 3-4: 15%+ reply rate on follow-up messages
+- Month 1: 5+ discovery calls booked
+- Month 2: 2+ trial signups from LinkedIn
+- Month 3: 1+ paying customer from LinkedIn
 
-### Tier 1: Primary Channels (80% of effort)
+**When to scale:** Double investment when hitting 20%+ reply rate and 10+ calls/month
+**When to abandon:** <10% accept rate after 100 requests, <5% reply rate after 50 conversations
 
-#### 1. LinkedIn Outbound (40% of effort)
+### Secondary Channel: Content/SEO (Long-term)
 
-**Why:** ICPs are active on LinkedIn, decision-makers reachable directly, zero cost
+**Why this channel:**
+- "Performance review template" = 8,000+ monthly searches
+- ICPs actively searching for review help during Q1/Q4 cycles
+- Compounds over time - content from Month 1 drives leads in Month 6
+- Establishes authority and trust before sales conversations
 
-**Target Volume:**
-- Week 1-4: 25 connections/day (100/week)
-- Week 5-8: 40 connections/day (150/week)
-- Ongoing: 50 connections/day (200/week)
+**Weekly time investment:** 2-3 hours/week
+- 1 hour: Writing one blog post or template
+- 1 hour: Optimizing/updating existing content
+- 30 min: Sharing content across channels
 
-**Target Metrics:**
-- Connection acceptance rate: 30%+
-- Reply rate: 10%+
-- Call booking rate: 3-5% of connections
+**Key tactics:**
+1. **Template library:** Create 5-10 free review templates (Engineering, Sales, Manager levels) as lead magnets
+2. **Blog content:** Weekly posts targeting "performance review" + modifier keywords
+3. **Comparison pages:** "TeamPulse vs Lattice" and "TeamPulse vs Small Improvements" pages
+4. **Landing page SEO:** Optimize for "performance review software small business"
 
-**Execution:**
-1. Build prospect list using LinkedIn Sales Navigator
-2. Send personalized connection requests
-3. Follow up with value-first DM sequence
-4. Book discovery calls
-5. Convert to trial/demo
+**Target keywords (by intent):**
+| Keyword | Monthly Volume | Intent | Priority |
+|---------|----------------|--------|----------|
+| performance review template | 8,100 | Informational | High |
+| employee self evaluation | 4,400 | Informational | High |
+| 360 feedback template | 2,900 | Informational | Medium |
+| lattice alternative | 720 | Commercial | High |
+| performance review software small business | 320 | Commercial | High |
+| how to give performance review | 2,400 | Informational | Medium |
 
-**See:** `04-linkedin-outreach.md` for templates and sequences
+**Success metric:**
+- Month 1: 5 template downloads from organic
+- Month 3: 500 monthly organic visitors
+- Month 6: 50 monthly organic visitors to commercial pages
+- Month 6: 2+ trial signups from organic/month
 
-#### 2. SEO Content (40% of effort)
+**When to scale:** Hire writer when organic drives 10+ qualified leads/month
+**When to abandon:** Zero traction after 6 months of consistent publishing
 
-**Why:** Performance review searches are high-intent, content compounds over time
+## 30-Day Launch Plan
 
-**Target Keywords:**
-| Keyword | Monthly Volume | Difficulty | Intent |
-|---------|---------------|------------|--------|
-| "performance review template" | 12,100 | Medium | High |
-| "self evaluation examples" | 8,100 | Medium | High |
-| "peer feedback template" | 1,900 | Low | High |
-| "performance review software small business" | 720 | Low | Very High |
-| "360 feedback template" | 2,400 | Medium | High |
+### Week 1: Foundation
+- [ ] Optimize LinkedIn profile for ICP (headline: "Helping small teams run 360-reviews without enterprise pricing")
+- [ ] Set up LinkedIn Sales Navigator (or Premium) - $50/month
+- [ ] Build target list: 100 engineering managers at 10-50 person tech companies
+- [ ] Build target list: 50 HR leads at 20-100 person companies
+- [ ] Draft 3 connection request variations (see LinkedIn Outreach artifact)
+- [ ] Draft follow-up sequence (4 messages)
+- [ ] Create simple landing page with waitlist signup
+- [ ] Set up Calendly for discovery call booking
 
-**Content Calendar (Month 1-3):**
+### Week 2: Outreach Begins
+- [ ] Send 25 personalized connection requests (Mon-Wed)
+- [ ] Post first LinkedIn content: "3 questions to ask in every performance review"
+- [ ] Comment on 15 ICP posts
+- [ ] Follow up with accepted connections (value-first)
+- [ ] Book first 3 discovery calls
+- [ ] Refine messaging based on initial responses
+- [ ] Create first free template: "Engineering Performance Review Template"
 
-| Week | Content Type | Title | Target Keyword |
-|------|--------------|-------|----------------|
-| 1 | Template | Engineering Performance Review Template | performance review template |
-| 2 | Guide | How to Write a Self-Review (With Examples) | self evaluation examples |
-| 3 | Template | Peer Feedback Template for Small Teams | peer feedback template |
-| 4 | Comparison | Best Performance Review Software for Small Teams | performance review software small business |
-| 5 | Guide | 360-Degree Feedback: A Guide for Managers | 360 feedback template |
-| 6 | Template | Manager Performance Review Template | manager performance review |
-| 7 | Guide | When to Formalize Your Review Process | performance management startups |
-| 8 | Comparison | Lattice vs Alternatives for Small Teams | lattice alternatives |
+### Week 3: Iterate
+- [ ] Send 30 connection requests (targeting what's working)
+- [ ] A/B test connection request messages
+- [ ] Post 3x on LinkedIn (learnings from discovery calls)
+- [ ] Have 5-7 discovery calls
+- [ ] Qualify leads using criteria from Sales artifacts
+- [ ] Update landing page copy based on call feedback
+- [ ] Create second free template: "Manager Self-Review Template"
+- [ ] Start comparison blog post: "TeamPulse vs Lattice"
 
-**Distribution:**
-- Publish on company blog
-- Cross-post summary on LinkedIn
-- Submit templates to relevant newsletters
-- Answer Quora/Reddit questions linking to content
-
-### Tier 2: Secondary Channels (15% of effort)
-
-#### 3. Product Hunt Launch
-
-**Why:** One-time traffic spike, social proof, early adopters
-
-**Timing:** Month 4-5 (after 10+ paying customers and testimonials)
-
-**Preparation:**
-- [ ] 15+ upvotes lined up from existing network
-- [ ] 3+ customer testimonials ready
-- [ ] Launch video (60 seconds)
-- [ ] Founder story write-up
-- [ ] Email list for launch day notification
-
-**Target:** Top 5 of the day, 200+ upvotes, 50 signups
-
-#### 4. Community Engagement
-
-**Why:** Build relationships with ICPs where they already hang out
-
-**Communities to engage:**
-- Rands Leadership Slack
-- Engineering Managers Slack
-- r/startups, r/smallbusiness
-- Hacker News (comment on relevant threads)
-- Indie Hackers
-
-**Rules:**
-- Provide value first, don't spam
-- Share templates and guides, not product pitches
-- Build reputation over 4-6 weeks before mentioning product
-
-### Tier 3: Future Channels (5% of effort)
-
-#### 5. Referral Program (Month 6+)
-
-**Incentive:** 1 month free for referrer and referee
-
-**Target:** 20% of new customers from referrals by month 9
-
-#### 6. Partnerships (Month 6+)
-
-**Potential partners:**
-- Payroll providers (Gusto, Rippling)
-- HR consultants serving SMBs
-- Startup accelerators (YC, Techstars)
-
----
-
-## Launch Timeline
-
-### Week 1-2: Foundation
-
-| Day | Task | Owner |
-|-----|------|-------|
-| 1-2 | Set up LinkedIn Sales Navigator | Marketing |
-| 3-4 | Build initial prospect list (200 prospects) | Marketing |
-| 5 | Create connection request templates | Marketing |
-| 6-7 | Set up landing page | Marketing |
-| 8-10 | Start outreach (25/day) | Marketing |
-| 11-14 | Write first 2 SEO articles | Marketing |
-
-### Week 3-4: Validate
-
-| Day | Task | Owner |
-|-----|------|-------|
-| 15-17 | Continue outreach, refine messaging | Marketing |
-| 18-20 | Book first 5 discovery calls | Sales |
-| 21-24 | Run discovery calls, capture insights | Sales |
-| 25-28 | Sign first 2-3 beta customers | Sales |
-
-### Week 5-8: Iterate & Scale
-
-| Week | Focus | Target |
-|------|-------|--------|
-| 5 | Increase outreach to 40/day | 10 discovery calls |
-| 6 | Publish 2 more articles | 100 organic visits |
-| 7 | Close first paying customers | 5 customers |
-| 8 | Prep Product Hunt materials | Launch page ready |
-
-### Week 9-12: Growth
-
-| Week | Focus | Target |
-|------|-------|--------|
-| 9 | 50 outreach/day | 15 customers |
-| 10 | Product Hunt launch | 200 signups |
-| 11 | Follow up on PH signups | 25 customers |
-| 12 | Referral program launch | 30 customers |
-
----
+### Week 4: Double Down or Pivot
+- [ ] Analyze Week 1-3 data:
+  - Connection accept rate: Target 30%+
+  - Reply rate: Target 15%+
+  - Call booking rate: Target 20%+ of conversations
+- [ ] Scale winning message variations 2x
+- [ ] Kill message variations with <10% reply rate
+- [ ] Post 3x on LinkedIn with top-performing themes
+- [ ] Have 7-10 discovery calls
+- [ ] Close first beta user or waitlist commitment
+- [ ] Document playbook: what worked, what didn't
+- [ ] Set Week 5-8 goals based on data
 
 ## Budget Allocation
 
-**Monthly Budget:** $250-300
+| Item | Monthly Cost | Expected Return |
+|------|--------------|-----------------|
+| LinkedIn Sales Navigator | $80 | 50+ quality connections, 10+ conversations |
+| Calendly Pro | $12 | Streamlined call booking |
+| Landing page (Carrd/Framer) | $10 | Waitlist capture, basic analytics |
+| Email (ConvertKit free tier) | $0 | Lead nurture, template delivery |
+| Domain + hosting | $15 | Basic web presence |
+| **Total** | $117 | 5-10 qualified leads/month |
 
-| Channel | Monthly Spend | Expected Return |
-|---------|--------------|-----------------|
-| LinkedIn Sales Navigator | $100 | 500 targeted prospects/month |
-| Content tools (Jasper, Surfer) | $75 | 4 optimized articles/month |
-| Email tools (Mailchimp/Loops) | $0-25 | Nurture sequences |
-| Design (Canva Pro) | $15 | Social graphics, templates |
-| Misc (domains, hosting) | $35-85 | Infrastructure |
+### Budget Scaling (When Validated)
+| Phase | Budget | Additions |
+|-------|--------|-----------|
+| Validation (Month 1-3) | $117/month | LinkedIn + basics |
+| Early Growth (Month 4-6) | $250/month | Add Notion/Airtable for CRM, upgrade email |
+| Growth (Month 7+) | $400/month | Add writer for content, LinkedIn ads test |
 
-**Total:** $250-300/month
+## Alternative Channels (Test Later)
 
----
+### Product Hunt Launch (Month 3-4)
+- One-time spike, good for early credibility
+- Requires working product with strong onboarding
+- Best for: initial user base, social proof, backlinks
 
-## Metrics & Goals
+### Cold Email (Month 4+)
+- Higher volume than LinkedIn but lower response rates
+- Requires email warmup and list building
+- Test when LinkedIn playbook is proven
 
-### Month 1-2 (Validation)
+### Podcast Guesting (Month 5+)
+- Target: Manager Tools, Supermanagers, Engineering Leadership podcasts
+- Good for authority building, long-term brand
+- Lower ROI than direct outreach initially
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| LinkedIn connections sent | 400 | - |
-| Connection acceptance rate | 30% | - |
-| Discovery calls booked | 20 | - |
-| Beta customers signed | 5 | - |
+### Community Participation (Ongoing)
+- Rands Leadership Slack, Engineering Managers Slack
+- Don't pitch - be helpful, share templates
+- Slow burn, good for organic referrals
 
-### Month 3-4 (Early Revenue)
+## Key Metrics to Track
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| LinkedIn connections sent | 600 | - |
-| Qualified leads generated | 30 | - |
-| Trial signups | 40 | - |
-| Paying customers | 15 | - |
-| MRR | $1,500 | - |
-
-### Month 5-6 (Scale)
-
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Monthly organic traffic | 500 | - |
-| Product Hunt upvotes | 200+ | - |
-| Trial signups | 100 | - |
-| Paying customers | 30-50 | - |
-| MRR | $3,000-5,000 | - |
-
----
-
-## Risk Mitigation
-
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| Low LinkedIn response rate | Medium | High | Test 5 different message variants, personalize heavily |
-| SEO content doesn't rank | Medium | Medium | Focus on long-tail keywords, build backlinks |
-| Product Hunt launch flops | Low | Medium | Line up 20+ upvotes, launch on optimal day (Tuesday/Wednesday) |
-| CAC too high | Medium | High | Double down on organic channels, cut paid experiments |
-
----
-
-## Key Decisions
-
-### Build vs. Buy
-
-| Tool | Build | Buy | Decision |
-|------|-------|-----|----------|
-| Landing page | Nuxt static | Framer/Webflow | Buy (faster iteration) |
-| Email sequences | Custom | Loops/Mailchimp | Buy ($25/month) |
-| CRM | Notion | HubSpot Free | Buy (free tier) |
-| Analytics | Plausible | Plausible/GA4 | Buy ($9/month) |
-
-### Launch Timing
-
-**Best time to launch:** Q4 (October-November)
-- Companies planning next year's budgets
-- Review cycles happening for year-end
-- "New year, new process" energy
-
-**Avoid:** December (holidays), August (summer)
-
----
-
-## Handoffs to Other Teams
-
-**To Product:**
-- Landing page requirements and messaging
-- Trial flow requirements
-- Feature requests from discovery calls
-
-**To Sales:**
-- Qualified lead criteria
-- Discovery call booking process
-- Lead source tracking
-
-**To Engineering:**
-- Analytics event tracking requirements
-- Landing page technical implementation
-- Email integration requirements
-
----
-
-*Next artifact: 04-linkedin-outreach.md*
+| Metric | Week 1-2 Target | Month 1 Target | Month 3 Target |
+|--------|-----------------|----------------|----------------|
+| Connection requests sent | 50 | 100 | 300 |
+| Accept rate | 25% | 30% | 35% |
+| Conversations started | 12 | 30 | 90 |
+| Reply rate | 10% | 15% | 20% |
+| Discovery calls booked | 3 | 8 | 25 |
+| Trial signups | 0 | 2 | 10 |
+| Paying customers | 0 | 0-1 | 3-5 |

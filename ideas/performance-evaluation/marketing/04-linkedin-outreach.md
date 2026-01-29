@@ -1,346 +1,263 @@
 # LinkedIn Outreach System
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Ready-to-use templates for LinkedIn prospecting. Copy-paste and personalize.
+>
+> **Fits in:** Implements GTM Strategy (03) primary channel. Works with Positioning (02) messaging.
 
----
+## Target Profile
 
-## Outreach Strategy
-
-### Target Personas (Priority Order)
-
-1. **Engineering Managers** at 20-50 person startups
-2. **People/HR Managers** at 20-75 person companies
-3. **Product Managers** with direct reports
-4. **Operations Leads** at professional services firms
-5. **Founders/CEOs** at 15-30 person companies
-
-### Search Filters (Sales Navigator)
-
-**Search 1: Engineering Managers**
+### Search Query (Sales Navigator)
 ```
-Title: "Engineering Manager" OR "VP Engineering" OR "Head of Engineering"
-Company headcount: 11-50
-Seniority: Manager, Director
-Industry: Software, Technology, SaaS
-Geography: United States, Canada, United Kingdom
+Title: (Engineering Manager OR Team Lead OR VP Engineering OR Head of Engineering OR HR Manager OR People Operations OR Head of People)
+AND Company headcount: 11-50
+AND Industry: (Computer Software OR Internet OR Information Technology)
+AND Geography: United States
 ```
 
-**Search 2: People/HR Leads**
-```
-Title: "HR Manager" OR "People Operations" OR "Head of People"
-Company headcount: 20-100
-Seniority: Manager, Director
-Geography: United States, Canada, United Kingdom
-```
+### Filters
+- **Title:** Engineering Manager, Team Lead, VP of Engineering, Head of Engineering, HR Manager, People Operations Lead, Head of People
+- **Location:** United States (expand to UK, Canada, Australia after US validation)
+- **Company Size:** 11-50 employees (sweet spot: 15-30)
+- **Industry:** Software, SaaS, Technology, Professional Services, Agencies
+- **Posted in last 30 days:** Yes (active users)
+- **Talking about:** performance reviews, team growth, management, hiring
 
-**Search 3: Startup Leaders**
-```
-Title: "CEO" OR "Founder" OR "COO"
-Company headcount: 11-50
-Company type: Privately held
-Industry: Technology, Professional Services
-Geography: United States
-```
-
----
+### Red Flags (Skip These)
+- Company just raised large round (will buy Lattice)
+- Already posting about Lattice/15Five (locked into enterprise)
+- Title includes "Chief" or "Director" at 100+ employee company (out of ICP)
+- No activity in 90+ days (inactive account)
 
 ## Connection Request Templates
 
-### Template 1: Mutual Interest (Highest Acceptance)
+### Template A: Mutual Interest (Best for Active Posters)
+```
+Hey [First Name] - saw your post about [specific topic they posted about]. Really resonated with me, especially [specific point].
 
-> Hi [First Name], I noticed we're both in the [industry/role] space. I'm working on something for managers who've outgrown spreadsheets for performance reviews - would love to connect and hear how you handle reviews at [Company].
+Building in the performance management space and would love to connect with other folks thinking about this.
+```
+*Character count: ~250 (under 300 limit)*
 
-**When to use:** Cold outreach to any ICP
-**Acceptance rate:** 35-40%
+### Template B: Company Context (Best for Silent Profiles)
+```
+Hi [First Name] - noticed you're leading [engineering/HR/people] at [Company].
 
-### Template 2: Content Hook
+Working with similar-sized teams on their review processes - would be great to connect!
+```
+*Character count: ~180*
 
-> Hi [First Name], saw your post on [topic]. Great insights on [specific point]. I'm building a performance review tool for small teams - would love to connect and share some templates that might be useful.
+### Template C: Role Transition (Best for Recently Promoted)
+```
+[First Name] - congrats on the [new role/promotion] at [Company]!
 
-**When to use:** After they post about management/team challenges
-**Acceptance rate:** 40-50%
+First review cycle as a manager can be tricky. Happy to share what's worked for other first-time managers if helpful. Let's connect!
+```
+*Character count: ~220*
 
-### Template 3: Company Trigger
+### Template D: Content-Led (Use with Template Downloads)
+```
+Hi [First Name] - just published a [performance review template/manager guide] that teams like [Company] have found useful.
 
-> Hi [First Name], congrats on [Company]'s recent growth! As teams scale past 20 people, reviews get tricky. Working on a tool to help with that - happy to connect.
+Happy to share if you're interested - no pitch, just trying to help. Connect?
+```
+*Character count: ~200*
 
-**When to use:** Companies that recently raised, hired, or announced growth
-**Acceptance rate:** 30-35%
+## Follow-Up Sequence
 
-### Template 4: Referral/Warm Intro
-
-> Hi [First Name], [Mutual Connection] mentioned you've been thinking about formalizing your review process. I'm building something that might help - would love to connect.
-
-**When to use:** When you have any connection to reference
-**Acceptance rate:** 50-60%
-
-### Template 5: Direct Value Offer
-
-> Hi [First Name], I put together a peer feedback template specifically for [engineering/product] teams. Happy to share it if you're interested - no strings attached. [Link optional]
-
-**When to use:** When you have a relevant template/resource
-**Acceptance rate:** 35-40%
-
----
-
-## Follow-Up Message Sequences
-
-### Sequence A: Standard Follow-Up (Post-Connection)
-
-**Message 1** (Day 0 - After Accept)
-> Thanks for connecting, [First Name]!
-
-> Quick question - how does [Company] handle performance reviews currently? Curious if you've run into the spreadsheet chaos most small teams deal with.
-
-**Message 2** (Day 3 - If No Reply)
-> No worries if reviews aren't top of mind right now.
-
-> I put together a free engineering performance review template that a lot of managers have found useful. Want me to send it over?
-
-**Message 3** (Day 7 - If No Reply)
-> Last ping - I help small teams run structured reviews without the Lattice price tag ($11/employee).
-
-> If you ever want to chat about what you're doing for reviews, happy to share some ideas. Either way, good luck with everything at [Company]!
-
-### Sequence B: High-Intent Follow-Up (Engaged Prospect)
-
-**Message 1** (Day 0 - After Positive Reply)
-> Great to hear! Most managers I talk to are either stuck with spreadsheets or sticker-shocked by Lattice.
-
-> What's your biggest pain point with your current process? I'd love to share how we approach [specific pain] if it'd be helpful.
-
-**Message 2** (Day 1 - If Continues Engaging)
-> Makes total sense. Would you be open to a quick 15-min call to show you what we're building?
-
-> I can also share some templates regardless of whether the tool is a fit.
-
-> [Calendly link]
-
-**Message 3** (Day 3 - If Books Call)
-> Looking forward to chatting on [date/time]!
-
-> To make our time valuable, I'll plan to show you:
-> 1. How self-reviews + gap analysis works
-> 2. How peer feedback gets aggregated
-> 3. Templates we built for [their role/industry]
-
-> Anything specific you want to cover?
-
-### Sequence C: Nurture Sequence (Not Ready Now)
-
-**Message 1** (Day 0 - After "Not Now" Reply)
-> Totally understand - timing is everything.
-
-> Mind if I check back in when you're closer to your next review cycle? When does that usually happen?
-
-**Message 2** (30 Days Later)
-> Hey [First Name], hope things are going well at [Company]!
-
-> Circling back - is performance review season coming up? Happy to share some resources or hop on a quick call if it'd be helpful.
-
-**Message 3** (60 Days Later - If No Reply)
-> Hey! Just published a guide on running 360 reviews for small teams. Thought of you - here's the link if you're interested: [link]
-
-> No pressure, just wanted to share something useful.
-
----
-
-## Response Handling
-
-### Positive Responses
-
-**"Yes, tell me more"**
-> Awesome! Quick overview: we help small teams run proper 360 reviews (self-review, peer feedback, manager evaluation) without the enterprise price tag.
-
-> Most managers save ~30 min per review compared to spreadsheets, and your employees actually get to see their own feedback.
-
-> Would a quick 15-min call make sense? I can show you the tool and share some templates either way.
-> [Calendly link]
-
-**"What does it cost?"**
-> Great question! We're at $6-8 per employee/month - about 50% less than Lattice.
-
-> For a 25-person team, that's ~$150-200/month vs $275-400 for enterprise tools.
-
-> The big difference is we focus on what small teams actually need: self-reviews, peer feedback, and goal tracking. No bloated features you won't use.
-
-> Want me to show you how it works? [Calendly link]
-
-**"We use Lattice/15Five"**
-> Nice - both solid tools! How's it working for you?
-
-> Most teams I talk to who use Lattice either love it or feel like they're paying for features they don't need.
-
-> If it's working well, I'd actually love to hear what you like about it - always learning. And if there's ever anything frustrating, happy to chat about alternatives.
-
-### Neutral Responses
-
-**"Maybe later"**
-> Totally get it. When's your next review cycle? I can ping you a month before to see if timing is better.
-
-> In the meantime, happy to send over some free templates if you want.
-
-**"Send more info"**
-> Sure! Here's the quick version:
-
-> **What it does:** 360-degree reviews with self-review, peer feedback, and gap analysis
-> **Why it's different:** Enterprise features at $6-8/employee (vs $11+ for Lattice)
-> **Best for:** Teams of 15-50 who've outgrown spreadsheets
-
-> Here's our site: [link]
-
-> Worth a 15-min call to show you how it works? [Calendly link]
-
-### Negative Responses
-
-**"Not interested"**
-> No problem - appreciate you letting me know. Good luck with everything at [Company]!
-
-**"We don't do formal reviews"**
-> Totally fair! Out of curiosity, how do you handle feedback and growth conversations?
-
-> Some teams skip formal reviews and do more frequent check-ins instead. Others just haven't formalized yet.
-
-> Either way, no pitch - just curious how different teams approach it.
-
-**"Too expensive" / "No budget"**
-> Understand. At $6/employee, we're actually the most affordable option with self-reviews and peer feedback included.
-
-> For context, that's $90/month for a 15-person team - probably less than one team lunch.
-
-> But if budget is tight, happy to share some free templates that might help in the meantime.
-
----
-
-## Daily Outreach Routine
-
-### Morning (15-20 minutes)
-
-1. **Review responses** from previous day
-2. **Respond to engaged prospects** (priority)
-3. **Send follow-up messages** (Day 3 and Day 7 sequences)
-
-### Midday (20-30 minutes)
-
-4. **Send 25 new connection requests** (with personalized notes)
-5. **Engage with 5 prospect posts** (comment, like)
-6. **Post your own content** (1-2x per week)
-
-### Evening (10 minutes)
-
-7. **Review connection accepts**
-8. **Send initial messages** to new connections
-9. **Update tracking spreadsheet**
-
----
-
-## Tracking & Metrics
-
-### Weekly Metrics to Track
-
-| Metric | Target | Week 1 | Week 2 | Week 3 | Week 4 |
-|--------|--------|--------|--------|--------|--------|
-| Connection requests sent | 100+ | - | - | - | - |
-| Connections accepted | 30+ | - | - | - | - |
-| Conversations started | 20+ | - | - | - | - |
-| Positive replies | 10+ | - | - | - | - |
-| Calls booked | 5+ | - | - | - | - |
-| Demos completed | 4+ | - | - | - | - |
-
-### Tracking Spreadsheet Template
-
-| Name | Company | Title | Size | Connection Date | Status | Last Message | Next Action | Notes |
-|------|---------|-------|------|-----------------|--------|--------------|-------------|-------|
-| John Smith | Acme Inc | Eng Manager | 35 | Jan 15 | Replied | Jan 17 | Book call | Uses spreadsheets now |
-
-### Conversion Funnel
+### Message 1 (Day 1 after accept): Value-First
+**Goal:** Establish goodwill, learn about their situation
 
 ```
-Connection Requests: 100
-     |
-     v (30% accept)
-Connections: 30
-     |
-     v (50% reply to DM)
-Conversations: 15
-     |
-     v (30% interested)
-Interested: 5
-     |
-     v (60% book call)
-Calls Booked: 3
-     |
-     v (50% show up)
-Calls Completed: 1.5
-     |
-     v (30% convert)
-Customers: 0.5
+Hey [First Name], thanks for connecting!
+
+Noticed [Company] is at that interesting 15-30 person stage where processes start to matter more. Curious - how are you handling performance reviews right now?
+
+No pitch here, genuinely curious since I'm building in this space and trying to learn from folks in the trenches.
 ```
 
-**100 connections = 0.5 customers** (need 200 connections/month for 1 customer/month)
+**Alternative if they posted recently:**
+```
+Hey [First Name], thanks for connecting!
 
----
+Loved your recent post about [topic]. [Specific comment showing you read it].
 
-## Content to Support Outreach
+Quick question - how are you currently handling performance reviews at [Company]? Always curious how growing teams approach this.
+```
 
-### LinkedIn Post Templates
+### Message 2 (Day 3-4): Soft Value Add
+**Goal:** Share something useful based on their response (or probe if no response)
 
-**Post 1: Pain Point**
-> "Spreadsheets for performance reviews" is the startup equivalent of using Post-it notes for project management.
+**If they responded about current process:**
+```
+That makes sense - [acknowledge their current approach].
 
-> It works until it doesn't.
+Since you mentioned [their pain point], thought you might find this useful: [share relevant template or tip].
 
-> Then you're searching for last quarter's feedback across 4 different folders, chasing people for peer reviews, and hoping you remember what you said 6 months ago.
+[Specific insight based on what they shared].
+```
 
-> At some point, every growing team needs to level up. The question is: when?
+**If no response:**
+```
+Hey [First Name] - know you're probably slammed.
 
-**Post 2: Hot Take**
-> Hot take: Most performance review software is built for HR, not managers.
+Quick thought: created this [engineering review template / manager self-review guide] that similar teams have found useful. Happy to share if helpful.
 
-> That's why it costs $11/employee, takes 6 weeks to implement, and requires "training."
+Either way, hope [Company] is crushing it!
+```
 
-> What if reviews were built for the people actually doing them?
+### Message 3 (Day 7-8): Direct Offer
+**Goal:** Propose a conversation (only if engagement signals exist)
 
-**Post 3: Value Share**
-> Free template: Engineering Performance Review (Junior/Mid/Senior)
+**If positive signals (replied, engaged with content):**
+```
+[First Name] - based on our chat, sounds like [restate their pain point].
 
-> Includes:
-> - Technical competencies by level
-> - Self-review questions
-> - Manager evaluation criteria
-> - Gap analysis framework
+Would you be open to a quick 15-min call to see if what I'm building could help? I can show you how [similar company type] handles [specific challenge they mentioned].
 
-> Drop a comment and I'll DM you the link.
+Here's my calendar if easier: [Calendly link]
 
-### Resource to Share
+If timing's bad, no worries - happy to stay in touch.
+```
 
-- Free Engineering Performance Review Template (Google Doc)
-- Self-Review Question Bank (15 questions with examples)
-- Peer Feedback Template (5 questions, anonymization tips)
-- Review Cycle Calendar Template
+**If lukewarm signals:**
+```
+Hey [First Name] - circling back on review processes.
 
----
+Curious: what would make your next review cycle less painful? Trying to figure out what matters most to teams like yours.
 
-## A/B Tests to Run
+If you've got 15 min, I'd love to learn more about how you're thinking about this: [Calendly link]
+```
 
-### Week 1-2: Test Connection Messages
+### Message 4 (Day 14-15): Breakup
+**Goal:** Close the loop respectfully, leave door open
 
-| Variant | Message Approach | Test Size |
-|---------|-----------------|-----------|
-| A | Mutual interest | 50 |
-| B | Direct value offer | 50 |
+```
+Hey [First Name] - I'll stop filling your inbox!
 
-**Winner:** Use for Weeks 3-4
+If performance reviews become a priority at [Company], I'm here. In the meantime, here's a free review template that might be useful whenever you need it: [link]
 
-### Week 3-4: Test Follow-Up Sequences
+Best of luck with everything - [Company] looks like it's doing great things!
+```
 
-| Variant | Approach | Test Size |
-|---------|----------|-----------|
-| A | 3-message sequence | 30 |
-| B | 5-message sequence | 30 |
+## Handling Responses
 
-**Winner:** Use going forward
+### Positive Response: "Tell me more"
+```
+Great! Here's the quick version:
 
----
+I'm building TeamPulse - 360-degree performance reviews (self-review, peer feedback, goal tracking) for teams of 10-50 people. Basically Lattice features at half the price, with 15-minute setup.
 
-*Next artifact: 05-landing-page.md*
+Would love to show you a quick demo or just chat about what you're dealing with now. Got 15 min this week?
+
+[Calendly link]
+```
+
+### Interested but Timing: "Not now, maybe later"
+```
+Totally understand - no rush at all.
+
+When's your next review cycle? Happy to check back in a few weeks before things get hectic.
+
+In the meantime, I'll send over our review template - might be useful for planning.
+```
+
+### Objection: "We use Lattice/15Five"
+```
+Nice - those are solid tools for bigger teams.
+
+Curious: do you use all the features? I hear from a lot of 15-30 person teams that they're paying for engagement surveys and OKR platforms they never touch.
+
+If you ever want to compare, happy to chat. But if Lattice is working well, stick with it!
+```
+
+### Objection: "We just use spreadsheets"
+```
+Spreadsheets totally work! Especially at smaller scale.
+
+The pain usually hits around 15+ people when tracking reviews across quarters gets messy. If you get to that point and want to upgrade, happy to show you what a lightweight alternative looks like.
+
+For now, here's a review template that might make your spreadsheet life easier: [link]
+```
+
+### Objection: "Not my decision"
+```
+Got it - who handles review process decisions at [Company]? Happy to connect with them directly if you think it'd be relevant.
+
+Or feel free to forward this along: [one-liner about TeamPulse]
+```
+
+### No Response After Sequence
+Add to "future follow-up" list. Re-engage in 2-3 months with:
+- New content share
+- Product update
+- Before their review cycle (Q4/Q1)
+
+## Content Themes for LinkedIn Posts
+
+### 1. Behind-the-Scenes (Building in Public)
+- "Here's what 20 conversations with engineering managers taught me about reviews"
+- "Why I'm building a performance review tool (personal story)"
+- "This week I talked to 8 HR leaders. Here's what surprised me."
+
+### 2. Customer Insights
+- "The #1 thing first-time managers get wrong about reviews"
+- "3 questions every employee wishes their manager would ask"
+- "Why your top performers hate your review process"
+
+### 3. Contrarian Takes
+- "Hot take: Annual reviews are dead. Here's what's replacing them."
+- "Your spreadsheet review process isn't broken - but here's when it will be"
+- "Unpopular opinion: Most performance review software is overkill for small teams"
+
+### 4. Data/Templates (Lead Magnets)
+- "Here's the exact template I use for engineering reviews (free download)"
+- "80% self-review completion rate. Here's how."
+- "I analyzed 50 review processes. The best ones all had these 3 things."
+
+### 5. Questions (Engagement Bait)
+- "Managers: What's your biggest frustration with performance reviews?"
+- "Engineers: What would make performance reviews actually useful?"
+- "HR folks: How do you handle review consistency across managers?"
+
+## Weekly Activity Targets
+
+| Activity | Target | Time Required |
+|----------|--------|---------------|
+| Connection requests sent | 25-50 | 2 hours |
+| Follow-ups sent | 15-30 | 1 hour |
+| Posts published | 3-5 | 1.5 hours |
+| Comments on ICP posts | 10-20 | 1 hour |
+| DM conversations | 10-15 | 30 min |
+| **Total** | | **6 hours** |
+
+## Tracking Spreadsheet
+
+Track these weekly:
+
+| Week | Requests Sent | Accepts | Accept Rate | Convos Started | Replies | Reply Rate | Calls Booked |
+|------|---------------|---------|-------------|----------------|---------|------------|--------------|
+| 1 | | | | | | | |
+| 2 | | | | | | | |
+| 3 | | | | | | | |
+| 4 | | | | | | | |
+
+**Benchmarks:**
+- Accept rate: 25-35% is good, 40%+ is excellent
+- Reply rate: 15-25% is good, 30%+ is excellent
+- Call booking rate: 20-30% of conversations is good
+
+## Pro Tips
+
+1. **Personalize the first line:** Always reference something specific about them (post, company, role change). Generic requests get ignored.
+
+2. **Send requests Tuesday-Thursday:** Highest acceptance rates mid-week, 9am-11am and 2pm-4pm.
+
+3. **Don't pitch in connection requests:** The 300-character limit isn't for your sales pitch. Build the relationship first.
+
+4. **Follow before connecting:** Following first shows genuine interest and can increase accept rates.
+
+5. **Engage with their content first:** Like/comment on their posts before connecting. Warm leads convert better.
+
+6. **Match their energy:** If they're casual, be casual. If they're formal, be professional. Mirror their communication style.
+
+7. **Track everything:** What messages get responses? What doesn't? Iterate weekly based on data.

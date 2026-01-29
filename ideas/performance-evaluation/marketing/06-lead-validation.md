@@ -1,367 +1,317 @@
 # Lead Validation Tactics
 
-*Generated for: Performance Evaluation Tool*
+> **Purpose:** Tests whether your ICP and messaging are right before scaling. Fail fast, learn fast.
+>
+> **Fits in:** Validates ICP (01) and Positioning (02) assumptions. Feeds learnings back to update all artifacts.
 
----
+## Validation Goals
 
-## Validation Framework
+### Hypothesis to Test
 
-### The Goal
+**Primary Hypothesis:**
+Engineering managers and HR leaders at 10-50 person companies will pay $6-8 per employee/month for performance review software that includes self-review, peer feedback, and gap analysis - features currently only available at $11+ PEPM enterprise tools.
 
-Before writing code, validate:
-1. **Problem exists** - People actually struggle with performance reviews
-2. **Problem is painful enough** - They'll pay to solve it
-3. **Our solution resonates** - Self-review + peer feedback + affordable pricing hits
+**Secondary Hypotheses:**
+1. First-time managers feel more pain than experienced managers (ICP refinement)
+2. Q4/Q1 review season creates urgency that drives faster purchase decisions
+3. "Self-review with gap analysis" resonates more than "360-degree feedback" as positioning
+4. Engineering managers are easier to convert than HR generalists (channel efficiency)
 
-### Validation Stages
+### Success Criteria
 
-```
-Stage 1: Problem Validation (Week 1-2)
-    └─> 10 discovery calls
-    └─> Goal: Confirm pain points, learn current solutions
+| Signal | Pass Threshold | What It Means |
+|--------|----------------|---------------|
+| LinkedIn reply rate | >20% | Messaging resonates with ICP |
+| Discovery call booking | >25% of conversations | Problem is real and urgent |
+| "I'd pay for this" | 6+ out of 10 calls | Willingness to pay validated |
+| Unprompted referrals | 2+ names given per 10 calls | Strong word-of-mouth potential |
+| Trial signups | 10+ in first month | Product-channel fit |
+| Trial-to-paid | 25%+ conversion | Value prop validated |
 
-Stage 2: Solution Validation (Week 3-4)
-    └─> 10 solution interviews
-    └─> Goal: Test feature set, pricing reaction
+### Fail Criteria
 
-Stage 3: Commitment Validation (Week 5-6)
-    └─> 5 beta customers
-    └─> Goal: Get usage, not just words
+| Signal | Fail Threshold | Action |
+|--------|----------------|--------|
+| LinkedIn reply rate | <10% after 50 messages | Pivot messaging or ICP |
+| Discovery calls | <3 booked after 30 conversations | ICP isn't urgent enough |
+| "Interesting, but..." | 7+ out of 10 calls | Problem isn't painful enough |
+| No referrals | 0 names after 10 calls | Not a "must-have" product |
+| Trial signups | <3 in first month | Landing page or channel broken |
+| Trial-to-paid | <15% conversion | Pricing or product issue |
 
-Stage 4: Revenue Validation (Week 7-8)
-    └─> 5 paying customers
-    └─> Goal: People pay real money
-```
+## Unified Customer Conversation Framework
 
----
+*Core questions used across Marketing validation, Product interviews, and Sales discovery*
 
-## Stage 1: Problem Validation
+### Foundation Questions (All Conversations)
 
-### Discovery Call Goals
-
-- Confirm ICP characteristics
-- Understand current process deeply
-- Identify pain points and workarounds
-- Learn what they've tried before
-
-### Questions to Ask
-
-**Current State:**
-1. "Walk me through how you do performance reviews today."
-2. "What tools do you use? (Spreadsheets, existing software, nothing?)"
-3. "How often do you do reviews? Quarterly? Annually?"
-4. "How many people do you review directly?"
+**1. Current State:**
+"Walk me through the last time you ran performance reviews. What did that process look like?"
 
-**Pain Points:**
-5. "What's the most frustrating part of your current process?"
-6. "How much time do you spend on reviews per cycle?"
-7. "What happens when you need to reference a review from 6 months ago?"
-8. "Do your employees get to see their reviews? Self-review?"
-
-**Stakes:**
-9. "What happens if reviews don't get done or are inconsistent?"
-10. "Have you ever had issues with undocumented performance problems?"
-11. "What's this costing you in terms of time or team issues?"
+*Listen for:* Tools used, time spent, frustrations mentioned, who was involved
 
-**Solutions Tried:**
-12. "Have you looked at any tools for this? What did you think?"
-13. "What would the ideal solution look like?"
-14. "What's your budget for something like this?"
+**2. Pain Quantification:**
+"How much time does review season cost you and your team? And what's the cost when reviews don't happen or go poorly?"
 
-### Validation Signals
+*Listen for:* Specific hours/days mentioned, downstream impacts (retention, legal, morale)
 
-| Signal | Strength | What It Means |
-|--------|----------|---------------|
-| "Yes, this is painful" | Weak | Everyone says reviews are painful |
-| "I've looked at tools" | Medium | Actively shopping |
-| "I tried X but it didn't work" | Strong | Motivated buyer |
-| "I'd pay $X for this" | Strong | Price validated |
-| "Can I be a beta tester?" | Very Strong | Ready to commit |
-| "I'll pay now" | Strongest | Do not pass go, take their money |
+**3. Failed Solutions:**
+"What have you tried to solve this? Spreadsheets, other tools, templates? Why didn't they stick?"
 
-### Disqualification Signals
+*Listen for:* Past purchases, reasons for abandonment, feature gaps, price sensitivity signals
 
-| Signal | Action |
-|--------|--------|
-| "We don't really do formal reviews" | Thank them, move on |
-| "Our team is 5 people" | Too small, revisit later |
-| "We use Lattice and love it" | Not a buyer |
-| "I'm not the decision maker" | Find the real buyer |
-| "We have no budget" | Nurture list |
+**4. Trigger Events:**
+"When did reviews become a problem for you? What triggered you to start thinking about this?"
 
----
+*Listen for:* Team growth, bad experience, compliance pressure, employee feedback
 
-## Stage 2: Solution Validation
+**5. Decision Process:**
+"If you found a solution today, who else would need to be involved in the decision? What would the process look like?"
 
-### Solution Interview Goals
+*Listen for:* Buying authority, stakeholders, budget approval process, timeline
 
-- Test specific feature resonance
-- Validate pricing
-- Identify must-haves vs nice-to-haves
-- Get feedback on positioning
+### Marketing Lens (Validation Focus)
 
-### What to Show
-
-**Option A: Figma Prototype**
-- 5-10 screens showing core flows
-- Self-review submission
-- Manager review with gap analysis
-- Peer feedback aggregation
+**Emphasis:** Problem validation and willingness to pay
 
-**Option B: Competitor Screenshots + Differentiation**
-- "This is what Lattice looks like at $11/employee"
-- "Here's what we're building at $7/employee"
-- "What features would you need?"
+**Additional Probes:**
+- "When I say 'performance review software,' what comes to mind? What category does this fall into for you?"
+- "What would you Google if you were looking for a solution?"
+- "How much do you think a tool like this should cost?"
+- "If I could solve [their main pain] for $X/month, would that be interesting?"
 
-**Option C: Loom Walkthrough**
-- 3-5 minute video of MVP concept
-- Narrated screens explaining each feature
-- Pause for reaction and questions
-
-### Questions to Ask
+**Success Signal:** Unprompted request for pricing, demo, or "when can I try it?"
 
-**Feature Validation:**
-1. "If you could only have 3 features, which would they be?"
-   - Self-review
-   - Peer feedback
-   - Goal tracking
-   - Templates
-   - Analytics
-   - Reminders
+### Product Lens (Workflow Understanding)
 
-2. "Is self-review with gap analysis valuable? Why/why not?"
-3. "How important is peer feedback anonymization?"
-4. "Would you use pre-built templates or build your own?"
+*See `product/05-interview-template.md` for detailed workflow questions*
 
-**Pricing Validation:**
-5. "What are you paying now (time or money)?"
-6. "Would you pay $7/employee/month for this?"
-7. "At what price would you say no?"
-8. "Would you pay annually upfront for a discount?"
+**Emphasis:** User journey, feature priorities, integration needs
 
-**Commitment Test:**
-9. "If we built this in 4 weeks, would you be a beta user?"
-10. "Would you pay $50/month for early access?"
-11. "Can I follow up when we launch?"
+**Additional Probes:**
+- "Walk me through exactly how you'd use this on a typical review cycle day"
+- "What tools would this need to connect with?"
+- "Which feature matters most: self-review, peer feedback, or goal tracking?"
 
-### Van Westendorp Price Sensitivity
+### Sales Lens (Qualification & Closing)
 
-Ask these 4 questions to nail pricing:
+*See `sales/02-discovery-call.md` for qualification scorecard*
 
-1. "At what price would this be so cheap you'd question quality?" → Floor
-2. "At what price is this a great deal?" → Low end
-3. "At what price does it start to feel expensive?" → High end
-4. "At what price is it too expensive to consider?" → Ceiling
+**Emphasis:** Budget, authority, timeline, success criteria
 
-**Expected Answers:**
-- Floor: $3-4 PEPM
-- Low end: $5-6 PEPM
-- High end: $8-10 PEPM
-- Ceiling: $12-15 PEPM
+**Additional Probes:**
+- "What's your budget for people/HR tools?"
+- "When's your next review cycle? What needs to happen before then?"
+- "What would success look like 6 months after implementing this?"
 
-**Conclusion:** $6-8 PEPM is the sweet spot
+## Validation Experiments
 
----
-
-## Stage 3: Commitment Validation
+### Experiment 1: Message-Market Fit (Week 1-2)
 
-### Beta Program Structure
+**Method:** Send 50 personalized LinkedIn messages to ICP using 3 different message variations
 
-**Offer:**
-- Free access for 3 months
-- In exchange: weekly feedback calls (15 min), testimonial if satisfied
+**Sample size:** 50 messages (split A/B/C)
 
-**Selection Criteria:**
-- Team size 15-40 (sweet spot)
-- Review cycle starting in next 30 days
-- Manager with budget authority
-- Responsive during validation (replied within 24 hours)
+**Time to run:** 2 weeks
 
-### Beta Agreement (Email Template)
+**Message Variations:**
+- A: Problem-focused ("Struggling with review chaos?")
+- B: Solution-focused ("360-reviews without enterprise pricing")
+- C: Social proof ("How 20-person teams run better reviews")
 
-```
-Subject: Beta Agreement - [Product Name]
-
-Hi [Name],
-
-Thanks for joining our beta program! Here's what we're agreeing to:
-
-WHAT YOU GET:
-- Free access to [Product] for 3 months
-- Direct access to founders for feature requests
-- Priority support via Slack/email
-- Lock in $5/employee/month pricing when you convert (20% off launch price)
+**Tracking:**
 
-WHAT WE ASK:
-- Run at least 1 review cycle during beta
-- 15-minute feedback call weekly (or bi-weekly)
-- Permission to use your logo/testimonial if satisfied
-- Honest feedback on what's working and what's not
-
-Timeline:
-- Beta starts: [Date]
-- First check-in: [Date]
-- Beta ends: [Date]
-
-Sound good? Reply to confirm and I'll get you set up.
+| Variation | Sent | Accepts | Accept Rate | Replies | Reply Rate | Calls Booked |
+|-----------|------|---------|-------------|---------|------------|--------------|
+| A | 17 | | | | | |
+| B | 17 | | | | | |
+| C | 16 | | | | | |
 
-Best,
-[Your Name]
-```
-
-### Beta Success Metrics
-
-| Metric | Target | Why It Matters |
-|--------|--------|----------------|
-| Beta signups | 5+ | Enough to learn patterns |
-| Completed review cycles | 3+ | Actual usage, not just signup |
-| Weekly feedback calls completed | 80%+ | Engaged beta users |
-| NPS after beta | 8+ | Would recommend |
-| Convert to paid | 60%+ | Validated value |
-
----
-
-## Stage 4: Revenue Validation
-
-### Pre-Launch Pricing Test
-
-**Option A: Founding Member Pricing**
-- $5/employee/month (locked forever)
-- Limited to first 10 customers
-- Creates urgency and validates willingness to pay
-
-**Option B: Annual Prepay Discount**
-- Pay $50/employee/year (vs $84/year at $7/month)
-- 40% discount for annual commitment
-- Validates strong intent
-
-**Option C: Pilot Program**
-- $99/month flat for 3 months (any team size under 30)
-- Low-risk entry point
-- Converts to standard pricing after pilot
+**Pass criteria:**
+- 30%+ accept rate overall
+- 20%+ reply rate on winning variation
+- 50%+ positive sentiment (vs "not interested" or "we're fine")
+- 3+ calls booked
 
-### Revenue Validation Signals
+**Fail criteria:**
+- <15% accept rate (ICP wrong or targeting too broad)
+- <10% reply rate on best variation (messaging doesn't resonate)
+- Majority responses: "we don't have this problem" (problem not painful)
+
+**Actions based on results:**
+- If A wins: Lead with pain in all messaging
+- If B wins: Feature/price positioning is strongest
+- If C wins: Build social proof before scaling
+- If all fail: Interview 5 rejectors to understand why
 
-| Signal | Strength |
-|--------|----------|
-| Credit card on file | Strong |
-| Paid first month | Very Strong |
-| Paid annual upfront | Strongest |
-| Used for actual reviews | Ultimate validation |
+### Experiment 2: Value Proposition Resonance (Week 2-4)
+
+**Method:** 10 x 30-minute customer discovery calls
 
-### Kill Criteria
+**Sample size:** 10 calls with qualified ICP
 
-**Kill the idea if:**
-- <5% reply rate on 200+ LinkedIn outreach attempts
-- <20% of discovery calls express buying intent
-- <10% of solution interviews willing to pay
-- 0 beta customers willing to use for real reviews
-- 0 paying customers after 6 weeks of sales
+**Time to run:** 2-3 weeks
 
-**Pivot if:**
-- Pain exists but pricing is wrong → Test lower price
-- Wrong ICP → Test different segment
-- Feature set wrong → Add/remove features
-- Messaging wrong → Test different positioning
+**Call Structure:**
+1. Background (5 min): Role, team size, review history
+2. Current process (10 min): Foundation questions above
+3. Feature prioritization (10 min): Which features matter most
+4. Pricing reaction (5 min): Willingness to pay test
+
+**Feature Prioritization Exercise:**
+"I'm going to list 5 features. Rank them 1-5 based on what would make the biggest difference for you."
+- Employee self-review with gap analysis
+- Anonymous peer feedback aggregation
+- Goal setting and tracking tied to reviews
+- Pre-built role-specific templates
+- Team analytics dashboard
+
+**Pricing Test:**
+"A tool with [their top 3 features] for $6 per employee per month - is that something you'd consider? Why or why not?"
+
+**Scoring Each Call:**
+
+| Signal | Score |
+|--------|-------|
+| "I'd pay for this" or asks about pricing | +2 |
+| Offers referral names unprompted | +2 |
+| Books follow-up meeting | +2 |
+| "Interesting but not now" | +1 |
+| "Let me think about it" | 0 |
+| "We're fine with spreadsheets" | -1 |
+| "Not really a problem for us" | -2 |
+
+**Pass criteria:**
+- Average score > +1 across 10 calls
+- 6+ say "I'd pay for this" or ask about pricing
+- 2+ offer referral names
+- Clear feature priority emerges (one feature ranked #1 by 5+ people)
+
+**Fail criteria:**
+- Average score < 0
+- 0 people offer referrals
+- No clear feature priority (all features equally "nice to have")
+- Majority say "not really a problem"
 
----
+### Experiment 3: Landing Page Conversion (Week 3-5)
 
-## Validation Tracking
+**Method:** Drive 200 visitors to landing page from LinkedIn outreach and measure conversion
 
-### Outreach Tracker
+**Sample size:** 200 unique visitors
 
-| Week | Connections | Replies | Calls | Interest | Beta | Paid |
-|------|-------------|---------|-------|----------|------|------|
-| 1 | 100 | 15 | 5 | 3 | 1 | 0 |
-| 2 | 100 | 18 | 6 | 4 | 2 | 0 |
-| 3 | 100 | 20 | 7 | 5 | 2 | 0 |
-| 4 | 100 | 22 | 8 | 5 | 0 | 5 |
+**Time to run:** 3 weeks
 
-**Conversion Rates:**
-- Connection → Reply: 15-20%
-- Reply → Call: 35-40%
-- Call → Interest: 50-60%
-- Interest → Beta: 30-40%
-- Beta → Paid: 60%+
+**Traffic sources:**
+- LinkedIn profile link clicks
+- Direct shares in conversations
+- Content post links
 
-### Interview Notes Template
+**Funnel tracking:**
 
-```
-## Interview: [Name] at [Company]
+| Stage | Target | Actual |
+|-------|--------|--------|
+| Visitors | 200 | |
+| Scroll to pricing | 60% | |
+| Click CTA | 15% | |
+| Start trial/signup | 5% | |
+| Complete onboarding | 3% | |
 
-**Date:** [Date]
-**Role:** [Title]
-**Team Size:** [Number]
-**Current Solution:** [Spreadsheets/Tool/Nothing]
+**Pass criteria:**
+- 5%+ visitor-to-signup conversion (10+ signups from 200 visitors)
+- 60%+ scroll to pricing (message keeps them reading)
+- Qualitative feedback: "this is exactly what I need"
 
-### Problem Validation
-- Main pain points:
-- Time spent on reviews:
-- What they've tried:
+**Fail criteria:**
+- <2% conversion (landing page broken or messaging off)
+- <30% scroll to pricing (above-fold not compelling)
+- High bounce rate with short time on page (<30 seconds average)
 
-### Solution Validation
-- Features that resonated:
-- Features they didn't care about:
-- Must-haves:
+## Signal Tracking
 
-### Pricing Validation
-- Current spend:
-- Willingness to pay:
-- Price sensitivity:
+### Strong Signals (Act On These)
 
-### Commitment
-- Beta interest: [Yes/No]
-- Timeline: [When's next review cycle]
-- Decision maker: [Yes/No]
-- Next steps:
+| Signal | Meaning | Action |
+|--------|---------|--------|
+| "When can I buy?" asked unprompted | High urgency, ready buyer | Fast-track to trial, close quickly |
+| Referral names offered | Strong advocate potential | Ask for intro, prioritize relationship |
+| Specific budget mentioned | Qualified buyer | Move to pricing discussion |
+| "We were just talking about this" | Perfect timing | Strike while hot, book next step same call |
+| Email sent to boss during call | Internal champion | Arm them with info to sell internally |
 
-### Quotes (Verbatim)
-- "[Quote about pain]"
-- "[Quote about value]"
+### Weak Signals (Monitor, Don't Celebrate)
 
-### Follow-up
-- [ ] Send [resource]
-- [ ] Schedule [next call]
-- [ ] Add to [beta/nurture list]
-```
+| Signal | Meaning | Action |
+|--------|---------|--------|
+| "This is interesting" | Polite, not urgent | Probe for urgency: "What would make this a priority?" |
+| "Send me more info" | Dodge, likely dead | Send info, add to nurture, don't count as qualified |
+| "Let me think about it" | No urgency | Set specific follow-up: "Can we reconnect Tuesday?" |
+| High open/click rates | Curiosity, not intent | Focus on converting clicks to conversations |
 
----
+### Red Signals (Investigate or Pivot)
 
-## Quick Validation Tests
+| Signal | Meaning | Action |
+|--------|---------|--------|
+| "We already solved this" | Problem not universal | Ask how, understand what "solved" means to them |
+| "Not a priority" consistently | Problem not painful | Consider different ICP or different problem |
+| Ghost after positive call | No real intent | Test with smaller asks, assume no until proven |
+| Price objections at $6/employee | Too expensive for segment | Test lower price or different ICP with more budget |
 
-### Smoke Test: Landing Page
+## Red Flags (Kill Signals)
 
-**Setup:** Landing page with email capture, no product
-**Test:** Run $50 in LinkedIn ads to landing page
-**Validate:** >5% email signup rate = interest exists
+When to seriously consider killing/pivoting the idea:
 
-### Concierge MVP
+- [ ] No one responds after 50+ outreach attempts (message AND ICP failure)
+- [ ] People say "interesting" but won't commit 15 min for call (no urgency)
+- [ ] 8+ out of 10 calls: "we're fine with spreadsheets" (problem not painful enough)
+- [ ] No budget even from "qualified" leads (market can't pay)
+- [ ] Can't explain value in <30 seconds without confusion (positioning broken)
+- [ ] Competitors mentioned as "good enough" in majority of calls (no differentiation)
+- [ ] 0 referrals offered after 15+ calls (not word-of-mouth worthy)
+- [ ] Every call requires heavy education on why reviews matter (market not ready)
 
-**Setup:** Manually run reviews for 2-3 customers
-**Test:** Use Google Forms + Notion to simulate product
-**Validate:** Customers complete reviews and find value
+### Kill Decision Framework
 
-### Wizard of Oz
+After 4 weeks of validation, answer these honestly:
 
-**Setup:** Real-looking product, manual backend
-**Test:** Accept beta signups, manually process data
-**Validate:** Users engage as if real product
+| Question | Yes | No |
+|----------|-----|-----|
+| Did 5+ people say "I'd pay for this"? | Continue | Investigate |
+| Did anyone ask "when can I start"? | Continue | Investigate |
+| Did you get 2+ referrals unprompted? | Continue | Investigate |
+| Is reply rate >15%? | Continue | Pivot messaging |
+| Is call booking rate >20%? | Continue | Pivot ICP |
 
----
+**Scoring:**
+- 5 Yes: Full speed ahead
+- 3-4 Yes: Continue with iterations
+- 1-2 Yes: Serious pivot needed
+- 0 Yes: Kill or major pivot
 
-## Validation Timeline
+## Weekly Validation Review
 
-| Week | Focus | Goal | Done |
-|------|-------|------|------|
-| 1 | Problem discovery | 5 discovery calls | [ ] |
-| 2 | Problem discovery | 5 more calls, patterns emerging | [ ] |
-| 3 | Solution validation | 5 solution interviews | [ ] |
-| 4 | Solution validation | 5 more interviews, features prioritized | [ ] |
-| 5 | Beta recruitment | 3 beta customers signed | [ ] |
-| 6 | Beta recruitment | 5 beta customers total | [ ] |
-| 7 | Revenue validation | 2 paying customers | [ ] |
-| 8 | Revenue validation | 5 paying customers | [ ] |
+### Questions to Answer Every Friday
 
----
+1. **What's our reply rate this week?** ___% (Target: >20%)
 
-*Next artifact: 07-marketing-metrics.md*
+2. **How many discovery calls did we have?** ___ (Target: 5+/week)
+
+3. **How many "I'd pay for this" responses?** ___ out of ___ calls
+
+4. **What's the #1 objection we're hearing?**
+   _________________________________
+
+5. **What feature do people ask about most?**
+   _________________________________
+
+6. **Did anyone offer referrals this week?** Yes / No
+   If yes, did we follow up? Yes / No
+
+7. **Based on this week, should we:**
+   - [ ] Stay the course
+   - [ ] Iterate messaging
+   - [ ] Iterate ICP targeting
+   - [ ] Iterate feature priority
+   - [ ] Consider pivot
+
+8. **One thing to test next week:**
+   _________________________________
