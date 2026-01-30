@@ -16,7 +16,7 @@ description: |
   04. Code Templates
   05. Engineering Metrics
 
-  Tech stack: Next.js 15 (App Router, full-stack) + shadcn/ui (MCP) + Supabase (PostgreSQL + Auth)
+  Tech stack: Next.js 15 (App Router, full-stack) + shadcn/ui (MCP) + Supabase (DB, Auth, Storage, Edge Functions)
 
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
@@ -151,16 +151,23 @@ Ask which artifacts needed:
 │  • Components (shadcn/ui)                        │
 │  • Server Components (RSC)                       │
 │  • Server Actions (mutations)                    │
-│  • API Routes (REST endpoints)                   │
+│  • API Routes (webhooks)                         │
 │                 [Vercel]                         │
 └───────────────────────┬─────────────────────────┘
                         │ Supabase Client
                         ▼
 ┌─────────────────────────────────────────────────┐
-│              Supabase                            │
-│  • PostgreSQL Database                           │
-│  • Auth (magic link, OAuth, email/password)      │
-│  • Row Level Security (RLS)                      │
+│                    Supabase                      │
+│  ┌─────────────────────────────────────────────┐│
+│  │ PostgreSQL + RLS (data isolation)           ││
+│  └─────────────────────────────────────────────┘│
+│  ┌─────────────────────────────────────────────┐│
+│  │ Auth (magic link, OAuth, email/password)    ││
+│  └─────────────────────────────────────────────┘│
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐│
+│  │  Storage    │ │Edge Funcs   │ │  Realtime   ││
+│  │(files/PDFs) │ │(cron/hooks) │ │(live updates││
+│  └─────────────┘ └─────────────┘ └─────────────┘│
 └─────────────────────────────────────────────────┘
 \`\`\`
 
@@ -174,7 +181,9 @@ project-root/
 ├── next.config.ts
 ├── .env.local
 ├── supabase/
-│   └── migrations/            # SQL migration files
+│   ├── migrations/            # SQL migration files
+│   └── functions/             # Edge Functions (optional)
+│       └── [function-name]/index.ts
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx         # Root layout
@@ -323,7 +332,7 @@ NEXT_PUBLIC_POSTHOG_KEY="phc_xxxx"
 - Node.js 20+ LTS
 - pnpm 9+
 - Git
-- VS Code with: ESLint, Tailwind CSS IntelliSense, Prisma
+- VS Code with: ESLint, Tailwind CSS IntelliSense
 
 ---
 
@@ -603,10 +612,10 @@ cd ..
 | E-1.1.1 | Run setup guide commands | - | ⬜ |
 | E-1.1.2 | Configure environment variables | E-1.1.1 | ⬜ |
 | E-1.1.3 | Deploy empty app to staging | E-1.1.2 | ⬜ |
-| E-1.2.1 | Create User model in Prisma schema | E-1.1.1 | ⬜ |
-| E-1.2.2 | Create entity models per PRD | E-1.2.1 | ⬜ |
-| E-1.2.3 | Run database migrations | E-1.2.2 | ⬜ |
-| E-1.3.1 | Setup NextAuth config | E-1.2.3 | ⬜ |
+| E-1.2.1 | Create profiles table in Supabase | E-1.1.1 | ⬜ |
+| E-1.2.2 | Create entity tables per PRD with RLS | E-1.2.1 | ⬜ |
+| E-1.2.3 | Apply database migrations | E-1.2.2 | ⬜ |
+| E-1.3.1 | Setup Supabase Auth clients | E-1.2.3 | ⬜ |
 | E-1.3.2 | Create register server action | E-1.3.1 | ⬜ |
 | E-1.3.3 | Create login page | E-1.3.1 | ⬜ |
 | E-1.3.4 | Create register page | E-1.3.2 | ⬜ |
@@ -620,9 +629,9 @@ POST /api/auth/register (Server Action)
   Output: { success: true } or { error: string }
   Errors: EMAIL_EXISTS
 
-POST /api/auth/signin (NextAuth)
+signIn (Server Action)
   Input:  { email, password }
-  Output: Session created
+  Output: Redirect to dashboard
   Errors: INVALID_CREDENTIALS
 
 GET /api/auth/session
@@ -1536,16 +1545,23 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 "use client"
 
 import { usePostHog } from "posthog-js/react"
-import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
+import type { User } from "@supabase/supabase-js"
 
 export function useAnalytics() {
   const posthog = usePostHog()
-  const { data: session } = useSession()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+  }, [])
 
   return {
     identify: () => {
-      if (session?.user) {
-        posthog.identify(session.user.id, { email: session.user.email })
+      if (user) {
+        posthog.identify(user.id, { email: user.email })
       }
     },
     reset: () => posthog.reset(),
@@ -1645,7 +1661,7 @@ Focus on **shipped features**, not activity.
 
 8. **Working Code Only** - All templates must be production-ready, not pseudocode
 
-9. **Bootstrap-Friendly** - SQLite first, minimal services, Vercel-deployable
+9. **Bootstrap-Friendly** - Supabase (free tier), minimal services, Vercel-deployable
 
 10. **Connect to PRD Analytics** - Include tracking for events defined in PRD Conversion Funnel
 
