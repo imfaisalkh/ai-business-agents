@@ -103,13 +103,16 @@ cp -r ideas/_template ideas/my-idea-name
    - **Best for:** Financial planning, unit economics, runway tracking
 
 7. **`full-stack-engineer`** - Implementation agent for building features
-   - Implements tasks from engineering/03-development-tasks.md
+   - **Two operating modes:**
+     - **Task File Mode**: Implements tasks from `./engineering/03-development-tasks.md` (e.g., "implement E-1.3.3")
+     - **Ad-Hoc Mode**: Accepts direct requests (e.g., "build a user settings page")
    - Has access to next-devtools-mcp (error detection, logs, metadata), supabase-mcp, and shadcn-mcp
    - Self-verifying: validates code works before marking complete
    - Self-fixing: uses next-devtools-mcp to detect and fix bugs automatically
    - Creates/updates feature documentation in `/docs/` folder
    - Maintains consistent architecture patterns across the codebase
-   - **Best for:** Implementing features, building pages, fixing bugs, database setup
+   - **Portable**: Can be copied to any project with optional engineering files
+   - **Best for:** Implementing features, building pages, fixing bugs, database setup, ad-hoc development
 
 #### How to Use Native Agents
 
@@ -125,7 +128,8 @@ This coordinates all 5 departments and generates 30 artifacts + executive summar
 @product-manager generate all artifacts for [idea-name]
 @sales-manager generate all artifacts for [idea-name]
 @engineering-manager generate all artifacts for [idea-name]
-@full-stack-engineer implement task E-1.3.3 for [idea-name]
+@full-stack-engineer implement task E-1.3.3
+@full-stack-engineer build a user settings page (ad-hoc mode)
 @bootstrap-finance generate all artifacts for [idea-name]
 ```
 
@@ -149,7 +153,7 @@ Native agents automatically check for and generate missing dependencies:
 2. Product Manager (requires: business-context.md + marketing/01-icp-market-analysis.md)
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
 4. Engineering Manager (requires: product/02-prd.md)
-5. Full-Stack Engineer (requires: engineering/03-development-tasks.md + engineering/04-code-templates.md)
+5. Full-Stack Engineer (optional: engineering/03-development-tasks.md + engineering/04-code-templates.md, OR ad-hoc tasks)
 6. Bootstrap Finance (requires: product/05-pricing-strategy.md + marketing/07-marketing-metrics.md)
 
 ## Key Concepts
@@ -192,12 +196,40 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Focus: Financial sustainability and path to profitability
 
 7. **Full-Stack Engineer** (`.claude/agents/full-stack-engineer.md`)
-   - Implements features from engineering/03-development-tasks.md
+   - Implements features from `./engineering/03-development-tasks.md` OR accepts ad-hoc tasks
    - Uses supabase-mcp for database, shadcn-mcp for UI components
    - Self-verifying and self-fixing (validates code works, fixes bugs automatically)
    - Maintains consistent patterns (reuses existing clients, utilities, hooks)
    - Creates feature documentation in `/docs/` folder
+   - **Portable**: Can be copied to any Next.js + Supabase project
    - Focus: Ship production-ready code that works on first deploy
+
+### Using Full-Stack Engineer in Standalone Projects
+
+The full-stack engineer agent is designed to be portable. You can copy it to any project:
+
+**Option 1: With engineering artifacts (task-driven)**
+```bash
+# In your project folder
+mkdir -p .claude/agents engineering
+cp /path/to/ai-business-agents/.claude/agents/full-stack-engineer.md .claude/agents/
+cp /path/to/ai-business-agents/ideas/[idea]/engineering/* engineering/
+
+# Then use:
+@full-stack-engineer implement task E-1.3.3
+@full-stack-engineer list all available tasks
+```
+
+**Option 2: Without engineering artifacts (ad-hoc mode)**
+```bash
+# Just copy the agent
+mkdir -p .claude/agents
+cp /path/to/ai-business-agents/.claude/agents/full-stack-engineer.md .claude/agents/
+
+# Then use:
+@full-stack-engineer build a user dashboard
+@full-stack-engineer fix the authentication bug
+```
 
 ### When to Re-run Agents
 Don't update artifacts randomly. Triggers include:
