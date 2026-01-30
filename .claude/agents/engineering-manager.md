@@ -21,7 +21,6 @@ description: |
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
   - ideas/[idea-name]/product/02-prd.md (will auto-generate product artifacts if missing)
-  - ideas/[idea-name]/product/03-tasks.md (will auto-generate if missing)
 
   Example usage:
   "Generate engineering artifacts for the 'invoicing-saas' idea"
@@ -93,10 +92,9 @@ Handle multiple roles via:
 ### Step 2: Check Dependencies
 Required files:
 1. `ideas/[idea-name]/business-context.md` - Must exist (extract **Project Name**)
-2. `ideas/[idea-name]/product/02-prd.md` - Needed for features
-3. `ideas/[idea-name]/product/03-tasks.md` - Needed for task breakdown
+2. `ideas/[idea-name]/product/02-prd.md` - Needed for features and user stories
 
-If product artifacts missing, offer to generate them via product-manager agent.
+If product PRD missing, offer to generate it via product-manager agent.
 
 ### Step 3: Determine Scope
 Ask which artifacts needed:
@@ -537,58 +535,47 @@ cd ..
 | Build errors | Check `next.config.ts` for proper setup |
 ```
 
-### 3. Implementation Tasks (`engineering/03-implementation-tasks.md`)
+### 3. Development Tasks (`engineering/03-development-tasks.md`)
 
 ```markdown
-# Implementation Tasks
+# Development Tasks
 
-> **Purpose:** Phased breakdown of development work for [Project Name]. Your daily work tracker.
+> **Purpose:** Unified development tasks for [Project Name]. Contains both product requirements (user stories) and technical implementation details. Your daily work tracker.
 >
-> **References:** product/03-tasks.md for user stories, Code Templates (04) for implementation patterns.
+> **References:** PRD (product/02-prd.md) for feature requirements, Code Templates (04) for implementation patterns.
 
 ## Task Format
 
 - **Depends On:** Task IDs that must complete first (- = no blockers)
-- **Acceptance Criteria:** Testable conditions for "done"
+- **Acceptance Criteria:** Testable conditions for "done" (Given/When/Then format)
 - **API Contract:** Request/response schema where applicable
 
 ---
 
-## Phase 1: Foundation (Week 1)
+## Epic 1: Authentication & User Management
 
-### 1.1 Project Setup
+**Description:** User registration, login, and session management
+**Business Value:** Users can securely access their accounts and data
+**Success Criteria:** Users can register, login, and maintain sessions across page refreshes
+
+### User Stories
+
+| ID | Story | Acceptance Criteria |
+|----|-------|---------------------|
+| US-1.1 | As a user, I want to register with email so I can create an account | Given valid email and password, When I submit registration, Then account is created and I'm logged in |
+| US-1.2 | As a user, I want to login with credentials so I can access my data | Given valid credentials, When I submit login, Then I'm authenticated and redirected to dashboard |
+| US-1.3 | As a user, I want my session to persist so I don't have to login repeatedly | Given I'm logged in, When I refresh the page, Then I remain authenticated |
+
+### Technical Implementation
 
 | Task ID | Task | Depends On | Status |
 |---------|------|------------|--------|
 | E-1.1.1 | Run setup guide commands | - | ⬜ |
 | E-1.1.2 | Configure environment variables | E-1.1.1 | ⬜ |
 | E-1.1.3 | Deploy empty app to staging | E-1.1.2 | ⬜ |
-
-**Acceptance Criteria:**
-- [ ] `pnpm dev` starts app on port 3000
-- [ ] `curl localhost:3000/api/health` returns `{"status":"ok"}`
-- [ ] Staging URL responds
-
----
-
-### 1.2 Database Schema
-
-| Task ID | Task | Depends On | Status |
-|---------|------|------------|--------|
-| E-1.2.1 | Create User model | E-1.1.1 | ⬜ |
-| E-1.2.2 | Create [entity] models per PRD | E-1.2.1 | ⬜ |
-| E-1.2.3 | Run migrations | E-1.2.2 | ⬜ |
-
-**Acceptance Criteria:**
-- [ ] `pnpm prisma db push` applies schema without errors
-- [ ] `pnpm prisma studio` shows all tables
-
----
-
-### 1.3 Authentication
-
-| Task ID | Task | Depends On | Status |
-|---------|------|------------|--------|
+| E-1.2.1 | Create User model in Prisma schema | E-1.1.1 | ⬜ |
+| E-1.2.2 | Create entity models per PRD | E-1.2.1 | ⬜ |
+| E-1.2.3 | Run database migrations | E-1.2.2 | ⬜ |
 | E-1.3.1 | Setup NextAuth config | E-1.2.3 | ⬜ |
 | E-1.3.2 | Create register server action | E-1.3.1 | ⬜ |
 | E-1.3.3 | Create login page | E-1.3.1 | ⬜ |
@@ -612,21 +599,28 @@ GET /api/auth/session
   Output: { user: { id, email, name, role } } or null
 \`\`\`
 
-**Acceptance Criteria:**
-- [ ] Register creates user, redirects to dashboard
-- [ ] Login authenticates and creates session
-- [ ] Middleware redirects unauthenticated users to /login
-- [ ] Session persists across page refreshes
-
 ---
 
-### 1.4 Base Layout
+## Epic 2: Base Layout & Navigation
+
+**Description:** Dashboard layout with sidebar navigation and user menu
+**Business Value:** Users have consistent, intuitive navigation throughout the app
+**Success Criteria:** All authenticated pages share consistent layout with working navigation
+
+### User Stories
+
+| ID | Story | Acceptance Criteria |
+|----|-------|---------------------|
+| US-2.1 | As a user, I want a sidebar so I can navigate between sections | Given I'm on any page, When I click a sidebar link, Then I navigate to that section |
+| US-2.2 | As a user, I want to see my profile and logout option so I can manage my session | Given I'm logged in, When I click my profile, Then I see logout option |
+
+### Technical Implementation
 
 | Task ID | Task | Depends On | Status |
 |---------|------|------------|--------|
-| E-1.4.1 | Dashboard layout with sidebar | E-1.1.1 | ⬜ |
-| E-1.4.2 | Header with user menu | E-1.3.1 | ⬜ |
-| E-1.4.3 | Dashboard page shell | E-1.4.1 | ⬜ |
+| E-2.1.1 | Dashboard layout with sidebar | E-1.1.1 | ⬜ |
+| E-2.1.2 | Header with user menu | E-1.3.1 | ⬜ |
+| E-2.1.3 | Dashboard page shell | E-2.1.1 | ⬜ |
 
 **UI Mock:**
 \`\`\`
@@ -642,23 +636,36 @@ GET /api/auth/session
 
 ---
 
-## Phase 2: Core Features (Weeks 2-3)
+## Epic 3: [Primary Feature from PRD]
 
-### 2.1 [Primary Feature from PRD]
+**Description:** [1-2 sentence summary from PRD feature]
+**Business Value:** [Why this matters to users/business - from PRD]
+**Success Criteria:** [How we know it's done and working]
 
-*Repeat this pattern for each feature in PRD.*
+*Repeat this epic pattern for each core feature in PRD.*
 
-**Database:** Add models to schema if not already done in 1.2
+### User Stories
+
+| ID | Story | Acceptance Criteria |
+|----|-------|---------------------|
+| US-3.1 | As a [user], I want to [create entity] so that [benefit] | Given [context], When [action], Then [result] |
+| US-3.2 | As a [user], I want to [view entities] so that [benefit] | Given [context], When [action], Then [result] |
+| US-3.3 | As a [user], I want to [update entity] so that [benefit] | Given [context], When [action], Then [result] |
+| US-3.4 | As a [user], I want to [delete entity] so that [benefit] | Given [context], When [action], Then [result] |
+
+### Technical Implementation
+
+**Database:** Add models to schema if not already done
 
 **Server Actions:**
 
 | Task ID | Task | Depends On | Status |
 |---------|------|------------|--------|
-| E-2.1.1 | getEntities (list) | E-1.2.3 | ⬜ |
-| E-2.1.2 | createEntity | E-1.3.5 | ⬜ |
-| E-2.1.3 | getEntity (single) | E-2.1.1 | ⬜ |
-| E-2.1.4 | updateEntity | E-2.1.3 | ⬜ |
-| E-2.1.5 | deleteEntity | E-2.1.3 | ⬜ |
+| E-3.1.1 | getEntities (list with pagination) | E-1.2.3 | ⬜ |
+| E-3.1.2 | createEntity server action | E-1.3.5 | ⬜ |
+| E-3.1.3 | getEntity (single) | E-3.1.1 | ⬜ |
+| E-3.1.4 | updateEntity server action | E-3.1.3 | ⬜ |
+| E-3.1.5 | deleteEntity server action | E-3.1.3 | ⬜ |
 
 **API Contract:**
 \`\`\`
@@ -680,69 +687,116 @@ deleteEntity({ id })
 
 | Task ID | Task | Depends On | Status |
 |---------|------|------------|--------|
-| E-2.1.6 | List page with data table | E-2.1.1 | ⬜ |
-| E-2.1.7 | Create/edit form dialog | E-2.1.2 | ⬜ |
-| E-2.1.8 | Delete confirmation | E-2.1.5 | ⬜ |
-| E-2.1.9 | Loading & empty states | E-2.1.6 | ⬜ |
+| E-3.2.1 | List page with data table | E-3.1.1 | ⬜ |
+| E-3.2.2 | Create/edit form dialog | E-3.1.2 | ⬜ |
+| E-3.2.3 | Delete confirmation dialog | E-3.1.5 | ⬜ |
+| E-3.2.4 | Loading & empty states | E-3.2.1 | ⬜ |
 
-**Acceptance Criteria:**
-- [ ] List shows paginated data, sorting works
-- [ ] Create form validates, shows success toast
-- [ ] Edit pre-fills form with existing data
-- [ ] Delete shows confirmation dialog first
-- [ ] Empty state shows CTA to create first item
-
-**Analytics Events:** (from PRD MVP Funnel)
-- `[entity]_created`, `[entity]_updated`
+**Analytics Events:** (from PRD Conversion Funnel)
+- `[entity]_created`, `[entity]_updated`, `[entity]_deleted`
 
 ---
 
-## Phase 3: Polish & Launch (Week 4)
+## Epic 4: Polish & Launch
 
-### 3.1 Analytics
+**Description:** Analytics, error handling, and production deployment
+**Business Value:** Ship a stable, instrumented product
+**Success Criteria:** Production URL accessible, analytics firing, error handling working
 
-| Task ID | Task | Depends On | Status |
-|---------|------|------------|--------|
-| E-3.1.1 | Set up PostHog | E-1.1.3 | ⬜ |
-| E-3.1.2 | Add analytics provider | E-3.1.1 | ⬜ |
-| E-3.1.3 | Track PRD funnel events | E-3.1.2 | ⬜ |
+### User Stories
 
-### 3.2 Error Handling
+| ID | Story | Acceptance Criteria |
+|----|-------|---------------------|
+| US-4.1 | As a user, I want clear error messages so I know what went wrong | Given an error occurs, When it's displayed, Then I understand what happened |
+| US-4.2 | As a founder, I want analytics so I can track user behavior | Given users interact with the app, When they perform actions, Then events are tracked |
 
-| Task ID | Task | Depends On | Status |
-|---------|------|------------|--------|
-| E-3.2.1 | Global error boundary | E-1.1.1 | ⬜ |
-| E-3.2.2 | 404/500 error pages | E-3.2.1 | ⬜ |
-| E-3.2.3 | Toast notifications | E-3.2.1 | ⬜ |
-
-### 3.3 Production Deploy
+### Technical Implementation
 
 | Task ID | Task | Depends On | Status |
 |---------|------|------------|--------|
-| E-3.3.1 | Production environment | E-1.1.3 | ⬜ |
-| E-3.3.2 | Domain/SSL setup | E-3.3.1 | ⬜ |
-| E-3.3.3 | Full user journey test | E-3.3.2 | ⬜ |
+| E-4.1.1 | Set up PostHog | E-1.1.3 | ⬜ |
+| E-4.1.2 | Add analytics provider | E-4.1.1 | ⬜ |
+| E-4.1.3 | Track PRD funnel events | E-4.1.2 | ⬜ |
+| E-4.2.1 | Global error boundary | E-1.1.1 | ⬜ |
+| E-4.2.2 | 404/500 error pages | E-4.2.1 | ⬜ |
+| E-4.2.3 | Toast notifications | E-4.2.1 | ⬜ |
+| E-4.3.1 | Production environment setup | E-1.1.3 | ⬜ |
+| E-4.3.2 | Domain/SSL setup | E-4.3.1 | ⬜ |
+| E-4.3.3 | Full user journey test | E-4.3.2 | ⬜ |
 
-**Acceptance Criteria:**
-- [ ] Production URL accessible via HTTPS
-- [ ] Full flow works: signup → login → core action → logout
-- [ ] Analytics events firing in dashboard
+---
+
+## Sprint Planning View
+
+### Sprint 1: Foundation (Week 1)
+**Goal:** Auth working, can login and see dashboard
+**Capacity:** 20 hours
+
+| Task ID | Description | Status |
+|---------|-------------|--------|
+| E-1.1.1 - E-1.1.3 | Project setup | ⬜ |
+| E-1.2.1 - E-1.2.3 | Database schema | ⬜ |
+| E-1.3.1 - E-1.3.6 | Authentication | ⬜ |
+| E-2.1.1 - E-2.1.3 | Base layout | ⬜ |
+
+### Sprint 2-3: Core Features (Weeks 2-3)
+**Goal:** All core features from PRD implemented
+**Capacity:** 40 hours
+
+| Task ID | Description | Status |
+|---------|-------------|--------|
+| E-3.x.x | [Feature 1] CRUD | ⬜ |
+| E-3.x.x | [Feature 2] CRUD | ⬜ |
+| E-3.x.x | [Feature 3] CRUD | ⬜ |
+
+### Sprint 4: Polish & Launch (Week 4)
+**Goal:** Production-ready, analytics working
+**Capacity:** 20 hours
+
+| Task ID | Description | Status |
+|---------|-------------|--------|
+| E-4.1.x | Analytics setup | ⬜ |
+| E-4.2.x | Error handling | ⬜ |
+| E-4.3.x | Production deploy | ⬜ |
+
+---
+
+## Technical Debt
+
+Track only when it blocks shipping:
+
+| Issue | Impact | Fix When |
+|-------|--------|----------|
+| [Item] | High/Med/Low | [Trigger] |
+
+**Rule:** Fix High impact immediately. Ignore Low impact until it blocks shipping.
+
+---
+
+## Definition of Done
+
+A task is "Done" when:
+- [ ] Code complete and self-reviewed
+- [ ] Acceptance criteria verified (manual testing)
+- [ ] Analytics events firing correctly (if applicable)
+- [ ] Deployed to staging
+- [ ] No console errors
 
 ---
 
 ## Summary
 
-| Phase | Estimate | Timeline |
-|-------|----------|----------|
-| Phase 1: Foundation | 20h | Week 1 |
-| Phase 2: Core Features | 40h | Weeks 2-3 |
-| Phase 3: Polish | 20h | Week 4 |
-| **Total** | **80h** | **4 weeks** |
+| Phase | Tasks | Timeline |
+|-------|-------|----------|
+| Foundation (Auth + Layout) | Epic 1-2 | Week 1 |
+| Core Features | Epic 3+ | Weeks 2-3 |
+| Polish & Launch | Epic 4 | Week 4 |
+| **Total** | **All Epics** | **4 weeks** |
 
 ## Critical Path
 
 \`\`\`
-Setup → Schema → Auth → Middleware → Server Actions → List Page → Production
+Setup → Schema → Auth → Layout → Server Actions → Frontend → Analytics → Production
 \`\`\`
 
 **Parallel opportunities:** While building server actions, frontend can build pages with mock data.
@@ -1378,21 +1432,23 @@ Focus on **shipped features**, not activity.
 
 ## Guidelines for Generation
 
-1. **Build Upon Product Tasks** - Reference `product/03-tasks.md`, add technical details (schema, actions, components)
+1. **Build Upon PRD** - Reference `product/02-prd.md` for features and user stories. Extract user stories directly from the PRD's User Stories section.
 
-2. **Task Dependencies Required** - Every task needs "Depends On" column to prevent wasted work
+2. **Unified Tasks Document** - The 03-development-tasks.md is the single source of truth for all tasks. Include both user stories (product perspective) and technical implementation details.
 
-3. **Acceptance Criteria Required** - Testable conditions with checkbox format
+3. **Task Dependencies Required** - Every task needs "Depends On" column to prevent wasted work
 
-4. **Server Actions for Mutations** - Use Next.js Server Actions instead of API routes for CRUD
+4. **Acceptance Criteria Required** - Testable conditions in Given/When/Then format for user stories, checkbox format for technical tasks
 
-5. **Single App Architecture** - ONE Next.js app regardless of user roles
+5. **Server Actions for Mutations** - Use Next.js Server Actions instead of API routes for CRUD
 
-6. **Working Code Only** - All templates must be production-ready, not pseudocode
+6. **Single App Architecture** - ONE Next.js app regardless of user roles
 
-7. **Bootstrap-Friendly** - SQLite first, minimal services, Vercel-deployable
+7. **Working Code Only** - All templates must be production-ready, not pseudocode
 
-8. **Connect to PRD Analytics** - Include tracking for events defined in PRD MVP Funnel
+8. **Bootstrap-Friendly** - SQLite first, minimal services, Vercel-deployable
+
+9. **Connect to PRD Analytics** - Include tracking for events defined in PRD Conversion Funnel
 
 ## After Generation
 

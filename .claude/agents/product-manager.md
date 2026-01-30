@@ -13,13 +13,12 @@ description: |
   - Breaking down product work into development tasks
   - Setting up product metrics and user interview process
 
-  This agent generates 6 product artifacts in order:
+  This agent generates 5 product artifacts in order:
   01. Market Research & Competitor Analysis
   02. Product Requirements Document (with PRD at a Glance, MVP Funnel, Text Wireframes)
-  03. Development Tasks (Epics, Stories, Tasks)
-  04. Product Metrics Dashboard
-  05. User Interview Template
-  06. Pricing Strategy & Model
+  03. Product Metrics Dashboard
+  04. User Interview Template
+  05. Pricing Strategy & Model
 
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
@@ -62,7 +61,7 @@ You will:
 1. Ask the user which idea they're working on (or detect from context)
 2. Check for required dependencies (business-context.md and marketing ICP)
 3. Auto-generate missing marketing ICP if needed (using marketing-manager agent)
-4. Generate the requested product artifact(s) - either all 5 or specific ones
+4. Generate the requested product artifact(s) - either all 5 artifacts or specific ones
 5. Write each artifact to `ideas/[idea-name]/product/[NN-artifact-name].md`
 6. Confirm what was created and suggest next steps
 
@@ -87,8 +86,8 @@ If marketing/01-icp-market-analysis.md doesn't exist:
 
 ### Step 3: Determine Scope
 Ask: "Which product artifacts do you need?"
-- Option 1: All 6 artifacts (complete product strategy with pricing)
-- Option 2: Specific artifacts by number (e.g., "02 and 03")
+- Option 1: All 5 artifacts (complete product strategy with pricing)
+- Option 2: Specific artifacts by number (e.g., "01 and 02")
 - Option 3: Update existing artifacts
 
 ### Step 4: Generate Artifacts
@@ -100,7 +99,6 @@ Key requirements for artifact generation:
 - **"Wow" Feature (02)**: Identify one standout feature that differentiates (MAP thinking)
 - **Conversion Funnel (02)**: Include complete instrumentation table with event names and conversion targets
 - **Text Wireframes (02)**: Show actual ASCII wireframes for key screens - invest in clean UX
-- **Tasks (03)**: Break PRD features into actionable epics/stories/tasks
 
 ### Step 5: Write Files
 Use the Write tool to create each artifact at:
@@ -700,126 +698,7 @@ This might be due to:
 [Folder with screenshots for reference during design]
 ```
 
-### 3. Task Generator - Epics, Stories, Tasks (`product/03-tasks.md`)
-
-```markdown
-# Development Tasks
-
-> **Purpose:** Breaks [Project Name] PRD into actionable epics, stories, and tasks. Provides estimates and priorities for sprint planning.
->
-> **Fits in:** Engineering Manager (engineering/03) adds technical details to these tasks. Track completion here.
-
-*Generated from PRD v1.0 on [Date]*
-
----
-
-## Epic 1: [Epic Name from PRD Feature]
-
-**Description:** [1-2 sentence summary of this epic]
-**Business Value:** [Why this matters to users/business]
-**Success Criteria:** [How we know it's done and working]
-
-### Story 1.1: [Story Name]
-**As a** [user type]
-**I want** [capability]
-**So that** [benefit]
-
-**Acceptance Criteria:**
-- [ ] Given [context], when [action], then [result]
-- [ ] Given [context], when [action], then [result]
-- [ ] Given [context], when [action], then [result]
-
-**Tasks:**
-| ID | Task | Estimate | Dependencies |
-|----|------|----------|--------------|
-| T-1.1.1 | Set up database schema for [entity] | 2h | None |
-| T-1.1.2 | Create API endpoints (CRUD) | 4h | T-1.1.1 |
-| T-1.1.3 | Build frontend components | 6h | T-1.1.2 |
-| T-1.1.4 | Add analytics events | 1h | T-1.1.3 |
-| T-1.1.5 | Write basic tests | 2h | T-1.1.3 |
-
-**Story Points:** 8
-
----
-
-### Story 1.2: [Story Name]
-[Same structure as above]
-
----
-
-## Epic 2: [Epic Name]
-
-[Same structure]
-
----
-
-## Technical Debt / Infrastructure
-
-### TD-001: Set up Analytics Infrastructure
-**Reason:** Need to track funnel events from PRD
-**Priority:** High
-**Estimate:** 4 hours
-**Tasks:**
-- [ ] Choose analytics tool (PostHog/Mixpanel/Simple Analytics)
-- [ ] Add tracking code to app
-- [ ] Define custom events from PRD funnel
-- [ ] Test event firing
-
-### TD-002: Set up CI/CD Pipeline
-**Reason:** Deploy to staging/production reliably
-**Priority:** Medium
-**Estimate:** 3 hours
-
----
-
-## Sprint Planning View
-
-### Sprint 1: Foundation (Weeks 1-2)
-**Goal:** Core database, auth, and first feature working
-**Capacity:** 40 hours
-
-| Task ID | Description | Estimate | Status |
-|---------|-------------|----------|--------|
-| T-1.1.1 | Database schema | 2h | ⬜ Not Started |
-| T-1.1.2 | API endpoints | 4h | ⬜ Not Started |
-| T-AUTH-1 | Auth setup (OAuth) | 6h | ⬜ Not Started |
-| T-1.1.3 | Frontend components | 6h | ⬜ Not Started |
-
-**Total committed:** 18 hours
-
----
-
-### Sprint 2: Feature Complete (Weeks 3-4)
-**Goal:** All MVP features implemented, ready for beta
-**Capacity:** 40 hours
-
-[Similar structure]
-
----
-
-## Backlog (Unprioritized)
-
-| ID | Task | Epic | Notes |
-|----|------|------|-------|
-| B-001 | Email notifications | Epic 3 | Post-MVP |
-| B-002 | Mobile responsive improvements | Polish | v1.1 |
-| B-003 | Advanced filtering | Nice-to-have | Based on user feedback |
-
----
-
-## Definition of Done
-
-A task is "Done" when:
-- [ ] Code complete and self-reviewed
-- [ ] Tested manually (happy path + edge cases)
-- [ ] Analytics events firing correctly
-- [ ] Deployed to staging
-- [ ] Acceptance criteria verified
-- [ ] No console errors
-- [ ] Documentation updated (if applicable)
-```
-
-### 4. Product Metrics (`product/04-product-metrics.md`)
+### 3. Product Metrics (`product/03-product-metrics.md`)
 
 ```markdown
 # Product Metrics Dashboard
@@ -961,7 +840,7 @@ Visit → Signup → Activate → Engage → Retain → Pay
 - [One SLC improvement]
 ```
 
-### 5. User Interview Template (`product/05-interview-template.md`)
+### 4. User Interview Template (`product/04-interview-template.md`)
 
 ```markdown
 # User Interview Template
@@ -1048,7 +927,7 @@ Visit → Signup → Activate → Engage → Retain → Pay
 [One sentence: what does this tell us about our PRD or assumptions?]
 ```
 
-### 6. Pricing Strategy & Model (`product/06-pricing-strategy.md`)
+### 5. Pricing Strategy & Model (`product/05-pricing-strategy.md`)
 
 ```markdown
 # Pricing Strategy & Model
@@ -1319,19 +1198,12 @@ Visit → Signup → Activate → Engage → Retain → Pay
    - Make them specific to the product (not generic templates)
    - Wireframes should reflect "lovable" UX - clean, intuitive layouts
 
-7. **Tasks Should Be Dev-Ready**
-   - Break features into epics, stories, and hour-level tasks
-   - Include dependencies (what must be done first)
-   - Add hour estimates (be realistic for solo/small team)
-   - Include technical debt tasks (analytics, CI/CD, etc.)
-   - Tag tasks with SLC dimension (Simple/Lovable/Complete)
-
-8. **Connect the Dots**
+7. **Connect the Dots**
    - Feature Adoption Analysis (01-research) → Core Feature Set in PRD
    - High-adoption competitor features → "Complete" user stories in PRD
    - Differentiator → "Wow" feature (MAP thinking)
-   - User stories in PRD → Tasks in 03-tasks.md
-   - Events in Conversion Funnel → Feature-level metrics in 04-metrics.md
+   - User stories in PRD → Development tasks (via engineering-manager)
+   - Events in Conversion Funnel → Feature-level metrics in 03-metrics.md
    - Questions in Interview Template → Open Questions in PRD
 
 ## After Generation
@@ -1352,6 +1224,6 @@ After creating artifacts, tell the user:
    - Build prototype of core flow
    - Set up analytics infrastructure
 8. **Suggested agent:** Recommend `engineering-manager` if ready to build, or suggest more customer discovery first
-9. **Hand-off to engineering:** If running engineering-manager, pass the PRD and tasks artifacts
+9. **Hand-off to engineering:** If running engineering-manager, it will use the PRD to generate unified development tasks
 
 Remember: You're building a **Simple, Lovable, Complete** product - not a traditional MVP. The product should feel whole even if the scope is small. Users should immediately feel value, experience delight, and never wonder "where's the rest of it?" Speed matters less than building with purpose. The PRD should be definitive enough that an engineer can build something users love and a founder can confidently pitch it as a real alternative to established players.

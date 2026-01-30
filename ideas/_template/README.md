@@ -39,10 +39,9 @@
 ├── product/               # Product artifacts
 │   ├── 01-market-research.md
 │   ├── 02-prd.md
-│   ├── 03-tasks.md
-│   ├── 04-product-metrics.md
-│   ├── 05-interview-template.md
-│   └── 06-pricing-strategy.md
+│   ├── 03-product-metrics.md
+│   ├── 04-interview-template.md
+│   └── 05-pricing-strategy.md
 ├── engineering/           # Engineering artifacts
 │   ├── 01-technical-requirements.md
 │   ├── 02-setup-guide.md

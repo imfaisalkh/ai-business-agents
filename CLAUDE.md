@@ -20,7 +20,7 @@ business-context.md (foundation)
     ├─> Marketing Manager   → marketing/*.md
     ├─> Product Manager     → product/*.md  (needs marketing/01-icp-market-analysis.md)
     ├─> Sales Manager       → sales/*.md    (needs marketing/01, 02)
-    ├─> Engineering Manager → engineering/*.md (needs product/02-prd.md, 03-tasks.md)
+    ├─> Engineering Manager → engineering/*.md (needs product/02-prd.md)
     └─> Bootstrap Finance   → finance/*.md  (needs product/06-pricing, marketing/07-metrics)
 ```
 
@@ -37,7 +37,7 @@ Each idea in `ideas/[idea-name]/` follows this structure:
 ├── README.md              # Idea status tracker
 ├── business-context.md    # Foundation document (fill this first)
 ├── marketing/             # 7 marketing artifacts
-├── product/               # 6 product artifacts (includes pricing strategy)
+├── product/               # 5 product artifacts (includes pricing strategy)
 ├── sales/                 # 7 sales artifacts
 ├── engineering/           # 5 engineering artifacts
 └── finance/               # 5 financial artifacts
@@ -80,8 +80,8 @@ cp -r ideas/_template ideas/my-idea-name
    - ICP analysis, positioning, GTM, LinkedIn outreach, landing page, validation, metrics
    - **Best for:** Marketing strategy, customer research, go-to-market planning
 
-3. **`product-manager`** - Generates 6 product artifacts
-   - Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview template, pricing strategy
+3. **`product-manager`** - Generates 5 product artifacts
+   - Market research, PRD (with MVP Funnel & Wireframes), metrics, interview template, pricing strategy
    - Auto-generates marketing dependencies if missing
    - **Best for:** Product strategy, feature planning, PRD creation, pricing
 
@@ -91,9 +91,9 @@ cp -r ideas/_template ideas/my-idea-name
    - **Best for:** Sales process design, founder-led sales systems
 
 5. **`engineering-manager`** - Generates 5 engineering artifacts
-   - Technical requirements, setup guide, implementation tasks, code templates, metrics
+   - Technical requirements, setup guide, development tasks (unified user stories + implementation), code templates, metrics
    - Tech stack: Next.js 15 (App Router, full-stack) + shadcn/ui (MCP) + Prisma ORM + SQLite
-   - Auto-generates product dependencies if missing
+   - Auto-generates PRD if missing
    - **Best for:** Technical architecture, development planning, code scaffolding
 
 6. **`bootstrap-finance`** - Generates 5 financial artifacts
@@ -129,7 +129,7 @@ This coordinates all 5 departments and generates 30 artifacts + executive summar
 Native agents automatically check for and generate missing dependencies:
 - **Product Manager** → Auto-generates marketing/01-icp if missing
 - **Sales Manager** → Auto-generates marketing/01-icp and 02-positioning if missing
-- **Engineering Manager** → Auto-generates product/02-prd and 03-tasks if missing
+- **Engineering Manager** → Auto-generates product/02-prd if missing
 - **Bootstrap Finance** → Auto-generates product/06-pricing and marketing/07-metrics if missing
 - **CEO Orchestrator** → Coordinates all 5 departments in optimal order
 
@@ -137,7 +137,7 @@ Native agents automatically check for and generate missing dependencies:
 1. Marketing Manager (requires: business-context.md)
 2. Product Manager (requires: business-context.md + marketing/01-icp-market-analysis.md)
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
-4. Engineering Manager (requires: product/02-prd.md + product/03-tasks.md)
+4. Engineering Manager (requires: product/02-prd.md)
 5. Bootstrap Finance (requires: product/06-pricing-strategy.md + marketing/07-marketing-metrics.md)
 
 ## Key Concepts
@@ -159,7 +159,7 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Focus: Distribution channels and customer messaging
 
 2. **Product Manager** (`.claude/agents/product-manager.md`)
-   - Generates 6 artifacts: Market research, PRD (with MVP Funnel & Wireframes), tasks, metrics, interview templates, pricing strategy
+   - Generates 5 artifacts: Market research, PRD (with MVP Funnel & Wireframes), metrics, interview templates, pricing strategy
    - Focus: What to build and why (validate before building)
 
 3. **Sales Manager** (`.claude/agents/sales-manager.md`)
@@ -167,7 +167,7 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Focus: Converting prospects to customers
 
 4. **Engineering Manager** (`.claude/agents/engineering-manager.md`)
-   - Generates 5 artifacts: Technical requirements, setup guide, implementation tasks, code templates, metrics
+   - Generates 5 artifacts: Technical requirements, setup guide, development tasks (unified user stories + technical implementation), code templates, metrics
    - Focus: Ship velocity and quality (Next.js 15 + Prisma + SQLite full-stack)
 
 5. **CEO Orchestrator** (`.claude/agents/ceo-orchestrator.md`)
