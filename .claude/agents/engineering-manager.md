@@ -549,6 +549,7 @@ cd ..
 - **Depends On:** Task IDs that must complete first (- = no blockers)
 - **Acceptance Criteria:** Testable conditions for "done" (Given/When/Then format)
 - **API Contract:** Request/response schema where applicable
+- **UI Mock:** ASCII wireframe for UI tasks - based on PRD wireframes (product/02-prd.md appendix) but with implementation-specific details (actual field names, columns, entity names)
 
 ---
 
@@ -597,6 +598,49 @@ POST /api/auth/signin (NextAuth)
 
 GET /api/auth/session
   Output: { user: { id, email, name, role } } or null
+\`\`\`
+
+**UI Mocks:** *(Based on PRD Form Flow pattern)*
+
+*Login Page (E-1.3.3):*
+\`\`\`
+┌─────────────────────────────────────┐
+│           [Logo]                    │
+│                                     │
+│         Sign In                     │
+│  ┌───────────────────────────────┐  │
+│  │ Email                         │  │
+│  └───────────────────────────────┘  │
+│  ┌───────────────────────────────┐  │
+│  │ Password                      │  │
+│  └───────────────────────────────┘  │
+│                                     │
+│  [        Sign In        ]          │
+│                                     │
+│  Don't have an account? Sign up     │
+└─────────────────────────────────────┘
+\`\`\`
+
+*Register Page (E-1.3.4):*
+\`\`\`
+┌─────────────────────────────────────┐
+│           [Logo]                    │
+│                                     │
+│       Create Account                │
+│  ┌───────────────────────────────┐  │
+│  │ Name (optional)               │  │
+│  └───────────────────────────────┘  │
+│  ┌───────────────────────────────┐  │
+│  │ Email                         │  │
+│  └───────────────────────────────┘  │
+│  ┌───────────────────────────────┐  │
+│  │ Password                      │  │
+│  └───────────────────────────────┘  │
+│                                     │
+│  [      Create Account      ]       │
+│                                     │
+│  Already have an account? Sign in   │
+└─────────────────────────────────────┘
 \`\`\`
 
 ---
@@ -691,6 +735,81 @@ deleteEntity({ id })
 | E-3.2.2 | Create/edit form dialog | E-3.1.2 | ⬜ |
 | E-3.2.3 | Delete confirmation dialog | E-3.1.5 | ⬜ |
 | E-3.2.4 | Loading & empty states | E-3.2.1 | ⬜ |
+
+**UI Mocks:** *(Implementation of PRD wireframe patterns with entity-specific details)*
+
+*List Page (E-3.2.1) - Based on PRD "List View with Filters":*
+\`\`\`
+[Entity Plural]                         [+ New Entity]
+
+[Search...              ] [Filter ▼] [Sort ▼]
+
+┌──────────────────────────────────────────────────┐
+│ □ │ Name          │ Status   │ Created  │ ···   │
+├──────────────────────────────────────────────────┤
+│ □ │ Item One      │ Active   │ Jan 15   │ [···] │
+│ □ │ Item Two      │ Pending  │ Jan 14   │ [···] │
+│ □ │ Item Three    │ Active   │ Jan 13   │ [···] │
+└──────────────────────────────────────────────────┘
+
+Showing 1-3 of 12              [< Prev] [1] [2] [Next >]
+\`\`\`
+
+*Create/Edit Dialog (E-3.2.2) - Based on PRD "Form Flow":*
+\`\`\`
+┌─────────────────────────────────────────┐
+│ Create [Entity]                    [×]  │
+├─────────────────────────────────────────┤
+│                                         │
+│  Name *                                 │
+│  ┌───────────────────────────────────┐  │
+│  │                                   │  │
+│  └───────────────────────────────────┘  │
+│                                         │
+│  [Field 2]                              │
+│  ┌───────────────────────────────────┐  │
+│  │                                   │  │
+│  └───────────────────────────────────┘  │
+│                                         │
+│  Status                                 │
+│  [Select status...               ▼]     │
+│                                         │
+├─────────────────────────────────────────┤
+│              [Cancel]  [Save]           │
+└─────────────────────────────────────────┘
+\`\`\`
+
+*Delete Confirmation (E-3.2.3):*
+\`\`\`
+┌─────────────────────────────────────────┐
+│ Delete [Entity]?                   [×]  │
+├─────────────────────────────────────────┤
+│                                         │
+│  Are you sure you want to delete        │
+│  "[Entity Name]"?                       │
+│                                         │
+│  This action cannot be undone.          │
+│                                         │
+├─────────────────────────────────────────┤
+│              [Cancel]  [Delete]         │
+└─────────────────────────────────────────┘
+\`\`\`
+
+*Empty State (E-3.2.4) - Based on PRD "Empty State":*
+\`\`\`
+┌─────────────────────────────────────────┐
+│                                         │
+│              [Icon/Emoji]               │
+│                                         │
+│        No [entities] yet                │
+│                                         │
+│   Create your first [entity] to get     │
+│   started with [value proposition].     │
+│                                         │
+│        [+ Create [Entity]]              │
+│                                         │
+└─────────────────────────────────────────┘
+\`\`\`
 
 **Analytics Events:** (from PRD Conversion Funnel)
 - `[entity]_created`, `[entity]_updated`, `[entity]_deleted`
@@ -1440,15 +1559,17 @@ Focus on **shipped features**, not activity.
 
 4. **Acceptance Criteria Required** - Testable conditions in Given/When/Then format for user stories, checkbox format for technical tasks
 
-5. **Server Actions for Mutations** - Use Next.js Server Actions instead of API routes for CRUD
+5. **ASCII Wireframes for UI Tasks** - Every frontend task (pages, forms, dialogs, modals, empty states) must include an ASCII wireframe. **Build upon the PRD wireframes** (product/02-prd.md appendix) but make them implementation-specific: replace generic placeholders with actual entity names, field labels, column headers, and button text. Place wireframes directly after the task table they relate to. Wireframes serve as visual acceptance criteria and bridge the gap between product design and implementation.
 
-6. **Single App Architecture** - ONE Next.js app regardless of user roles
+6. **Server Actions for Mutations** - Use Next.js Server Actions instead of API routes for CRUD
 
-7. **Working Code Only** - All templates must be production-ready, not pseudocode
+7. **Single App Architecture** - ONE Next.js app regardless of user roles
 
-8. **Bootstrap-Friendly** - SQLite first, minimal services, Vercel-deployable
+8. **Working Code Only** - All templates must be production-ready, not pseudocode
 
-9. **Connect to PRD Analytics** - Include tracking for events defined in PRD Conversion Funnel
+9. **Bootstrap-Friendly** - SQLite first, minimal services, Vercel-deployable
+
+10. **Connect to PRD Analytics** - Include tracking for events defined in PRD Conversion Funnel
 
 ## After Generation
 
