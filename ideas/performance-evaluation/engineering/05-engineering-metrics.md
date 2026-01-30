@@ -1,357 +1,253 @@
 # Engineering Metrics Dashboard
 
-> **Purpose:** Track development velocity, quality, and system health for TeamPulse. Focus on ship speed, not vanity metrics.
->
-> **Fits in:** Review weekly to ensure healthy development pace. Product Manager uses these in standups.
+> **Purpose:** Track shipping velocity and technical health for TeamPulse. Update weekly.
 
-## North Star Metric
+## North Star: Ship Velocity
 
-**Features Shipped per Week:** 0 (current) --> 3-5 (target)
-
-**Definition:** A feature is "shipped" when it's deployed to production and usable by customers
-**Why this metric:** Shipping is the only thing that matters for a startup
+**Definition:** Features shipped per week that reach production
+**Target:** 2-3 features/week (solo dev with 20h/week)
 
 ---
 
-## Primary Metrics
+## Health Metrics
 
-### 1. Ship Velocity
+### Shipping Velocity (Primary)
 
-**Definition:** Features/fixes deployed to production per week
+| Metric | Target | How to Measure | Current |
+|--------|--------|----------------|---------|
+| Features shipped/week | 2-3 | Completed tasks deployed to prod | - |
+| Phase completion | On schedule | Actual vs planned milestone dates | - |
+| Deploy frequency | Daily | Production deploys per week | - |
 
-| Week | Features | Bug Fixes | Total | Notes |
-|------|----------|-----------|-------|-------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
+### Quality Metrics
 
-**Target:** 3-5 items/week during build phase
-**Action if below:** Identify blockers, reduce scope, parallelize
+| Metric | Target | How to Measure | Current |
+|--------|--------|----------------|---------|
+| Bug escape rate | <10% | Bugs found in prod / features shipped | - |
+| Rollback rate | <5% | Rollbacks / total deploys | - |
+| P0 incidents | 0/month | Critical prod issues requiring immediate fix | - |
 
----
+### Performance Metrics (SLC Targets from PRD)
 
-### 2. Time to Deploy
+| Metric | Target | How to Measure | Current |
+|--------|--------|----------------|---------|
+| LCP (Largest Contentful Paint) | <2.0s | Lighthouse / Vercel Analytics | - |
+| API Response P95 | <500ms | PostHog / Vercel Functions | - |
+| Time to Interactive | <3.0s | Lighthouse | - |
+| Auto-save latency | <1s | Client-side timing | - |
+| Database query P95 | <100ms | Supabase metrics | - |
 
-**Definition:** Time from code complete to production
+### SLC-Specific Metrics (from PRD)
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Avg deploy time | - | <15 min |
-| Hotfix deploy time | - | <5 min |
-| Rollback time | - | <2 min |
-
-**Target:** <15 minutes from merge to production
-**Action if above:** Optimize CI/CD, reduce build size
-
----
-
-### 3. Build Success Rate
-
-**Definition:** % of CI builds that pass
-
-| Week | Total Builds | Passed | Success Rate |
-|------|--------------|--------|--------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-
-**Target:** >95%
-**Action if below:** Fix flaky tests, improve error messages
+| Dimension | Metric | Target | Timeline |
+|-----------|--------|--------|----------|
+| **Simple** | Time to first review cycle | <15 min | Week 2 |
+| **Simple** | Time to complete one review | <20 min | Week 2 |
+| **Lovable** | Gap analysis adoption | >70% of reviews | Week 4 |
+| **Complete** | Review cycle completion rate | >80% | Week 4 |
 
 ---
 
-### 4. Code Review Turnaround
+## Weekly Tracking Template
 
-**Definition:** Time from PR opened to merged
+### Week of: [DATE]
 
-| Week | PRs Opened | Avg Time to Merge | >24h PRs |
-|------|------------|-------------------|----------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
+**Shipped:**
+- [ ] Feature 1: [description]
+- [ ] Feature 2: [description]
+- [ ] Feature 3: [description]
 
-**Target:** <4 hours average
-**Action if above:** Async review, smaller PRs, pair programming
+**Velocity:** [X] features (Target: 2-3)
 
----
+**Blockers:**
+- None / [description]
 
-## System Health Metrics
+**Performance Check:**
+- LCP: [X.X]s (Target: <2.0s)
+- API P95: [X]ms (Target: <500ms)
 
-### Uptime
-
-| Metric | Current | Target |
-|--------|---------|--------|
-| Uptime (30 day) | - | 99.9% |
-| Downtime incidents | - | 0/month |
-| P1 incidents | - | 0/month |
+**Bugs Fixed:** [X]
+**Bugs Escaped to Prod:** [X]
 
 ---
 
-### Performance
+## Phase Progress Tracker
 
-| Metric | Current | Target | Action Threshold |
-|--------|---------|--------|------------------|
-| Avg page load (FCP) | - | <1.5s | >3s = P1 |
-| Avg API response | - | <200ms | >500ms = investigate |
-| P95 API response | - | <500ms | >1s = P1 |
-| Database query time | - | <50ms | >200ms = optimize |
+### Phase 1: Foundation (Weeks 1-2)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Project setup complete | Week 1 | - | [ ] |
+| Auth working | Week 1 | - | [ ] |
+| Schema deployed | Week 1 | - | [ ] |
+| Multi-tenant foundation | Week 2 | - | [ ] |
+| Staging deployed | Week 2 | - | [ ] |
+
+### Phase 2: Cycle Management (Weeks 3-4)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Cycle CRUD | Week 3 | - | [ ] |
+| Template system | Week 3 | - | [ ] |
+| Team management | Week 4 | - | [ ] |
+| Wizard complete | Week 4 | - | [ ] |
+
+### Phase 3: Review Workflow (Weeks 5-7)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Manager review form | Week 5 | - | [ ] |
+| Auto-save working | Week 5 | - | [ ] |
+| Self-review form | Week 6 | - | [ ] |
+| Peer feedback system | Week 6 | - | [ ] |
+| Share review flow | Week 7 | - | [ ] |
+
+### Phase 4: Gap Analysis (Week 8)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Gap calculation | Week 8 | - | [ ] |
+| Visual comparison | Week 8 | - | [ ] |
+| PDF export | Week 8 | - | [ ] |
+
+### Phase 5: Goals (Week 9)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Goal CRUD | Week 9 | - | [ ] |
+| Goal progress tracking | Week 9 | - | [ ] |
+| Goals in review sidebar | Week 9 | - | [ ] |
+
+### Phase 6: Notifications (Week 10)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Email templates | Week 10 | - | [ ] |
+| Reminder cron job | Week 10 | - | [ ] |
+| In-app notifications | Week 10 | - | [ ] |
+
+### Phase 7: Analytics & Billing (Week 11)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| PostHog integration | Week 11 | - | [ ] |
+| Stripe billing | Week 11 | - | [ ] |
+| Dashboard stats | Week 11 | - | [ ] |
+
+### Phase 8: Polish & Launch (Week 12)
+| Milestone | Planned | Actual | Status |
+|-----------|---------|--------|--------|
+| Error handling | Week 12 | - | [ ] |
+| Landing page | Week 12 | - | [ ] |
+| Production launch | Week 12 | - | [ ] |
 
 ---
 
-### Error Rates
+## Technical Debt Register
 
-| Metric | Current | Target | Action Threshold |
-|--------|---------|--------|------------------|
-| Error rate (5xx) | - | <0.1% | >1% = P1 |
-| Error rate (4xx) | - | <5% | >10% = investigate |
-| Unhandled exceptions | - | 0/day | >5/day = fix |
+Track only when it blocks shipping. Fix High impact immediately, schedule Medium for next phase, ignore Low until it causes problems.
 
----
+| Issue | Impact | Discovered | Fix When | Status |
+|-------|--------|------------|----------|--------|
+| - | - | - | - | - |
 
-## Quality Metrics
-
-### Test Coverage
-
-| Area | Current | Target |
-|------|---------|--------|
-| Unit tests | - | >80% |
-| API tests | - | >90% |
-| E2E tests (critical paths) | - | 100% |
-
-**Critical paths to test:**
-- [ ] User signup/login
-- [ ] Create review cycle
-- [ ] Write and submit review
-- [ ] View gap analysis
-- [ ] Payment flow
+**Impact Definitions:**
+- **High:** Blocks feature development or causes user-facing issues
+- **Medium:** Slows development or causes minor UX issues
+- **Low:** Code smell, minor inefficiency, nice-to-have cleanup
 
 ---
 
-### Bug Metrics
+## Performance Budget
 
-| Week | New Bugs | Fixed | Open | Backlog Age |
-|------|----------|-------|------|-------------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
+### Bundle Size
+| Chunk | Budget | Current |
+|-------|--------|---------|
+| Initial JS | <150KB gzip | - |
+| Route chunks | <50KB each | - |
+| Total page weight | <500KB | - |
 
-**Target:** Fix rate > creation rate
-**Backlog age target:** <2 weeks oldest bug
-
----
-
-## Technical Debt Tracking
-
-### Current Tech Debt Items
-
-| Item | Impact | Effort | Priority |
-|------|--------|--------|----------|
-| Add proper error boundaries | Medium | Low | P1 |
-| Optimize database queries | High | Medium | P1 |
-| Add comprehensive logging | Medium | Medium | P2 |
-| Improve test coverage | Medium | High | P2 |
-| Refactor [specific area] | Low | Low | P3 |
-
-**Tech debt budget:** 20% of sprint capacity
+### Database
+| Query Type | Budget | Current |
+|------------|--------|---------|
+| List queries | <50ms | - |
+| Single record | <20ms | - |
+| Complex joins | <100ms | - |
 
 ---
 
 ## Infrastructure Costs
 
-### Monthly Costs
+Track monthly to ensure sustainable unit economics.
 
-| Service | Current | Projected (6 mo) | Notes |
-|---------|---------|------------------|-------|
-| Vercel | $20 | $20 | Pro plan |
-| Supabase | $25 | $25 | Pro plan |
-| Clerk | $0 | $25 | Free tier now |
-| Resend | $0 | $20 | Free tier now |
-| PostHog | $0 | $0 | Free tier |
-| Domain/SSL | $15 | $15 | Annual |
-| **Total** | **~$60** | **~$105** | |
+| Service | Budget | Current | Notes |
+|---------|--------|---------|-------|
+| Vercel | $20/mo | - | Pro plan for cron |
+| Supabase (DB + Auth) | $0-25/mo | - | Free tier generous, Pro at $25 |
+| Resend | $20/mo | - | 50k emails |
+| PostHog | $0/mo | - | Free tier sufficient |
+| **Total** | **~$40-65/mo** | - | |
 
-**Cost per customer:** $60 / X customers = $Y
+**Break-even:** ~7-10 users at $6 PEPM (conservative)
 
 ---
 
-## Development Environment Health
+## What NOT to Track
 
-### Setup Time
+These metrics add overhead without driving shipping:
 
-| Task | Current | Target |
-|------|---------|--------|
-| Clone to running locally | - | <15 min |
-| New dev onboarding | - | <2 hours |
-| Database seed | - | <1 min |
+- Lines of code written/deleted
+- Number of commits
+- Test coverage percentage (focus on critical paths only)
+- Cyclomatic complexity scores
+- Code review turnaround time (solo dev)
+- Sprint velocity points
 
----
-
-### Developer Experience
-
-| Metric | Current | Target |
-|--------|---------|--------|
-| Hot reload time | - | <1s |
-| Full build time | - | <2 min |
-| Test run time | - | <2 min |
-| Linting time | - | <10s |
+**Focus on:** Shipped features, user-facing quality, and performance.
 
 ---
 
-## Weekly Engineering Review
+## Alerts & Monitoring (Post-Launch)
 
-*Complete every Friday - 15 minutes*
+### Critical Alerts (Wake me up)
+- [ ] API error rate > 5% for 5 minutes
+- [ ] P95 latency > 2s for 5 minutes
+- [ ] Database connection failures
+- [ ] Stripe webhook failures
 
-### This Week's Numbers
+### Warning Alerts (Check next morning)
+- [ ] Error rate > 1%
+- [ ] P95 latency > 1s
+- [ ] Email delivery failures
+- [ ] Low disk space
 
-| Metric | Target | Actual | Trend |
-|--------|--------|--------|-------|
-| Features shipped | 3-5 | | ↑↓→ |
-| Bugs fixed | | | |
-| Build success rate | 95% | | |
-| Error rate (5xx) | <0.1% | | |
-| Avg page load | <1.5s | | |
-
-### What Shipped This Week?
-- [ ] Feature: _______________
-- [ ] Feature: _______________
-- [ ] Bug fix: _______________
-
-### What Got Blocked?
-- Blocker: _______________ | Resolution: _______________
-
-### Tech Debt Addressed?
-- [ ] Item: _______________
-
-### Next Week's Focus
-1. _______________
-2. _______________
-3. _______________
+### Daily Dashboard Check
+- [ ] Vercel deployment status
+- [ ] PostHog funnel conversion
+- [ ] Error logs review (first 10 min of day)
 
 ---
 
-## Incident Tracking
+## Post-Launch Iteration Metrics
 
-### Incident Template
+After SLC launch, focus on:
 
-```markdown
-## Incident #[number]: [Brief title]
-
-**Severity:** P1 / P2 / P3
-**Status:** Open / Resolved
-**Duration:** [start time] - [end time]
-
-### What Happened
-[Brief description of the issue]
-
-### Impact
-- Users affected: [number]
-- Revenue impact: [if any]
-- Data impact: [if any]
-
-### Timeline
-- [time]: Issue detected
-- [time]: Investigation started
-- [time]: Root cause identified
-- [time]: Fix deployed
-- [time]: Verified resolved
-
-### Root Cause
-[What caused the issue]
-
-### Resolution
-[How it was fixed]
-
-### Action Items
-- [ ] [Preventive measure 1]
-- [ ] [Preventive measure 2]
-```
+| Metric | Week 13 | Week 14 | Week 15 | Week 16 |
+|--------|---------|---------|---------|---------|
+| WAU | - | - | - | - |
+| Review cycles created | - | - | - | - |
+| Gap analysis views | - | - | - | - |
+| Trial signups | - | - | - | - |
+| Trial -> Paid conversion | - | - | - | - |
+| Churn rate | - | - | - | - |
+| NPS score | - | - | - | - |
 
 ---
 
-## Deployment Checklist
+## Engineering Principles Checklist
 
-### Pre-Deploy
-- [ ] All tests passing
-- [ ] Code reviewed and approved
-- [ ] Migrations tested (if any)
-- [ ] Feature flags configured (if needed)
-- [ ] Monitoring alerts configured
+Before each release, verify:
 
-### Deploy
-- [ ] Deploy to staging
-- [ ] Smoke test staging
-- [ ] Deploy to production
-- [ ] Verify production works
-
-### Post-Deploy
-- [ ] Monitor error rates (15 min)
-- [ ] Check key flows work
-- [ ] Update changelog
-- [ ] Notify team in Slack
+- [ ] **Simple:** Feature can be explained in one sentence
+- [ ] **Lovable:** Tested the flow myself, it feels good
+- [ ] **Complete:** User can complete their task end-to-end
+- [ ] **Fast:** Loads in <2s on 3G connection
+- [ ] **Reliable:** Error states handled gracefully
+- [ ] **Secure:** Auth checks on all mutations, data isolation verified
 
 ---
 
-## Alerts Configuration
-
-### Critical Alerts (Wake Up)
-
-| Alert | Condition | Action |
-|-------|-----------|--------|
-| Error spike | >5% 5xx in 5 min | Page on-call |
-| Database down | Connection failures | Page on-call |
-| Payment failures | >10% failure rate | Page on-call |
-| Auth down | Clerk errors | Page on-call |
-
-### Warning Alerts (Check Next Day)
-
-| Alert | Condition | Action |
-|-------|-----------|--------|
-| Slow API | P95 >1s | Investigate |
-| High error rate | >1% 4xx | Investigate |
-| Low disk space | >80% | Scale up |
-| High memory | >85% | Investigate |
-
----
-
-## DO NOT TRACK (Vanity Metrics)
-
-- Lines of code (more isn't better)
-- Number of commits (meaningless)
-- GitHub stars (doesn't pay bills)
-- Framework version updates (update when needed)
-- Test count (coverage % matters more)
-
----
-
-## Quick Commands for Metrics
-
-```bash
-# Check build times
-time pnpm build
-
-# Check test times
-time pnpm test
-
-# Check bundle size
-pnpm build && ls -la .next/static/chunks
-
-# Check dependencies
-pnpm outdated
-
-# Check for security issues
-pnpm audit
-```
-
----
-
-## Monitoring Dashboard Links
-
-- **Vercel Dashboard:** [Link to Vercel project]
-- **Supabase Dashboard:** [Link to Supabase project]
-- **PostHog:** [Link to PostHog dashboard]
-- **Sentry:** [Link to Sentry project]
-- **Clerk Dashboard:** [Link to Clerk project]
+*Last updated: [DATE]*

@@ -1,750 +1,671 @@
 # Project Setup Guide
 
-> **Purpose:** Step-by-step instructions to bootstrap the TeamPulse development environment. From zero to running app in 30 minutes.
->
-> **Fits in:** Run these commands before starting Implementation Tasks (03). Architecture decisions in (01).
+> **Purpose:** Bootstrap TeamPulse from zero to running locally. Follow once at project start.
 
 ## Prerequisites
 
-Ensure you have installed:
-- Node.js 20+ (`node -v`)
-- pnpm 8+ (`pnpm -v`)
-- Git (`git -v`)
-- VS Code (recommended)
+- Node.js 20+ LTS
+- pnpm 9+
+- Git
+- Supabase account (free tier works)
+- VS Code with extensions:
+  - ESLint
+  - Tailwind CSS IntelliSense
+  - Prettier
 
 ---
 
 ## Step 1: Create Next.js Project
 
 ```bash
-# Create new Next.js 15 project with App Router
-pnpm create next-app@latest teampulse --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
+pnpm create next-app@latest teampulse \
+  --typescript \
+  --tailwind \
+  --eslint \
+  --app \
+  --src-dir \
+  --import-alias "@/*"
 
-# Navigate to project
 cd teampulse
 ```
 
 ---
 
-## Step 2: Install Core Dependencies
+## Step 2: Install Dependencies
 
 ```bash
-# Prisma ORM
-pnpm add prisma @prisma/client
-pnpm add -D prisma
+# Core dependencies
+pnpm add @supabase/supabase-js @supabase/ssr zod date-fns
+pnpm add -D supabase
 
-# shadcn/ui (will prompt for configuration)
-pnpm dlx shadcn-ui@latest init
+# UI (shadcn/ui)
+pnpm dlx shadcn@latest init
 
-# Select these options:
+# When prompted, choose:
 # - Style: Default
-# - Base color: Slate
+# - Base color: Neutral
 # - CSS variables: Yes
 
-# Add essential shadcn components
-pnpm dlx shadcn-ui@latest add button card dialog dropdown-menu form input label select separator tabs textarea toast avatar badge calendar popover table
+# Add shadcn components
+pnpm dlx shadcn@latest add \
+  button input textarea select label \
+  card dialog sheet \
+  table data-table \
+  form toast sonner \
+  dropdown-menu avatar badge \
+  tabs progress separator \
+  skeleton tooltip popover \
+  calendar date-picker \
+  alert alert-dialog \
+  sidebar
 
-# Clerk authentication
-pnpm add @clerk/nextjs
+# Icons
+pnpm add lucide-react
 
-# Resend for email
-pnpm add resend
+# Email (React Email + Resend)
+pnpm add @react-email/components resend
 
-# PostHog for analytics
-pnpm add posthog-js posthog-node
+# Analytics
+pnpm add posthog-js
 
-# Date handling
-pnpm add date-fns
+# Payments
+pnpm add stripe @stripe/stripe-js
 
-# Form validation
-pnpm add zod react-hook-form @hookform/resolvers
-
-# Server actions
-pnpm add next-safe-action
-
-# PDF generation (for gap analysis export)
+# PDF Generation (for gap analysis export)
 pnpm add @react-pdf/renderer
 
-# Dev dependencies
+# Development
 pnpm add -D @types/node
 ```
 
 ---
 
-## Step 3: Initialize Prisma
+## Step 3: Setup Supabase Project
 
-```bash
-# Initialize Prisma with PostgreSQL
-pnpm prisma init --datasource-provider postgresql
-```
+### 3.1 Create Supabase Project
 
-Update `prisma/schema.prisma`:
+1. Go to https://supabase.com and sign in
+2. Click "New Project"
+3. Choose organization and name your project "teampulse"
+4. Set a secure database password (save this!)
+5. Select a region close to your users
+6. Wait for project to be created (~2 minutes)
 
-```prisma
-generator client {
-  provider = "prisma-client-js"
-}
+### 3.2 Get API Keys
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
-// === ENUMS ===
-
-enum Role {
-  ADMIN
-  MANAGER
-  EMPLOYEE
-}
-
-enum CycleStatus {
-  DRAFT
-  ACTIVE
-  COMPLETED
-  ARCHIVED
-}
-
-enum ReviewStatus {
-  DRAFT
-  SUBMITTED
-  SHARED
-}
-
-// === MODELS ===
-
-model Company {
-  id          String        @id @default(uuid())
-  clerkOrgId  String        @unique
-  name        String
-  plan        String        @default("trial")
-  trialEndsAt DateTime?
-  users       User[]
-  cycles      ReviewCycle[]
-  templates   Template[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-}
-
-model User {
-  id             String         @id @default(uuid())
-  clerkUserId    String         @unique
-  email          String
-  name           String
-  role           Role           @default(EMPLOYEE)
-  companyId      String
-  company        Company        @relation(fields: [companyId], references: [id])
-  managerId      String?
-  manager        User?          @relation("ManagerRelation", fields: [managerId], references: [id])
-  directReports  User[]         @relation("ManagerRelation")
-  reviews        Review[]       @relation("ReviewsWritten")
-  reviewsReceived Review[]      @relation("ReviewsReceived")
-  selfReviews    SelfReview[]
-  peerFeedbackGiven PeerFeedback[] @relation("FeedbackGiven")
-  peerFeedbackReceived PeerFeedback[] @relation("FeedbackReceived")
-  goals          Goal[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
-  @@index([companyId])
-}
-
-model Template {
-  id           String         @id @default(uuid())
-  name         String
-  description  String?
-  isDefault    Boolean        @default(false)
-  companyId    String?
-  company      Company?       @relation(fields: [companyId], references: [id])
-  competencies Competency[]
-  cycles       ReviewCycle[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-
-  @@index([companyId])
-}
-
-model Competency {
-  id          String   @id @default(uuid())
-  templateId  String
-  template    Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
-  name        String
-  description String?
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model ReviewCycle {
-  id                  String        @id @default(uuid())
-  name                String
-  companyId           String
-  company             Company       @relation(fields: [companyId], references: [id])
-  templateId          String
-  template            Template      @relation(fields: [templateId], references: [id])
-  startDate           DateTime
-  endDate             DateTime
-  selfReviewDeadline  DateTime
-  peerFeedbackDeadline DateTime
-  managerReviewDeadline DateTime
-  status              CycleStatus   @default(DRAFT)
-  participants        Participant[]
-  reviews             Review[]
-  selfReviews         SelfReview[]
-  peerFeedback        PeerFeedback[]
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-
-  @@index([companyId])
-}
-
-model Participant {
-  id         String      @id @default(uuid())
-  cycleId    String
-  cycle      ReviewCycle @relation(fields: [cycleId], references: [id], onDelete: Cascade)
-  userId     String
-  peers      String[]    // Array of user IDs who give peer feedback
-  createdAt  DateTime    @default(now())
-
-  @@unique([cycleId, userId])
-}
-
-model Review {
-  id              String       @id @default(uuid())
-  cycleId         String
-  cycle           ReviewCycle  @relation(fields: [cycleId], references: [id])
-  revieweeId      String
-  reviewee        User         @relation("ReviewsReceived", fields: [revieweeId], references: [id])
-  reviewerId      String
-  reviewer        User         @relation("ReviewsWritten", fields: [reviewerId], references: [id])
-  ratings         Rating[]
-  overallRating   Float?
-  overallFeedback String?
-  status          ReviewStatus @default(DRAFT)
-  sharedAt        DateTime?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-
-  @@unique([cycleId, revieweeId, reviewerId])
-  @@index([cycleId])
-  @@index([revieweeId])
-}
-
-model Rating {
-  id             String   @id @default(uuid())
-  reviewId       String
-  review         Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  competencyId   String
-  competencyName String
-  score          Int      // 1-5
-  feedback       String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
-model SelfReview {
-  id          String       @id @default(uuid())
-  cycleId     String
-  cycle       ReviewCycle  @relation(fields: [cycleId], references: [id])
-  userId      String
-  user        User         @relation(fields: [userId], references: [id])
-  ratings     SelfRating[]
-  highlights  String?
-  nextGoals   String?
-  status      ReviewStatus @default(DRAFT)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  @@unique([cycleId, userId])
-  @@index([cycleId])
-}
-
-model SelfRating {
-  id             String     @id @default(uuid())
-  selfReviewId   String
-  selfReview     SelfReview @relation(fields: [selfReviewId], references: [id], onDelete: Cascade)
-  competencyId   String
-  competencyName String
-  score          Int        // 1-5
-  feedback       String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-}
-
-model PeerFeedback {
-  id           String       @id @default(uuid())
-  cycleId      String
-  cycle        ReviewCycle  @relation(fields: [cycleId], references: [id])
-  giverId      String
-  giver        User         @relation("FeedbackGiven", fields: [giverId], references: [id])
-  receiverId   String
-  receiver     User         @relation("FeedbackReceived", fields: [receiverId], references: [id])
-  strengths    String?
-  areasForGrowth String?
-  collaboration Int?        // 1-5
-  additionalComments String?
-  status       ReviewStatus @default(DRAFT)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-
-  @@unique([cycleId, giverId, receiverId])
-  @@index([cycleId])
-  @@index([receiverId])
-}
-
-model Goal {
-  id          String   @id @default(uuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  title       String
-  description String?
-  dueDate     DateTime?
-  status      String   @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, COMPLETED, MISSED
-  progress    Int      @default(0) // 0-100
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([userId])
-}
-```
+1. Go to Project Settings > API
+2. Copy the following:
+   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+   - **anon public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (keep secret!)
 
 ---
 
-## Step 4: Set Up Environment Variables
+## Step 4: Setup Supabase Client
 
-Create `.env.local`:
-
-```bash
-# Database (Supabase)
-DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT].supabase.co:5432/postgres?pgbouncer=true"
-DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT].supabase.co:5432/postgres"
-
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
-
-# Resend Email
-RESEND_API_KEY=re_...
-
-# PostHog Analytics
-NEXT_PUBLIC_POSTHOG_KEY=phc_...
-NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
-
-# Stripe (add later)
-# STRIPE_SECRET_KEY=sk_test_...
-# STRIPE_WEBHOOK_SECRET=whsec_...
-# NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-Create `.env.example` (for documentation):
-
-```bash
-# Database (Supabase)
-DATABASE_URL=
-DIRECT_URL=
-
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
-
-# Resend Email
-RESEND_API_KEY=
-
-# PostHog Analytics
-NEXT_PUBLIC_POSTHOG_KEY=
-NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
-
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
----
-
-## Step 5: Configure Clerk
-
-Create `src/middleware.ts`:
+**Create `src/lib/supabase/client.ts`:** (Browser client)
 
 ```typescript
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { createBrowserClient } from '@supabase/ssr'
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/webhooks(.*)",
-]);
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+```
 
-export default clerkMiddleware((auth, request) => {
-  if (!isPublicRoute(request)) {
-    auth().protect();
+**Create `src/lib/supabase/server.ts`:** (Server client)
+
+```typescript
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+export async function createClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {}
+        },
+      },
+    }
+  )
+}
+```
+
+**Create `src/lib/supabase/middleware.ts`:**
+
+```typescript
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export async function updateSession(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Redirect to login if not authenticated and accessing protected route
+  if (!user &&
+      !request.nextUrl.pathname.startsWith('/login') &&
+      !request.nextUrl.pathname.startsWith('/register') &&
+      !request.nextUrl.pathname.startsWith('/api/webhooks') &&
+      request.nextUrl.pathname !== '/' &&
+      request.nextUrl.pathname !== '/pricing' &&
+      request.nextUrl.pathname !== '/features') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
   }
-});
+
+  return supabaseResponse
+}
+```
+
+---
+
+## Step 5: Setup Authentication Middleware
+
+**Create `src/middleware.ts`:**
+
+```typescript
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/supabase/middleware'
+
+export async function middleware(request: NextRequest) {
+  return await updateSession(request)
+}
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
+}
 ```
 
-Update `src/app/layout.tsx`:
+**Create `src/app/(auth)/callback/route.ts`:** (OAuth callback)
 
 ```typescript
-import { ClerkProvider } from "@clerk/nextjs";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
-const inter = Inter({ subsets: ["latin"] });
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url)
+  const code = searchParams.get('code')
+  const next = searchParams.get('next') ?? '/dashboard'
 
-export const metadata: Metadata = {
-  title: "TeamPulse - Performance Reviews for Small Teams",
-  description: "360-degree performance reviews with gap analysis",
-};
+  if (code) {
+    const supabase = await createClient()
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      return NextResponse.redirect(`${origin}${next}`)
+    }
+  }
+
+  return NextResponse.redirect(`${origin}/login?error=auth_error`)
+}
+```
+
+**Update `src/app/layout.tsx`:**
+
+```typescript
+import { Inter } from 'next/font/google'
+import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>{children}</body>
-      </html>
-    </ClerkProvider>
-  );
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
+    </html>
+  )
 }
 ```
 
 ---
 
-## Step 6: Set Up Database
+## Step 6: Setup Stripe
 
-### Create Supabase Project
+### 6.1 Create Stripe Account
 
-1. Go to [supabase.com](https://supabase.com)
+1. Go to https://stripe.com and create account
+2. Switch to Test Mode
+3. Create a Product with recurring pricing:
+   - Name: "TeamPulse"
+   - Pricing: $6/employee/month (metered)
+4. Copy API keys and price ID
+
+### 6.2 Create Stripe Webhook
+
+In Stripe Dashboard:
+1. Developers > Webhooks > Add Endpoint
+2. URL: `https://your-domain.com/api/webhooks/stripe`
+3. Events to listen:
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.paid`
+   - `invoice.payment_failed`
+
+---
+
+## Step 7: Setup Resend (Email)
+
+### 7.1 Create Resend Account
+
+1. Go to https://resend.com and create account
+2. Verify your domain
+3. Create API key
+
+### 7.2 Create Email Templates
+
+**Create `emails/reminder.tsx`:**
+
+```typescript
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
+  Text,
+} from '@react-email/components'
+
+interface ReminderEmailProps {
+  recipientName: string
+  cycleName: string
+  dueDate: string
+  actionUrl: string
+  actionType: 'self-review' | 'peer-feedback' | 'manager-review'
+}
+
+export default function ReminderEmail({
+  recipientName,
+  cycleName,
+  dueDate,
+  actionUrl,
+  actionType,
+}: ReminderEmailProps) {
+  const actionText = {
+    'self-review': 'Complete Your Self-Review',
+    'peer-feedback': 'Submit Peer Feedback',
+    'manager-review': 'Write Team Reviews',
+  }
+
+  return (
+    <Html>
+      <Head />
+      <Preview>{`Reminder: ${actionText[actionType]} for ${cycleName}`}</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Heading style={h1}>Review Reminder</Heading>
+          <Text style={text}>Hi {recipientName},</Text>
+          <Text style={text}>
+            This is a friendly reminder that your {actionText[actionType].toLowerCase()}
+            for <strong>{cycleName}</strong> is due on <strong>{dueDate}</strong>.
+          </Text>
+          <Button style={button} href={actionUrl}>
+            {actionText[actionType]}
+          </Button>
+          <Text style={footer}>
+            - The TeamPulse Team
+          </Text>
+        </Container>
+      </Body>
+    </Html>
+  )
+}
+
+const main = { backgroundColor: '#f6f9fc', fontFamily: 'sans-serif' }
+const container = { margin: '0 auto', padding: '20px', maxWidth: '600px' }
+const h1 = { color: '#333', fontSize: '24px' }
+const text = { color: '#555', fontSize: '16px', lineHeight: '24px' }
+const button = {
+  backgroundColor: '#000',
+  color: '#fff',
+  padding: '12px 24px',
+  borderRadius: '6px',
+  textDecoration: 'none',
+  display: 'inline-block',
+}
+const footer = { color: '#888', fontSize: '14px', marginTop: '32px' }
+```
+
+---
+
+## Step 8: Setup PostHog (Analytics)
+
+### 8.1 Create PostHog Account
+
+1. Go to https://posthog.com and create account
 2. Create new project
-3. Copy connection strings to `.env.local`
+3. Copy Project API Key
 
-### Run Migrations
+### 8.2 Create Analytics Provider
 
-```bash
-# Generate Prisma client
-pnpm prisma generate
-
-# Push schema to database
-pnpm prisma db push
-
-# (Optional) Seed database with default templates
-pnpm prisma db seed
-```
-
-Create `prisma/seed.ts`:
+**Create `src/components/providers/posthog.tsx`:**
 
 ```typescript
-import { PrismaClient } from "@prisma/client";
+'use client'
 
-const prisma = new PrismaClient();
+import posthog from 'posthog-js'
+import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
-async function main() {
-  // Create default templates
-  const engineeringIC = await prisma.template.create({
-    data: {
-      name: "Engineering IC - Mid Level",
-      description: "Performance review template for mid-level software engineers",
-      isDefault: true,
-      competencies: {
-        create: [
-          {
-            name: "Technical Skills",
-            description: "Quality of code, debugging ability, system design",
-            order: 1,
-          },
-          {
-            name: "Communication",
-            description: "Clear documentation, effective meetings, async communication",
-            order: 2,
-          },
-          {
-            name: "Problem Solving",
-            description: "Breaking down problems, finding solutions, learning from failures",
-            order: 3,
-          },
-          {
-            name: "Collaboration",
-            description: "Code reviews, helping teammates, cross-team work",
-            order: 4,
-          },
-          {
-            name: "Ownership",
-            description: "Taking responsibility, following through, proactive improvement",
-            order: 5,
-          },
-        ],
-      },
-    },
-  });
+export function PostHogProvider({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+        capture_pageview: false,
+        capture_pageleave: true,
+      })
+    }
+  }, [])
 
-  const managerTemplate = await prisma.template.create({
-    data: {
-      name: "Engineering Manager",
-      description: "Performance review template for engineering managers",
-      isDefault: true,
-      competencies: {
-        create: [
-          {
-            name: "Team Development",
-            description: "Growing team members, providing feedback, career pathing",
-            order: 1,
-          },
-          {
-            name: "Execution",
-            description: "Delivering on commitments, removing blockers, planning",
-            order: 2,
-          },
-          {
-            name: "Communication",
-            description: "Upward, downward, and cross-functional communication",
-            order: 3,
-          },
-          {
-            name: "Technical Leadership",
-            description: "Technical decisions, architecture guidance, code review",
-            order: 4,
-          },
-          {
-            name: "Strategic Thinking",
-            description: "Long-term planning, prioritization, business alignment",
-            order: 5,
-          },
-        ],
-      },
-    },
-  });
-
-  console.log("Seeded templates:", { engineeringIC, managerTemplate });
+  return <PHProvider client={posthog}>{children}</PHProvider>
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
-```
+export function PostHogIdentify() {
+  const posthog = usePostHog()
+  const [user, setUser] = useState<User | null>(null)
 
-Update `package.json`:
+  useEffect(() => {
+    const supabase = createClient()
 
-```json
-{
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
-  }
-}
-```
+    // Get initial user
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
 
-```bash
-pnpm add -D ts-node
-pnpm prisma db seed
-```
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+    })
 
----
+    return () => subscription.unsubscribe()
+  }, [])
 
-## Step 7: Set Up PostHog
+  useEffect(() => {
+    if (user) {
+      posthog.identify(user.id, {
+        email: user.email,
+        name: user.user_metadata?.name,
+      })
+    } else {
+      posthog.reset()
+    }
+  }, [posthog, user])
 
-Create `src/lib/posthog.ts`:
-
-```typescript
-import posthog from "posthog-js";
-
-export const initPostHog = () => {
-  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-      capture_pageview: false, // We'll capture manually
-    });
-  }
-};
-
-export const trackEvent = (
-  eventName: string,
-  properties?: Record<string, any>
-) => {
-  if (typeof window !== "undefined") {
-    posthog.capture(eventName, properties);
-  }
-};
-```
-
----
-
-## Step 8: Create Base Layout
-
-Create `src/app/(dashboard)/layout.tsx`:
-
-```typescript
-import { UserButton } from "@clerk/nextjs";
-import Link from "next/link";
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Review Cycles", href: "/cycles" },
-  { name: "Team", href: "/team" },
-  { name: "Goals", href: "/goals" },
-  { name: "Templates", href: "/templates" },
-];
-
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-white border-r">
-        <div className="flex h-16 items-center px-6 border-b">
-          <Link href="/dashboard" className="text-xl font-bold">
-            TeamPulse
-          </Link>
-        </div>
-        <nav className="p-4 space-y-1">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="block px-4 py-2 rounded-md hover:bg-gray-100"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {/* Main content */}
-      <div className="pl-64">
-        {/* Header */}
-        <header className="h-16 bg-white border-b flex items-center justify-end px-6">
-          <UserButton afterSignOutUrl="/" />
-        </header>
-
-        {/* Page content */}
-        <main className="p-6">{children}</main>
-      </div>
-    </div>
-  );
+  return null
 }
 ```
 
 ---
 
-## Step 9: Create Prisma Client
+## Step 9: Environment Setup
 
-Create `src/lib/prisma.ts`:
+```bash
+cat > .env.local << 'EOF'
+# Supabase (Database + Auth) - Replace with your keys
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 
-```typescript
-import { PrismaClient } from "@prisma/client";
+# Payments (Stripe) - Replace with your keys
+STRIPE_SECRET_KEY="sk_test_xxx"
+STRIPE_WEBHOOK_SECRET="whsec_xxx"
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_xxx"
+STRIPE_PRICE_ID="price_xxx"
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+# Email (Resend) - Replace with your key
+RESEND_API_KEY="re_xxx"
+EMAIL_FROM="TeamPulse <reviews@teampulse.app>"
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+# Analytics (PostHog) - Replace with your key
+NEXT_PUBLIC_POSTHOG_KEY="phc_xxx"
+NEXT_PUBLIC_POSTHOG_HOST="https://us.i.posthog.com"
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+# App
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEXT_PUBLIC_APP_NAME="TeamPulse"
+NODE_ENV="development"
+EOF
 ```
 
 ---
 
-## Step 10: Start Development Server
+## Step 10: Initialize Database
+
+### 10.1 Apply Database Schema
+
+Go to Supabase Dashboard > SQL Editor and run the schema from `01-technical-requirements.md`.
+
+Or use the Supabase CLI:
 
 ```bash
-# Run development server
+# Initialize Supabase locally (optional)
+pnpm supabase init
+
+# Link to your remote project
+pnpm supabase link --project-ref your-project-ref
+
+# Push migrations
+pnpm supabase db push
+```
+
+### 10.2 Seed System Templates
+
+Run this SQL in Supabase SQL Editor to create the 4 system templates:
+
+```sql
+-- Engineering IC Template
+WITH eng_ic AS (
+  INSERT INTO public.templates (name, description, is_system, role_type, level)
+  VALUES ('Engineering IC - Mid-Level', 'Performance review template for mid-level software engineers', true, 'engineering', 'mid')
+  RETURNING id
+)
+INSERT INTO public.competencies (template_id, name, description, sort_order)
+SELECT id, name, description, sort_order FROM eng_ic,
+(VALUES
+  ('Technical Skills', 'Ability to write clean, maintainable, and efficient code. Demonstrates strong debugging and problem-solving abilities.', 1),
+  ('Code Quality', 'Writes well-tested code. Follows coding standards and best practices. Participates actively in code reviews.', 2),
+  ('Problem Solving', 'Breaks down complex problems into manageable pieces. Identifies root causes and proposes effective solutions.', 3),
+  ('Communication', 'Clearly communicates technical concepts. Documents work appropriately. Keeps stakeholders informed of progress.', 4),
+  ('Collaboration', 'Works effectively with teammates. Shares knowledge willingly. Mentors junior team members.', 5),
+  ('Ownership', 'Takes responsibility for work end-to-end. Proactively identifies and addresses issues. Follows through on commitments.', 6)
+) AS v(name, description, sort_order);
+
+-- Engineering Manager Template
+WITH eng_mgr AS (
+  INSERT INTO public.templates (name, description, is_system, role_type, level)
+  VALUES ('Engineering Manager', 'Performance review template for engineering managers', true, 'manager', 'manager')
+  RETURNING id
+)
+INSERT INTO public.competencies (template_id, name, description, sort_order)
+SELECT id, name, description, sort_order FROM eng_mgr,
+(VALUES
+  ('Team Leadership', 'Builds and maintains a high-performing team. Creates an inclusive environment where everyone can do their best work.', 1),
+  ('Technical Strategy', 'Makes sound technical decisions. Balances short-term needs with long-term technical health.', 2),
+  ('People Development', 'Provides regular, actionable feedback. Supports career growth. Identifies and develops future leaders.', 3),
+  ('Execution', 'Delivers projects on time and within scope. Manages risks proactively. Removes blockers for the team.', 4),
+  ('Communication', 'Communicates clearly up, down, and across the organization. Represents the team effectively.', 5),
+  ('Strategic Thinking', 'Aligns team work with company goals. Anticipates future needs and plans accordingly.', 6)
+) AS v(name, description, sort_order);
+
+-- Product Manager Template
+WITH pm AS (
+  INSERT INTO public.templates (name, description, is_system, role_type, level)
+  VALUES ('Product Manager', 'Performance review template for product managers', true, 'product', 'mid')
+  RETURNING id
+)
+INSERT INTO public.competencies (template_id, name, description, sort_order)
+SELECT id, name, description, sort_order FROM pm,
+(VALUES
+  ('Product Vision', 'Defines clear product vision and strategy. Identifies opportunities that align with business goals.', 1),
+  ('Customer Focus', 'Deeply understands customer needs. Uses data and research to drive decisions.', 2),
+  ('Execution', 'Delivers products that meet quality standards. Manages scope and priorities effectively.', 3),
+  ('Stakeholder Management', 'Builds strong relationships across the organization. Manages expectations effectively.', 4),
+  ('Data-Driven Decision Making', 'Uses metrics to measure success. Makes decisions based on evidence.', 5),
+  ('Communication', 'Writes clear PRDs and documentation. Presents ideas persuasively.', 6)
+) AS v(name, description, sort_order);
+
+-- General IC Template
+WITH general AS (
+  INSERT INTO public.templates (name, description, is_system, role_type, level)
+  VALUES ('Individual Contributor - General', 'General-purpose performance review template for individual contributors', true, 'general', 'mid')
+  RETURNING id
+)
+INSERT INTO public.competencies (template_id, name, description, sort_order)
+SELECT id, name, description, sort_order FROM general,
+(VALUES
+  ('Job Knowledge', 'Demonstrates expertise in core job responsibilities. Stays current with industry trends and best practices.', 1),
+  ('Quality of Work', 'Produces accurate, thorough, and high-quality work. Pays attention to detail.', 2),
+  ('Productivity', 'Manages time effectively. Meets deadlines consistently. Handles workload efficiently.', 3),
+  ('Communication', 'Communicates clearly and professionally. Listens actively and responds appropriately.', 4),
+  ('Teamwork', 'Collaborates effectively with others. Contributes positively to team dynamics.', 5),
+  ('Initiative', 'Proactively identifies opportunities. Takes action without being asked. Suggests improvements.', 6)
+) AS v(name, description, sort_order);
+```
+
+---
+
+## Step 11: Run Development
+
+```bash
+# Start development server
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+**Verify setup:**
+- Visit http://localhost:3000 - should see landing page
+- Visit Supabase Dashboard > Table Editor - shows your tables
+- Test auth by signing up at /register
 
 ---
 
-## Project Structure
+## Step 12: Production Deployment (Vercel)
 
-```
-teampulse/
-├── prisma/
-│   ├── schema.prisma      # Database schema
-│   └── seed.ts            # Seed data
-├── src/
-│   ├── app/
-│   │   ├── (auth)/        # Auth pages (sign-in, sign-up)
-│   │   ├── (dashboard)/   # Dashboard pages
-│   │   │   ├── dashboard/
-│   │   │   ├── cycles/
-│   │   │   ├── team/
-│   │   │   ├── goals/
-│   │   │   └── templates/
-│   │   ├── (marketing)/   # Landing page
-│   │   ├── api/           # API routes
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── components/
-│   │   ├── ui/            # shadcn components
-│   │   └── ...            # Custom components
-│   ├── lib/
-│   │   ├── prisma.ts      # Prisma client
-│   │   ├── posthog.ts     # Analytics
-│   │   └── utils.ts       # Utilities
-│   └── middleware.ts      # Clerk middleware
-├── .env.local             # Environment variables
-├── .env.example           # Example env file
-├── package.json
-├── tailwind.config.ts
-└── tsconfig.json
-```
+### 12.1 Supabase Production Setup
 
----
+Your Supabase project is already production-ready! Just ensure:
+1. Enable email confirmations in Auth Settings if desired
+2. Configure OAuth providers (Google) with production redirect URLs
+3. Review and test RLS policies
 
-## Quick Commands Reference
+### 12.2 Deploy to Vercel
 
 ```bash
-# Development
-pnpm dev                    # Start dev server
-pnpm build                  # Build for production
-pnpm start                  # Start production server
+# Install Vercel CLI
+pnpm add -g vercel
 
-# Database
-pnpm prisma studio          # Open Prisma Studio (DB GUI)
-pnpm prisma generate        # Generate Prisma client
-pnpm prisma db push         # Push schema changes
-pnpm prisma migrate dev     # Create migration
-pnpm prisma db seed         # Run seed script
+# Login and link
+vercel login
+vercel link
 
-# Linting
-pnpm lint                   # Run ESLint
-pnpm format                 # Run Prettier
+# Set environment variables in Vercel dashboard:
+# - NEXT_PUBLIC_SUPABASE_URL
+# - NEXT_PUBLIC_SUPABASE_ANON_KEY
+# - SUPABASE_SERVICE_ROLE_KEY
+# - All Stripe keys
+# - Resend API key
+# - PostHog key
 
-# shadcn/ui
-pnpm dlx shadcn-ui@latest add [component]  # Add component
+# Deploy
+vercel --prod
 ```
+
+### 12.3 Post-Deploy Checklist
+
+- [ ] Update Supabase Auth redirect URLs to production domain
+- [ ] Update Stripe webhook URLs to production
+- [ ] Test signup flow end-to-end
+- [ ] Test payment flow with Stripe test cards
+- [ ] Verify email delivery
+- [ ] Check RLS policies are working correctly
 
 ---
 
-## Next Steps
+## Troubleshooting
 
-After setup, proceed to:
-1. **Implementation Tasks (03)** - Start building features
-2. **Code Templates (04)** - Copy-paste common patterns
-3. **Engineering Metrics (05)** - Set up tracking
+| Issue | Fix |
+|-------|-----|
+| Supabase client errors | Verify NEXT_PUBLIC_SUPABASE_URL and keys are correct |
+| Auth redirect errors | Check Site URL in Supabase Auth settings matches your domain |
+| RLS blocking queries | Verify RLS policies, check user is authenticated |
+| OAuth not working | Ensure callback URL is configured: `your-domain.com/callback` |
+| Stripe webhook failures | Verify STRIPE_WEBHOOK_SECRET, check endpoint URL |
+| Email not sending | Verify RESEND_API_KEY, check domain verification |
+| PostHog events missing | Check NEXT_PUBLIC_POSTHOG_KEY, verify client initialization |
+| Build errors | Clear `.next` folder, run `pnpm install` again |
+
+---
+
+## Development Workflow
+
+### Daily Commands
+
+```bash
+# Start dev server
+pnpm dev
+
+# Apply schema changes (run SQL in Supabase Dashboard or CLI)
+pnpm supabase db push
+
+# View database
+# Use Supabase Dashboard > Table Editor
+
+# Test emails locally
+pnpm dlx email dev
+```
+
+### Before Commit
+
+```bash
+# Type check
+pnpm tsc --noEmit
+
+# Lint
+pnpm lint
+
+# Build test
+pnpm build
+```

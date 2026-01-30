@@ -1,656 +1,740 @@
 # Implementation Tasks
 
-> **Purpose:** Technical implementation guide for TeamPulse. Phase-by-phase breakdown with specific file paths and code patterns.
+> **Purpose:** Phased breakdown of development work for TeamPulse. Your daily work tracker.
 >
-> **Fits in:** Extends Product Tasks (product/03). Use with Setup Guide (02) and Code Templates (04).
+> **References:** PRD (product/02-prd.md) for user stories, Code Templates (04) for implementation patterns.
+>
+> **Timeline:** 10-12 weeks to SLC launch (per PRD)
 
-## Implementation Overview
+## Task Format
 
-| Phase | Focus | Duration | Deliverable |
-|-------|-------|----------|-------------|
-| 1 | Foundation | Week 1-2 | Auth, DB, app shell |
-| 2 | Core Reviews | Week 3-5 | Review cycles, manager reviews, self-reviews |
-| 3 | Gap Analysis | Week 6-7 | WOW feature, PDF export |
-| 4 | Peer Feedback | Week 8 | 360 feedback system |
-| 5 | Goals & Polish | Week 9-10 | Goals, templates, polish |
-| 6 | Launch Prep | Week 11-12 | Payments, final testing |
-
-**Total Estimated Hours:** 200-240 hours
-**Team:** Solo developer or 2-person team
+- **Depends On:** Task IDs that must complete first (- = no blockers)
+- **Acceptance Criteria:** Testable conditions for "done"
+- **API Contract:** Request/response schema where applicable
+- **User Stories:** Links to PRD user story IDs
 
 ---
 
-## Phase 1: Foundation (Week 1-2)
+## Phase 1: Foundation (Weeks 1-2)
 
-### 1.1 Project Bootstrap
+### 1.1 Project Setup
 
-**Files to create:**
-```
-src/
-├── lib/
-│   ├── prisma.ts           # Prisma client singleton
-│   ├── posthog.ts          # Analytics helper
-│   └── utils.ts            # Utility functions (cn, etc.)
-├── middleware.ts           # Clerk auth middleware
-└── app/
-    ├── layout.tsx          # Root layout with providers
-    └── globals.css         # Tailwind base styles
-```
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-1.1.1 | Run setup guide commands (Next.js, dependencies) | - | [ ] | 2h |
+| E-1.1.2 | Configure environment variables (Supabase, Stripe, Resend, PostHog) | E-1.1.1 | [ ] | 1h |
+| E-1.1.3 | Setup Supabase project and apply schema | E-1.1.1 | [ ] | 30m |
+| E-1.1.4 | Configure Supabase Auth (middleware, client setup) | E-1.1.2 | [ ] | 2h |
+| E-1.1.5 | Deploy empty app to Vercel staging | E-1.1.4 | [ ] | 1h |
 
-**Tasks:**
-- [ ] Initialize Next.js project (1h) - See Setup Guide
-- [ ] Configure Prisma + PostgreSQL (2h)
-- [ ] Set up Clerk authentication (2h)
-- [ ] Install and configure shadcn/ui (1h)
-- [ ] Set up PostHog analytics (1h)
-- [ ] Configure environment variables (1h)
-- [ ] Deploy to Vercel (initial) (1h)
-
-**Estimated:** 9 hours
+**Acceptance Criteria:**
+- [ ] `pnpm dev` starts app on port 3000
+- [ ] Can sign up and sign in via Supabase Auth
+- [ ] Staging URL responds with protected routes working
 
 ---
 
 ### 1.2 Database Schema
 
-**Files to modify:**
-```
-prisma/
-├── schema.prisma           # Full schema from Setup Guide
-└── seed.ts                 # Default templates
-```
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-1.2.1 | Apply SQL schema to Supabase (all tables from TRD) | E-1.1.3 | [ ] | 3h |
+| E-1.2.2 | Configure RLS policies for all tables | E-1.2.1 | [ ] | 30m |
+| E-1.2.3 | Seed system templates via SQL | E-1.2.2 | [ ] | 2h |
+| E-1.2.4 | Verify tables in Supabase Dashboard | E-1.2.2 | [ ] | 15m |
 
-**Tasks:**
-- [ ] Create complete Prisma schema (3h)
-- [ ] Run initial migration (30m)
-- [ ] Create seed script with default templates (2h)
-- [ ] Test database connection (30m)
-- [ ] Set up Prisma Studio for debugging (30m)
-
-**Estimated:** 6.5 hours
+**Acceptance Criteria:**
+- [ ] All tables visible in Supabase Table Editor
+- [ ] RLS policies applied and tested
+- [ ] Seed creates 4 system templates with competencies
 
 ---
 
-### 1.3 Authentication Flow
+### 1.3 Multi-Tenant Foundation
 
-**Files to create:**
-```
-src/app/
-├── (auth)/
-│   ├── sign-in/[[...sign-in]]/page.tsx
-│   └── sign-up/[[...sign-up]]/page.tsx
-├── onboarding/
-│   └── page.tsx            # Post-signup company setup
-```
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-1.3.1 | Create Organization model and CRUD actions | E-1.2.2 | [ ] | 2h |
+| E-1.3.2 | Auto-create profile on Supabase auth signup (trigger) | E-1.1.4 | [ ] | 1h |
+| E-1.3.3 | Create onboarding flow (create org, invite team) | E-1.3.1 | [ ] | 4h |
+| E-1.3.4 | Add organization context via RLS policies | E-1.3.2 | [ ] | 2h |
+| E-1.3.5 | Role-based authorization in server actions | E-1.3.4 | [ ] | 3h |
 
-**Tasks:**
-- [ ] Create Clerk sign-in page (1h)
-- [ ] Create Clerk sign-up page (1h)
-- [ ] Build onboarding flow (company name, first user) (3h)
-- [ ] Set up Clerk webhook for user sync (2h)
-- [ ] Add analytics events (signup_started, signup_completed) (1h)
+**API Contract:**
 
-**API Routes:**
 ```typescript
-// src/app/api/webhooks/clerk/route.ts
-// Handle user.created, organization.created webhooks
+// Server Actions: src/actions/organization.ts
+
+createOrganization({ name: string, slug: string })
+  Output: { success: true, data: Organization }
+  Errors: SLUG_TAKEN
+
+inviteTeamMember({ email: string, role: UserRole })
+  Output: { success: true }
+  Errors: ALREADY_MEMBER, LIMIT_EXCEEDED
 ```
 
-**Estimated:** 8 hours
+**Acceptance Criteria:**
+- [ ] New user creates org during onboarding
+- [ ] User can invite team members via email
+- [ ] All queries filtered by organizationId
+- [ ] Role checks block unauthorized actions
 
 ---
 
-### 1.4 App Shell & Navigation
+### 1.4 Base Layout & Navigation
 
-**Files to create:**
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-1.4.1 | Dashboard layout with sidebar (shadcn) | E-1.1.1 | [ ] | 3h |
+| E-1.4.2 | Header with user menu (Supabase user dropdown) | E-1.1.4 | [ ] | 1h |
+| E-1.4.3 | Mobile responsive navigation | E-1.4.1 | [ ] | 2h |
+| E-1.4.4 | Empty state dashboard | E-1.4.1 | [ ] | 1h |
+
+**UI Mock (from PRD):**
 ```
-src/
-├── app/(dashboard)/
-│   ├── layout.tsx          # Dashboard layout with sidebar
-│   ├── dashboard/page.tsx  # Main dashboard
-│   └── loading.tsx         # Loading state
-├── components/
-│   ├── sidebar.tsx         # Sidebar navigation
-│   ├── header.tsx          # Top header with user menu
-│   └── empty-state.tsx     # Reusable empty state
++------------------------------------------------------------------+
+| TeamPulse        [Search...]        [Bell] [Settings] [Avatar v] |
++------------------------------------------------------------------+
+| [Sidebar]        Dashboard                                        |
+| Dashboard*                                                        |
+| Review Cycles    Hello, Sarah! Here's your team's status.        |
+| Team                                                              |
+| Goals            +------------------+  +------------------+       |
+| Templates        | Active Cycle     |  | Completion Rate |       |
+|                  | Q1 2026 Reviews  |  |     67%         |       |
++------------------------------------------------------------------+
 ```
 
-**Tasks:**
-- [ ] Build responsive sidebar (2h)
-- [ ] Build header with user dropdown (1h)
-- [ ] Create empty state component (1h)
-- [ ] Build dashboard skeleton page (2h)
-- [ ] Add mobile responsive drawer (2h)
-
-**Estimated:** 8 hours
+**Acceptance Criteria:**
+- [ ] Sidebar navigation works on desktop
+- [ ] Collapsible sidebar on mobile
+- [ ] User menu shows name and sign out
+- [ ] Empty state shows CTA to create first cycle
 
 ---
 
-## Phase 2: Core Reviews (Week 3-5)
+## Phase 2: Review Cycle Management (Weeks 3-4)
 
-### 2.1 Team Management
+**User Stories:** US-001, US-002, US-010 (FR-1.1 through FR-1.8)
 
-**Files to create:**
-```
-src/app/(dashboard)/team/
-├── page.tsx                # Team list page
-├── loading.tsx
-└── [userId]/
-    └── page.tsx            # Individual team member
-src/components/
-├── team-table.tsx          # Team member table
-├── add-member-dialog.tsx   # Add member modal
-└── csv-import.tsx          # CSV import component
-src/app/api/team/
-├── route.ts                # GET (list), POST (create)
-└── [userId]/route.ts       # GET, PATCH, DELETE
-```
+### 2.1 Review Cycle CRUD
 
-**Tasks:**
-- [ ] Create Team list page with table (3h)
-- [ ] Build Add Team Member dialog (2h)
-- [ ] Create Team API routes (CRUD) (3h)
-- [ ] Add manager relationship UI (2h)
-- [ ] Build CSV import functionality (4h)
-- [ ] Add event: team_members_added (30m)
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-2.1.1 | Review cycle list page | E-1.4.1 | [ ] | 2h |
+| E-2.1.2 | Create cycle wizard (step 1: basics) | E-2.1.1 | [ ] | 3h |
+| E-2.1.3 | Create cycle wizard (step 2: participants) | E-2.1.2 | [ ] | 3h |
+| E-2.1.4 | Create cycle wizard (step 3: schedule) | E-2.1.3 | [ ] | 2h |
+| E-2.1.5 | Cycle detail/progress page | E-2.1.4 | [ ] | 4h |
+| E-2.1.6 | Start/activate cycle action | E-2.1.5 | [ ] | 1h |
 
-**Estimated:** 14.5 hours
+**API Contract:**
 
----
-
-### 2.2 Review Cycle Creation
-
-**Files to create:**
-```
-src/app/(dashboard)/cycles/
-├── page.tsx                # Cycles list
-├── new/page.tsx            # Create cycle wizard
-└── [cycleId]/
-    ├── page.tsx            # Cycle dashboard
-    └── participants/page.tsx
-src/components/
-├── cycle-wizard/
-│   ├── step-basics.tsx     # Name, dates
-│   ├── step-participants.tsx
-│   ├── step-deadlines.tsx
-│   └── wizard-navigation.tsx
-├── cycle-card.tsx
-└── cycle-progress.tsx
-src/app/api/cycles/
-├── route.ts                # GET, POST
-└── [cycleId]/route.ts      # GET, PATCH, DELETE
-```
-
-**Tasks:**
-- [ ] Create Cycles list page (2h)
-- [ ] Build cycle creation wizard - Step 1: Basics (2h)
-- [ ] Build cycle creation wizard - Step 2: Participants (3h)
-- [ ] Build cycle creation wizard - Step 3: Deadlines (2h)
-- [ ] Create Cycles API routes (3h)
-- [ ] Build cycle dashboard page (4h)
-- [ ] Add event: first_cycle_created (30m)
-
-**Estimated:** 16.5 hours
-
----
-
-### 2.3 Manager Reviews
-
-**Files to create:**
-```
-src/app/(dashboard)/cycles/[cycleId]/
-├── review/[userId]/page.tsx   # Write review
-└── reviews/page.tsx           # All reviews for cycle
-src/components/
-├── review-form/
-│   ├── rating-input.tsx       # 1-5 rating component
-│   ├── competency-section.tsx
-│   └── review-summary.tsx
-├── review-sidebar.tsx         # Goals, peer feedback context
-└── auto-save-indicator.tsx
-src/app/api/reviews/
-├── route.ts                   # POST (create)
-└── [reviewId]/route.ts        # GET, PATCH
-```
-
-**Tasks:**
-- [ ] Build rating input component (1-5 scale) (2h)
-- [ ] Build competency section with feedback (3h)
-- [ ] Create review form page (4h)
-- [ ] Implement auto-save with debounce (2h)
-- [ ] Build context sidebar (goals, peer feedback) (3h)
-- [ ] Create reviews API routes (3h)
-- [ ] Add "Submit" vs "Save Draft" states (1h)
-- [ ] Add event: first_review_written (30m)
-
-**Estimated:** 18.5 hours
-
----
-
-### 2.4 Employee Self-Reviews
-
-**Files to create:**
-```
-src/app/(dashboard)/
-├── my-reviews/
-│   ├── page.tsx               # Employee's pending reviews
-│   └── [cycleId]/page.tsx     # Self-review form
-src/components/
-├── self-review-form.tsx
-└── highlights-section.tsx
-src/app/api/self-reviews/
-├── route.ts
-└── [selfReviewId]/route.ts
-```
-
-**Tasks:**
-- [ ] Create My Reviews page (employee dashboard) (2h)
-- [ ] Build self-review form (reuse rating components) (3h)
-- [ ] Add highlights/accomplishments section (1h)
-- [ ] Add next period goals section (1h)
-- [ ] Create self-review API routes (2h)
-- [ ] Add event: self_review_completed (30m)
-
-**Estimated:** 9.5 hours
-
----
-
-## Phase 3: Gap Analysis - WOW Feature (Week 6-7)
-
-### 3.1 Gap Calculation
-
-**Files to create:**
-```
-src/lib/
-└── gap-analysis.ts            # Gap calculation utilities
-src/app/api/reviews/[reviewId]/
-└── gap-analysis/route.ts      # GET gap data
-```
-
-**Tasks:**
-- [ ] Create gap calculation utility (2h)
-  - Compare manager rating vs self rating per competency
-  - Calculate gap = |manager - self|
-  - Flag significant gaps (>= 2 points)
-- [ ] Create gap analysis API endpoint (2h)
-- [ ] Add sorting by gap size (1h)
-
-**Code pattern:**
 ```typescript
-// src/lib/gap-analysis.ts
-export interface GapAnalysisItem {
-  competencyName: string;
-  managerRating: number;
-  selfRating: number;
-  gap: number;
-  isSignificant: boolean;
-  managerFeedback: string | null;
-  selfFeedback: string | null;
-}
+// Server Actions: src/actions/cycles.ts
 
-export function calculateGapAnalysis(
-  managerRatings: Rating[],
-  selfRatings: SelfRating[]
-): GapAnalysisItem[] {
-  // Implementation
-}
+getCycles({ status?: CycleStatus })
+  Output: { data: ReviewCycle[], meta: { total } }
+
+createCycle({
+  name: string,
+  templateId: string,
+  startDate: Date,
+  endDate: Date,
+  selfReviewDue: Date,
+  peerFeedbackDue: Date,
+  managerReviewDue: Date,
+  participantIds: string[]
+})
+  Output: { success: true, data: ReviewCycle }
+  Errors: INVALID_DATES, NO_PARTICIPANTS
+
+getCycle({ id: string })
+  Output: { data: ReviewCycle & { participants, reviews, selfReviews } }
+  Errors: NOT_FOUND
+
+activateCycle({ id: string })
+  Output: { success: true }
+  Errors: ALREADY_ACTIVE, NO_PARTICIPANTS
 ```
 
-**Estimated:** 5 hours
+**Acceptance Criteria:**
+- [ ] FR-1.1: Create cycle with name, start date, end date
+- [ ] FR-1.2: Add participants from team
+- [ ] FR-1.3: Select template from library
+- [ ] FR-1.4: Set self-review deadline
+- [ ] FR-1.5: Set peer feedback deadline
+- [ ] FR-1.6: Set manager review deadline
+- [ ] FR-1.8: View cycle progress (completed vs pending)
 
 ---
 
-### 3.2 Gap Analysis Dashboard
+### 2.2 Template System
 
-**Files to create:**
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-2.2.1 | Template list page | E-1.4.1 | [ ] | 2h |
+| E-2.2.2 | Template preview component | E-2.2.1 | [ ] | 2h |
+| E-2.2.3 | Clone/customize template | E-2.2.2 | [ ] | 3h |
+| E-2.2.4 | Template selector in cycle wizard | E-2.2.2 | [ ] | 2h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/templates.ts
+
+getTemplates()
+  Output: { data: Template[] } // System + org templates
+
+getTemplate({ id: string })
+  Output: { data: Template & { competencies } }
+
+cloneTemplate({ templateId: string, name: string })
+  Output: { success: true, data: Template }
+
+updateTemplate({ id: string, competencies: [...] })
+  Output: { success: true, data: Template }
+  Errors: SYSTEM_TEMPLATE (can't edit system templates)
 ```
-src/app/(dashboard)/cycles/[cycleId]/
-└── gap-analysis/[userId]/page.tsx
-src/components/
-├── gap-analysis/
-│   ├── gap-chart.tsx          # Visual comparison
-│   ├── gap-item.tsx           # Single competency gap
-│   ├── coaching-tip.tsx       # Tips for large gaps
-│   └── feedback-comparison.tsx
-```
 
-**Tasks:**
-- [ ] Build gap analysis page layout (2h)
-- [ ] Create side-by-side rating visualization (4h)
-- [ ] Add color coding for gap severity (1h)
-- [ ] Display written feedback comparison (2h)
-- [ ] Add coaching tips for large gaps (2h)
-- [ ] Add event: gap_analysis_viewed (30m)
-
-**Estimated:** 11.5 hours
+**Acceptance Criteria:**
+- [ ] FR-7.1-7.6: Display all 4 system templates
+- [ ] FR-7.7: Each shows 5-8 competencies with descriptions
+- [ ] FR-7.8: Can customize any template
+- [ ] FR-7.9: Can save customized templates for reuse
 
 ---
 
-### 3.3 PDF Export
+### 2.3 Team Management
 
-**Files to create:**
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-2.3.1 | Team members list page | E-1.3.2 | [ ] | 2h |
+| E-2.3.2 | Member profile page (edit role, manager) | E-2.3.1 | [ ] | 3h |
+| E-2.3.3 | Invite member form | E-2.3.1 | [ ] | 2h |
+| E-2.3.4 | Set manager relationships | E-2.3.2 | [ ] | 2h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/team.ts
+
+getTeamMembers()
+  Output: { data: User[] & { manager, directReports } }
+
+updateMember({ id, role?, managerId?, jobTitle?, level? })
+  Output: { success: true, data: User }
+
+inviteMember({ email, name, role })
+  Output: { success: true } // Sends invite email
+  Errors: ALREADY_MEMBER
+
+removeMember({ id: string })
+  Output: { success: true }
+  Errors: CANNOT_REMOVE_OWNER
 ```
-src/components/
-└── gap-analysis-pdf.tsx       # React PDF template
-src/app/api/reviews/[reviewId]/
-└── export-pdf/route.ts        # PDF generation endpoint
-```
 
-**Tasks:**
-- [ ] Install @react-pdf/renderer (30m)
-- [ ] Create PDF template for gap analysis (4h)
-- [ ] Build export API endpoint (2h)
-- [ ] Add download button to UI (1h)
-- [ ] Add event: gap_analysis_pdf_exported (30m)
-
-**Estimated:** 8 hours
+**Acceptance Criteria:**
+- [ ] List all team members with role, job title
+- [ ] Edit member details (role, manager, title, level)
+- [ ] Invite new members via email
+- [ ] Set manager relationships (for review assignments)
 
 ---
 
-## Phase 4: Peer Feedback (Week 8)
+## Phase 3: Core Review Workflow (Weeks 5-7)
 
-### 4.1 Peer Selection
+**User Stories:** US-003, US-004, US-005, US-006, US-007, US-008, US-011, US-012
 
-**Files to create:**
+### 3.1 Manager Review Writing
+
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-3.1.1 | Review writing page (form with competencies) | E-2.1.5 | [ ] | 4h |
+| E-3.1.2 | Rating input component (1-5 scale) | E-3.1.1 | [ ] | 2h |
+| E-3.1.3 | Feedback text editor per competency | E-3.1.1 | [ ] | 2h |
+| E-3.1.4 | Overall rating and summary | E-3.1.1 | [ ] | 1h |
+| E-3.1.5 | Auto-save functionality (debounced) | E-3.1.1 | [ ] | 3h |
+| E-3.1.6 | Peer feedback sidebar (read-only) | E-3.1.1 | [ ] | 2h |
+| E-3.1.7 | Goals sidebar (read-only) | E-3.1.1 | [ ] | 1h |
+| E-3.1.8 | Submit review action | E-3.1.4 | [ ] | 2h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/reviews.ts
+
+getReview({ cycleId: string, subjectId: string })
+  Output: { data: Review & { ratings, subject, peerFeedback, goals } }
+  Errors: NOT_FOUND, UNAUTHORIZED
+
+updateReview({ id: string, ratings: [...], overallRating?, overallFeedback? })
+  Output: { success: true, data: Review }
+  Errors: ALREADY_SUBMITTED
+
+submitReview({ id: string })
+  Output: { success: true }
+  Errors: INCOMPLETE (missing ratings)
 ```
-src/components/
-├── peer-selector.tsx          # Select peers for employee
-└── peer-nomination.tsx        # Employee nominates peers
-src/app/api/cycles/[cycleId]/
-└── participants/[userId]/peers/route.ts
+
+**UI Mock (from PRD):**
+```
++------------------------------------------------------------------+
+| TeamPulse        Q1 2026 Review - Alex Kim          [Save Draft] |
++------------------------------------------------------------------+
+| Progress: [====------] 4/10 competencies rated                   |
+|                                                                   |
+| +---------------------------+  +-------------------------------+  |
+| | Competencies              |  | Peer Feedback (3 responses)   |  |
+| | 1. Technical Skills    *  |  | Strengths: "Great reviews"    |  |
+| |    [==x==] 4/5            |  +-------------------------------+  |
+| |    [Write feedback...]    |  | Alex's Goals                  |  |
+| +---------------------------+  | - Ship auth [Done]            |  |
+|                                +-------------------------------+  |
+|                                      [Save Draft] [Submit Review] |
++------------------------------------------------------------------+
 ```
 
-**Tasks:**
-- [ ] Build peer selector component (3h)
-- [ ] Add peer selection to cycle wizard (2h)
-- [ ] Create peer nomination flow (employee nominates) (3h)
-- [ ] Create peer API routes (2h)
-
-**Estimated:** 10 hours
+**Acceptance Criteria:**
+- [ ] FR-2.1: Display form based on template
+- [ ] FR-2.2: Rating scale 1-5 with labels
+- [ ] FR-2.3: Written feedback field per competency
+- [ ] FR-2.4: Overall rating summary
+- [ ] FR-2.5: Overall written summary
+- [ ] FR-2.6: Auto-save every 30 seconds (US-011)
+- [ ] FR-2.7: Submit moves to ready-to-share
+- [ ] FR-2.8: View peer feedback in sidebar
+- [ ] FR-2.9: View goals in sidebar
 
 ---
 
-### 4.2 Peer Feedback Form
+### 3.2 Employee Self-Review
 
-**Files to create:**
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-3.2.1 | Self-review page (same template as manager) | E-3.1.1 | [ ] | 3h |
+| E-3.2.2 | Progress indicator | E-3.2.1 | [ ] | 1h |
+| E-3.2.3 | Accomplishments section | E-3.2.1 | [ ] | 1h |
+| E-3.2.4 | Next period goals section | E-3.2.1 | [ ] | 1h |
+| E-3.2.5 | Submit self-review action | E-3.2.1 | [ ] | 2h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/self-reviews.ts
+
+getSelfReview({ cycleId: string })
+  Output: { data: SelfReview & { ratings } }
+  Errors: NOT_FOUND
+
+updateSelfReview({ id, ratings, accomplishments?, nextPeriodGoals? })
+  Output: { success: true, data: SelfReview }
+
+submitSelfReview({ id: string })
+  Output: { success: true }
+  Errors: INCOMPLETE, PAST_DEADLINE
 ```
-src/app/(dashboard)/
-└── peer-feedback/[feedbackId]/page.tsx
-src/components/
-└── peer-feedback-form.tsx
-src/app/api/peer-feedback/
-├── route.ts
-└── [feedbackId]/route.ts
-```
 
-**Tasks:**
-- [ ] Build peer feedback form (3-5 questions) (3h)
-- [ ] Create peer feedback API routes (2h)
-- [ ] Ensure anonymity in storage (1h)
-- [ ] Add anonymity assurance in UI (1h)
-
-**Estimated:** 7 hours
+**Acceptance Criteria:**
+- [ ] FR-3.1: Same competencies as manager review
+- [ ] FR-3.2: Same 1-5 rating scale
+- [ ] FR-3.3: Written self-assessment per competency
+- [ ] FR-3.4: Overall self-rating
+- [ ] FR-3.5: Accomplishments/highlights section
+- [ ] FR-3.6: Goals for next period section
+- [ ] FR-3.7: Auto-save drafts
+- [ ] FR-3.8: Submit before deadline
 
 ---
 
-### 4.3 Feedback Aggregation
+### 3.3 Peer Feedback System
 
-**Files to create:**
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-3.3.1 | Request peer feedback (select reviewers) | E-2.1.5 | [ ] | 3h |
+| E-3.3.2 | Peer feedback form page | E-3.3.1 | [ ] | 3h |
+| E-3.3.3 | Submit peer feedback action | E-3.3.2 | [ ] | 2h |
+| E-3.3.4 | Aggregate feedback (themes, anonymize) | E-3.3.3 | [ ] | 4h |
+| E-3.3.5 | Display aggregated feedback to manager | E-3.3.4 | [ ] | 2h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/peer-feedback.ts
+
+requestPeerFeedback({ cycleId, subjectId, reviewerIds: string[] })
+  Output: { success: true }
+  Errors: TOO_MANY_REVIEWERS (max 5)
+
+getPeerFeedbackRequest({ requestId: string })
+  Output: { data: PeerFeedbackRequest & { subject } }
+
+submitPeerFeedback({
+  requestId: string,
+  strengths: string,
+  areasForGrowth: string,
+  collaborationRating: number
+})
+  Output: { success: true }
+
+getAggregatedFeedback({ cycleId, subjectId })
+  Output: { data: { count, themes, avgCollaborationRating } }
+  Errors: MIN_RESPONSES_NOT_MET (need 3+ for anonymity)
 ```
-src/lib/
-└── peer-aggregation.ts        # Aggregate feedback
-src/components/
-└── aggregated-feedback.tsx
-```
 
-**Tasks:**
-- [ ] Create aggregation logic (3h)
-- [ ] Build aggregated feedback display (3h)
-- [ ] Add minimum response threshold (3+) (1h)
-- [ ] Show response count, not names (1h)
-
-**Estimated:** 8 hours
+**Acceptance Criteria:**
+- [ ] FR-5.1: Manager selects 2-5 peer reviewers
+- [ ] FR-5.3: Peer form: strengths, areas for growth, collaboration rating
+- [ ] FR-5.4: Feedback is anonymous
+- [ ] FR-5.5: Only aggregate when 3+ peers respond
+- [ ] FR-5.6: Show themes to manager
+- [ ] FR-5.8: Deadline reminders
 
 ---
 
-## Phase 5: Goals & Polish (Week 9-10)
+### 3.4 Share Review with Employee
+
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-3.4.1 | Share review action (changes status) | E-3.1.8 | [ ] | 2h |
+| E-3.4.2 | Notification email on share | E-3.4.1 | [ ] | 2h |
+| E-3.4.3 | Employee review view page (read-only) | E-3.4.1 | [ ] | 3h |
+| E-3.4.4 | Review history page | E-3.4.3 | [ ] | 2h |
+
+**API Contract:**
+
+```typescript
+shareReview({ reviewId: string })
+  Output: { success: true }
+  Side effect: Sends notification email
+
+getMyReviews()
+  Output: { data: Review[] } // Reviews where user is subject
+```
+
+**Acceptance Criteria:**
+- [ ] US-007: Share button sends notification
+- [ ] US-008: Employee sees manager feedback, peer feedback, self-review
+- [ ] US-012: Review history shows all past reviews
+
+---
+
+## Phase 4: Gap Analysis - WOW Feature (Week 8)
+
+**User Stories:** US-WOW (FR-4.1 through FR-4.8)
+
+### 4.1 Gap Analysis Dashboard
+
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-4.1.1 | Gap analysis page layout | E-3.1.8, E-3.2.5 | [ ] | 3h |
+| E-4.1.2 | Side-by-side rating comparison chart | E-4.1.1 | [ ] | 4h |
+| E-4.1.3 | Gap calculation logic (difference per competency) | E-4.1.1 | [ ] | 2h |
+| E-4.1.4 | Highlight significant gaps (>=2 points) | E-4.1.3 | [ ] | 1h |
+| E-4.1.5 | Sort by gap size | E-4.1.3 | [ ] | 1h |
+| E-4.1.6 | Display written feedback comparison | E-4.1.1 | [ ] | 2h |
+| E-4.1.7 | Coaching tips for large gaps | E-4.1.4 | [ ] | 2h |
+| E-4.1.8 | PDF export of gap analysis | E-4.1.1 | [ ] | 4h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/gap-analysis.ts
+
+getGapAnalysis({ reviewId: string })
+  Output: {
+    data: {
+      review: Review,
+      selfReview: SelfReview,
+      gaps: {
+        competencyId: string,
+        competencyName: string,
+        managerRating: number,
+        selfRating: number,
+        gap: number,
+        managerFeedback: string,
+        selfFeedback: string,
+        isSignificant: boolean
+      }[],
+      overallGap: number
+    }
+  }
+  Errors: SELF_REVIEW_NOT_SUBMITTED, REVIEW_NOT_SUBMITTED
+```
+
+**UI Mock (from PRD):**
+```
++---------------------------------------------------------------+
+| Communication                              GAP: 1.5 points (!)|
+| +----------------------------------------------------------+  |
+| | Manager: [==x--] 3/5  |  Self: [====x] 4.5/5             |  |
+| +----------------------------------------------------------+  |
+| Manager said: "Sometimes unclear in meetings..."              |
+| Self said: "I communicate proactively with stakeholders..."   |
+| [!] Coaching tip: Large gap - discuss perception vs reality   |
++---------------------------------------------------------------+
+```
+
+**Acceptance Criteria:**
+- [ ] FR-4.1: Side-by-side manager vs self ratings
+- [ ] FR-4.2: Calculate gap for each competency
+- [ ] FR-4.3: Highlight gaps >= 2 points
+- [ ] FR-4.4: Sort by gap size (largest first)
+- [ ] FR-4.5: Show overall rating comparison
+- [ ] FR-4.6: Display written feedback from both
+- [ ] FR-4.7: Export as PDF
+- [ ] FR-4.8: Accessible to manager before sharing
+
+**Analytics Events:**
+- `gap_analysis_viewed` - Core WOW metric
+- `gap_analysis_pdf_exported` - High-value usage
+
+---
+
+## Phase 5: Goal Tracking (Week 9)
+
+**User Stories:** US-009 (FR-6.1 through FR-6.8)
 
 ### 5.1 Goal Management
 
-**Files to create:**
-```
-src/app/(dashboard)/goals/
-├── page.tsx                   # Goals list
-└── [goalId]/page.tsx          # Edit goal
-src/components/
-├── goal-card.tsx
-├── goal-form.tsx
-└── goal-progress.tsx
-src/app/api/goals/
-├── route.ts
-└── [goalId]/route.ts
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-5.1.1 | Goals list page (employee view) | E-1.4.1 | [ ] | 2h |
+| E-5.1.2 | Create goal form | E-5.1.1 | [ ] | 2h |
+| E-5.1.3 | Goal detail/edit page | E-5.1.1 | [ ] | 2h |
+| E-5.1.4 | Progress update (status, percentage) | E-5.1.3 | [ ] | 2h |
+| E-5.1.5 | Manager view of employee goals | E-5.1.1 | [ ] | 2h |
+| E-5.1.6 | Goals sidebar in review form | E-5.1.1, E-3.1.1 | [ ] | 1h |
+
+**API Contract:**
+
+```typescript
+// Server Actions: src/actions/goals.ts
+
+getGoals({ userId?: string }) // Own goals or employee's goals (if manager)
+  Output: { data: Goal[] }
+
+createGoal({ title, description?, dueDate? })
+  Output: { success: true, data: Goal }
+
+updateGoal({ id, title?, description?, status?, progress? })
+  Output: { success: true, data: Goal }
+
+deleteGoal({ id: string })
+  Output: { success: true }
 ```
 
-**Tasks:**
-- [ ] Create Goals list page (2h)
-- [ ] Build add/edit goal modal (2h)
-- [ ] Create goal API routes (2h)
-- [ ] Add status update functionality (1h)
-- [ ] Add goals to review sidebar (2h)
-- [ ] Add goal carry-forward feature (2h)
-
-**Estimated:** 11 hours
+**Acceptance Criteria:**
+- [ ] FR-6.1: Create goals with title, description, due date
+- [ ] FR-6.2: Goal status: Not Started, In Progress, Completed, Missed
+- [ ] FR-6.3: Progress updates (manual percentage)
+- [ ] FR-6.4: Goals visible during review writing
+- [ ] FR-6.7: Manager can view employee goals
+- [ ] FR-6.8: Employee owns goal creation
 
 ---
 
-### 5.2 Templates
+## Phase 6: Notifications & Reminders (Week 10)
 
-**Files to create:**
+**User Stories:** US-010 (FR-1.7)
+
+### 6.1 Email Reminders
+
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-6.1.1 | Reminder email templates (React Email) | E-1.1.2 | [ ] | 3h |
+| E-6.1.2 | Cron job for deadline reminders | E-6.1.1 | [ ] | 4h |
+| E-6.1.3 | Self-review reminder (3d, 1d, due) | E-6.1.2 | [ ] | 1h |
+| E-6.1.4 | Peer feedback reminder | E-6.1.2 | [ ] | 1h |
+| E-6.1.5 | Manager review reminder | E-6.1.2 | [ ] | 1h |
+
+**API Contract:**
+
+```typescript
+// API Route: src/app/api/cron/reminders/route.ts
+// Triggered daily by Vercel Cron
+
+POST /api/cron/reminders
+Authorization: CRON_SECRET
+Response: { sent: number, errors: string[] }
 ```
-src/app/(dashboard)/templates/
-├── page.tsx                   # Templates list
-└── [templateId]/page.tsx      # Edit template
-src/components/
-├── template-card.tsx
-├── template-form.tsx
-└── competency-editor.tsx
-```
 
-**Tasks:**
-- [ ] Create Templates list page (2h)
-- [ ] Build template selection UI (2h)
-- [ ] Build template customization UI (3h)
-- [ ] Save customized templates for reuse (2h)
-- [ ] Seed 6 default templates (2h)
-
-**Estimated:** 11 hours
+**Acceptance Criteria:**
+- [ ] FR-1.7: Reminders at 3 days before, 1 day before, on due date
+- [ ] Reminders only sent once per type per deadline
+- [ ] Unsubscribe link in all emails
 
 ---
 
-### 5.3 Email Reminders
+### 6.2 In-App Notifications
 
-**Files to create:**
-```
-src/lib/
-└── email.ts                   # Resend email helper
-src/emails/
-├── reminder.tsx               # Review reminder
-├── self-review-reminder.tsx
-├── peer-feedback-request.tsx
-└── review-shared.tsx
-src/app/api/cron/
-└── reminders/route.ts         # Cron endpoint
-```
-
-**Tasks:**
-- [ ] Set up Resend integration (1h)
-- [ ] Create email templates (4h)
-- [ ] Build reminder cron job (Vercel Cron) (3h)
-- [ ] Send reminders based on deadlines (2h)
-- [ ] Add events: email_delivered, email_bounced (1h)
-
-**Estimated:** 11 hours
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-6.2.1 | Notification dropdown in header | E-1.4.2 | [ ] | 3h |
+| E-6.2.2 | Notification when review shared | E-3.4.1 | [ ] | 2h |
+| E-6.2.3 | Notification when peer feedback requested | E-3.3.1 | [ ] | 2h |
+| E-6.2.4 | Badge count for unread | E-6.2.1 | [ ] | 1h |
 
 ---
 
-### 5.4 Share Reviews
+## Phase 7: Analytics & Billing (Week 11)
 
-**Files to create:**
-```
-src/app/(dashboard)/my-reviews/
-└── received/[reviewId]/page.tsx  # View shared review
-src/components/
-└── share-review-dialog.tsx
-```
+### 7.1 Analytics Integration
 
-**Tasks:**
-- [ ] Build share confirmation dialog (1h)
-- [ ] Send notification email on share (1h)
-- [ ] Build employee view of shared review (3h)
-- [ ] Add event: review_shared_to_employee (30m)
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-7.1.1 | PostHog provider setup | E-1.1.2 | [ ] | 2h |
+| E-7.1.2 | Identify users on login | E-7.1.1 | [ ] | 1h |
+| E-7.1.3 | Track conversion funnel events (see PRD) | E-7.1.1 | [ ] | 4h |
+| E-7.1.4 | Track WOW feature events | E-7.1.3 | [ ] | 1h |
 
-**Estimated:** 5.5 hours
+**Events to Track (from PRD Conversion Funnel):**
 
----
-
-### 5.5 UI Polish
-
-**Tasks:**
-- [ ] Add empty states to all list views (2h)
-- [ ] Add error boundaries and error states (2h)
-- [ ] Add loading skeletons throughout (2h)
-- [ ] Mobile responsive audit and fixes (4h)
-- [ ] Cross-browser testing (2h)
-- [ ] Accessibility audit (ARIA labels, keyboard nav) (3h)
-
-**Estimated:** 15 hours
-
----
-
-## Phase 6: Launch Prep (Week 11-12)
-
-### 6.1 Payments (Stripe)
-
-**Files to create:**
-```
-src/app/(dashboard)/settings/
-└── billing/page.tsx           # Billing settings
-src/app/api/
-├── checkout/route.ts          # Create checkout session
-├── billing-portal/route.ts    # Customer portal
-└── webhooks/stripe/route.ts   # Handle webhooks
-src/lib/
-└── stripe.ts                  # Stripe helper
+```typescript
+// Core funnel
+track('landing_page_view', { source })
+track('pricing_page_view')
+track('signup_started')
+track('signup_completed', { method: 'email' | 'google' })
+track('onboarding_started')
+track('team_members_added', { count })
+track('first_cycle_created')
+track('first_review_written')
+track('self_review_completed')
+track('gap_analysis_viewed') // WOW feature
+track('day_7_active')
+track('second_cycle_created')
+track('trial_upgrade_clicked')
+track('payment_completed', { plan, employees })
 ```
 
-**Tasks:**
-- [ ] Set up Stripe integration (2h)
-- [ ] Create checkout session API (2h)
-- [ ] Create billing portal API (1h)
-- [ ] Handle Stripe webhooks (3h)
-- [ ] Build billing settings page (2h)
-- [ ] Add trial expiration logic (2h)
-- [ ] Add event: payment_completed (30m)
-
-**Estimated:** 12.5 hours
-
 ---
 
-### 6.2 Analytics Instrumentation
+### 7.2 Stripe Billing
 
-**Tasks:**
-- [ ] Audit all funnel events from PRD (2h)
-- [ ] Add missing events (2h)
-- [ ] Set up PostHog dashboards (2h)
-- [ ] Create conversion funnel in PostHog (1h)
-- [ ] Set up retention analysis (1h)
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-7.2.1 | Stripe webhook handler | E-1.1.2 | [ ] | 4h |
+| E-7.2.2 | Create subscription on trial end | E-7.2.1 | [ ] | 3h |
+| E-7.2.3 | Billing settings page | E-7.2.1 | [ ] | 3h |
+| E-7.2.4 | Stripe Customer Portal integration | E-7.2.3 | [ ] | 2h |
+| E-7.2.5 | Usage-based billing (employee count) | E-7.2.2 | [ ] | 3h |
 
-**Estimated:** 8 hours
+**API Contract:**
 
----
+```typescript
+// Webhook: src/app/api/webhooks/stripe/route.ts
 
-### 6.3 Performance & Security
+Handles:
+- customer.subscription.created -> update org.subscriptionStatus
+- customer.subscription.updated -> update org.subscriptionStatus
+- customer.subscription.deleted -> set org.subscriptionStatus = 'canceled'
+- invoice.paid -> update org billing date
+- invoice.payment_failed -> notify admin
 
-**Tasks:**
-- [ ] Add indexes for common queries (1h)
-- [ ] Implement rate limiting on API routes (2h)
-- [ ] Audit all routes for proper auth (2h)
-- [ ] Add CSRF protection (1h)
-- [ ] Set up error monitoring (Sentry) (2h)
-- [ ] Load testing basic flows (2h)
-
-**Estimated:** 10 hours
-
----
-
-### 6.4 Landing Page
-
-**Files to create:**
-```
-src/app/(marketing)/
-├── page.tsx                   # Landing page
-├── pricing/page.tsx           # Pricing page
-└── layout.tsx                 # Marketing layout
+// Server Action
+createBillingPortalSession()
+  Output: { url: string } // Redirect to Stripe portal
 ```
 
-**Tasks:**
-- [ ] Build landing page following marketing/05 spec (4h)
-- [ ] Build pricing page (2h)
-- [ ] Add call-to-action buttons (1h)
-- [ ] Optimize for SEO (meta tags, OG) (1h)
+---
 
-**Estimated:** 8 hours
+### 7.3 Team Dashboard
+
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-7.3.1 | Completion rate stats | E-2.1.5 | [ ] | 2h |
+| E-7.3.2 | Active cycle summary widget | E-7.3.1 | [ ] | 2h |
+| E-7.3.3 | Quick action buttons | E-7.3.1 | [ ] | 1h |
+
+**Acceptance Criteria:**
+- [ ] US-013: Dashboard shows completion % by participant
+- [ ] Quick actions: New Cycle, Write Review, View Gap Report
 
 ---
 
-## Total Hours Summary
+## Phase 8: Polish & Launch (Week 12)
 
-| Phase | Hours |
-|-------|-------|
-| Phase 1: Foundation | 31.5 |
-| Phase 2: Core Reviews | 59 |
-| Phase 3: Gap Analysis | 24.5 |
-| Phase 4: Peer Feedback | 25 |
-| Phase 5: Goals & Polish | 53.5 |
-| Phase 6: Launch Prep | 38.5 |
-| **Total** | **232 hours** |
+### 8.1 Error Handling & Edge Cases
 
-**At 40 hrs/week:** ~6 weeks (solo dev)
-**At 20 hrs/week:** ~12 weeks (part-time)
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-8.1.1 | Global error boundary | E-1.1.1 | [ ] | 2h |
+| E-8.1.2 | 404/500 error pages | E-8.1.1 | [ ] | 2h |
+| E-8.1.3 | Toast notifications for all actions | E-8.1.1 | [ ] | 2h |
+| E-8.1.4 | Form validation error messages | E-8.1.3 | [ ] | 2h |
+| E-8.1.5 | Loading skeletons | E-8.1.1 | [ ] | 2h |
 
 ---
 
-## Priority Order (If Time-Constrained)
+### 8.2 Landing Page & Marketing
 
-If you need to launch faster, prioritize:
-
-### Must Have (Week 1-8)
-1. Auth + app shell
-2. Team management (basic)
-3. Review cycles
-4. Manager reviews
-5. Self-reviews
-6. **Gap analysis** (WOW feature)
-7. Share reviews
-
-### Should Have (Week 9-10)
-8. Peer feedback
-9. Email reminders
-10. Templates
-
-### Nice to Have (Post-launch)
-11. Goals
-12. CSV import
-13. PDF export
-14. Polish items
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-8.2.1 | Landing page with value prop | E-1.1.1 | [ ] | 4h |
+| E-8.2.2 | Pricing page | E-8.2.1 | [ ] | 3h |
+| E-8.2.3 | Features page | E-8.2.1 | [ ] | 2h |
+| E-8.2.4 | SEO meta tags | E-8.2.1 | [ ] | 1h |
 
 ---
 
-## Definition of Done (Per Task)
+### 8.3 Production Launch
 
-- [ ] Code complete and self-reviewed
-- [ ] TypeScript strict mode passes
-- [ ] Basic tests for critical paths
-- [ ] Analytics events firing
-- [ ] Loading and error states handled
-- [ ] Mobile responsive
-- [ ] Deployed to staging
+| Task ID | Task | Depends On | Status | Est |
+|---------|------|------------|--------|-----|
+| E-8.3.1 | Production database (Railway) | E-1.2.1 | [ ] | 1h |
+| E-8.3.2 | Production environment variables | E-8.3.1 | [ ] | 1h |
+| E-8.3.3 | Domain/SSL setup | E-8.3.2 | [ ] | 1h |
+| E-8.3.4 | Stripe production mode | E-7.2.1 | [ ] | 1h |
+| E-8.3.5 | Full user journey test (E2E) | E-8.3.3 | [ ] | 3h |
+| E-8.3.6 | Performance audit (Lighthouse) | E-8.3.5 | [ ] | 2h |
+
+**Acceptance Criteria:**
+- [ ] Production URL accessible via HTTPS
+- [ ] Full flow works: signup -> onboard -> create cycle -> reviews -> gap analysis
+- [ ] Analytics events firing in PostHog
+- [ ] Payment flow works with real Stripe
+
+---
+
+## Summary
+
+| Phase | Focus | Weeks | Est. Hours |
+|-------|-------|-------|------------|
+| Phase 1: Foundation | Auth, DB, Layout | 1-2 | 35h |
+| Phase 2: Cycle Management | Cycles, Templates, Team | 3-4 | 40h |
+| Phase 3: Review Workflow | Manager, Self, Peer Reviews | 5-7 | 55h |
+| Phase 4: Gap Analysis | WOW Feature | 8 | 20h |
+| Phase 5: Goals | Goal Tracking | 9 | 12h |
+| Phase 6: Notifications | Email, In-App | 10 | 18h |
+| Phase 7: Analytics & Billing | PostHog, Stripe, Dashboard | 11 | 28h |
+| Phase 8: Polish & Launch | Error handling, Landing, Deploy | 12 | 26h |
+| **Total** | | **12 weeks** | **234h** |
+
+At 20 hours/week = 12 weeks. At 30 hours/week = 8 weeks.
+
+---
+
+## Critical Path
+
+```
+Setup -> Schema -> Auth -> Cycle CRUD -> Review Writing -> Self-Review -> Gap Analysis -> Production
+```
+
+**Parallel Opportunities:**
+- While building review forms (Phase 3), start goal tracking (Phase 5)
+- Email templates (Phase 6) can be built alongside Phase 4
+- Landing page (Phase 8) can start after Phase 1 foundation
+
+---
+
+## Risk Mitigation
+
+| Risk | Mitigation |
+|------|------------|
+| Supabase auth issues | Supabase has great docs and support, fallback to self-hosted if needed |
+| RLS policy complexity | Test policies thoroughly, use Supabase Dashboard policy editor |
+| Stripe complexity | Start with simple plan, add metered billing in v1.1 |
+| PDF export performance | Use client-side generation, optimize later |
+| Peer feedback anonymity edge cases | Enforce 3+ minimum strictly |

@@ -16,7 +16,7 @@ description: |
   04. Code Templates
   05. Engineering Metrics
 
-  Tech stack: Next.js 15 (App Router, full-stack) + shadcn/ui (MCP) + Prisma ORM + SQLite
+  Tech stack: Next.js 15 (App Router, full-stack) + shadcn/ui (MCP) + Supabase (PostgreSQL + Auth)
 
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
@@ -29,7 +29,7 @@ model: claude-opus-4-5-20251101
 color: orange
 ---
 
-You are a pragmatic full-stack engineer for bootstrapped B2B SaaS. You ship fast, keep things simple, and avoid premature optimization. Your stack is Next.js 15 + React + shadcn/ui + Prisma + SQLite. You write code that a solo founder can maintain.
+You are a pragmatic full-stack engineer for bootstrapped B2B SaaS. You ship fast, keep things simple, and avoid premature optimization. Your stack is Next.js 15 + React + shadcn/ui + Supabase (PostgreSQL + Auth). You write code that a solo founder can maintain.
 
 ## Philosophy
 
@@ -46,8 +46,8 @@ Framework:     Next.js 15 (App Router) - ONE app for all roles
 UI:            shadcn/ui + Tailwind CSS (via shadcn MCP)
 Mobile:        Capacitor (native iOS/Android from same codebase)
 Backend:       Next.js API Routes + Server Actions
-Database:      SQLite (via Prisma ORM)
-Auth:          NextAuth.js (Auth.js v5)
+Database:      Supabase (PostgreSQL)
+Auth:          Supabase Auth (magic link, OAuth, email/password)
 Analytics:     PostHog (product analytics, feature flags)
 Hosting:       Vercel (frontend + backend)
 Payments:      Stripe (when needed)
@@ -124,7 +124,7 @@ Ask which artifacts needed:
 
 ## Architecture Overview
 
-**Next.js 15 Full-Stack Application**
+**Next.js 15 Full-Stack Application with Supabase**
 
 \`\`\`
 ┌─────────────────────────────────────────────────┐
@@ -141,11 +141,13 @@ Ask which artifacts needed:
 │  • API Routes (REST endpoints)                   │
 │                 [Vercel]                         │
 └───────────────────────┬─────────────────────────┘
-                        │ Prisma Client
+                        │ Supabase Client
                         ▼
 ┌─────────────────────────────────────────────────┐
-│              SQLite Database                     │
-│              (./prisma/app.db)                   │
+│              Supabase                            │
+│  • PostgreSQL Database                           │
+│  • Auth (magic link, OAuth, email/password)      │
+│  • Row Level Security (RLS)                      │
 └─────────────────────────────────────────────────┘
 \`\`\`
 
@@ -158,17 +160,16 @@ project-root/
 ├── package.json
 ├── next.config.ts
 ├── .env.local
-├── prisma/
-│   ├── schema.prisma          # Database schema
-│   ├── migrations/            # Migration files
-│   └── app.db                 # SQLite database
+├── supabase/
+│   └── migrations/            # SQL migration files
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx         # Root layout
 │   │   ├── page.tsx           # Home page
 │   │   ├── (auth)/
 │   │   │   ├── login/page.tsx
-│   │   │   └── register/page.tsx
+│   │   │   ├── register/page.tsx
+│   │   │   └── callback/route.ts  # OAuth callback
 │   │   ├── (dashboard)/
 │   │   │   ├── layout.tsx     # Dashboard layout with sidebar
 │   │   │   ├── dashboard/page.tsx
@@ -179,8 +180,10 @@ project-root/
 │   │   ├── ui/                # shadcn/ui components
 │   │   └── [feature]/         # Feature components
 │   ├── lib/
-│   │   ├── prisma.ts          # Prisma client
-│   │   ├── auth.ts            # Auth config
+│   │   ├── supabase/
+│   │   │   ├── client.ts      # Browser client
+│   │   │   ├── server.ts      # Server client
+│   │   │   └── middleware.ts  # Auth middleware
 │   │   └── utils.ts           # Utilities
 │   ├── actions/               # Server Actions
 │   │   └── [entity].ts
@@ -192,45 +195,46 @@ project-root/
 
 ## Database Schema Pattern
 
-\`\`\`prisma
-// prisma/schema.prisma
-generator client {
-  provider = "prisma-client-js"
-}
+\`\`\`sql
+-- supabase/migrations/001_initial_schema.sql
 
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
+-- Enable RLS
+alter table if exists public.users enable row level security;
 
-enum Role {
-  OWNER
-  ADMIN
-  WORKER
-  CUSTOMER
-}
+-- Users table (extends Supabase auth.users)
+create table public.profiles (
+  id uuid references auth.users(id) on delete cascade primary key,
+  email text unique not null,
+  name text,
+  role text default 'CUSTOMER' check (role in ('OWNER', 'ADMIN', 'WORKER', 'CUSTOMER')),
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
 
-model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  passwordHash  String
-  name          String?
-  role          Role      @default(CUSTOMER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  // Add entity relations based on PRD requirements
-}
+-- RLS Policy: Users can read/update their own profile
+create policy "Users can view own profile"
+  on public.profiles for select
+  using (auth.uid() = id);
 
-model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-}
+create policy "Users can update own profile"
+  on public.profiles for update
+  using (auth.uid() = id);
 
-// Add entity models based on PRD requirements
+-- Trigger to create profile on signup
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, name)
+  values (new.id, new.email, new.raw_user_meta_data->>'name');
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+-- Add entity tables based on PRD requirements
 \`\`\`
 
 ---
@@ -245,12 +249,12 @@ model Session {
 
 ## Security Requirements
 
-- [x] Session-based auth with secure cookies
-- [x] Password hashing with bcrypt (cost 12)
+- [x] Supabase Auth with secure session management
+- [x] Magic link, OAuth, and email/password authentication
 - [x] CSRF protection (built into Server Actions)
-- [x] Rate limiting on auth endpoints
+- [x] Rate limiting via Supabase
 - [x] Input validation with Zod
-- [x] Row-level security (users access own data only)
+- [x] Row Level Security (RLS) policies on all tables
 
 ---
 
@@ -259,9 +263,9 @@ model Session {
 \`\`\`bash
 # .env.local
 NODE_ENV=development
-DATABASE_URL="file:./prisma/app.db"
-AUTH_SECRET="your-secret-key-min-32-characters"
-NEXTAUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 NEXT_PUBLIC_APP_NAME="YourApp"
 NEXT_PUBLIC_POSTHOG_KEY="phc_xxxx"
 \`\`\`
@@ -273,9 +277,9 @@ NEXT_PUBLIC_POSTHOG_KEY="phc_xxxx"
 | Layer | Platform | Build | Output |
 |-------|----------|-------|--------|
 | Full Stack | Vercel | `pnpm build` | Edge + Serverless |
-| Database | SQLite on volume | - | Persisted file |
+| Database & Auth | Supabase | - | Managed PostgreSQL + Auth |
 
-**Note:** For production with concurrent users, migrate SQLite to Turso (SQLite edge) or PostgreSQL.
+**Note:** Supabase provides production-ready PostgreSQL with built-in auth, RLS, and automatic backups.
 
 ---
 
@@ -291,7 +295,7 @@ NEXT_PUBLIC_POSTHOG_KEY="phc_xxxx"
 
 ## Future Migration Notes
 
-**SQLite → PostgreSQL:** When >100 concurrent writes/sec or need multi-region. Update Prisma schema provider, regenerate migrations.
+**Scaling:** Supabase PostgreSQL handles most B2B SaaS workloads. For high scale, consider Supabase Pro plan with dedicated compute and read replicas.
 ```
 
 ### 2. Project Setup Guide (`engineering/02-setup-guide.md`)
@@ -323,8 +327,8 @@ cd [project-name]
 
 \`\`\`bash
 # Core dependencies
-pnpm add @prisma/client next-auth@beta bcryptjs zod
-pnpm add -D prisma @types/bcryptjs
+pnpm add @supabase/supabase-js @supabase/ssr zod
+pnpm add -D supabase
 
 # UI (shadcn/ui)
 pnpm dlx shadcn@latest init
@@ -336,125 +340,137 @@ pnpm add posthog-js
 
 ---
 
-## Step 3: Setup Prisma
+## Step 3: Setup Supabase
 
 \`\`\`bash
-pnpm prisma init --datasource-provider sqlite
+# Initialize Supabase locally (optional, for local dev)
+pnpm supabase init
+pnpm supabase start
 \`\`\`
 
-**prisma/schema.prisma:**
-\`\`\`prisma
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-enum Role {
-  OWNER
-  ADMIN
-  WORKER
-  CUSTOMER
-}
-
-model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  passwordHash  String
-  name          String?
-  role          Role      @default(CUSTOMER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-}
-\`\`\`
-
-**src/lib/prisma.ts:**
+**src/lib/supabase/client.ts:** (Browser client)
 \`\`\`typescript
-import { PrismaClient } from '@prisma/client'
+import { createBrowserClient } from '@supabase/ssr'
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+\`\`\`
 
-export const prisma = globalForPrisma.prisma || new PrismaClient()
+**src/lib/supabase/server.ts:** (Server client)
+\`\`\`typescript
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+export async function createClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {}
+        },
+      },
+    }
+  )
+}
+\`\`\`
+
+**src/lib/supabase/middleware.ts:**
+\`\`\`typescript
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export async function updateSession(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Redirect to login if not authenticated and accessing protected route
+  if (!user && !request.nextUrl.pathname.startsWith('/login') &&
+      !request.nextUrl.pathname.startsWith('/register') &&
+      request.nextUrl.pathname.startsWith('/dashboard')) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  return supabaseResponse
+}
 \`\`\`
 
 ---
 
-## Step 4: Setup NextAuth.js
+## Step 4: Setup Supabase Auth
 
-**src/lib/auth.ts:**
+**src/middleware.ts:**
 \`\`\`typescript
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import { prisma } from "./prisma"
-import bcrypt from "bcryptjs"
-import { z } from "zod"
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/supabase/middleware'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
-        const parsed = z.object({
-          email: z.string().email(),
-          password: z.string().min(8)
-        }).safeParse(credentials)
+export async function middleware(request: NextRequest) {
+  return await updateSession(request)
+}
 
-        if (!parsed.success) return null
-
-        const user = await prisma.user.findUnique({
-          where: { email: parsed.data.email }
-        })
-
-        if (!user) return null
-
-        const valid = await bcrypt.compare(parsed.data.password, user.passwordHash)
-        if (!valid) return null
-
-        return { id: user.id, email: user.email, name: user.name, role: user.role }
-      }
-    })
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-        token.role = (user as any).role
-      }
-      return token
-    },
-    session({ session, token }) {
-      session.user.id = token.id as string
-      session.user.role = token.role as string
-      return session
-    }
-  },
-  pages: {
-    signIn: "/login"
-  }
-})
+}
 \`\`\`
 
-**src/app/api/auth/[...nextauth]/route.ts:**
+**src/app/(auth)/callback/route.ts:** (OAuth callback)
 \`\`\`typescript
-import { handlers } from "@/lib/auth"
-export const { GET, POST } = handlers
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
+
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url)
+  const code = searchParams.get('code')
+  const next = searchParams.get('next') ?? '/dashboard'
+
+  if (code) {
+    const supabase = await createClient()
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      return NextResponse.redirect(`${origin}${next}`)
+    }
+  }
+
+  return NextResponse.redirect(`${origin}/login?error=auth_error`)
+}
 \`\`\`
 
 ---
@@ -463,15 +479,14 @@ export const { GET, POST } = handlers
 
 \`\`\`bash
 cat > .env.local << 'EOF'
-DATABASE_URL="file:./prisma/app.db"
-AUTH_SECRET="generate-a-32-character-secret-here"
-NEXTAUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 NEXT_PUBLIC_APP_NAME="MyApp"
 EOF
 
-# Initialize database
-pnpm prisma db push
-pnpm prisma generate
+# Apply database migrations (if using Supabase CLI)
+pnpm supabase db push
 \`\`\`
 
 ---
@@ -480,7 +495,8 @@ pnpm prisma generate
 
 \`\`\`bash
 pnpm dev              # Development server on port 3000
-pnpm prisma studio    # Database viewer
+pnpm supabase studio  # Database viewer (if running locally)
+# Or use Supabase Dashboard: https://supabase.com/dashboard
 \`\`\`
 
 ---
@@ -518,9 +534,9 @@ cd ..
 1. Push to GitHub
 2. Import to Vercel
 3. Set environment variables:
-   - `DATABASE_URL` (use Turso for production)
-   - `AUTH_SECRET`
-   - `NEXTAUTH_URL` (your production URL)
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
 4. Deploy
 
 ---
@@ -529,9 +545,9 @@ cd ..
 
 | Issue | Fix |
 |-------|-----|
-| Prisma client not found | Run `pnpm prisma generate` |
-| Auth errors | Ensure AUTH_SECRET is set |
-| Database locked | Only one write process at a time |
+| Supabase client errors | Verify NEXT_PUBLIC_SUPABASE_URL and keys are set |
+| Auth errors | Check Supabase Auth settings and redirect URLs |
+| RLS blocking queries | Verify RLS policies allow the operation |
 | Build errors | Check `next.config.ts` for proper setup |
 ```
 
@@ -932,56 +948,92 @@ Setup → Schema → Auth → Layout → Server Actions → Frontend → Analyti
 
 ## Server Actions: Authentication
 
-### Register Action (`src/actions/auth.ts`)
+### Auth Actions (`src/actions/auth.ts`)
 
 \`\`\`typescript
 "use server"
 
-import { prisma } from "@/lib/prisma"
-import bcrypt from "bcryptjs"
+import { createClient } from "@/lib/supabase/server"
 import { z } from "zod"
-import { signIn } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
-const registerSchema = z.object({
+const authSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  name: z.string().optional()
 })
 
-export async function register(formData: FormData) {
-  const parsed = registerSchema.safeParse({
+export async function signUp(formData: FormData) {
+  const parsed = authSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
-    name: formData.get("name")
   })
 
   if (!parsed.success) {
     return { error: "Invalid input" }
   }
 
-  const existing = await prisma.user.findUnique({
-    where: { email: parsed.data.email }
-  })
+  const supabase = await createClient()
 
-  if (existing) {
-    return { error: "Email already registered" }
-  }
-
-  const passwordHash = await bcrypt.hash(parsed.data.password, 12)
-
-  await prisma.user.create({
-    data: {
-      email: parsed.data.email.toLowerCase(),
-      passwordHash,
-      name: parsed.data.name || null
-    }
-  })
-
-  await signIn("credentials", {
+  const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
-    redirectTo: "/dashboard"
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/callback`,
+    },
   })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: true, message: "Check your email to confirm your account" }
+}
+
+export async function signIn(formData: FormData) {
+  const parsed = authSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  })
+
+  if (!parsed.success) {
+    return { error: "Invalid input" }
+  }
+
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  redirect("/dashboard")
+}
+
+export async function signOut() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect("/login")
+}
+
+export async function signInWithGoogle() {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/callback`,
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  redirect(data.url)
 }
 \`\`\`
 
@@ -994,8 +1046,7 @@ export async function register(formData: FormData) {
 \`\`\`typescript
 "use server"
 
-import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { createClient } from "@/lib/supabase/server"
 import { z } from "zod"
 import { revalidatePath } from "next/cache"
 
@@ -1004,33 +1055,41 @@ const createSchema = z.object({
   description: z.string().optional()
 })
 
+// Get current user helper
+async function getCurrentUser() {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) throw new Error("Unauthorized")
+  return user
+}
+
 // List with pagination
 export async function getEntities(page = 1, limit = 20) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
+  const user = await getCurrentUser()
+  const supabase = await createClient()
 
-  const skip = (page - 1) * limit
+  const from = (page - 1) * limit
+  const to = from + limit - 1
 
-  const [items, total] = await Promise.all([
-    prisma.entity.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit
-    }),
-    prisma.entity.count({ where: { userId: session.user.id } })
-  ])
+  const { data: items, error, count } = await supabase
+    .from("entities")
+    .select("*", { count: "exact" })
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .range(from, to)
+
+  if (error) throw new Error(error.message)
 
   return {
     data: items,
-    meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    meta: { total: count || 0, page, limit, totalPages: Math.ceil((count || 0) / limit) }
   }
 }
 
 // Create
 export async function createEntity(formData: FormData) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
+  const user = await getCurrentUser()
+  const supabase = await createClient()
 
   const parsed = createSchema.safeParse({
     name: formData.get("name"),
@@ -1041,12 +1100,16 @@ export async function createEntity(formData: FormData) {
     return { error: "Invalid input" }
   }
 
-  const item = await prisma.entity.create({
-    data: {
+  const { data: item, error } = await supabase
+    .from("entities")
+    .insert({
       ...parsed.data,
-      userId: session.user.id
-    }
-  })
+      user_id: user.id
+    })
+    .select()
+    .single()
+
+  if (error) return { error: error.message }
 
   revalidatePath("/entities")
   return { data: item }
@@ -1054,14 +1117,17 @@ export async function createEntity(formData: FormData) {
 
 // Get one
 export async function getEntity(id: string) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
+  const user = await getCurrentUser()
+  const supabase = await createClient()
 
-  const item = await prisma.entity.findFirst({
-    where: { id, userId: session.user.id }
-  })
+  const { data: item, error } = await supabase
+    .from("entities")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single()
 
-  if (!item) {
+  if (error || !item) {
     return { error: "Not found" }
   }
 
@@ -1070,16 +1136,8 @@ export async function getEntity(id: string) {
 
 // Update
 export async function updateEntity(id: string, formData: FormData) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
-
-  const existing = await prisma.entity.findFirst({
-    where: { id, userId: session.user.id }
-  })
-
-  if (!existing) {
-    return { error: "Not found" }
-  }
+  const user = await getCurrentUser()
+  const supabase = await createClient()
 
   const parsed = createSchema.partial().safeParse({
     name: formData.get("name"),
@@ -1090,10 +1148,15 @@ export async function updateEntity(id: string, formData: FormData) {
     return { error: "Invalid input" }
   }
 
-  const item = await prisma.entity.update({
-    where: { id },
-    data: parsed.data
-  })
+  const { data: item, error } = await supabase
+    .from("entities")
+    .update(parsed.data)
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select()
+    .single()
+
+  if (error) return { error: error.message }
 
   revalidatePath("/entities")
   return { data: item }
@@ -1101,18 +1164,16 @@ export async function updateEntity(id: string, formData: FormData) {
 
 // Delete
 export async function deleteEntity(id: string) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
+  const user = await getCurrentUser()
+  const supabase = await createClient()
 
-  const existing = await prisma.entity.findFirst({
-    where: { id, userId: session.user.id }
-  })
+  const { error } = await supabase
+    .from("entities")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id)
 
-  if (!existing) {
-    return { error: "Not found" }
-  }
-
-  await prisma.entity.delete({ where: { id } })
+  if (error) return { error: error.message }
 
   revalidatePath("/entities")
   return { success: true }
@@ -1126,7 +1187,7 @@ export async function deleteEntity(id: string) {
 ### Login Page (`src/app/(auth)/login/page.tsx`)
 
 \`\`\`tsx
-import { signIn } from "@/lib/auth"
+import { signIn, signInWithGoogle } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -1140,18 +1201,8 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
         </CardHeader>
-        <CardContent>
-          <form
-            action={async (formData) => {
-              "use server"
-              await signIn("credentials", {
-                email: formData.get("email"),
-                password: formData.get("password"),
-                redirectTo: "/dashboard"
-              })
-            }}
-            className="space-y-4"
-          >
+        <CardContent className="space-y-4">
+          <form action={signIn} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" required />
@@ -1162,7 +1213,23 @@ export default function LoginPage() {
             </div>
             <Button type="submit" className="w-full">Sign In</Button>
           </form>
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
+            </div>
+          </div>
+
+          <form action={signInWithGoogle}>
+            <Button type="submit" variant="outline" className="w-full">
+              Continue with Google
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground">
             Don't have an account? <Link href="/register" className="underline">Sign up</Link>
           </p>
         </CardContent>
@@ -1175,7 +1242,7 @@ export default function LoginPage() {
 ### Register Page (`src/app/(auth)/register/page.tsx`)
 
 \`\`\`tsx
-import { register } from "@/actions/auth"
+import { signUp } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -1190,11 +1257,7 @@ export default function RegisterPage() {
           <CardTitle>Create Account</CardTitle>
         </CardHeader>
         <CardContent>
-          <form action={register} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" />
-            </div>
+          <form action={signUp} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" required />
@@ -1222,7 +1285,7 @@ export default function RegisterPage() {
 ### Layout (`src/app/(dashboard)/layout.tsx`)
 
 \`\`\`tsx
-import { auth } from "@/lib/auth"
+import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
@@ -1232,14 +1295,16 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
-  if (!session?.user) redirect("/login")
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect("/login")
 
   return (
     <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1">
-        <Header user={session.user} />
+        <Header user={user} />
         <main className="p-6">{children}</main>
       </div>
     </div>
@@ -1285,7 +1350,7 @@ export function Sidebar() {
 ### Header (`src/components/header.tsx`)
 
 \`\`\`tsx
-import { signOut } from "@/lib/auth"
+import { signOut } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -1294,8 +1359,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import type { User } from "@supabase/supabase-js"
 
-export function Header({ user }: { user: { name?: string | null; email?: string | null } }) {
+export function Header({ user }: { user: User }) {
   return (
     <header className="flex h-14 items-center justify-between border-b px-6">
       <div />
@@ -1303,16 +1369,15 @@ export function Header({ user }: { user: { name?: string | null; email?: string 
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="gap-2">
             <Avatar className="h-8 w-8">
-              <AvatarFallback>{user.name?.[0] || user.email?.[0] || "U"}</AvatarFallback>
+              <AvatarFallback>
+                {user.user_metadata?.name?.[0] || user.email?.[0] || "U"}
+              </AvatarFallback>
             </Avatar>
-            <span>{user.name || user.email}</span>
+            <span>{user.user_metadata?.name || user.email}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <form action={async () => {
-            "use server"
-            await signOut({ redirectTo: "/login" })
-          }}>
+          <form action={signOut}>
             <DropdownMenuItem asChild>
               <button type="submit" className="w-full">Sign out</button>
             </DropdownMenuItem>
