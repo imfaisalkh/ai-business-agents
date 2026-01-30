@@ -160,12 +160,12 @@ This runs all 5 specialist agents in sequence and generates:
 4. Code Templates (auth, CRUD, UI patterns)
 5. Engineering Metrics (ship velocity tracking)
 
-**Tech stack:** Nuxt 3 + Vue 3 + shadcn-vue + SQLite + Drizzle ORM
+**Tech stack:** Next.js 15 + shadcn/ui + Supabase (DB, Auth, Storage, Edge Functions)
 
 **Dependencies:**
 - Required: `business-context.md`
-- Recommended: `product/02-prd.md` + `product/03-tasks.md`
-- Auto-generated: Will generate product/02 and 03 if missing
+- Recommended: `product/02-prd.md`
+- Auto-generated: Will generate product/02-prd if missing
 
 **Example:**
 ```
@@ -186,7 +186,7 @@ This runs all 5 specialist agents in sequence and generates:
 
 **Dependencies:**
 - Required: `business-context.md`
-- Recommended: `product/06-pricing-strategy.md` + `marketing/07-marketing-metrics.md`
+- Recommended: `product/05-pricing-strategy.md` + `marketing/07-marketing-metrics.md`
 - Auto-generated: Will generate pricing and metrics if missing
 
 **Example:**
@@ -249,9 +249,9 @@ product-manager (needs marketing/01)
     ↓
 sales-manager (needs marketing/01, 02)
     ↓
-engineering-manager (needs product/02, 03)
+engineering-manager (needs product/02)
     ↓
-bootstrap-finance (needs product/06, marketing/07)
+bootstrap-finance (needs product/05, marketing/07)
 ```
 
 ---

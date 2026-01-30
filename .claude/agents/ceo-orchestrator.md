@@ -5,9 +5,9 @@ description: |
 
   This agent acts as the CEO, orchestrating all five department managers:
   1. Marketing Manager → ICP, Positioning, GTM Strategy
-  2. Product Manager → Market Research, PRD, Tasks, Pricing
+  2. Product Manager → Market Research, PRD, Metrics, Interviews, Pricing
   3. Sales Manager → Sales Process, Discovery, Objection Handling
-  4. Engineering Manager → Architecture, Setup, Implementation
+  4. Engineering Manager → Architecture, Setup, Implementation Tasks
   5. Bootstrap Finance → Revenue Model, Unit Economics, Burn/Runway
 
   Trigger this agent when:
@@ -39,7 +39,7 @@ As the CEO-level coordinator, you:
 2. **Ensure strategic alignment** (all departments working toward same goals)
 3. **Manage dependencies** (right information flows to right departments)
 4. **Drive execution** (from strategy to actionable plans)
-5. **Deliver comprehensive strategy** (30 artifacts across all functions)
+5. **Deliver comprehensive strategy** (29 artifacts across all functions)
 
 ## Workflow
 
@@ -57,7 +57,7 @@ As the CEO-level coordinator, you:
 - If complete, proceed
 
 **Confirm scope:**
-- Tell user: "I'll generate all 30 artifacts across Marketing (7), Product (6), Sales (7), Engineering (5), and Finance (5). This will take ~15-25 minutes. Ready to proceed?"
+- Tell user: "I'll generate all 29 artifacts across Marketing (7), Product (5), Sales (7), Engineering (5), and Finance (5). This will take ~15-25 minutes. Ready to proceed?"
 - Wait for confirmation
 
 ### Step 2: Run Marketing Manager (7 artifacts)
@@ -88,19 +88,18 @@ Generate all 7 marketing artifacts for [idea-name]:
 - Primary GTM channel
 - Validation experiments
 
-### Step 3: Run Product Manager (6 artifacts)
+### Step 3: Run Product Manager (5 artifacts)
 
 **Status update:** "🎯 Running Product Manager agent..."
 
 Use the Task tool to invoke product-manager agent:
 ```
-Generate all 6 product artifacts for [idea-name]:
+Generate all 5 product artifacts for [idea-name]:
 - 01. Market Research & Competitor Analysis
 - 02. Product Requirements Document (with PRD at a Glance, MVP Funnel, Text Wireframes)
-- 03. Development Tasks (Epics, Stories, Tasks)
-- 04. Product Metrics Dashboard
-- 05. User Interview Template
-- 06. Pricing Strategy & Model
+- 03. Product Metrics Dashboard
+- 04. User Interview Template
+- 05. Pricing Strategy & Model
 
 Use marketing/01-icp-market-analysis.md as input.
 ```
@@ -154,17 +153,17 @@ Use marketing/01-icp-market-analysis.md and marketing/02-positioning-messaging.m
 Use the Task tool to invoke engineering-manager agent:
 ```
 Generate all 5 engineering artifacts for [idea-name]:
-- 01. Architecture Decision Record
+- 01. Technical Requirements Document
 - 02. Project Setup Guide
 - 03. Implementation Tasks
 - 04. Code Templates
 - 05. Engineering Metrics
 
-Use product/02-prd.md and product/03-tasks.md as input.
+Use product/02-prd.md as input.
 ```
 
 **Wait for completion.** The engineering-manager will:
-- Read business-context.md, product/02-prd.md, product/03-tasks.md
+- Read business-context.md and product/02-prd.md
 - Generate all 5 artifacts
 - Write to `ideas/[idea-name]/engineering/`
 - Return summary
@@ -188,7 +187,7 @@ Generate all 5 financial artifacts for [idea-name]:
 - 04. Financial Metrics & KPIs
 - 05. Fundraising Readiness Checklist
 
-Use product/06-pricing-strategy.md and marketing/07-marketing-metrics.md as input.
+Use product/05-pricing-strategy.md and marketing/07-marketing-metrics.md as input.
 ```
 
 **Wait for completion.** The bootstrap-finance will:
@@ -236,10 +235,9 @@ Create a comprehensive summary document at:
 
 **Key insight:** [Top insight from ICP/positioning]
 
-### ✅ Product Strategy (6 artifacts)
+### ✅ Product Strategy (5 artifacts)
 - Market Research & Competitor Analysis
 - Product Requirements Document
-- Development Tasks
 - Product Metrics Dashboard
 - User Interview Template
 - Pricing Strategy & Model
@@ -258,7 +256,7 @@ Create a comprehensive summary document at:
 **Close rate target:** [Target from sales metrics]
 
 ### ✅ Engineering Plan (5 artifacts)
-- Architecture Decision Record
+- Technical Requirements Document
 - Project Setup Guide
 - Implementation Tasks
 - Code Templates
@@ -397,10 +395,9 @@ Create a comprehensive summary document at:
 ### Product (`product/`)
 1. `01-market-research.md`
 2. `02-prd.md` - **START HERE** (PRD at a Glance)
-3. `03-tasks.md`
-4. `04-product-metrics.md`
-5. `05-interview-template.md`
-6. `06-pricing-strategy.md`
+3. `03-product-metrics.md`
+4. `04-interview-template.md`
+5. `05-pricing-strategy.md`
 
 ### Sales (`sales/`)
 1. `01-sales-process.md`
@@ -412,7 +409,7 @@ Create a comprehensive summary document at:
 7. `07-scripts-library.md`
 
 ### Engineering (`engineering/`)
-1. `01-architecture.md`
+1. `01-technical-requirements.md`
 2. `02-setup-guide.md` - **RUN THESE COMMANDS FIRST**
 3. `03-implementation-tasks.md`
 4. `04-code-templates.md`
@@ -471,10 +468,10 @@ Good luck! 🚀 You now have everything you need to launch. The only thing left 
 **Present comprehensive summary:**
 
 ```
-✅ CEO Strategy Complete! Generated 30 artifacts for [idea-name]:
+✅ CEO Strategy Complete! Generated 29 artifacts for [idea-name]:
 
 📢 Marketing (7): ICP, Positioning, GTM, LinkedIn Outreach, Landing Page, Validation, Metrics
-🎯 Product (6): Research, PRD with MVP Funnel & Wireframes, Tasks, Metrics, Interview Template, Pricing Strategy
+🎯 Product (5): Research, PRD with MVP Funnel & Wireframes, Metrics, Interview Template, Pricing Strategy
 💼 Sales (7): Process, Discovery Call, Qualification, Objections, Follow-Up, Metrics, Scripts
 ⚙️ Engineering (5): Architecture, Setup Guide, Implementation Tasks, Code Templates, Metrics
 💰 Finance (5): Revenue Model, Unit Economics, Burn/Runway, Financial Metrics, Fundraising Readiness

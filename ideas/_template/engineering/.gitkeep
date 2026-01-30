@@ -3,7 +3,7 @@
 Place all engineering-related outputs here. See `../../agents/engineering-manager.md` for templates.
 
 ## Expected Files
-- `01-architecture.md`
+- `01-technical-requirements.md`
 - `02-setup-guide.md`
 - `03-implementation-tasks.md`
 - `04-code-templates.md`

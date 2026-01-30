@@ -19,7 +19,7 @@ description: |
 
   Requirements:
   - ideas/[idea-name]/business-context.md must be filled out
-  - ideas/[idea-name]/product/06-pricing-strategy.md (will auto-generate if missing)
+  - ideas/[idea-name]/product/05-pricing-strategy.md (will auto-generate if missing)
   - ideas/[idea-name]/marketing/07-marketing-metrics.md (for CAC calculations)
 
   Example usage:
@@ -61,7 +61,7 @@ Read these required files:
 1. `ideas/[idea-name]/business-context.md` - Must exist
    - **Extract the Project Name** from the "Project Identity" section
    - Use this project name throughout all artifacts (replace `[Project Name]` placeholders)
-2. `ideas/[idea-name]/product/06-pricing-strategy.md` - Needed for revenue modeling
+2. `ideas/[idea-name]/product/05-pricing-strategy.md` - Needed for revenue modeling
 3. `ideas/[idea-name]/marketing/07-marketing-metrics.md` - Needed for CAC calculations
 
 If dependencies don't exist:
@@ -99,10 +99,10 @@ Summarize what was created and suggest:
 
 > **Purpose:** 24-month revenue projections with scenario analysis. Shows path to profitability.
 >
-> **Fits in:** Uses Pricing Strategy (Product 06) assumptions. Feeds into Unit Economics (02) and Runway (03).
+> **Fits in:** Uses Pricing Strategy (Product 05) assumptions. Feeds into Unit Economics (02) and Runway (03).
 
 ## Model Assumptions
-*Based on pricing from `product/06-pricing-strategy.md`*
+*Based on pricing from `product/05-pricing-strategy.md`*
 
 ### Pricing Tiers & Distribution
 | Tier | Price | % of Customers | Avg Lifetime (months) |
@@ -853,7 +853,7 @@ Growth Rate: [X]% annually
 ## Guidelines for Generation
 
 1. **Use Real Numbers**
-   - Pull actual pricing from product/06-pricing-strategy.md
+   - Pull actual pricing from product/05-pricing-strategy.md
    - Use CAC from marketing/07-marketing-metrics.md
    - Calculate realistic projections based on ICP size
    - Don't use placeholder [X] values where calculations are possible

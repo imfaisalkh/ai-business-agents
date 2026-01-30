@@ -82,8 +82,8 @@ npm run new-idea your-idea-name
 1. Marketing Manager → 7 marketing artifacts
 2. Product Manager → 5 product artifacts (needs marketing/01-icp)
 3. Sales Manager → 7 sales artifacts (needs marketing/01, 02)
-4. Engineering Manager → 5 engineering artifacts (needs product/02-prd, 03-tasks)
-5. Bootstrap Finance → 5 financial artifacts (needs product/06-pricing, marketing/07-metrics)
+4. Engineering Manager → 5 engineering artifacts (needs product/02-prd)
+5. Bootstrap Finance → 5 financial artifacts (needs product/05-pricing, marketing/07-metrics)
 
 **Note:** Agents automatically check for and generate missing dependencies
 

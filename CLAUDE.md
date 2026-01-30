@@ -22,7 +22,7 @@ business-context.md (foundation)
     ├─> Sales Manager        → sales/*.md    (needs marketing/01, 02)
     ├─> Engineering Manager  → engineering/*.md (needs product/02-prd.md)
     │       └─> Full-Stack Engineer → src/*, docs/*.md (implements tasks from engineering/03, 04)
-    └─> Bootstrap Finance    → finance/*.md  (needs product/06-pricing, marketing/07-metrics)
+    └─> Bootstrap Finance    → finance/*.md  (needs product/05-pricing, marketing/07-metrics)
 ```
 
 ### Directory Structure
@@ -93,7 +93,7 @@ cp -r ideas/_template ideas/my-idea-name
 
 5. **`engineering-manager`** - Generates 5 engineering artifacts
    - Technical requirements, setup guide, development tasks (unified user stories + implementation), code templates, metrics
-   - Tech stack: Next.js 15 (App Router, full-stack) + shadcn/ui (MCP) + Prisma ORM + SQLite
+   - Tech stack: Next.js 16 (App Router, full-stack) + shadcn/ui (MCP) + Supabase (DB, Auth, Storage, Edge Functions)
    - Auto-generates PRD if missing
    - **Best for:** Technical architecture, development planning, code scaffolding
 
@@ -104,9 +104,9 @@ cp -r ideas/_template ideas/my-idea-name
 
 7. **`full-stack-engineer`** - Implementation agent for building features
    - Implements tasks from engineering/03-development-tasks.md
-   - Has access to supabase-mcp and shadcn-mcp for database and UI operations
+   - Has access to next-devtools-mcp (error detection, logs, metadata), supabase-mcp, and shadcn-mcp
    - Self-verifying: validates code works before marking complete
-   - Self-fixing: detects and fixes bugs automatically
+   - Self-fixing: uses next-devtools-mcp to detect and fix bugs automatically
    - Creates/updates feature documentation in `/docs/` folder
    - Maintains consistent architecture patterns across the codebase
    - **Best for:** Implementing features, building pages, fixing bugs, database setup
@@ -131,7 +131,7 @@ This coordinates all 5 departments and generates 30 artifacts + executive summar
 
 **Method 3: Specific Artifacts**
 ```
-@product-manager generate PRD and tasks for [idea-name]
+@product-manager generate PRD and pricing strategy for [idea-name]
 @sales-manager generate discovery call framework and objection handling
 ```
 
@@ -141,7 +141,7 @@ Native agents automatically check for and generate missing dependencies:
 - **Product Manager** → Auto-generates marketing/01-icp if missing
 - **Sales Manager** → Auto-generates marketing/01-icp and 02-positioning if missing
 - **Engineering Manager** → Auto-generates product/02-prd if missing
-- **Bootstrap Finance** → Auto-generates product/06-pricing and marketing/07-metrics if missing
+- **Bootstrap Finance** → Auto-generates product/05-pricing and marketing/07-metrics if missing
 - **CEO Orchestrator** → Coordinates all 5 departments in optimal order
 
 **Manual Execution Order** (if not using orchestrator):
@@ -150,7 +150,7 @@ Native agents automatically check for and generate missing dependencies:
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
 4. Engineering Manager (requires: product/02-prd.md)
 5. Full-Stack Engineer (requires: engineering/03-development-tasks.md + engineering/04-code-templates.md)
-6. Bootstrap Finance (requires: product/06-pricing-strategy.md + marketing/07-marketing-metrics.md)
+6. Bootstrap Finance (requires: product/05-pricing-strategy.md + marketing/07-marketing-metrics.md)
 
 ## Key Concepts
 
@@ -180,7 +180,7 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
 
 4. **Engineering Manager** (`.claude/agents/engineering-manager.md`)
    - Generates 5 artifacts: Technical requirements, setup guide, development tasks (unified user stories + technical implementation), code templates, metrics
-   - Focus: Ship velocity and quality (Next.js 15 + Prisma + SQLite full-stack)
+   - Focus: Ship velocity and quality (Next.js 16 + Prisma + SQLite full-stack)
 
 5. **CEO Orchestrator** (`.claude/agents/ceo-orchestrator.md`)
    - Chains all 5 department agents to generate complete 21-day launch strategy
