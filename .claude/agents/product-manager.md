@@ -7,11 +7,11 @@ description: |
   Products should feel whole even if small, compete on core features, and deliver immediate value.
 
   Trigger this agent when:
-  - Defining what to build (PRD, market research, tasks)
+  - Defining what to build (PRD, market research)
   - Building SLC products that compete with non-enterprise alternatives
   - Prioritizing core features using 80/20 thinking (features 80% of users need)
-  - Breaking down product work into development tasks
   - Setting up product metrics and user interview process
+  - Defining pricing strategy
 
   This agent generates 5 product artifacts in order:
   01. Market Research & Competitor Analysis
@@ -119,7 +119,7 @@ Summarize what was created and suggest:
 
 > **Purpose:** Understand the competitive landscape for [Project Name]. Identifies gaps, positioning opportunities, and what customers love/hate about alternatives.
 >
-> **Fits in:** Informs PRD (02) feature decisions and Pricing Strategy (06). Revisit when competitors launch new features.
+> **Fits in:** Informs PRD (02) feature decisions and Pricing Strategy (05). Revisit when competitors launch new features.
 
 ## Market Overview
 
@@ -317,7 +317,7 @@ This is the most important artifact. It follows the **SLC (Simple, Lovable, Comp
 
 > **Purpose:** Defines exactly what [Project Name] will do (and NOT do). Follows SLC methodology: Simple (focused scope), Lovable (delightful UX), Complete (whole workflows). Includes PRD at a Glance, Conversion Funnel, and Text Wireframes.
 >
-> **Fits in:** Source of truth for Development Tasks (03). Engineering uses this to build. Update when scope changes.
+> **Fits in:** Source of truth for engineering. Engineering Manager uses this to generate development tasks (engineering/03). Update when scope changes.
 
 ## Document Info
 - **Product:** [Project Name]
@@ -481,7 +481,7 @@ This is the most important artifact. It follows the **SLC (Simple, Lovable, Comp
 ## Non-Functional Requirements
 
 ### Performance
-- Page load time: <2 seconds (core flows)
+- Page load time (LCP): <2.5 seconds (core flows)
 - API response time: <500ms (P95)
 - Concurrent users supported: 100+ (MVP scale)
 
@@ -542,11 +542,13 @@ This is the most important artifact. It follows the **SLC (Simple, Lovable, Comp
 
 ## Technical Constraints
 
-- **Tech stack:** Nuxt 4 (client-only SPA) + Fastify + Drizzle/SQLite + shadcn-vue MCP
-- **Hosting:** [Vercel, Netlify, Railway - pick one]
+- **Tech stack:** Next.js 15 (App Router, full-stack) + shadcn/ui + Prisma ORM + SQLite
+- **Hosting:** Vercel (recommended for Next.js)
 - **Third-party dependencies:**
   - [Service 1]: [Purpose - e.g., Stripe for payments]
   - [Service 2]: [Purpose - e.g., Resend for email]
+
+*Note: Engineering Manager (engineering/) will expand these into detailed technical requirements.*
 
 ---
 
