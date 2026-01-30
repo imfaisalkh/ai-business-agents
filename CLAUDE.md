@@ -17,11 +17,12 @@ This is an artifact-driven AI agent system for solo founders building bootstrapp
 ### Agent System Flow
 ```
 business-context.md (foundation)
-    ├─> Marketing Manager   → marketing/*.md
-    ├─> Product Manager     → product/*.md  (needs marketing/01-icp-market-analysis.md)
-    ├─> Sales Manager       → sales/*.md    (needs marketing/01, 02)
-    ├─> Engineering Manager → engineering/*.md (needs product/02-prd.md)
-    └─> Bootstrap Finance   → finance/*.md  (needs product/06-pricing, marketing/07-metrics)
+    ├─> Marketing Manager    → marketing/*.md
+    ├─> Product Manager      → product/*.md  (needs marketing/01-icp-market-analysis.md)
+    ├─> Sales Manager        → sales/*.md    (needs marketing/01, 02)
+    ├─> Engineering Manager  → engineering/*.md (needs product/02-prd.md)
+    │       └─> Full-Stack Engineer → src/*, docs/*.md (implements tasks from engineering/03, 04)
+    └─> Bootstrap Finance    → finance/*.md  (needs product/06-pricing, marketing/07-metrics)
 ```
 
 ### Directory Structure
@@ -101,6 +102,15 @@ cp -r ideas/_template ideas/my-idea-name
    - Auto-generates pricing and marketing metrics dependencies if missing
    - **Best for:** Financial planning, unit economics, runway tracking
 
+7. **`full-stack-engineer`** - Implementation agent for building features
+   - Implements tasks from engineering/03-development-tasks.md
+   - Has access to supabase-mcp and shadcn-mcp for database and UI operations
+   - Self-verifying: validates code works before marking complete
+   - Self-fixing: detects and fixes bugs automatically
+   - Creates/updates feature documentation in `/docs/` folder
+   - Maintains consistent architecture patterns across the codebase
+   - **Best for:** Implementing features, building pages, fixing bugs, database setup
+
 #### How to Use Native Agents
 
 **Method 1: CEO Strategy (Recommended for comprehensive planning)**
@@ -115,6 +125,7 @@ This coordinates all 5 departments and generates 30 artifacts + executive summar
 @product-manager generate all artifacts for [idea-name]
 @sales-manager generate all artifacts for [idea-name]
 @engineering-manager generate all artifacts for [idea-name]
+@full-stack-engineer implement task E-1.3.3 for [idea-name]
 @bootstrap-finance generate all artifacts for [idea-name]
 ```
 
@@ -138,7 +149,8 @@ Native agents automatically check for and generate missing dependencies:
 2. Product Manager (requires: business-context.md + marketing/01-icp-market-analysis.md)
 3. Sales Manager (requires: marketing/01-icp-market-analysis.md + marketing/02-positioning-messaging.md)
 4. Engineering Manager (requires: product/02-prd.md)
-5. Bootstrap Finance (requires: product/06-pricing-strategy.md + marketing/07-marketing-metrics.md)
+5. Full-Stack Engineer (requires: engineering/03-development-tasks.md + engineering/04-code-templates.md)
+6. Bootstrap Finance (requires: product/06-pricing-strategy.md + marketing/07-marketing-metrics.md)
 
 ## Key Concepts
 
@@ -179,6 +191,14 @@ Each agent generates numbered artifacts (e.g., `01-icp-market-analysis.md`). Gen
    - Generates 5 artifacts: Revenue model, unit economics, burn/runway, financial metrics, fundraising readiness
    - Focus: Financial sustainability and path to profitability
 
+7. **Full-Stack Engineer** (`.claude/agents/full-stack-engineer.md`)
+   - Implements features from engineering/03-development-tasks.md
+   - Uses supabase-mcp for database, shadcn-mcp for UI components
+   - Self-verifying and self-fixing (validates code works, fixes bugs automatically)
+   - Maintains consistent patterns (reuses existing clients, utilities, hooks)
+   - Creates feature documentation in `/docs/` folder
+   - Focus: Ship production-ready code that works on first deploy
+
 ### When to Re-run Agents
 Don't update artifacts randomly. Triggers include:
 - New competitor discovered → Update market research + positioning (Product + Marketing)
@@ -215,11 +235,11 @@ Don't update artifacts randomly. Triggers include:
 **Week 3: Execution**
 1. Run `@engineering-manager generate all artifacts for [idea]`
 2. Bootstrap project using setup guide
-3. Start Phase 1 implementation (auth + foundation)
-4. Deploy MVP features and continue outreach
+3. Run `@full-stack-engineer implement Epic 1 (auth + foundation) for [idea]`
+4. Deploy to staging and continue outreach
 
 **Week 4: Launch**
-1. Complete MVP build
+1. Run `@full-stack-engineer implement remaining epics for [idea]`
 2. Beta test with first users
 3. Public launch
 4. Track metrics and iterate
@@ -265,6 +285,12 @@ When creating new ideas:
 - Always start from `ideas/_template/`
 - Fill `business-context.md` completely before any agent work
 - Don't skip the template structure - all agents expect these folders
+
+When implementing features (full-stack-engineer):
+- Feature documentation goes in `/docs/[feature-name].md` (one doc per feature)
+- Never create arbitrary markdown files in the project root
+- Use `/tmp` for any temporary files, clean up when done
+- Reuse existing patterns from `src/lib/`, `src/hooks/`, `src/actions/`
 
 ## Development Notes
 
