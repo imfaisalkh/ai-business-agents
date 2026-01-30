@@ -26,23 +26,28 @@
 |  | Pages (RSC)        |  | Server Actions     |  | API Routes   | |
 |  | - Dashboard        |  | - createReview     |  | - webhooks   | |
 |  | - Review Editor    |  | - submitSelfReview |  | - stripe     | |
-|  | - Gap Analysis     |  | - addPeerFeedback  |  | - email      | |
+|  | - Gap Analysis     |  | - addPeerFeedback  |  |              | |
 |  | - Team Management  |  | - manageGoals      |  |              | |
 |  +--------------------+  +--------------------+  +--------------+ |
 |                                                                   |
 |  +--------------------+  +--------------------+  +--------------+ |
 |  | shadcn/ui          |  | Supabase Client    |  | Supabase     | |
-|  | Components         |  | (PostgreSQL)       |  | Auth         | |
+|  | Components         |  | (all features)     |  | Realtime     | |
 |  +--------------------+  +--------------------+  +--------------+ |
 |                                 [Vercel]                          |
 +--------------------------------+---------------------------------+
                                  | Supabase Client
                                  v
 +------------------------------------------------------------------+
-|                        Supabase                                   |
+|                        Supabase Platform                          |
 |  +--------------------+  +--------------------+  +--------------+ |
 |  | PostgreSQL DB      |  | Auth (magic link,  |  | Row Level    | |
 |  | Multi-tenant       |  | OAuth, email/pass) |  | Security     | |
+|  +--------------------+  +--------------------+  +--------------+ |
+|  +--------------------+  +--------------------+  +--------------+ |
+|  | Storage            |  | Edge Functions     |  | Realtime     | |
+|  | - Avatars          |  | - Cron reminders   |  | - Notifs     | |
+|  | - PDF exports      |  | - Webhook handlers |  | - Live sync  | |
 |  +--------------------+  +--------------------+  +--------------+ |
 +------------------------------------------------------------------+
                                  |
@@ -67,7 +72,10 @@ teampulse/
 ├── .env.local
 ├── supabase/
 │   ├── config.toml            # Supabase local config
-│   └── migrations/            # SQL migration files
+│   ├── migrations/            # SQL migration files
+│   └── functions/             # Edge Functions
+│       ├── send-reminders/    # Cron job for deadline reminders
+│       └── stripe-webhook/    # Stripe webhook handler
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx         # Root layout
@@ -629,6 +637,213 @@ NEXT_PUBLIC_APP_NAME="TeamPulse"
 - Touch-friendly form inputs
 - Collapsible sidebar on mobile
 - Native date pickers
+
+---
+
+## Supabase Platform Features
+
+### Supabase Storage
+
+**Use Cases:**
+- **Profile Avatars:** User profile photos, organization logos
+- **PDF Exports:** Generated performance review PDFs stored for download
+- **Attachments:** Supporting documents attached to reviews (future)
+
+**Bucket Configuration:**
+```sql
+-- Create storage buckets
+insert into storage.buckets (id, name, public)
+values
+  ('avatars', 'avatars', true),
+  ('exports', 'exports', false);
+
+-- RLS for avatars (public read, authenticated write)
+create policy "Avatar images are publicly accessible"
+  on storage.objects for select
+  using (bucket_id = 'avatars');
+
+create policy "Users can upload their own avatar"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'avatars'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+-- RLS for exports (only owner can access)
+create policy "Users can access their own exports"
+  on storage.objects for select
+  using (
+    bucket_id = 'exports'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+```
+
+**Client Usage:**
+```typescript
+// Upload avatar
+const { data, error } = await supabase.storage
+  .from('avatars')
+  .upload(`${userId}/avatar.png`, file, {
+    cacheControl: '3600',
+    upsert: true
+  })
+
+// Get public URL
+const { data: { publicUrl } } = supabase.storage
+  .from('avatars')
+  .getPublicUrl(`${userId}/avatar.png`)
+
+// Download private export
+const { data, error } = await supabase.storage
+  .from('exports')
+  .download(`${userId}/review-${reviewId}.pdf`)
+```
+
+### Supabase Edge Functions
+
+**Use Cases:**
+- **Reminder Cron Jobs:** Daily check for approaching deadlines, send reminder emails
+- **Stripe Webhooks:** Handle subscription updates, payment events
+- **PDF Generation:** Generate review PDFs on demand (heavy computation)
+- **Email Sending:** Offload Resend API calls from main app
+
+**Function Structure:**
+```
+supabase/
+└── functions/
+    ├── send-reminders/
+    │   └── index.ts     # Cron job for deadline reminders
+    ├── stripe-webhook/
+    │   └── index.ts     # Handle Stripe events
+    └── generate-pdf/
+        └── index.ts     # Generate review PDF
+```
+
+**Example: Reminder Cron Function:**
+```typescript
+// supabase/functions/send-reminders/index.ts
+import { createClient } from '@supabase/supabase-js'
+import { Resend } from 'resend'
+
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+)
+const resend = new Resend(Deno.env.get('RESEND_API_KEY')!)
+
+Deno.serve(async (req) => {
+  // Get cycles with deadlines in 3 days, 1 day, or today
+  const { data: cycles } = await supabase
+    .from('review_cycles')
+    .select('*, organization:organizations(*)')
+    .gte('deadline', new Date().toISOString())
+    .lte('deadline', addDays(new Date(), 3).toISOString())
+    .eq('status', 'ACTIVE')
+
+  for (const cycle of cycles ?? []) {
+    // Get incomplete reviews
+    const { data: reviews } = await supabase
+      .from('reviews')
+      .select('*, reviewer:profiles!reviewer_id(*)')
+      .eq('cycle_id', cycle.id)
+      .neq('status', 'COMPLETED')
+
+    // Send reminders
+    for (const review of reviews ?? []) {
+      await resend.emails.send({
+        from: 'TeamPulse <noreply@teampulse.app>',
+        to: review.reviewer.email,
+        subject: `Reminder: Review due ${formatDate(cycle.deadline)}`,
+        html: renderReminderEmail(review, cycle)
+      })
+    }
+  }
+
+  return new Response(JSON.stringify({ sent: true }))
+})
+```
+
+**Cron Schedule (via Supabase Dashboard or pg_cron):**
+```sql
+-- Run reminders daily at 9am UTC
+select cron.schedule(
+  'send-review-reminders',
+  '0 9 * * *',
+  $$
+  select net.http_post(
+    url := 'https://your-project.supabase.co/functions/v1/send-reminders',
+    headers := '{"Authorization": "Bearer ' || current_setting('app.settings.service_role_key') || '"}'::jsonb
+  );
+  $$
+);
+```
+
+### Supabase Realtime
+
+**Use Cases:**
+- **Review Notifications:** Instant notification when a review is shared with employee
+- **Cycle Status Updates:** Real-time progress bar updates on cycle dashboard
+- **Collaborative Editing (Future):** Multiple reviewers on same form
+
+**Subscription Patterns:**
+```typescript
+// Subscribe to reviews shared with current user
+useEffect(() => {
+  const channel = supabase
+    .channel('my-reviews')
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'reviews',
+        filter: `reviewee_id=eq.${userId}`
+      },
+      (payload) => {
+        if (payload.new.status === 'SHARED') {
+          toast.success('Your review is ready to view!')
+          refetch()
+        }
+      }
+    )
+    .subscribe()
+
+  return () => { supabase.removeChannel(channel) }
+}, [userId])
+
+// Subscribe to cycle progress updates
+const channel = supabase
+  .channel('cycle-progress')
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'reviews',
+      filter: `cycle_id=eq.${cycleId}`
+    },
+    () => {
+      // Refetch cycle stats when any review changes
+      refetchCycleStats()
+    }
+  )
+  .subscribe()
+```
+
+**Enable Realtime on Tables:**
+```sql
+-- Enable realtime for specific tables
+alter publication supabase_realtime add table reviews;
+alter publication supabase_realtime add table review_cycles;
+```
+
+### Supabase Feature Summary
+
+| Feature | Use Case | Priority |
+|---------|----------|----------|
+| **Storage** | Avatars, PDF exports | Phase 1 (avatars), Phase 4 (PDFs) |
+| **Edge Functions** | Cron reminders, Stripe webhooks | Phase 6 (notifications), Phase 7 (billing) |
+| **Realtime** | Review notifications | Phase 7 (nice-to-have) |
 
 ---
 

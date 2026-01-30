@@ -568,7 +568,164 @@ SELECT id, name, description, sort_order FROM general,
 
 ---
 
-## Step 11: Run Development
+## Step 11: Setup Supabase Storage
+
+### 11.1 Create Storage Buckets
+
+In Supabase Dashboard > Storage, or run this SQL:
+
+```sql
+-- Create storage buckets
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values
+  ('avatars', 'avatars', true, 2097152, array['image/jpeg', 'image/png', 'image/webp']),
+  ('exports', 'exports', false, 10485760, array['application/pdf']);
+
+-- Avatars: Public read, user can upload/update their own
+create policy "Avatar images are publicly accessible"
+  on storage.objects for select
+  using (bucket_id = 'avatars');
+
+create policy "Users can upload their own avatar"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'avatars'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can update their own avatar"
+  on storage.objects for update
+  using (
+    bucket_id = 'avatars'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+-- Exports: Private, owner only
+create policy "Users can access their own exports"
+  on storage.objects for select
+  using (
+    bucket_id = 'exports'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can upload their own exports"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'exports'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+```
+
+### 11.2 Verify Storage Setup
+
+1. Go to Supabase Dashboard > Storage
+2. Verify `avatars` bucket is public
+3. Verify `exports` bucket is private
+4. Test upload in browser console (after auth)
+
+---
+
+## Step 12: Setup Supabase Edge Functions (Optional)
+
+Edge Functions are useful for cron jobs and heavy processing. Skip if using Vercel Cron.
+
+### 12.1 Initialize Edge Functions
+
+```bash
+# Create functions directory
+mkdir -p supabase/functions
+
+# Create reminder function
+mkdir -p supabase/functions/send-reminders
+cat > supabase/functions/send-reminders/index.ts << 'EOF'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+serve(async (req) => {
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    )
+
+    // Get active cycles with pending reviews
+    const { data: cycles } = await supabase
+      .from("review_cycles")
+      .select("*, organization:organizations(*)")
+      .eq("status", "ACTIVE")
+
+    // Send reminders logic here...
+    console.log(`Found ${cycles?.length ?? 0} active cycles`)
+
+    return new Response(
+      JSON.stringify({ success: true, cycles: cycles?.length ?? 0 }),
+      { headers: { "Content-Type": "application/json" } }
+    )
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    )
+  }
+})
+EOF
+```
+
+### 12.2 Deploy Edge Functions
+
+```bash
+# Login to Supabase
+pnpm supabase login
+
+# Link project
+pnpm supabase link --project-ref your-project-ref
+
+# Deploy function
+pnpm supabase functions deploy send-reminders
+
+# Set secrets
+pnpm supabase secrets set RESEND_API_KEY=re_xxx
+```
+
+### 12.3 Setup Cron with pg_cron (Alternative to Vercel Cron)
+
+In Supabase SQL Editor:
+
+```sql
+-- Enable pg_cron extension (if not enabled)
+create extension if not exists pg_cron;
+
+-- Schedule daily reminder at 9am UTC
+select cron.schedule(
+  'send-review-reminders',
+  '0 9 * * *',
+  $$
+  select net.http_post(
+    url := 'https://your-project.supabase.co/functions/v1/send-reminders',
+    headers := jsonb_build_object(
+      'Authorization', 'Bearer ' || current_setting('app.settings.service_role_key', true)
+    )
+  );
+  $$
+);
+```
+
+---
+
+## Step 13: Enable Realtime (Optional)
+
+For live notifications when reviews are shared:
+
+```sql
+-- Enable realtime for specific tables
+alter publication supabase_realtime add table reviews;
+alter publication supabase_realtime add table self_reviews;
+alter publication supabase_realtime add table review_cycles;
+```
+
+---
+
+## Step 14: Run Development
 
 ```bash
 # Start development server
@@ -582,16 +739,16 @@ pnpm dev
 
 ---
 
-## Step 12: Production Deployment (Vercel)
+## Step 15: Production Deployment (Vercel)
 
-### 12.1 Supabase Production Setup
+### 15.1 Supabase Production Setup
 
 Your Supabase project is already production-ready! Just ensure:
 1. Enable email confirmations in Auth Settings if desired
 2. Configure OAuth providers (Google) with production redirect URLs
 3. Review and test RLS policies
 
-### 12.2 Deploy to Vercel
+### 15.2 Deploy to Vercel
 
 ```bash
 # Install Vercel CLI
@@ -613,7 +770,7 @@ vercel link
 vercel --prod
 ```
 
-### 12.3 Post-Deploy Checklist
+### 15.3 Post-Deploy Checklist
 
 - [ ] Update Supabase Auth redirect URLs to production domain
 - [ ] Update Stripe webhook URLs to production

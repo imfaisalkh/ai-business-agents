@@ -15,6 +15,9 @@
 7. [Analytics: PostHog](#analytics-posthog)
 8. [Email: Reminder Templates](#email-reminder-templates)
 9. [API Routes: Webhooks](#api-routes-webhooks)
+10. [Supabase Storage](#supabase-storage)
+11. [Supabase Edge Functions](#supabase-edge-functions)
+12. [Supabase Realtime](#supabase-realtime)
 
 ---
 
@@ -186,38 +189,34 @@ export async function getCycle(id: string): Promise<ActionResult<ReviewCycle & {
 }>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const cycle = await prisma.reviewCycle.findFirst({
-      where: {
-        id,
-        organizationId: user.organizationId,
-      },
-      include: {
-        template: { include: { competencies: true } },
-        participants: {
-          include: {
-            user: {
-              select: { id: true, name: true, email: true, jobTitle: true, level: true },
-            },
-          },
-        },
-        reviews: {
-          include: {
-            ratings: true,
-            author: { select: { id: true, name: true } },
-            subject: { select: { id: true, name: true } },
-          },
-        },
-        selfReviews: {
-          include: {
-            ratings: true,
-            user: { select: { id: true, name: true } },
-          },
-        },
-      },
-    })
+    const { data: cycle, error } = await supabase
+      .from("review_cycles")
+      .select(`
+        *,
+        template:templates(*, competencies(*)),
+        participants:cycle_participants(
+          *,
+          user:profiles(id, name, email, job_title, level)
+        ),
+        reviews(
+          *,
+          ratings:review_ratings(*),
+          author:profiles!reviewer_id(id, name),
+          subject:profiles!reviewee_id(id, name)
+        ),
+        self_reviews(
+          *,
+          ratings:self_review_ratings(*),
+          user:profiles(id, name)
+        )
+      `)
+      .eq("id", id)
+      .eq("organization_id", user.organization_id)
+      .single()
 
-    if (!cycle) {
+    if (error || !cycle) {
       return { success: false, error: { code: "NOT_FOUND", message: "Cycle not found" } }
     }
 
@@ -231,13 +230,16 @@ export async function getCycle(id: string): Promise<ActionResult<ReviewCycle & {
 export async function activateCycle(id: string): Promise<ActionResult<ReviewCycle>> {
   try {
     const user = await requireRole(["OWNER", "ADMIN", "MANAGER"])
+    const supabase = await createClient()
 
-    const cycle = await prisma.reviewCycle.findFirst({
-      where: { id, organizationId: user.organizationId },
-      include: { participants: true },
-    })
+    const { data: cycle, error: cycleError } = await supabase
+      .from("review_cycles")
+      .select("*, participants:cycle_participants(*)")
+      .eq("id", id)
+      .eq("organization_id", user.organization_id)
+      .single()
 
-    if (!cycle) {
+    if (cycleError || !cycle) {
       return { success: false, error: { code: "NOT_FOUND", message: "Cycle not found" } }
     }
 
@@ -245,46 +247,42 @@ export async function activateCycle(id: string): Promise<ActionResult<ReviewCycl
       return { success: false, error: { code: "ALREADY_ACTIVE", message: "Cycle is not in draft status" } }
     }
 
-    if (cycle.participants.length === 0) {
+    if (!cycle.participants || cycle.participants.length === 0) {
       return { success: false, error: { code: "NO_PARTICIPANTS", message: "Add participants before activating" } }
     }
 
-    // Create review records for each participant
-    const template = await prisma.template.findUnique({
-      where: { id: cycle.templateId! },
-      include: { competencies: true },
-    })
-
     // Create self-reviews and manager reviews for each participant
     for (const participant of cycle.participants) {
-      const participantUser = await prisma.user.findUnique({
-        where: { id: participant.userId },
-      })
+      const { data: participantUser } = await supabase
+        .from("profiles")
+        .select("manager_id")
+        .eq("id", participant.user_id)
+        .single()
 
       // Create self-review
-      await prisma.selfReview.create({
-        data: {
-          cycleId: id,
-          userId: participant.userId,
-        },
+      await supabase.from("self_reviews").insert({
+        cycle_id: id,
+        user_id: participant.user_id,
       })
 
       // Create manager review if participant has a manager
-      if (participantUser?.managerId) {
-        await prisma.review.create({
-          data: {
-            cycleId: id,
-            authorId: participantUser.managerId,
-            subjectId: participant.userId,
-          },
+      if (participantUser?.manager_id) {
+        await supabase.from("reviews").insert({
+          cycle_id: id,
+          reviewer_id: participantUser.manager_id,
+          reviewee_id: participant.user_id,
         })
       }
     }
 
-    const updatedCycle = await prisma.reviewCycle.update({
-      where: { id },
-      data: { status: "ACTIVE" },
-    })
+    const { data: updatedCycle, error: updateError } = await supabase
+      .from("review_cycles")
+      .update({ status: "ACTIVE" })
+      .eq("id", id)
+      .select()
+      .single()
+
+    if (updateError) throw updateError
 
     revalidatePath("/cycles")
     revalidatePath(`/cycles/${id}`)
@@ -328,51 +326,44 @@ export async function getReviewForWriting(
 ): Promise<ActionResult<any>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const review = await prisma.review.findFirst({
-      where: {
-        cycleId,
-        subjectId,
-        authorId: user.id,
-      },
-      include: {
-        ratings: { include: { competency: true } },
-        subject: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            jobTitle: true,
-            level: true,
-            goals: { where: { status: { not: "COMPLETED" } } },
-          },
-        },
-        cycle: {
-          include: {
-            template: { include: { competencies: { orderBy: { order: "asc" } } } },
-          },
-        },
-      },
-    })
+    const { data: review, error } = await supabase
+      .from("reviews")
+      .select(`
+        *,
+        ratings:review_ratings(*, competency:competencies(*)),
+        subject:profiles!reviewee_id(
+          id, name, email, job_title, level,
+          goals(*)
+        ),
+        cycle:review_cycles(
+          *,
+          template:templates(*, competencies(*))
+        )
+      `)
+      .eq("cycle_id", cycleId)
+      .eq("reviewee_id", subjectId)
+      .eq("reviewer_id", user.id)
+      .single()
 
-    if (!review) {
+    if (error || !review) {
       return { success: false, error: { code: "NOT_FOUND", message: "Review not found" } }
     }
 
     // Get aggregated peer feedback
-    const peerFeedback = await prisma.peerFeedback.findMany({
-      where: {
-        subjectId,
-        request: { cycleId },
-      },
-    })
+    const { data: peerFeedback } = await supabase
+      .from("peer_feedback")
+      .select("*, request:peer_feedback_requests!inner(*)")
+      .eq("subject_id", subjectId)
+      .eq("request.cycle_id", cycleId)
 
     return {
       success: true,
       data: {
         ...review,
-        peerFeedback: peerFeedback.length >= 3 ? aggregatePeerFeedback(peerFeedback) : null,
-        peerFeedbackCount: peerFeedback.length,
+        peerFeedback: (peerFeedback?.length ?? 0) >= 3 ? aggregatePeerFeedback(peerFeedback!) : null,
+        peerFeedbackCount: peerFeedback?.length ?? 0,
       },
     }
   } catch (error) {
@@ -384,9 +375,9 @@ export async function getReviewForWriting(
 function aggregatePeerFeedback(feedback: any[]) {
   return {
     count: feedback.length,
-    avgCollaborationRating: feedback.reduce((sum, f) => sum + (f.collaborationRating || 0), 0) / feedback.length,
+    avgCollaborationRating: feedback.reduce((sum, f) => sum + (f.collaboration_rating || 0), 0) / feedback.length,
     strengths: feedback.map(f => f.strengths).filter(Boolean),
-    areasForGrowth: feedback.map(f => f.areasForGrowth).filter(Boolean),
+    areasForGrowth: feedback.map(f => f.areas_for_growth).filter(Boolean),
   }
 }
 
@@ -397,12 +388,16 @@ export async function updateReview(
 ): Promise<ActionResult<Review>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const review = await prisma.review.findFirst({
-      where: { id: reviewId, authorId: user.id },
-    })
+    const { data: review, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("id", reviewId)
+      .eq("reviewer_id", user.id)
+      .single()
 
-    if (!review) {
+    if (error || !review) {
       return { success: false, error: { code: "NOT_FOUND", message: "Review not found" } }
     }
 
@@ -410,38 +405,33 @@ export async function updateReview(
       return { success: false, error: { code: "ALREADY_SHARED", message: "Cannot edit shared review" } }
     }
 
-    // Update ratings
+    // Update ratings with upsert
     for (const rating of data.ratings) {
-      await prisma.reviewRating.upsert({
-        where: {
-          reviewId_competencyId: {
-            reviewId,
-            competencyId: rating.competencyId,
-          },
-        },
-        create: {
-          reviewId,
-          competencyId: rating.competencyId,
+      await supabase
+        .from("review_ratings")
+        .upsert({
+          review_id: reviewId,
+          competency_id: rating.competencyId,
           rating: rating.rating,
           feedback: rating.feedback,
-        },
-        update: {
-          rating: rating.rating,
-          feedback: rating.feedback,
-        },
-      })
+        }, {
+          onConflict: "review_id,competency_id"
+        })
     }
 
     // Update overall
-    const updated = await prisma.review.update({
-      where: { id: reviewId },
-      data: {
-        overallRating: data.overallRating,
-        overallFeedback: data.overallFeedback,
+    const { data: updated, error: updateError } = await supabase
+      .from("reviews")
+      .update({
+        overall_rating: data.overallRating,
+        overall_feedback: data.overallFeedback,
         status: "IN_PROGRESS",
-      },
-    })
+      })
+      .eq("id", reviewId)
+      .select()
+      .single()
 
+    if (updateError) throw updateError
     return { success: true, data: updated }
   } catch (error) {
     return { success: false, error: { code: "UPDATE_ERROR", message: "Failed to update review" } }
@@ -452,38 +442,46 @@ export async function updateReview(
 export async function submitReview(reviewId: string): Promise<ActionResult<Review>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const review = await prisma.review.findFirst({
-      where: { id: reviewId, authorId: user.id },
-      include: {
-        ratings: true,
-        cycle: { include: { template: { include: { competencies: true } } } },
-      },
-    })
+    const { data: review, error } = await supabase
+      .from("reviews")
+      .select(`
+        *,
+        ratings:review_ratings(*),
+        cycle:review_cycles(*, template:templates(*, competencies(*)))
+      `)
+      .eq("id", reviewId)
+      .eq("reviewer_id", user.id)
+      .single()
 
-    if (!review) {
+    if (error || !review) {
       return { success: false, error: { code: "NOT_FOUND", message: "Review not found" } }
     }
 
     // Check all competencies have ratings
-    const requiredCompetencies = review.cycle.template?.competencies.length || 0
-    if (review.ratings.length < requiredCompetencies) {
+    const requiredCompetencies = review.cycle?.template?.competencies?.length || 0
+    if ((review.ratings?.length || 0) < requiredCompetencies) {
       return { success: false, error: { code: "INCOMPLETE", message: "All competencies must be rated" } }
     }
 
-    if (!review.overallRating) {
+    if (!review.overall_rating) {
       return { success: false, error: { code: "INCOMPLETE", message: "Overall rating is required" } }
     }
 
-    const updated = await prisma.review.update({
-      where: { id: reviewId },
-      data: {
+    const { data: updated, error: updateError } = await supabase
+      .from("reviews")
+      .update({
         status: "SUBMITTED",
-        submittedAt: new Date(),
-      },
-    })
+        submitted_at: new Date().toISOString(),
+      })
+      .eq("id", reviewId)
+      .select()
+      .single()
 
-    revalidatePath(`/cycles/${review.cycleId}`)
+    if (updateError) throw updateError
+
+    revalidatePath(`/cycles/${review.cycle_id}`)
     return { success: true, data: updated }
   } catch (error) {
     return { success: false, error: { code: "SUBMIT_ERROR", message: "Failed to submit review" } }
@@ -494,28 +492,36 @@ export async function submitReview(reviewId: string): Promise<ActionResult<Revie
 export async function shareReview(reviewId: string): Promise<ActionResult<Review>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const review = await prisma.review.findFirst({
-      where: { id: reviewId, authorId: user.id, status: "SUBMITTED" },
-      include: { subject: true },
-    })
+    const { data: review, error } = await supabase
+      .from("reviews")
+      .select("*, subject:profiles!reviewee_id(*)")
+      .eq("id", reviewId)
+      .eq("reviewer_id", user.id)
+      .eq("status", "SUBMITTED")
+      .single()
 
-    if (!review) {
+    if (error || !review) {
       return { success: false, error: { code: "NOT_FOUND", message: "Review not found or not ready to share" } }
     }
 
-    const updated = await prisma.review.update({
-      where: { id: reviewId },
-      data: {
+    const { data: updated, error: updateError } = await supabase
+      .from("reviews")
+      .update({
         status: "SHARED",
-        sharedAt: new Date(),
-      },
-    })
+        shared_at: new Date().toISOString(),
+      })
+      .eq("id", reviewId)
+      .select()
+      .single()
+
+    if (updateError) throw updateError
 
     // TODO: Send notification email
     // await sendReviewSharedEmail(review.subject.email, ...)
 
-    revalidatePath(`/cycles/${review.cycleId}`)
+    revalidatePath(`/cycles/${review.cycle_id}`)
     return { success: true, data: updated }
   } catch (error) {
     return { success: false, error: { code: "SHARE_ERROR", message: "Failed to share review" } }
@@ -549,23 +555,23 @@ const updateSelfReviewSchema = z.object({
 export async function getSelfReview(cycleId: string): Promise<ActionResult<any>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const selfReview = await prisma.selfReview.findFirst({
-      where: {
-        cycleId,
-        userId: user.id,
-      },
-      include: {
-        ratings: { include: { competency: true } },
-        cycle: {
-          include: {
-            template: { include: { competencies: { orderBy: { order: "asc" } } } },
-          },
-        },
-      },
-    })
+    const { data: selfReview, error } = await supabase
+      .from("self_reviews")
+      .select(`
+        *,
+        ratings:self_review_ratings(*, competency:competencies(*)),
+        cycle:review_cycles(
+          *,
+          template:templates(*, competencies(*))
+        )
+      `)
+      .eq("cycle_id", cycleId)
+      .eq("user_id", user.id)
+      .single()
 
-    if (!selfReview) {
+    if (error || !selfReview) {
       return { success: false, error: { code: "NOT_FOUND", message: "Self-review not found" } }
     }
 
@@ -582,12 +588,16 @@ export async function updateSelfReview(
 ): Promise<ActionResult<SelfReview>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const selfReview = await prisma.selfReview.findFirst({
-      where: { id: selfReviewId, userId: user.id },
-    })
+    const { data: selfReview, error } = await supabase
+      .from("self_reviews")
+      .select("*")
+      .eq("id", selfReviewId)
+      .eq("user_id", user.id)
+      .single()
 
-    if (!selfReview) {
+    if (error || !selfReview) {
       return { success: false, error: { code: "NOT_FOUND", message: "Self-review not found" } }
     }
 
@@ -595,39 +605,34 @@ export async function updateSelfReview(
       return { success: false, error: { code: "ALREADY_SUBMITTED", message: "Cannot edit submitted self-review" } }
     }
 
-    // Update ratings
+    // Update ratings with upsert
     for (const rating of data.ratings) {
-      await prisma.selfReviewRating.upsert({
-        where: {
-          selfReviewId_competencyId: {
-            selfReviewId,
-            competencyId: rating.competencyId,
-          },
-        },
-        create: {
-          selfReviewId,
-          competencyId: rating.competencyId,
+      await supabase
+        .from("self_review_ratings")
+        .upsert({
+          self_review_id: selfReviewId,
+          competency_id: rating.competencyId,
           rating: rating.rating,
           feedback: rating.feedback,
-        },
-        update: {
-          rating: rating.rating,
-          feedback: rating.feedback,
-        },
-      })
+        }, {
+          onConflict: "self_review_id,competency_id"
+        })
     }
 
-    const updated = await prisma.selfReview.update({
-      where: { id: selfReviewId },
-      data: {
-        overallRating: data.overallRating,
-        overallFeedback: data.overallFeedback,
+    const { data: updated, error: updateError } = await supabase
+      .from("self_reviews")
+      .update({
+        overall_rating: data.overallRating,
+        overall_feedback: data.overallFeedback,
         accomplishments: data.accomplishments,
-        nextPeriodGoals: data.nextPeriodGoals,
+        next_period_goals: data.nextPeriodGoals,
         status: "IN_PROGRESS",
-      },
-    })
+      })
+      .eq("id", selfReviewId)
+      .select()
+      .single()
 
+    if (updateError) throw updateError
     return { success: true, data: updated }
   } catch (error) {
     return { success: false, error: { code: "UPDATE_ERROR", message: "Failed to update self-review" } }
@@ -638,37 +643,45 @@ export async function updateSelfReview(
 export async function submitSelfReview(selfReviewId: string): Promise<ActionResult<SelfReview>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
-    const selfReview = await prisma.selfReview.findFirst({
-      where: { id: selfReviewId, userId: user.id },
-      include: {
-        ratings: true,
-        cycle: { include: { template: { include: { competencies: true } } } },
-      },
-    })
+    const { data: selfReview, error } = await supabase
+      .from("self_reviews")
+      .select(`
+        *,
+        ratings:self_review_ratings(*),
+        cycle:review_cycles(*, template:templates(*, competencies(*)))
+      `)
+      .eq("id", selfReviewId)
+      .eq("user_id", user.id)
+      .single()
 
-    if (!selfReview) {
+    if (error || !selfReview) {
       return { success: false, error: { code: "NOT_FOUND", message: "Self-review not found" } }
     }
 
     // Check deadline
-    if (new Date() > selfReview.cycle.selfReviewDue) {
+    if (new Date() > new Date(selfReview.cycle.self_review_due)) {
       return { success: false, error: { code: "PAST_DEADLINE", message: "Self-review deadline has passed" } }
     }
 
     // Check completeness
-    const requiredCompetencies = selfReview.cycle.template?.competencies.length || 0
-    if (selfReview.ratings.length < requiredCompetencies) {
+    const requiredCompetencies = selfReview.cycle?.template?.competencies?.length || 0
+    if ((selfReview.ratings?.length || 0) < requiredCompetencies) {
       return { success: false, error: { code: "INCOMPLETE", message: "All competencies must be rated" } }
     }
 
-    const updated = await prisma.selfReview.update({
-      where: { id: selfReviewId },
-      data: {
+    const { data: updated, error: updateError } = await supabase
+      .from("self_reviews")
+      .update({
         status: "SUBMITTED",
-        submittedAt: new Date(),
-      },
-    })
+        submitted_at: new Date().toISOString(),
+      })
+      .eq("id", selfReviewId)
+      .select()
+      .single()
+
+    if (updateError) throw updateError
 
     revalidatePath(`/reviews/self/${selfReviewId}`)
     return { success: true, data: updated }
@@ -705,45 +718,46 @@ export interface GapAnalysisData {
 export async function getGapAnalysis(reviewId: string): Promise<ActionResult<GapAnalysisData>> {
   try {
     const user = await getCurrentUser()
+    const supabase = await createClient()
 
     // Get manager review
-    const review = await prisma.review.findFirst({
-      where: {
-        id: reviewId,
-        authorId: user.id,
-        status: { in: ["SUBMITTED", "SHARED"] },
-      },
-      include: {
-        ratings: { include: { competency: true } },
-        subject: { select: { id: true, name: true, email: true } },
-        cycle: { include: { template: { include: { competencies: true } } } },
-      },
-    })
+    const { data: review, error: reviewError } = await supabase
+      .from("reviews")
+      .select(`
+        *,
+        ratings:review_ratings(*, competency:competencies(*)),
+        subject:profiles!reviewee_id(id, name, email),
+        cycle:review_cycles(*, template:templates(*, competencies(*)))
+      `)
+      .eq("id", reviewId)
+      .eq("reviewer_id", user.id)
+      .in("status", ["SUBMITTED", "SHARED"])
+      .single()
 
-    if (!review) {
+    if (reviewError || !review) {
       return { success: false, error: { code: "NOT_FOUND", message: "Review not found" } }
     }
 
     // Get self-review
-    const selfReview = await prisma.selfReview.findFirst({
-      where: {
-        cycleId: review.cycleId,
-        userId: review.subjectId,
-        status: "SUBMITTED",
-      },
-      include: {
-        ratings: { include: { competency: true } },
-      },
-    })
+    const { data: selfReview, error: selfReviewError } = await supabase
+      .from("self_reviews")
+      .select(`
+        *,
+        ratings:self_review_ratings(*, competency:competencies(*))
+      `)
+      .eq("cycle_id", review.cycle_id)
+      .eq("user_id", review.reviewee_id)
+      .eq("status", "SUBMITTED")
+      .single()
 
-    if (!selfReview) {
+    if (selfReviewError || !selfReview) {
       return { success: false, error: { code: "SELF_REVIEW_NOT_SUBMITTED", message: "Employee has not submitted self-review yet" } }
     }
 
     // Calculate gaps
-    const gaps = review.cycle.template?.competencies.map(competency => {
-      const managerRating = review.ratings.find(r => r.competencyId === competency.id)
-      const selfRating = selfReview.ratings.find(r => r.competencyId === competency.id)
+    const gaps = review.cycle?.template?.competencies?.map((competency: any) => {
+      const managerRating = review.ratings?.find((r: any) => r.competency_id === competency.id)
+      const selfRating = selfReview.ratings?.find((r: any) => r.competency_id === competency.id)
 
       const managerValue = managerRating?.rating || 0
       const selfValue = selfRating?.rating || 0
@@ -762,10 +776,10 @@ export async function getGapAnalysis(reviewId: string): Promise<ActionResult<Gap
     }) || []
 
     // Sort by gap size (largest first)
-    gaps.sort((a, b) => b.gap - a.gap)
+    gaps.sort((a: any, b: any) => b.gap - a.gap)
 
     const overallGap = Math.abs(
-      (selfReview.overallRating || 0) - (review.overallRating || 0)
+      (selfReview.overall_rating || 0) - (review.overall_rating || 0)
     )
 
     return {
@@ -1832,24 +1846,24 @@ export async function POST(req: Request) {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription
-        await prisma.organization.update({
-          where: { stripeCustomerId: subscription.customer as string },
-          data: {
-            subscriptionId: subscription.id,
-            subscriptionStatus: subscription.status,
-          },
-        })
+        const supabase = await createClient()
+        await supabase
+          .from("organizations")
+          .update({
+            subscription_id: subscription.id,
+            subscription_status: subscription.status,
+          })
+          .eq("stripe_customer_id", subscription.customer as string)
         break
       }
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription
-        await prisma.organization.update({
-          where: { stripeCustomerId: subscription.customer as string },
-          data: {
-            subscriptionStatus: "canceled",
-          },
-        })
+        const supabase = await createClient()
+        await supabase
+          .from("organizations")
+          .update({ subscription_status: "canceled" })
+          .eq("stripe_customer_id", subscription.customer as string)
         break
       }
 
@@ -1897,42 +1911,42 @@ export async function POST(req: Request) {
   const reminderDays = [0, 1, 3] // Due today, 1 day before, 3 days before
 
   try {
+    const supabase = await createClient()
+
     // Find active cycles with upcoming deadlines
-    const activeCycles = await prisma.reviewCycle.findMany({
-      where: { status: "ACTIVE" },
-      include: {
-        participants: {
-          include: {
-            user: true,
-          },
-        },
-      },
-    })
+    const { data: activeCycles } = await supabase
+      .from("review_cycles")
+      .select(`
+        *,
+        participants:cycle_participants(
+          *,
+          user:profiles(*)
+        )
+      `)
+      .eq("status", "ACTIVE")
 
     let sentCount = 0
     const errors: string[] = []
 
-    for (const cycle of activeCycles) {
+    for (const cycle of activeCycles ?? []) {
       for (const reminderDay of reminderDays) {
         const checkDate = addDays(today, reminderDay)
 
         // Self-review reminders
-        if (startOfDay(cycle.selfReviewDue).getTime() === checkDate.getTime()) {
-          const pendingSelfReviews = await prisma.selfReview.findMany({
-            where: {
-              cycleId: cycle.id,
-              status: { not: "SUBMITTED" },
-            },
-            include: { user: true },
-          })
+        if (startOfDay(new Date(cycle.self_review_due)).getTime() === checkDate.getTime()) {
+          const { data: pendingSelfReviews } = await supabase
+            .from("self_reviews")
+            .select("*, user:profiles(*)")
+            .eq("cycle_id", cycle.id)
+            .neq("status", "SUBMITTED")
 
-          for (const selfReview of pendingSelfReviews) {
+          for (const selfReview of pendingSelfReviews ?? []) {
             try {
               await sendReminderEmail({
                 to: selfReview.user.email,
                 recipientName: selfReview.user.name || "Team Member",
                 cycleName: cycle.name,
-                dueDate: cycle.selfReviewDue.toLocaleDateString(),
+                dueDate: new Date(cycle.self_review_due).toLocaleDateString(),
                 daysRemaining: reminderDay,
                 actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/reviews/self/${selfReview.id}`,
                 actionType: "self-review",
@@ -1945,22 +1959,20 @@ export async function POST(req: Request) {
         }
 
         // Peer feedback reminders
-        if (startOfDay(cycle.peerFeedbackDue).getTime() === checkDate.getTime()) {
-          const pendingPeerRequests = await prisma.peerFeedbackRequest.findMany({
-            where: {
-              cycleId: cycle.id,
-              status: "pending",
-            },
-            include: { reviewer: true },
-          })
+        if (startOfDay(new Date(cycle.peer_feedback_due)).getTime() === checkDate.getTime()) {
+          const { data: pendingPeerRequests } = await supabase
+            .from("peer_feedback_requests")
+            .select("*, reviewer:profiles(*)")
+            .eq("cycle_id", cycle.id)
+            .eq("status", "pending")
 
-          for (const request of pendingPeerRequests) {
+          for (const request of pendingPeerRequests ?? []) {
             try {
               await sendReminderEmail({
                 to: request.reviewer.email,
                 recipientName: request.reviewer.name || "Team Member",
                 cycleName: cycle.name,
-                dueDate: cycle.peerFeedbackDue.toLocaleDateString(),
+                dueDate: new Date(cycle.peer_feedback_due).toLocaleDateString(),
                 daysRemaining: reminderDay,
                 actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/reviews/peer/${request.id}`,
                 actionType: "peer-feedback",
@@ -1973,19 +1985,17 @@ export async function POST(req: Request) {
         }
 
         // Manager review reminders
-        if (startOfDay(cycle.managerReviewDue).getTime() === checkDate.getTime()) {
-          const pendingReviews = await prisma.review.findMany({
-            where: {
-              cycleId: cycle.id,
-              status: { not: "SUBMITTED" },
-            },
-            include: { author: true },
-          })
+        if (startOfDay(new Date(cycle.manager_review_due)).getTime() === checkDate.getTime()) {
+          const { data: pendingReviews } = await supabase
+            .from("reviews")
+            .select("*, author:profiles!reviewer_id(*)")
+            .eq("cycle_id", cycle.id)
+            .neq("status", "SUBMITTED")
 
           // Group by manager
-          const managerReviews = pendingReviews.reduce((acc, review) => {
-            if (!acc[review.authorId]) acc[review.authorId] = { manager: review.author, count: 0 }
-            acc[review.authorId].count++
+          const managerReviews = (pendingReviews ?? []).reduce((acc, review) => {
+            if (!acc[review.reviewer_id]) acc[review.reviewer_id] = { manager: review.author, count: 0 }
+            acc[review.reviewer_id].count++
             return acc
           }, {} as Record<string, { manager: any; count: number }>)
 
@@ -1995,7 +2005,7 @@ export async function POST(req: Request) {
                 to: manager.email,
                 recipientName: manager.name || "Manager",
                 cycleName: cycle.name,
-                dueDate: cycle.managerReviewDue.toLocaleDateString(),
+                dueDate: new Date(cycle.manager_review_due).toLocaleDateString(),
                 daysRemaining: reminderDay,
                 actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/cycles/${cycle.id}`,
                 actionType: "manager-review",
@@ -2029,3 +2039,627 @@ export async function POST(req: Request) {
   ]
 }
 ```
+
+---
+
+## Supabase Storage
+
+### Avatar Upload Hook (`src/hooks/use-avatar-upload.ts`)
+
+```typescript
+"use client"
+
+import { useState, useCallback } from "react"
+import { createClient } from "@/lib/supabase/client"
+
+interface UseAvatarUploadOptions {
+  userId: string
+  onSuccess?: (publicUrl: string) => void
+  onError?: (error: Error) => void
+}
+
+export function useAvatarUpload({ userId, onSuccess, onError }: UseAvatarUploadOptions) {
+  const [isUploading, setIsUploading] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  const upload = useCallback(async (file: File) => {
+    setIsUploading(true)
+    setProgress(0)
+
+    try {
+      const supabase = createClient()
+
+      // Validate file
+      if (!file.type.startsWith("image/")) {
+        throw new Error("File must be an image")
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        throw new Error("File must be less than 2MB")
+      }
+
+      // Generate unique filename
+      const ext = file.name.split(".").pop()
+      const fileName = `${userId}/avatar.${ext}`
+
+      // Upload to storage
+      const { data, error } = await supabase.storage
+        .from("avatars")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+          upsert: true,
+        })
+
+      if (error) throw error
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(fileName)
+
+      // Update profile
+      await supabase
+        .from("profiles")
+        .update({ avatar_url: publicUrl })
+        .eq("id", userId)
+
+      setProgress(100)
+      onSuccess?.(publicUrl)
+      return publicUrl
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error("Upload failed")
+      onError?.(error)
+      throw error
+    } finally {
+      setIsUploading(false)
+    }
+  }, [userId, onSuccess, onError])
+
+  return { upload, isUploading, progress }
+}
+```
+
+### PDF Export Action (`src/actions/exports.ts`)
+
+```typescript
+"use server"
+
+import { createClient } from "@/lib/supabase/server"
+import { getCurrentUser, type ActionResult } from "./base"
+
+export async function exportReviewPDF(reviewId: string): Promise<ActionResult<{ downloadUrl: string }>> {
+  try {
+    const user = await getCurrentUser()
+    const supabase = await createClient()
+
+    // Get review data
+    const { data: review, error } = await supabase
+      .from("reviews")
+      .select(`
+        *,
+        reviewee:profiles!reviewee_id(name, email),
+        reviewer:profiles!reviewer_id(name),
+        ratings:review_ratings(*, competency:competencies(*)),
+        cycle:review_cycles(name)
+      `)
+      .eq("id", reviewId)
+      .eq("reviewer_id", user.id)
+      .single()
+
+    if (error || !review) {
+      return { success: false, error: { code: "NOT_FOUND", message: "Review not found" } }
+    }
+
+    // Call Edge Function to generate PDF
+    const { data: pdfData, error: fnError } = await supabase.functions.invoke("generate-pdf", {
+      body: { review }
+    })
+
+    if (fnError) {
+      return { success: false, error: { code: "PDF_GENERATION_FAILED", message: "Failed to generate PDF" } }
+    }
+
+    // Upload to storage
+    const fileName = `${user.id}/review-${reviewId}-${Date.now()}.pdf`
+    const { error: uploadError } = await supabase.storage
+      .from("exports")
+      .upload(fileName, pdfData, {
+        contentType: "application/pdf",
+      })
+
+    if (uploadError) {
+      return { success: false, error: { code: "UPLOAD_FAILED", message: "Failed to save PDF" } }
+    }
+
+    // Get signed URL (expires in 1 hour)
+    const { data: signedUrl } = await supabase.storage
+      .from("exports")
+      .createSignedUrl(fileName, 3600)
+
+    return {
+      success: true,
+      data: { downloadUrl: signedUrl?.signedUrl || "" }
+    }
+  } catch (error) {
+    return { success: false, error: { code: "EXPORT_ERROR", message: "Failed to export review" } }
+  }
+}
+```
+
+### Storage Bucket Setup (`supabase/migrations/XX_storage_buckets.sql`)
+
+```sql
+-- Create storage buckets
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values
+  ('avatars', 'avatars', true, 2097152, array['image/jpeg', 'image/png', 'image/webp']),
+  ('exports', 'exports', false, 10485760, array['application/pdf']);
+
+-- Avatars: Public read, user can upload their own
+create policy "Avatar images are publicly accessible"
+  on storage.objects for select
+  using (bucket_id = 'avatars');
+
+create policy "Users can upload their own avatar"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'avatars'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can update their own avatar"
+  on storage.objects for update
+  using (
+    bucket_id = 'avatars'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+-- Exports: Private, owner only
+create policy "Users can access their own exports"
+  on storage.objects for select
+  using (
+    bucket_id = 'exports'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can upload their own exports"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'exports'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+```
+
+---
+
+## Supabase Edge Functions
+
+### PDF Generation (`supabase/functions/generate-pdf/index.ts`)
+
+```typescript
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+}
+
+serve(async (req) => {
+  // Handle CORS
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders })
+  }
+
+  try {
+    const { review } = await req.json()
+
+    // Generate PDF using html-to-pdf library or similar
+    // For production, use a library like @react-pdf/renderer
+    const html = generateReviewHTML(review)
+    const pdf = await htmlToPdf(html)
+
+    return new Response(pdf, {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/pdf",
+      },
+    })
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    )
+  }
+})
+
+function generateReviewHTML(review: any): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 40px; }
+          h1 { color: #1a1a1a; border-bottom: 2px solid #000; }
+          .section { margin: 20px 0; }
+          .rating { display: flex; justify-content: space-between; }
+        </style>
+      </head>
+      <body>
+        <h1>Performance Review</h1>
+        <div class="section">
+          <strong>Employee:</strong> ${review.reviewee.name}<br/>
+          <strong>Review Cycle:</strong> ${review.cycle.name}<br/>
+          <strong>Reviewer:</strong> ${review.reviewer.name}
+        </div>
+        ${review.ratings.map((r: any) => `
+          <div class="section">
+            <div class="rating">
+              <strong>${r.competency.name}</strong>
+              <span>${r.rating}/5</span>
+            </div>
+            <p>${r.feedback || "No feedback provided"}</p>
+          </div>
+        `).join("")}
+        <div class="section">
+          <strong>Overall Rating:</strong> ${review.overall_rating}/5
+        </div>
+      </body>
+    </html>
+  `
+}
+
+async function htmlToPdf(html: string): Promise<Uint8Array> {
+  // Use Puppeteer or similar for actual PDF generation
+  // This is a placeholder - in production use @react-pdf/renderer or Puppeteer
+  const encoder = new TextEncoder()
+  return encoder.encode(html) // Placeholder - returns HTML as bytes
+}
+```
+
+### Reminder Cron (`supabase/functions/send-reminders/index.ts`)
+
+```typescript
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+serve(async (req) => {
+  try {
+    // Verify authorization
+    const authHeader = req.headers.get("Authorization")
+    if (!authHeader) {
+      return new Response("Unauthorized", { status: 401 })
+    }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    )
+
+    const today = new Date()
+    const reminderDays = [0, 1, 3] // Due today, 1 day, 3 days before
+
+    // Get active cycles
+    const { data: cycles } = await supabase
+      .from("review_cycles")
+      .select("*")
+      .eq("status", "ACTIVE")
+
+    let sentCount = 0
+
+    for (const cycle of cycles ?? []) {
+      for (const daysBefore of reminderDays) {
+        const checkDate = new Date(today)
+        checkDate.setDate(checkDate.getDate() + daysBefore)
+
+        const selfReviewDue = new Date(cycle.self_review_due)
+        if (isSameDay(selfReviewDue, checkDate)) {
+          // Get incomplete self-reviews
+          const { data: pending } = await supabase
+            .from("self_reviews")
+            .select("*, user:profiles(*)")
+            .eq("cycle_id", cycle.id)
+            .neq("status", "SUBMITTED")
+
+          for (const sr of pending ?? []) {
+            await sendEmail({
+              to: sr.user.email,
+              subject: `Reminder: Self-review due ${daysBefore === 0 ? "today" : `in ${daysBefore} days`}`,
+              template: "reminder",
+              data: {
+                name: sr.user.name,
+                cycleName: cycle.name,
+                dueDate: cycle.self_review_due,
+                actionType: "self-review",
+              }
+            })
+            sentCount++
+          }
+        }
+      }
+    }
+
+    return new Response(
+      JSON.stringify({ sent: sentCount }),
+      { headers: { "Content-Type": "application/json" } }
+    )
+  } catch (error) {
+    console.error("Reminder error:", error)
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    )
+  }
+})
+
+function isSameDay(d1: Date, d2: Date): boolean {
+  return d1.toDateString() === d2.toDateString()
+}
+
+async function sendEmail(params: any) {
+  const resendKey = Deno.env.get("RESEND_API_KEY")!
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${resendKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: "TeamPulse <noreply@teampulse.app>",
+      to: params.to,
+      subject: params.subject,
+      html: renderEmailTemplate(params.template, params.data),
+    }),
+  })
+}
+
+function renderEmailTemplate(template: string, data: any): string {
+  // Simple template rendering - use React Email in production
+  return `
+    <h1>Hello ${data.name},</h1>
+    <p>Your ${data.actionType} for "${data.cycleName}" is due on ${data.dueDate}.</p>
+    <a href="${Deno.env.get("APP_URL")}/reviews">Complete Now</a>
+  `
+}
+```
+
+### Deploy Edge Functions
+
+```bash
+# Install Supabase CLI
+npm install -g supabase
+
+# Login
+supabase login
+
+# Deploy all functions
+supabase functions deploy generate-pdf
+supabase functions deploy send-reminders
+
+# Set secrets
+supabase secrets set RESEND_API_KEY=re_xxx
+supabase secrets set APP_URL=https://teampulse.app
+```
+
+---
+
+## Supabase Realtime
+
+### Review Notification Hook (`src/hooks/use-review-notifications.ts`)
+
+```typescript
+"use client"
+
+import { useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
+import { toast } from "sonner"
+
+interface UseReviewNotificationsOptions {
+  userId: string
+  enabled?: boolean
+}
+
+export function useReviewNotifications({ userId, enabled = true }: UseReviewNotificationsOptions) {
+  const [notifications, setNotifications] = useState<any[]>([])
+
+  useEffect(() => {
+    if (!enabled || !userId) return
+
+    const supabase = createClient()
+
+    // Subscribe to reviews where user is the reviewee
+    const channel = supabase
+      .channel(`reviews-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "reviews",
+          filter: `reviewee_id=eq.${userId}`,
+        },
+        (payload) => {
+          const newStatus = payload.new.status
+          const oldStatus = payload.old.status
+
+          // Notify when review is shared
+          if (newStatus === "SHARED" && oldStatus !== "SHARED") {
+            toast.success("Your performance review is ready to view!", {
+              action: {
+                label: "View",
+                onClick: () => window.location.href = `/reviews/${payload.new.id}`,
+              },
+            })
+            setNotifications((prev) => [...prev, payload.new])
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [userId, enabled])
+
+  return { notifications }
+}
+```
+
+### Cycle Progress Subscription (`src/hooks/use-cycle-progress.ts`)
+
+```typescript
+"use client"
+
+import { useEffect, useState, useCallback } from "react"
+import { createClient } from "@/lib/supabase/client"
+
+interface CycleProgress {
+  total: number
+  completed: number
+  inProgress: number
+  notStarted: number
+}
+
+export function useCycleProgress(cycleId: string) {
+  const [progress, setProgress] = useState<CycleProgress>({
+    total: 0,
+    completed: 0,
+    inProgress: 0,
+    notStarted: 0,
+  })
+  const [loading, setLoading] = useState(true)
+
+  const fetchProgress = useCallback(async () => {
+    const supabase = createClient()
+
+    const { data: reviews } = await supabase
+      .from("reviews")
+      .select("status")
+      .eq("cycle_id", cycleId)
+
+    if (reviews) {
+      const stats = reviews.reduce(
+        (acc, r) => {
+          acc.total++
+          if (r.status === "COMPLETED" || r.status === "SHARED") acc.completed++
+          else if (r.status === "IN_PROGRESS") acc.inProgress++
+          else acc.notStarted++
+          return acc
+        },
+        { total: 0, completed: 0, inProgress: 0, notStarted: 0 }
+      )
+      setProgress(stats)
+    }
+    setLoading(false)
+  }, [cycleId])
+
+  useEffect(() => {
+    fetchProgress()
+
+    const supabase = createClient()
+
+    // Subscribe to any changes in reviews for this cycle
+    const channel = supabase
+      .channel(`cycle-progress-${cycleId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "reviews",
+          filter: `cycle_id=eq.${cycleId}`,
+        },
+        () => {
+          // Refetch progress when any review changes
+          fetchProgress()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [cycleId, fetchProgress])
+
+  return { progress, loading, refetch: fetchProgress }
+}
+```
+
+### Enable Realtime (`supabase/migrations/XX_enable_realtime.sql`)
+
+```sql
+-- Enable realtime for reviews table
+alter publication supabase_realtime add table reviews;
+
+-- Enable realtime for self_reviews table
+alter publication supabase_realtime add table self_reviews;
+
+-- Enable realtime for review_cycles table
+alter publication supabase_realtime add table review_cycles;
+```
+
+### Realtime Provider Setup (`src/components/providers/realtime-provider.tsx`)
+
+```typescript
+"use client"
+
+import { createContext, useContext, useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
+import type { RealtimeChannel } from "@supabase/supabase-js"
+
+interface RealtimeContextType {
+  isConnected: boolean
+  subscribe: (channel: string, callback: (payload: any) => void) => RealtimeChannel
+  unsubscribe: (channel: RealtimeChannel) => void
+}
+
+const RealtimeContext = createContext<RealtimeContextType | null>(null)
+
+export function RealtimeProvider({ children }: { children: React.ReactNode }) {
+  const [isConnected, setIsConnected] = useState(false)
+  const supabase = createClient()
+
+  useEffect(() => {
+    // Test connection
+    const channel = supabase.channel("connection-test")
+    channel.subscribe((status) => {
+      setIsConnected(status === "SUBSCRIBED")
+    })
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [supabase])
+
+  const subscribe = (channelName: string, callback: (payload: any) => void) => {
+    return supabase
+      .channel(channelName)
+      .on("postgres_changes", { event: "*", schema: "public" }, callback)
+      .subscribe()
+  }
+
+  const unsubscribe = (channel: RealtimeChannel) => {
+    supabase.removeChannel(channel)
+  }
+
+  return (
+    <RealtimeContext.Provider value={{ isConnected, subscribe, unsubscribe }}>
+      {children}
+    </RealtimeContext.Provider>
+  )
+}
+
+export function useRealtime() {
+  const context = useContext(RealtimeContext)
+  if (!context) {
+    throw new Error("useRealtime must be used within a RealtimeProvider")
+  }
+  return context
+}
+```
+
+---
+
+*Last updated: [DATE]*

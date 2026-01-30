@@ -45,14 +45,27 @@ Architecture:  Monorepo (Next.js handles frontend + backend)
 Framework:     Next.js 15 (App Router) - ONE app for all roles
 UI:            shadcn/ui + Tailwind CSS (via shadcn MCP)
 Mobile:        Capacitor (native iOS/Android from same codebase)
-Backend:       Next.js API Routes + Server Actions
-Database:      Supabase (PostgreSQL)
+Backend:       Next.js API Routes + Server Actions + Supabase Edge Functions
+Database:      Supabase (PostgreSQL with Row Level Security)
 Auth:          Supabase Auth (magic link, OAuth, email/password)
+Storage:       Supabase Storage (file uploads, avatars, exports)
+Realtime:      Supabase Realtime (live updates, notifications)
 Analytics:     PostHog (product analytics, feature flags)
 Hosting:       Vercel (frontend + backend)
 Payments:      Stripe (when needed)
 Email:         Resend / Postmark (when needed)
 ```
+
+### Supabase Features to Use
+
+| Feature | Use Case | When to Add |
+|---------|----------|-------------|
+| **Database** | All app data | Day 1 (required) |
+| **Auth** | User authentication | Day 1 (required) |
+| **RLS** | Data isolation per tenant/user | Day 1 (required) |
+| **Storage** | Avatars, file uploads, PDF exports | When needed |
+| **Edge Functions** | Cron jobs, webhooks, background tasks | When needed |
+| **Realtime** | Live notifications, collaborative features | When needed |
 
 ### Single App Architecture (Critical!)
 
